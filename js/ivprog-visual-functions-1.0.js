@@ -2,7 +2,7 @@ var counter_new_functions = 0;
 
 function addFunctionHandler() {
 	new_function = new Funcao("new_function_" + counter_new_functions);
-	programa.adicionarFuncao(new_function);
+	adicionarFuncao(new_function);
 
 	counter_new_functions ++;
 	renderAlgorithm();
@@ -103,7 +103,7 @@ function appendFunction(function_obj, sequence) {
 	$('.all_functions').append('<div class="ui secondary segment function_div list-group-item">'
 		+ '<span class="glyphicon glyphicon-move" aria-hidden="true"><i class="icon sort alternate vertical"></i></span>'
 		
-		+ (!function_obj.eh_principal ? '<button class="ui icon button large remove_function_button" onclick="removeFunctionHandler(this.parentNode, '+sequence+')"><i class="red icon times outline"></i></button>' : '')
+		+ (!function_obj.eh_principal ? '<button class="ui icon button large remove_function_button" onclick="removeFunctionHandler(this.parentNode, '+sequence+')"><i class="red icon times"></i></button>' : '')
 		+ '<button class="ui icon button tiny minimize_function_button" onclick="minimizeFunctionHandler(this.parentNode, '+sequence+')"><i class="icon window minimize"></i></button>'
 
 		+ '<div class="function_signature_div">function '

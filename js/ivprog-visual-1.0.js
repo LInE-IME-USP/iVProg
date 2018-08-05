@@ -21,12 +21,12 @@ var Programa = function () {
 	this.funcoes = new Array();
 };
 
-Programa.prototype.adicionarFuncao = function(funcao){
-	this.funcoes.push(funcao);
+function adicionarFuncao(funcao) {
+	programa.funcoes.push(funcao);
 };
 
 // Adicionando a função principal automaticamente
 var programa = new Programa();
 var funcaoPrincipal = new Funcao("principal", tiposDados.void, 0, null, true);
 
-programa.adicionarFuncao(funcaoPrincipal);
+adicionarFuncao(funcaoPrincipal);
