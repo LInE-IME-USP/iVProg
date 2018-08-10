@@ -1,0 +1,38 @@
+{
+  "name": "ivprog",
+  "version": "0.1.0",
+  "description": "IMA para o ensino de programação",
+  "main": "js/main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "babel": "babel --presets env js/main.js -o build/ivprog.bunlde.js",
+    "start": "http-server",
+    "webpack": "webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/git.lcalion.com/ivprog.git"
+  },
+  "keywords": [
+    "programação",
+    "ensino",
+    "visual"
+  ],
+  "author": "LInE-IME/USP",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/git.lcalion.com/ivprog/issues"
+  },
+  "homepage": "https://github.com/git.lcalion.com/ivprog#readme",
+  "devDependencies": {
+    "antlr4-webpack-loader": "^0.1.1",
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.5",
+    "babel-preset-env": "^1.7.0",
+    "webpack": "^4.16.5",
+    "webpack-cli": "^3.1.0"
+  },
+  "dependencies": {
+    "antlr4": "^4.7.1"
+  }
+}
