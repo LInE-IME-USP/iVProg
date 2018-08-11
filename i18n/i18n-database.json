@@ -1,0 +1,57 @@
+{
+	"function": {
+		"en": "function",
+		"es": "función",
+		"pt": "função"
+	},
+	"start": {
+		"en": "start",
+		"es": "comienzo",
+		"pt": "inicio"
+	},
+	"void": {
+		"en": "void",
+		"es": "vacío",
+		"pt": "vazio"
+	},
+	"integer": {
+		"en": "integer",
+		"es": "entero",
+		"pt": "inteiro"
+	},
+	"real": {
+		"en": "real",
+		"es": "real",
+		"pt": "real"
+	},
+	"text": {
+		"en": "text",
+		"es": "texto",
+		"pt": "texto"
+	},
+	"boolean": {
+		"en": "boolean",
+		"es": "booleano",
+		"pt": "booleano"
+	},
+	"Variable": {
+		"en": "Variable",
+		"es": "Variable",
+		"pt": "Variável"
+	},
+	"Command": {
+		"en": "Command",
+		"es": "Mando",
+		"pt": "Comando"
+	},
+	"": {
+		"en": "",
+		"es": "",
+		"pt": ""
+	},
+	"": {
+		"en": "",
+		"es": "",
+		"pt": ""
+	}
+}
