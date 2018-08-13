@@ -115,7 +115,7 @@ body {
 	display: inline;
 }
 
-.enable_edit_name_function, .enable_edit_name_parameter {
+.enable_edit_name_function, .enable_edit_name_parameter, .add_parameter, .remove_parameter {
 	cursor: pointer;
 }
 
@@ -183,4 +183,13 @@ body {
 
 .parameters_list {
 	display: inline;
+}
+
+.function_return, .parameter_type {
+	margin-left: 10px;
+    margin-right: 15px;
+}
+
+.function_return .dropdown .icon, .parameter_type .dropdown .icon {
+	margin-left: 6px;
 }

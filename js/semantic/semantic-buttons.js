@@ -30,6 +30,10 @@ var button_ready = function() {
     .dropdown()
   ;
 
+  $('.ui.dropdown')
+    .dropdown()
+  ;
+
 
   $('.add_function_button').on('click', addFunctionHandler);
 

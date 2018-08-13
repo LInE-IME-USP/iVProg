@@ -1,6 +1,7 @@
 // Definição das classes utilizadas para armazenar o algoritmo
 
-var tiposDados = Object.freeze({void:"void", integer:"integer", real:"real", text:"text", boolean:"boolean"});
+// Não adicionar elementos ao tipoDados, pois existem componentes que dependem do seu tamanho e isso afetará seu funcionamento
+var tiposDados = Object.freeze({void:"void", integer:"integer", real:"real", text:"text", boolean:"boolean", vector:"vector"});
 
 var Variavel = function(tipo, nome, valor, dimensoes = 0, eh_constante = false) {
 	this.tipo = tipo;
@@ -37,11 +38,19 @@ function adicionarFuncao(funcao) {
 	programa.funcoes.push(funcao);
 }
 
+//var tex = i18n('text');
+
 // Adicionando a função principal automaticamente
 var programa = new Programa();
-var funcaoPrincipal = new Funcao("principal", tiposDados.void, 0, new Array(), true);
+var funcaoPrincipal = new Funcao(i18n("start"), tiposDados.void, 0, new Array(), true);
 
-funcaoPrincipal.lista_parametros.push(new Variavel(tiposDados.text, "args"));
+//funcaoPrincipal.lista_parametros.push(new Variavel(tiposDados.text, "args"));
 
 
 adicionarFuncao(funcaoPrincipal);
+
+var funcaoSomar = new Funcao("somar", tiposDados.integer, 0, new Array(), false);
+funcaoSomar.lista_parametros.push(new Variavel(tiposDados.integer, "a"));
+funcaoSomar.lista_parametros.push(new Variavel(tiposDados.integer, "b"));
+
+adicionarFuncao(funcaoSomar);

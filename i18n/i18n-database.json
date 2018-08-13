@@ -4,6 +4,11 @@
 		"es": "función",
 		"pt": "função"
 	},
+	"Function": {
+		"en": "Function",
+		"es": "Función",
+		"pt": "Função"
+	},
 	"start": {
 		"en": "start",
 		"es": "comienzo",
@@ -44,14 +49,19 @@
 		"es": "Mando",
 		"pt": "Comando"
 	},
-	"": {
-		"en": "",
-		"es": "",
-		"pt": ""
+	"new_parameter": {
+		"en": "new_parameter",
+		"es": "nuevo_parámetro",
+		"pt": "novo_parâmetro"
 	},
-	"": {
-		"en": "",
-		"es": "",
-		"pt": ""
+	"new_function": {
+		"en": "new_function",
+		"es": "nueva_función",
+		"pt": "nova_função"
+	},
+	"vector": {
+		"en": "vector",
+		"es": "vector",
+		"pt": "vetor"
 	}
 }
