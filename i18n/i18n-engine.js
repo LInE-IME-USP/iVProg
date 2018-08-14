@@ -44,7 +44,6 @@ $.getJSON('i18n/i18n-database.json', function(data) {
       i18n.set('es', x, l.es);
       i18n.set('pt', x, l.pt);
     }
-    console.log("ja era!");
 });
 
 $.ajaxSetup({

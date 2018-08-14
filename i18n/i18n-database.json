@@ -54,6 +54,11 @@
 		"es": "nuevo_parámetro",
 		"pt": "novo_parâmetro"
 	},
+	"new_variable": {
+		"en": "new_variable",
+		"es": "nuevo_variable",
+		"pt": "nova_variável"
+	},
 	"new_function": {
 		"en": "new_function",
 		"es": "nueva_función",

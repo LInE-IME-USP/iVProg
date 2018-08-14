@@ -1,5 +1,6 @@
 var counter_new_functions = 0;
 var counter_new_parameters = 0;
+var counter_new_variables = 0;
 
 function addFunctionHandler() {
 	new_function = new Funcao(i18n("new_function") + "_" + counter_new_functions);
@@ -40,6 +41,7 @@ function renderAlgorithm() {
 }
 
 function addHandlers() {
+
 	$('.ui.dropdown.function_return')
     	.dropdown({
 		    onChange: function(value, text, $selectedItem) {
@@ -85,7 +87,6 @@ function addHandlers() {
 				}
 				for (tm in tiposDados) {
 					if ($selectedItem.hasClass(tm)) {
-						console.log("possui: " + tm);
 						updateParameterType(fun, seq, tm, dim);
 						break;
 					} 
@@ -93,6 +94,55 @@ function addHandlers() {
 
 		    }
 		});
+
+  	$('.ui.dropdown.variable_type').dropdown({
+		    onChange: function(value, text, $selectedItem) {
+
+		    	classList = $selectedItem.attr('class').split(/\s+/);
+		    	var fun;
+				var seq;
+				$.each(classList, function(index, item) {
+
+					if (item.indexOf("fun_") > -1) {
+						fun = item.split("fun_")[1];
+					}
+				    if (item.indexOf("seq_") > -1) {
+				        seq = item.split("seq_")[1];
+				    }
+				});
+				var dim = 0;
+				if (value.indexOf(i18n(tiposDados.vector)) > -1) {
+					dim = value.split('[').length - 1;
+				}
+				for (tm in tiposDados) {
+					if ($selectedItem.hasClass(tm)) {
+						console.log("possui: " + tm);
+						updateVariableType(fun, seq, tm, dim);
+						break;
+					} 
+				}
+
+		    }
+		});
+
+}
+
+function updateVariableType(wich_function, wich_variable, new_value, new_dimensions) {
+	programa.funcoes[wich_function].variaveis[wich_variable].tipo = new_value;
+	programa.funcoes[wich_function].variaveis[wich_variable].dimensoes = new_dimensions;
+}
+
+
+function addVariable(sequence) {//tipo, nome, valor
+	var v = new Variavel(tiposDados.integer, i18n('new_variable') + '_' + counter_new_variables, 1);
+	adicionarVariavel(sequence, v);
+	counter_new_variables ++;
+	renderAlgorithm();
+}
+
+function deleteVariable(which_function, which_variable) {
+	programa.funcoes[which_function].variaveis.splice(which_variable, 1);
+	renderAlgorithm();
 }
 
 function addParameter(sequence) {
@@ -193,6 +243,77 @@ function enableNameFunctionUpdate(div_el, sequence) {
 	
 }
 
+var opened_name_variable = false;
+var opened_input_variable = null;
+var sequence_name_opened_variable;
+var sequence_function_opened_variable;
+function enableNameVariableUpdate(parent_node, which_function, which_parameter) {
+	if (opened_name_variable) {
+		$(opened_input_variable).focus();
+		return;
+	}
+	opened_name_variable = true;
+	sequence_name_opened_variable = which_parameter;
+	sequence_function_opened_variable = which_function;
+
+	$(parent_node).find('.span_name_variable').text('');
+	$( "<input type='text' class='width-dynamic input_name_function' autocomplete='off' autocorrect='off' autocapitalize='off' spellcheck='false' value='"
+		+ programa.funcoes[which_function].variaveis[which_parameter].nome + "' />" ).insertBefore($(parent_node).find('.span_name_variable'));
+
+	$('.width-dynamic').on('input', function() {
+	    var inputWidth = $(this).textWidth()+10;
+	    opened_input_variable = this;
+	    $(this).focus();
+
+	    var tmpStr = $(this).val();
+		$(this).val('');
+		$(this).val(tmpStr);
+
+	    $(this).css({
+	        width: inputWidth
+	    })
+	}).trigger('input');
+
+	$('.width-dynamic').focusout(function() {
+		/// update array:
+		if ($(this).val().trim()) {
+			programa.funcoes[which_function].variaveis[which_parameter].nome = $(this).val().trim();
+		}
+		$(this).remove();
+
+		/// update elements:
+		opened_name_variable = false;
+		opened_input_variable = false;
+
+		renderAlgorithm();
+	});
+
+	$('.width-dynamic').on('keydown', function(e) {
+		var code = e.keyCode || e.which;
+		if(code == 13) {
+			if ($(this).val().trim()) {
+				programa.funcoes[which_function].variaveis[which_parameter].nome = $(this).val().trim();
+			}
+			$(this).remove();
+
+			/// update elements:
+			opened_name_variable = false;
+			opened_input_variable = false;
+
+			renderAlgorithm();
+		}
+		if(code == 27) {
+			$(parent_node).find('.span_name_variable').text(programa.funcoes[which_function].variaveis[which_parameter].nome);
+
+			$(this).remove();
+
+			/// update elements:
+			opened_name_variable = false;
+			opened_input_variable = false;
+		}
+	});
+
+}
 
 var opened_name_parameter = false;
 var opened_input_parameter = null;
@@ -295,8 +416,10 @@ function appendFunction(function_obj, sequence) {
 	appender += '</div> ) {</div>'
 		+ (function_obj.esta_oculta ? ' <div class="function_area" style="display: none;"> ' : ' <div class="function_area"> ')
 
-		+ '<div class="ui top attached segment variables_list_div"><div class="ui teal small labeled icon button add_variable_button">'+i18n('Variable')+'<i class="add icon"></i></div></div>'
-		+ '<div class="ui bottom attached segment commands_list_div"><div class="ui teal small labeled icon button add_command_button">'+i18n('Command')+'<i class="add icon"></i></div></div>'		
+		+ '<div class="ui top attached segment variables_list_div"><div class="ui teal small labeled icon button add_variable_button" onclick="addVariable('+sequence+')">'+i18n('Variable')+'<i class="add icon"></i></div>'
+		+ renderVariables(function_obj, sequence)
+		+ '</div>'
+		+ '<div class="ui bottom attached segment commands_list_div"><div class="ui teal small labeled icon button add_command_button seq_'+sequence+'">'+i18n('Command')+'<i class="add icon"></i></div></div>'		
 
 		+ '<div class="function_close_div">}</div>'
 		+ '</div>'
@@ -348,11 +471,7 @@ function renderFunctionParameters(function_obj, sequence) {
 			    	+  i18n(tiposDados.vector)+':'+i18n(tm)
 			    	+ '</div>';	
 		  	}
-
     		ret += '</div></div>';
-
-
-
 
 			ret += ' <i class="red icon times remove_parameter" onclick="removeParameter(this.parentNode, '+sequence+', '+j+')"></i></div>';
 
@@ -362,28 +481,18 @@ function renderFunctionParameters(function_obj, sequence) {
 }
 
 
+// Essa função imprime as variáveis e os recursos para sua manipulação
 function renderVariables(function_obj, sequence) {
 	var ret = "";
-	if (function_obj.lista_parametros != null) {
+	if (function_obj.variaveis != null) {
 
-		for (var j = 0; j < function_obj.lista_parametros.length; j++) {
+		for (var j = 0; j < function_obj.variaveis.length; j++) {
 
-			var par_temp = function_obj.lista_parametros[j];
+			var par_temp = function_obj.variaveis[j];
 
-			/*ret += '<div class="ui label function_name_parameter"><span class="span_name_parameter" ondblclick="enableNameParameterUpdate(this.parentNode, '+sequence+', '+j+')">'+par_temp.nome+'</span> <i class="icon small pencil alternate enable_edit_name_parameter" onclick="enableNameParameterUpdate(this.parentNode, '+sequence+', '+j+')"></i>';
+			ret += '<div class="ui label name_variable"><span class="span_name_variable" ondblclick="enableNameVariableUpdate(this.parentNode, '+sequence+', '+j+')">'+par_temp.nome+'</span> <i class="icon small pencil alternate enable_edit_name_parameter" onclick="enableNameVariableUpdate(this.parentNode, '+sequence+', '+j+')"></i>';
 
-			ret += '<select class="ui fluid dropdown parameter_data_types_dropdown" onchange="updateParameterType('+sequence+', '+j+', this.value)">'
-    		+ '<option value="'+tiposDados.integer+'" '+(par_temp.tipo == tiposDados.integer ? 'selected' : '')+'>'+i18n(tiposDados.integer)+'</option>'
-    		+ '<option value="'+tiposDados.real+'" '+(par_temp.tipo == tiposDados.real ? 'selected' : '')+'>'+i18n(tiposDados.real)+'</option>'
-    		+ '<option value="'+tiposDados.text+'" '+(par_temp.tipo == tiposDados.text ? 'selected' : '')+'>'+i18n(tiposDados.text)+'</option>'
-    		+ '<option value="'+tiposDados.boolean+'" '+(par_temp.tipo == tiposDados.boolean ? 'selected' : '')+'>'+i18n(tiposDados.boolean)+'</option>'
-    		+ '</select>';
-
-			ret += ' <i class="red icon times remove_parameter" onclick="removeParameter(this.parentNode, '+sequence+', '+j+')"></i></div>';*/
-
-			ret += '<div class="ui label function_name_parameter"><span class="span_name_parameter" ondblclick="enableNameParameterUpdate(this.parentNode, '+sequence+', '+j+')">'+par_temp.nome+'</span> <i class="icon small pencil alternate enable_edit_name_parameter" onclick="enableNameParameterUpdate(this.parentNode, '+sequence+', '+j+')"></i>';
-
-			ret += '<div class="ui dropdown parameter_type seq_'+j+' fun_'+sequence+'">';
+			ret += '<div class="ui dropdown variable_type seq_'+j+' fun_'+sequence+'">';
   	
 		  	if (par_temp.dimensoes > 0) {
 		  		ret += '<div class="text seq_'+j+' fun_'+sequence+'">'+ i18n(tiposDados.vector)+':'+i18n(par_temp.tipo);
@@ -421,7 +530,6 @@ function renderVariables(function_obj, sequence) {
 			      	+  '<div class="menu seq_'+j+' fun_'+sequence+'">'
 				        + '<div class="item seq_'+j+' fun_'+sequence+' '+tm+'" data-text="'+ i18n(tiposDados.vector)+':'+i18n(tm)+' [ ] ">[ ]</div>'
 				        + '<div class="item seq_'+j+' fun_'+sequence+' '+tm+'" data-text="'+ i18n(tiposDados.vector)+':'+i18n(tm)+' [ ] [ ] ">[ ] [ ] </div>'
-				        + '<div class="item seq_'+j+' fun_'+sequence+' '+tm+'" data-text="'+ i18n(tiposDados.vector)+':'+i18n(tm)+' [ ] [ ] [ ]">[ ] [ ] [ ] </div>'
 			      	+  '</div>'
 			    	+ '</div>';	
 		  	}
@@ -431,7 +539,7 @@ function renderVariables(function_obj, sequence) {
 
 
 
-			ret += ' <i class="red icon times remove_parameter" onclick="removeParameter(this.parentNode, '+sequence+', '+j+')"></i></div>';
+			ret += ' = ' + par_temp.valor + ' <i class="red icon times remove_parameter" onclick="deleteVariable('+sequence+', '+j+')"></i></div>';
 
 		}
 	}

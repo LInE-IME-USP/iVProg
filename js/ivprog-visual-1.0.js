@@ -11,13 +11,14 @@ var Variavel = function(tipo, nome, valor, dimensoes = 0, eh_constante = false) 
 	this.eh_constante = eh_constante;
 };
 
-var Funcao = function(nome, tipo_retorno = tiposDados.void, dimensoes_retorno = 0, lista_parametros = null, eh_principal = false, esta_oculta = false) {
+var Funcao = function(nome, tipo_retorno = tiposDados.void, dimensoes_retorno = 0, lista_parametros = null, eh_principal = false, esta_oculta = false, variaveis = null) {
 	this.nome = nome;
 	this.tipo_retorno = tipo_retorno;
 	this.dimensoes_retorno = dimensoes_retorno;
 	this.lista_parametros = lista_parametros;
 	this.eh_principal = eh_principal;
 	this.esta_oculta = esta_oculta;
+	this.variaveis = variaveis;
 };
 
 var Comando = function(tipo) {
@@ -36,6 +37,13 @@ var Programa = function () {
 
 function adicionarFuncao(funcao) {
 	programa.funcoes.push(funcao);
+}
+
+function adicionarVariavel(funcao, variavel) {
+	if (programa.funcoes[funcao].variaveis == null) {
+		programa.funcoes[funcao].variaveis = new Array();
+	}
+	programa.funcoes[funcao].variaveis.push(variavel);
 }
 
 //var tex = i18n('text');
