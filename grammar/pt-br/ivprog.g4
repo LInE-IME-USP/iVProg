@@ -57,12 +57,12 @@ CADEIA        : '"' ( SEQ_ESC | ~('\\'|'"') )* '"'  ;
 
 CARACTER        :   '\'' ( SEQ_ESC | ~('\''|'\\') ) '\''  ;
 
-ESPACO        : ( ' ' | '\t' | '\r' | '\n') -> channel(HIDDEN)  ;
+ESPACO        : ( ' ' | '\t' | '\r' | '\n') -> skip  ;
 
 
 fragment DIGIT_HEX    :   ('0'..'9'|'a'..'f'|'A'..'F')  ;
 
-fragment SEQ_ESC      :  '\\' ('b'|'t'|'n'|'f'|'r'|'\"'|'\''|'\\')  |   ESC_UNICODE  |   ESC_OCTAL   ;
+fragment SEQ_ESC      :  '\\' ('b'|'t'|'n'|'f'|'r'|'"'|'\''|'\\')  |   ESC_UNICODE  |   ESC_OCTAL   ;
 
 fragment ESC_OCTAL    : '\\' ('0'..'3') ('0'..'7') ('0'..'7')  |   '\\' ('0'..'7') ('0'..'7')    |   '\\' ('0'..'7')    ;
 
