@@ -88,11 +88,16 @@ class AnalisadorSintatico {
   * @returns Declararion(const, type, id, initVal?)
   **/
   parseHasConst () {
-    const token = this.getToken();
-    if(token.type === this.lexer.PR_CONST) {
-      this.pos++
-      return parseDeclararion(true);
-    } else if(isVariableType(token)) {
+    const constToken = this.getToken();
+    if(constToken.type === this.lexer.PR_CONST) {
+      this.pos++;
+      const typeToken = this.getToken();
+      if(!this.isVariableType(typeToken)) {
+        throw SintaxError.createError(this.getCommaTypeString(), typeToken);
+      }
+      this.pos++;;
+      return parseDeclararion(true, typeToken);
+    } else if(isVariableType(constToken)) {
       return parseDeclararion();
     } else {
       return null;
@@ -107,18 +112,12 @@ class AnalisadorSintatico {
   parseDeclararion (isConst = false) {
     const typeToken = this.getToken();
     if(!this.isVariableType(typeToken)) {
-      throw new SintaxError(this.variableTypes.map( x => this.lexer.literalNames[x])
-        .reduce((o, n) => {
-        if (o.length <= 0)
-          return n;
-        else
-          return o + ", " + n;
-      }, ''), typeToken);
+      throw SintaxError.createError(this.getCommaTypeString(), typeToken);
     }
     this.pos++;
     const idToken = this.getToken();
     if(idToken.type !== this.lexer.ID) {
-      throw new SintaxError('ID', idToken);
+      throw SintaxError.createError('ID', idToken);
     }
     this.pos++;
     const equalsToken = this.getToken();
@@ -137,11 +136,17 @@ class AnalisadorSintatico {
     }
   }
 
-  getErrorString (symbol, token) {
-    return `Sintax error! Expecting '${symbol}' but found ${token.text} at line:${token.line}, column:${token.column}`;
-  }
-
   isVariableType (token) {
     return this.variableTypes.find(v => v === token.type);
+  }
+
+  getCommaTypeString () {
+    return this.variableTypes.map( x => this.lexer.literalNames[x])
+        .reduce((o, n) => {
+        if (o.length <= 0)
+          return n;
+        else
+          return o + ", " + n;
+      }, '');
   }
 }
