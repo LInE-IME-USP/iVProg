@@ -1,19 +1,20 @@
-import { CommonTokenStream } from 'antlr4/index';
+import { CommonTokenStream, InputStream } from 'antlr4/index';
 import { SintaxError } from './SintaxError';
 
-class AnalisadorSintatico {
+export class AnalisadorSintatico {
 
-  constructor (lexer) {
-    this.lexer = lexer;
-    this.tokenStream = new CommonTokenStream(lexer);
+  constructor (input, lexerClass) {
+    this.lexerClass = lexerClass;
+    this.lexer = new lexerClass(new InputStream(input));
+    this.tokenStream = new CommonTokenStream(this.lexer);
     this.tokenStream.fill();
     this.pos = 1;
-    this.variableTypes = [this.lexer.PR_INTEIRO, this.lexer.PR_REAL, this.lexer.PR_LOGICO, this.lexer.PR_CADEIA];
+    this.variableTypes = [this.lexerClass.PR_INTEIRO, this.lexerClass.PR_REAL, this.lexerClass.PR_LOGICO, this.lexerClass.PR_CADEIA];
 
   }
 
   parseTree () {
-    return {};
+    return this.parseProgram();
   }
 
   getToken (index = null) {
@@ -22,56 +23,63 @@ class AnalisadorSintatico {
     return this.tokenStream.LT(index);
   }
 
+  isEOF () {
+    this.getToken(this.pos);
+    return this.tokenStream.fetchedEOF;
+  }
+
   parseProgram () {
-    let token = null;
+    let token = this.getToken();
 
-    if(this.lexer.PR_PROGRAMA === (token = this.getToken()).type) {
-      try {
-        this.pos++;
-        this.consumeNewLines();
-        checkOpenCurly();
-        this.pos++;
-        this.consumeNewLines();
-        const globalVars = parseGlobalVariables();
-        this.consumeNewLines();
-        const functions = parseFunctions();
-        this.consumeNewLines();
-        checkCloseCurly();
-        this.pos++;
-        this.consumeNewLines();
-        if(this.lexer.EOF !== (token = this.getToken()).type) {
-          console.log("No extra characters are allowed after program {...}");
-        }
-        return {global: globalVars, functions: functions};
-
-      } catch(SintaxError err) {
-        console.log(err.message);
+    if(this.lexerClass.PR_PROGRAMA === token.type) {
+      this.pos++;
+      this.consumeNewLines();
+      this.checkOpenCurly();
+      this.pos++;
+      this.consumeNewLines();
+      const globalVars = this.parseGlobalVariables();
+      this.consumeNewLines();
+      const functions = []; // this.parseFunctions();
+      this.consumeNewLines();
+      this.checkCloseCurly();
+      this.pos++;
+      this.consumeNewLines();
+      if(!this.isEOF()) {
+        throw new Error("No extra characters are allowed after 'program {...}'");
       }
+      return {global: globalVars, functions: functions};
     } else {
-      throw SintaxError.createError(this.lexer.literalNames(this.lexer.PR_PROGRAMA), token);
+      throw SintaxError.createError(this.lexer.literalNames[this.lexerClass.PR_PROGRAMA], token);
     }
-    return null;
   }
 
   checkOpenCurly () {
     let token = null;
-    if(this.lexer.ABRE_CHA !== (token = this.getToken()).type){
-      throw SintaxError.createError(this.getErrorString('{', token));
+    if(this.lexerClass.ABRE_CHA !== (token = this.getToken()).type){
+      throw SintaxError.createError('{', token);
     }
   }
 
   checkCloseCurly () {
     let token = null;
-    if(this.lexer.FECHA_CHA !== (token = this.getToken()).type){
-      throw SintaxError.createError(this.getErrorString('}', token));
+    if(this.lexerClass.FECHA_CHA !== (token = this.getToken()).type){
+      throw SintaxError.createError('}', token);
     }
   }
 
+  /* It checks if the current token at position pos is a ']'.
+  * As a check function it doesn't increment pos.
+  *
+  * @params bool:attempt, indicates that the token is optional. Defaults: false
+  *
+  * @returns true if the attempt is true and current token is '[',
+  *   false is attempt is true and current token is not '['
+  **/
   checkOpenBrace (attempt = false) {
     const token = this.getToken();
-    if(this.lexer.ABRE_COL !== token.type){
+    if(this.lexerClass.ABRE_COL !== token.type){
       if (!attempt) {
-        throw SintaxError.createError(this.getErrorString('[', token));
+        throw SintaxError.createError('[', token);
       } else {
         return false;
       }
@@ -81,9 +89,9 @@ class AnalisadorSintatico {
 
   checkCloseBrace (attempt = false) {
     const token = this.getToken();
-    if(this.lexer.FECHA_COL !== token.type){
+    if(this.lexerClass.FECHA_COL !== token.type){
       if (!attempt) {
-        throw SintaxError.createError(this.getErrorString(']', token));
+        throw SintaxError.createError(']', token);
       } else {
         return false;
       }
@@ -96,14 +104,16 @@ class AnalisadorSintatico {
     while(true) {
       const decl = this.parseHasConst();
       const eosToken = this.getToken();
-      if (eosToken.type !== this.lexer.EOS) {
+      if (decl !== null && eosToken.type !== this.lexerClass.EOS) {
         throw SintaxError.createError('new line or \';\'', eosToken);
       }
-      this.pos++;
-      if (decl === null)
+      
+      if (decl === null){
         break;
-      else
+      } else {
         vars.concat(decl);
+        this.pos++;
+      }
     }
     return vars;
   }
@@ -115,17 +125,17 @@ class AnalisadorSintatico {
   **/
   parseHasConst () {
     const constToken = this.getToken();
-    if(constToken.type === this.lexer.PR_CONST) {
+    if(constToken.type === this.lexerClass.PR_CONST) {
       this.pos++;
       const typeToken = this.getToken();
       if(!this.isVariableType(typeToken)) {
         throw SintaxError.createError(this.getCommaTypeString(), typeToken);
       }
       this.pos++;;
-      return parseDeclararion(typeToken, true);
-    } else if(isVariableType(constToken)) {
+      return this.parseDeclararion(typeToken, true);
+    } else if(this.isVariableType(constToken)) {
       this.pos++;
-      return parseDeclararion(constToken);
+      return this.parseDeclararion(constToken);
     } else {
       return null;
     }
@@ -141,7 +151,7 @@ class AnalisadorSintatico {
     let initial = null;
     let dim1 = null;
     let dim2 = null;
-    if(idToken.type !== this.lexer.ID) {
+    if(idToken.type !== this.lexerClass.ID) {
       throw SintaxError.createError('ID', idToken);
     }
     this.pos++;
@@ -161,12 +171,14 @@ class AnalisadorSintatico {
     }
 
     const equalsToken = this.getToken();
-    if(equalsToken.type === this.lexer.ATRIBUICAO) {
+    if(equalsToken.type === this.lexerClass.ATRIBUICAO) {
       //process Expression(EAnd) => initial != null
+      console.log("= founds");
     }
 
     const commaToken = this.getToken();
-    if(commaToken.type === this.lexer.VIRGULA) {
+    if(commaToken.type === this.lexerClass.VIRGULA) {
+      console.log("comma found");
       this.pos++;
       return [{
         isConst: isConst,
@@ -178,13 +190,20 @@ class AnalisadorSintatico {
       }]
       .concat(this.parseDeclararion(typeToken, isConst));
     } else {
-      return [{isConst: isConst, tipo: typeToken.text, id: idToken.text. initial: initial}];
+       return [{
+        isConst: isConst,
+        tipo: typeToken.text,
+        id: idToken.text,
+        lines: dim1,
+        columns: dim2,
+        initial: initial
+      }]
     }
   }
 
   consumeNewLines () {
-    token = this.getToken();
-    while(token.type === this.lexer.EOS && token.text.match('[\r\n]')) {
+    let token = this.getToken();
+    while(token.type === this.lexerClass.EOS && token.text.match('[\r\n]+')) {
       this.pos++;
       token = this.getToken();
     }
@@ -200,9 +219,10 @@ class AnalisadorSintatico {
   **/
   getArrayDimension () {
     const dimToken = this.getToken();
-    if(dimToken.type !== this.lexer.PR_INTEIRO || dimToken.type !== this.lexer.ID) {
+    if(dimToken.type !== this.lexerClass.INTEIRO && dimToken.type !== this.lexerClass.ID) {
       throw SintaxError.createError('int or ID', dimToken);
     }
+    this.pos++;
     return dimToken.text;
   }
 

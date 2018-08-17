@@ -1,35 +1,32 @@
-import { InputStream, CommonTokenStream } from 'antlr4/index';
-import Parsers from '../grammar/';
+import {
+    InputStream,
+    CommonTokenStream
+} from 'antlr4/index';
+import { AnalisadorSintatico } from './asa/analisadorSintatico';
+import Lexers from '../grammar/';
 
 const lang = 'pt_br';
 
-const ivprogParser = Parsers[lang];
+const ivprogLexer = Lexers[lang];
 
 const input = `programa {
-  const real PI = 0x25ff
-  funcao inteiro casa(inteiro a, inteiro[][] b) {
-    cadeia s = "teste"
-    escreva(s)
-    se (a <= 5) {
-      a = 10;
-    }
-    senao se (a > 5 E a < 10) {
-      a = 15
-    } senao {
-      a = 20
-    }
-  }
+  const real PI
+  const inteiro a[5][5]
+
 }`;
-const lexer = new ivprogParser(new InputStream(input));
-const parser = new CommonTokenStream(lexer);
-parser.fill();
+const lexer = new ivprogLexer(new InputStream(input));
+const stream = new CommonTokenStream(lexer);
+stream.fill();
 let i = 1;
 let token = null;
-while((token = parser.LT(i)).type !== ivprogParser.EOF && token.type !== ivprogParser.ESPACO) {
-  console.log(`${token.type}-${token.text}`);
-  console.log('\n')
-  i++;
+while ((token = stream.LT(i)).type !== ivprogLexer.EOF && token.type !== ivprogLexer.ESPACO) {
+    console.log(`${token.type}-${token.text}`);
+    console.log('\n')
+    i++;
 }
-
-
-
+const anaSin = new AnalisadorSintatico(input, ivprogLexer);
+try {
+  console.log(anaSin.parseTree().global);
+} catch(a) {
+  console.log(a);
+}
