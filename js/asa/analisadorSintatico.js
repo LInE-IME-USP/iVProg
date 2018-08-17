@@ -1,6 +1,8 @@
 import { CommonTokenStream } from 'antlr4/index';
 import { SintaxError } from './SintaxError';
+
 class AnalisadorSintatico {
+
   constructor (lexer) {
     this.lexer = lexer;
     this.tokenStream = new CommonTokenStream(lexer);
@@ -14,7 +16,7 @@ class AnalisadorSintatico {
     return {};
   }
 
-  getToken (index=null) {
+  getToken (index = null) {
     if(index === null)
       index = this.pos;
     return this.tokenStream.LT(index);
@@ -46,7 +48,7 @@ class AnalisadorSintatico {
         console.log(err.message);
       }
     } else {
-      console.log(this.getErrorString(this.lexer.literalNames(this.lexer.PR_PROGRAMA), token));
+      throw SintaxError.createError(this.lexer.literalNames(this.lexer.PR_PROGRAMA), token);
     }
     return null;
   }
@@ -54,14 +56,14 @@ class AnalisadorSintatico {
   parseOpenCurly () {
     let token = null;
     if(this.lexer.ABRE_CHA !== (token = this.getToken()).type){
-      throw new SintaxError(this.getErrorString('{', token));
+      throw SintaxError.createError(this.getErrorString('{', token));
     }
   }
 
   parseCloseCurly () {
     let token = null;
     if(this.lexer.FECHA_CHA !== (token = this.getToken()).type){
-      throw new SintaxError(this.getErrorString('}', token));
+      throw SintaxError.createError(this.getErrorString('}', token));
     }
   }
 
@@ -70,11 +72,11 @@ class AnalisadorSintatico {
     while(true) {
       const decl = this.parseHasConst();
       const eosToken = this.getToken();
-      if(eosToken.type !== this.lexer.EOS) {
-        throw new SintaxError('new line or \';\'', eosToken);
+      if (eosToken.type !== this.lexer.EOS) {
+        throw SintaxError.createError('new line or \';\'', eosToken);
       }
       this.pos++;
-      if ( decl === null)
+      if (decl === null)
         break;
       else
         vars.push(decl);
@@ -96,9 +98,9 @@ class AnalisadorSintatico {
         throw SintaxError.createError(this.getCommaTypeString(), typeToken);
       }
       this.pos++;;
-      return parseDeclararion(true, typeToken);
+      return parseDeclararion(typeToken, true);
     } else if(isVariableType(constToken)) {
-      return parseDeclararion();
+      return parseDeclararion(constToken);
     } else {
       return null;
     }
@@ -142,7 +144,7 @@ class AnalisadorSintatico {
 
   getCommaTypeString () {
     return this.variableTypes.map( x => this.lexer.literalNames[x])
-        .reduce((o, n) => {
+      .reduce((o, n) => {
         if (o.length <= 0)
           return n;
         else
