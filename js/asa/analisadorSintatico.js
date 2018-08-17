@@ -29,14 +29,14 @@ class AnalisadorSintatico {
       try {
         this.pos++;
         this.consumeNewLines();
-        parseOpenCurly();
+        checkOpenCurly();
         this.pos++;
         this.consumeNewLines();
         const globalVars = parseGlobalVariables();
         this.consumeNewLines();
         const functions = parseFunctions();
         this.consumeNewLines();
-        parseCloseCurly();
+        checkCloseCurly();
         this.pos++;
         this.consumeNewLines();
         if(this.lexer.EOF !== (token = this.getToken()).type) {
@@ -53,19 +53,43 @@ class AnalisadorSintatico {
     return null;
   }
 
-  parseOpenCurly () {
+  checkOpenCurly () {
     let token = null;
     if(this.lexer.ABRE_CHA !== (token = this.getToken()).type){
       throw SintaxError.createError(this.getErrorString('{', token));
     }
   }
 
-  parseCloseCurly () {
+  checkCloseCurly () {
     let token = null;
     if(this.lexer.FECHA_CHA !== (token = this.getToken()).type){
       throw SintaxError.createError(this.getErrorString('}', token));
     }
   }
+
+  checkOpenBrace (attempt = false) {
+    const token = this.getToken();
+    if(this.lexer.ABRE_COL !== token.type){
+      if (!attempt) {
+        throw SintaxError.createError(this.getErrorString('[', token));
+      } else {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  checkCloseBrace (attempt = false) {
+    const token = this.getToken();
+    if(this.lexer.FECHA_COL !== token.type){
+      if (!attempt) {
+        throw SintaxError.createError(this.getErrorString(']', token));
+      } else {
+        return false;
+      }
+    }
+    return true;
+  } 
 
   parseGlobalVariables () {
     let vars = [];
@@ -79,7 +103,7 @@ class AnalisadorSintatico {
       if (decl === null)
         break;
       else
-        vars.push(decl);
+        vars.concat(decl);
     }
     return vars;
   }
@@ -100,6 +124,7 @@ class AnalisadorSintatico {
       this.pos++;;
       return parseDeclararion(typeToken, true);
     } else if(isVariableType(constToken)) {
+      this.pos++;
       return parseDeclararion(constToken);
     } else {
       return null;
@@ -111,22 +136,49 @@ class AnalisadorSintatico {
   * Parses a declarion of the form: type --- id --- (= --- EAnd)?
   * @returns Declararion(const, type, id, initVal?)
   **/
-  parseDeclararion (isConst = false) {
-    const typeToken = this.getToken();
-    if(!this.isVariableType(typeToken)) {
-      throw SintaxError.createError(this.getCommaTypeString(), typeToken);
-    }
-    this.pos++;
+  parseDeclararion (typeToken, isConst = false) {
     const idToken = this.getToken();
+    let initial = null;
+    let dim1 = null;
+    let dim2 = null;
     if(idToken.type !== this.lexer.ID) {
       throw SintaxError.createError('ID', idToken);
     }
     this.pos++;
+    // Check for array or vector
+    // ID[int/IDi][int/IDj]
+    if (this.checkOpenBrace(true)) {
+      this.pos++;
+      dim1 = this.getArrayDimension();
+      this.checkCloseBrace();
+      this.pos++;
+      if(this.checkOpenBrace(true)) {
+        this.pos++;
+        dim2 = this.getArrayDimension();
+        this.checkCloseBrace();
+        this.pos++;
+      }
+    }
+
     const equalsToken = this.getToken();
     if(equalsToken.type === this.lexer.ATRIBUICAO) {
-      //process Expression
+      //process Expression(EAnd) => initial != null
+    }
+
+    const commaToken = this.getToken();
+    if(commaToken.type === this.lexer.VIRGULA) {
+      this.pos++;
+      return [{
+        isConst: isConst,
+        tipo: typeToken.text,
+        id: idToken.text,
+        lines: dim1,
+        columns: dim2,
+        initial: initial
+      }]
+      .concat(this.parseDeclararion(typeToken, isConst));
     } else {
-      return {isConst: isConst, tipo: typeToken.text, id: idToken.text};
+      return [{isConst: isConst, tipo: typeToken.text, id: idToken.text. initial: initial}];
     }
   }
 
@@ -140,6 +192,18 @@ class AnalisadorSintatico {
 
   isVariableType (token) {
     return this.variableTypes.find(v => v === token.type);
+  }
+
+  /*
+  * Reads the next token of the stream to check if it is a Integer or an ID.
+  * @returns Integer | ID
+  **/
+  getArrayDimension () {
+    const dimToken = this.getToken();
+    if(dimToken.type !== this.lexer.PR_INTEIRO || dimToken.type !== this.lexer.ID) {
+      throw SintaxError.createError('int or ID', dimToken);
+    }
+    return dimToken.text;
   }
 
   getCommaTypeString () {
