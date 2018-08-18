@@ -1,5 +1,5 @@
 import { CommonTokenStream, InputStream } from 'antlr4/index';
-import { SintaxError } from './SintaxError';
+import { SyntaxError } from './SyntaxError';
 
 export class AnalisadorSintatico {
 
@@ -9,17 +9,20 @@ export class AnalisadorSintatico {
     this.tokenStream = new CommonTokenStream(this.lexer);
     this.tokenStream.fill();
     this.pos = 1;
-    this.variableTypes = [this.lexerClass.PR_INTEIRO, this.lexerClass.PR_REAL, this.lexerClass.PR_LOGICO, this.lexerClass.PR_CADEIA];
-
+    this.variableTypes = [this.lexerClass.PR_INTEIRO,
+      this.lexerClass.PR_REAL,
+      this.lexerClass.PR_LOGICO,
+      this.lexerClass.PR_CADEIA
+    ];
   }
 
   parseTree () {
     return this.parseProgram();
   }
 
-  getToken (index = null) {
-    if(index === null)
-      index = this.pos;
+  getToken (index = this.pos) {
+    // if(index === null)
+    //   index = this.pos;
     return this.tokenStream.LT(index);
   }
 
@@ -29,7 +32,7 @@ export class AnalisadorSintatico {
   }
 
   parseProgram () {
-    let token = this.getToken();
+    const token = this.getToken();
 
     if(this.lexerClass.PR_PROGRAMA === token.type) {
       this.pos++;
@@ -49,21 +52,21 @@ export class AnalisadorSintatico {
       }
       return {global: globalVars, functions: functions};
     } else {
-      throw SintaxError.createError(this.lexer.literalNames[this.lexerClass.PR_PROGRAMA], token);
+      throw SyntaxError.createError(this.lexer.literalNames[this.lexerClass.PR_PROGRAMA], token);
     }
   }
 
   checkOpenCurly () {
-    let token = null;
-    if(this.lexerClass.ABRE_CHA !== (token = this.getToken()).type){
-      throw SintaxError.createError('{', token);
+    const token = this.getToken();
+    if(this.lexerClass.ABRE_CHA !== token.type){
+      throw SyntaxError.createError('{', token);
     }
   }
 
   checkCloseCurly () {
-    let token = null;
-    if(this.lexerClass.FECHA_CHA !== (token = this.getToken()).type){
-      throw SintaxError.createError('}', token);
+    const token = this.getToken();
+    if(this.lexerClass.FECHA_CHA !== token.type){
+      throw SyntaxError.createError('}', token);
     }
   }
 
@@ -79,7 +82,7 @@ export class AnalisadorSintatico {
     const token = this.getToken();
     if(this.lexerClass.ABRE_COL !== token.type){
       if (!attempt) {
-        throw SintaxError.createError('[', token);
+        throw SyntaxError.createError('[', token);
       } else {
         return false;
       }
@@ -91,7 +94,31 @@ export class AnalisadorSintatico {
     const token = this.getToken();
     if(this.lexerClass.FECHA_COL !== token.type){
       if (!attempt) {
-        throw SintaxError.createError(']', token);
+        throw SyntaxError.createError(']', token);
+      } else {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  checkOpenParenthesis (attempt = false) {
+    const token = this.getToken();
+    if(this.lexerClass.ABRE_PAR !== token.type){
+      if (!attempt) {
+        throw SyntaxError.createError('(', token);
+      } else {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  checkCloseParenthesis (attempt = false) {
+    const token = this.getToken();
+    if(this.lexerClass.FECHA_PAR !== token.type){
+      if (!attempt) {
+        throw SyntaxError.createError(')', token);
       } else {
         return false;
       }
@@ -105,13 +132,13 @@ export class AnalisadorSintatico {
       const decl = this.parseHasConst();
       const eosToken = this.getToken();
       if (decl !== null && eosToken.type !== this.lexerClass.EOS) {
-        throw SintaxError.createError('new line or \';\'', eosToken);
+        throw SyntaxError.createError('new line or \';\'', eosToken);
       }
-      
+
       if (decl === null){
         break;
       } else {
-        vars.concat(decl);
+        vars = vars.concat(decl);
         this.pos++;
       }
     }
@@ -129,7 +156,7 @@ export class AnalisadorSintatico {
       this.pos++;
       const typeToken = this.getToken();
       if(!this.isVariableType(typeToken)) {
-        throw SintaxError.createError(this.getCommaTypeString(), typeToken);
+        throw SyntaxError.createError(this.getTypesAsString(), typeToken);
       }
       this.pos++;;
       return this.parseDeclararion(typeToken, true);
@@ -147,12 +174,12 @@ export class AnalisadorSintatico {
   * @returns Declararion(const, type, id, initVal?)
   **/
   parseDeclararion (typeToken, isConst = false) {
-    const idToken = this.getToken();
     let initial = null;
     let dim1 = null;
     let dim2 = null;
+    const idToken = this.getToken();
     if(idToken.type !== this.lexerClass.ID) {
-      throw SintaxError.createError('ID', idToken);
+      throw SyntaxError.createError('ID', idToken);
     }
     this.pos++;
     // Check for array or vector
@@ -173,7 +200,7 @@ export class AnalisadorSintatico {
     const equalsToken = this.getToken();
     if(equalsToken.type === this.lexerClass.ATRIBUICAO) {
       //process Expression(EAnd) => initial != null
-      console.log("= founds");
+      console.log("= found");
     }
 
     const commaToken = this.getToken();
@@ -219,14 +246,130 @@ export class AnalisadorSintatico {
   **/
   getArrayDimension () {
     const dimToken = this.getToken();
-    if(dimToken.type !== this.lexerClass.INTEIRO && dimToken.type !== this.lexerClass.ID) {
-      throw SintaxError.createError('int or ID', dimToken);
+    if(dimToken.type === this.lexerClass.INTEIRO) {
+      //parse as int literal
+      this.pos++;
+      return this.parseIntLiteral(dimToken);
+    } else if(dimToken.type === this.lexerClass.ID) {
+      //parse as variable
+      this.pos++;
+      return this.parseVariable(dimToken);
+    } else {
+      throw SyntaxError.createError('int or ID', dimToken);
     }
-    this.pos++;
-    return dimToken.text;
   }
 
-  getCommaTypeString () {
+  /*
+  * Returns an object {type: 'int', value: value}.
+  * It checks for binary and hexadecimal integers.
+  * @returns object with fields type and value
+  **/
+  parseIntLiteral (token) {
+    const text = token.text;
+    let val = null;
+    if(text.match('^0b|^0B')) {
+      val = parseInt(text.substring(2), 2);
+    } else if (text.match('^0x|^0X')) {
+      val = parseInt(text.substring(2), 16);
+    } else {
+      val = parseInt(text);
+    }
+    return {type: 'int', value: val};
+  }
+
+  parseRealLiteral (token) {
+    return {type: 'real', value: parseFloat(token.text)};
+  }
+
+  /*
+  * Returns an object {type: 'variable', value: value}.
+  * @returns object with fields type and value
+  **/
+  parseVariable (token) {
+    return {type: 'variable', value: token.text};
+  }
+
+  parseFunctions () {
+    let list = [];
+    while(true) {
+      const f = this.parseFunction();
+      if(f === null)
+        break;
+
+    }
+    return list;
+  }
+
+  /*
+  * Returns an object representing a function. It has
+  * four attributes: returnType, id, formalParams and block.
+  * The block object has two attributes: declarations and commands
+  **/
+  parseFunction () {
+    const token = this.getToken();
+    if(token.type !== this.lexerClass.PR_FUNCAO) {
+      //throw SyntaxError.createError(this.lexer.literalNames[this.lexerClass.PR_FUNCAO], token);
+      return null;
+    }
+    this.pos++;
+    this.consumeNewLines();
+    const returnType = this.parseFunctionType();
+    this.consumeNewLines();
+    const functionID = this.parseFunctionID();
+    this.consumeNewLines();
+    this.checkOpenParenthesis();
+    this.pos++;
+    this.consumeNewLines();
+    const formalParams = []; // formal parameters list
+    this.consumeNewLines();
+    this.checkCloseParenthesis();
+    this.pos++;
+    this.consumeNewLines();
+    const commandsBlock = this.parseFunctionBody();
+    return {returnType: returnType, id: functionID, formalParams: formalParams, block: commandsBlock};
+  }
+
+  parseFunctionID () {
+    const token = this.getToken();
+    if(token.type !== this.lexerClass.ID) {
+      throw SyntaxError.createError('ID', token);
+    }
+    this.pos++;
+    return token.text;
+  }
+
+  parseFunctionType () {
+    const token = this.getToken();
+    if(token.type === this.lexerClass.ID) {
+      return 'void';
+    } else if (token.type === this.lexerClass.PR_VAZIO) {
+      this.pos++;
+      return 'void';
+    } else if (this.isVariableType(token)) {
+      this.pos++;
+      switch(token.type) {
+        case this.lexerClass.PR_INTEIRO:
+          return 'int';
+        case this.lexerClass.PR_LOGICO:
+          return 'logic';
+        case this.lexerClass.PR_REAL:
+          return 'real';
+        case this.lexerClass.PR_CADEIA:
+          return 'string';
+      }
+    }
+  }
+
+  parseFunctionBody () {
+    this.checkOpenCurly();
+    this.pos++;
+    while(true) {
+      this.consumeNewLines();
+      const token = this.getToken();
+    }
+  }
+
+  getTypesAsString () {
     return this.variableTypes.map( x => this.lexer.literalNames[x])
       .reduce((o, n) => {
         if (o.length <= 0)
