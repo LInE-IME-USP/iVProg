@@ -39,6 +39,16 @@
 		"es": "booleano",
 		"pt": "booleano"
 	},
+	"true": {
+		"en": "true",
+		"es": "verdadero",
+		"pt": "verdadeiro"
+	},
+	"false": {
+		"en": "false",
+		"es": "falso",
+		"pt": "falso"
+	},
 	"Variable": {
 		"en": "Variable",
 		"es": "Variable",

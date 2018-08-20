@@ -3,12 +3,14 @@
 // Não adicionar elementos ao tipoDados, pois existem componentes que dependem do seu tamanho e isso afetará seu funcionamento
 var tiposDados = Object.freeze({void:"void", integer:"integer", real:"real", text:"text", boolean:"boolean", vector:"vector"});
 
-var Variavel = function(tipo, nome, valor, dimensoes = 0, eh_constante = false) {
+var Variavel = function(tipo, nome, valor, dimensoes = 0, eh_constante = false, linhas = 0, colunas = 0) {
 	this.tipo = tipo;
 	this.nome = nome;
 	this.valor = valor;
 	this.dimensoes = dimensoes;
 	this.eh_constante = eh_constante;
+	this.linhas = linhas;
+	this.colunas = colunas;
 };
 
 var Funcao = function(nome, tipo_retorno = tiposDados.void, dimensoes_retorno = 0, lista_parametros = null, eh_principal = false, esta_oculta = false, variaveis = null) {

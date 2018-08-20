@@ -193,3 +193,19 @@ body {
 .function_return .dropdown .icon, .parameter_type .dropdown .icon {
 	margin-left: 6px;
 }
+.tabela_var {
+	display: inline;
+}
+.buttons_manage_columns i, .tr_manage_lines i {
+	cursor: pointer;
+	display: inline;
+}
+div.buttons_manage_columns {
+	display: inline;
+}
+.tr_manage_lines {
+	text-align: center;
+}
+.div_valor_var {
+	display: inline;
+}

@@ -116,7 +116,6 @@ function addHandlers() {
 				}
 				for (tm in tiposDados) {
 					if ($selectedItem.hasClass(tm)) {
-						console.log("possui: " + tm);
 						updateVariableType(fun, seq, tm, dim);
 						break;
 					} 
@@ -130,6 +129,179 @@ function addHandlers() {
 function updateVariableType(wich_function, wich_variable, new_value, new_dimensions) {
 	programa.funcoes[wich_function].variaveis[wich_variable].tipo = new_value;
 	programa.funcoes[wich_function].variaveis[wich_variable].dimensoes = new_dimensions;
+
+	if (new_dimensions > 0) {
+		programa.funcoes[wich_function].variaveis[wich_variable].linhas = new_dimensions;
+		programa.funcoes[wich_function].variaveis[wich_variable].colunas = 2;
+	}
+
+	if (new_value == tiposDados.integer) {
+		if (new_dimensions == 0) {
+			programa.funcoes[wich_function].variaveis[wich_variable].valor = 1;
+		}
+		if (new_dimensions == 1) {
+			programa.funcoes[wich_function].variaveis[wich_variable].valor = [1, 1];
+		}
+		if (new_dimensions == 2) {
+			programa.funcoes[wich_function].variaveis[wich_variable].valor = [[1, 1], [1, 1]];
+		}
+	}
+
+	if (new_value == tiposDados.real) {
+		if (new_dimensions == 0) {
+			programa.funcoes[wich_function].variaveis[wich_variable].valor = 1.0;
+		}
+		if (new_dimensions == 1) {
+			programa.funcoes[wich_function].variaveis[wich_variable].valor = [1.0, 1.0];
+		}
+		if (new_dimensions == 2) {
+			programa.funcoes[wich_function].variaveis[wich_variable].valor = [[1.0, 1.0], [1.0, 1.0]];
+		}
+	}
+
+	if (new_value == tiposDados.text) {
+		if (new_dimensions == 0) {
+			programa.funcoes[wich_function].variaveis[wich_variable].valor = i18n(tiposDados.text);
+		}
+		if (new_dimensions == 1) {
+			programa.funcoes[wich_function].variaveis[wich_variable].valor = [i18n(tiposDados.text), i18n(tiposDados.text)];
+		}
+		if (new_dimensions == 2) {
+			programa.funcoes[wich_function].variaveis[wich_variable].valor = [[i18n(tiposDados.text), i18n(tiposDados.text)], [i18n(tiposDados.text), i18n(tiposDados.text)]];
+		}
+	}
+
+	if (new_value == tiposDados.boolean) {
+		if (new_dimensions == 0) {
+			programa.funcoes[wich_function].variaveis[wich_variable].valor = true;
+		}
+		if (new_dimensions == 1) {
+			programa.funcoes[wich_function].variaveis[wich_variable].valor = [true, true];
+		}
+		if (new_dimensions == 2) {
+			programa.funcoes[wich_function].variaveis[wich_variable].valor = [[true, true], [true, true]];
+		}
+	}
+
+	renderAlgorithm();
+}
+
+function addColumnVector(which_function, which_variable) {
+	programa.funcoes[which_function].variaveis[which_variable].colunas ++;
+
+	if (programa.funcoes[which_function].variaveis[which_variable].tipo == tiposDados.integer) {
+		programa.funcoes[which_function].variaveis[which_variable].valor.push(1);
+	}
+	if (programa.funcoes[which_function].variaveis[which_variable].tipo == tiposDados.real) {
+		programa.funcoes[which_function].variaveis[which_variable].valor.push(1.0);
+	}
+	if (programa.funcoes[which_function].variaveis[which_variable].tipo == tiposDados.text) {
+		programa.funcoes[which_function].variaveis[which_variable].valor.push(i18n(tiposDados.text));
+	}
+	if (programa.funcoes[which_function].variaveis[which_variable].tipo == tiposDados.boolean) {
+		programa.funcoes[which_function].variaveis[which_variable].valor.push(true);
+	}
+	renderAlgorithm();
+}
+
+function addColumnMatrix(which_function, which_variable) {
+	programa.funcoes[which_function].variaveis[which_variable].colunas ++;
+
+	if (programa.funcoes[which_function].variaveis[which_variable].tipo == tiposDados.integer) {
+		for (i = 0; i < programa.funcoes[which_function].variaveis[which_variable].linhas; i++) {
+			programa.funcoes[which_function].variaveis[which_variable].valor[i].push(1);
+		}
+	}
+
+	if (programa.funcoes[which_function].variaveis[which_variable].tipo == tiposDados.real) {
+		for (i = 0; i < programa.funcoes[which_function].variaveis[which_variable].linhas; i++) {
+			programa.funcoes[which_function].variaveis[which_variable].valor[i].push(1.0);
+		}
+	}
+
+	if (programa.funcoes[which_function].variaveis[which_variable].tipo == tiposDados.text) {
+		for (i = 0; i < programa.funcoes[which_function].variaveis[which_variable].linhas; i++) {
+			programa.funcoes[which_function].variaveis[which_variable].valor[i].push(i18n(tiposDados.text));
+		}
+	}
+
+	if (programa.funcoes[which_function].variaveis[which_variable].tipo == tiposDados.boolean) {
+		for (i = 0; i < programa.funcoes[which_function].variaveis[which_variable].linhas; i++) {
+			programa.funcoes[which_function].variaveis[which_variable].valor[i].push(true);
+		}
+	}
+	renderAlgorithm();
+}
+
+function addLineMatrix(which_function, which_variable) {
+	programa.funcoes[which_function].variaveis[which_variable].linhas ++;
+
+	if (programa.funcoes[which_function].variaveis[which_variable].tipo == tiposDados.integer) {
+		var n_l = [];
+		for (i = 0; i < programa.funcoes[which_function].variaveis[which_variable].colunas; i++) {
+			n_l.push(1);
+		}
+		programa.funcoes[which_function].variaveis[which_variable].valor.push(n_l);
+	}
+	if (programa.funcoes[which_function].variaveis[which_variable].tipo == tiposDados.real) {
+		var n_l = [];
+		for (i = 0; i < programa.funcoes[which_function].variaveis[which_variable].colunas; i++) {
+			n_l.push(1.0);
+		}
+		programa.funcoes[which_function].variaveis[which_variable].valor.push(n_l);
+	}
+
+	if (programa.funcoes[which_function].variaveis[which_variable].tipo == tiposDados.text) {
+		var n_l = [];
+		for (i = 0; i < programa.funcoes[which_function].variaveis[which_variable].colunas; i++) {
+			n_l.push(i18n(tiposDados.text));
+		}
+		programa.funcoes[which_function].variaveis[which_variable].valor.push(n_l);
+	}
+
+	if (programa.funcoes[which_function].variaveis[which_variable].tipo == tiposDados.boolean) {
+		var n_l = [];
+		for (i = 0; i < programa.funcoes[which_function].variaveis[which_variable].colunas; i++) {
+			n_l.push(true);
+		}
+		programa.funcoes[which_function].variaveis[which_variable].valor.push(n_l);
+	}
+	renderAlgorithm();
+}
+
+function removeColumnVector(which_function, which_variable) {
+	if (programa.funcoes[which_function].variaveis[which_variable].colunas == 0) {
+		return;
+	}
+
+	programa.funcoes[which_function].variaveis[which_variable].colunas --;
+	programa.funcoes[which_function].variaveis[which_variable].valor.splice(programa.funcoes[which_function].variaveis[which_variable].valor.length - 1, 1);
+	renderAlgorithm();
+}
+
+function removeColumnMatrix(which_function, which_variable) {
+	if (programa.funcoes[which_function].variaveis[which_variable].colunas == 0) {
+		return;
+	}
+
+	programa.funcoes[which_function].variaveis[which_variable].colunas --;
+
+	for (i = 0; i < programa.funcoes[which_function].variaveis[which_variable].linhas; i++) {
+		programa.funcoes[which_function].variaveis[which_variable].valor[i].splice(programa.funcoes[which_function].variaveis[which_variable].valor[i].length - 1, 1);
+	}
+
+	renderAlgorithm();
+}
+
+function removeLineMatrix(which_function, which_variable) {
+	if (programa.funcoes[which_function].variaveis[which_variable].linhas == 0) {
+		return;
+	}
+
+	programa.funcoes[which_function].variaveis[which_variable].linhas --;
+	programa.funcoes[which_function].variaveis[which_variable].valor.splice(programa.funcoes[which_function].variaveis[which_variable].valor.length - 1, 1);
+
+	renderAlgorithm();
 }
 
 
@@ -171,8 +343,6 @@ function updateParameterType(wich_function, wich_parameter, new_value, new_dimen
 	programa.funcoes[wich_function].lista_parametros[wich_parameter].dimensoes = new_dimensions;
 
 }
-
-
 
 var opened_name_function = false;
 var opened_input = null;
@@ -241,6 +411,321 @@ function enableNameFunctionUpdate(div_el, sequence) {
 		}
 	});
 	
+}
+
+function alternateBooleanVarVectorValue(parent_node, which_function, which_var, column_index) {
+	programa.funcoes[which_function].variaveis[which_var].valor[column_index] = !programa.funcoes[which_function].variaveis[which_var].valor[column_index];
+	renderAlgorithm();
+}
+
+function alternateBooleanVarMatrixValue(parent_node, which_function, which_var, row_index, column_index) {
+	programa.funcoes[which_function].variaveis[which_var].valor[row_index][column_index] = !programa.funcoes[which_function].variaveis[which_var].valor[row_index][column_index];
+	renderAlgorithm();
+}
+
+function alternateBooleanVarValue(parent_node, which_function, which_var) {
+	programa.funcoes[which_function].variaveis[which_var].valor = !programa.funcoes[which_function].variaveis[which_var].valor;
+	renderAlgorithm();
+}
+
+var opened_name_value_vector_variable = false;
+var opened_input_value_vector_variable = null;
+var sequence_name_opened_value_vector_variable;
+var sequence_function_opened_value_vector_variable;
+function enableVarVectorValueUpdate(parent_node, which_function, which_parameter, column_index) {
+	if (opened_name_value_vector_variable) {
+		$(opened_input_value_vector_variable).focus();
+		return;
+	}
+	opened_name_value_vector_variable = true;
+	sequence_name_opened_value_vector_variable = which_parameter;
+	sequence_function_opened_value_vector_variable = which_function;
+
+	$(parent_node).find('.span_value_variable').text('');
+
+	if (programa.funcoes[which_function].variaveis[which_parameter].tipo == tiposDados.real) {
+		$( "<input type='text' class='width-dynamic input_name_function' autocomplete='off' autocorrect='off' autocapitalize='off' spellcheck='false' value='"
+			+ programa.funcoes[which_function].variaveis[which_parameter].valor[column_index].toFixed(1) + "' />" ).insertBefore($(parent_node).find('.span_value_variable'));
+	} else {
+		$( "<input type='text' class='width-dynamic input_name_function' autocomplete='off' autocorrect='off' autocapitalize='off' spellcheck='false' value='"
+			+ programa.funcoes[which_function].variaveis[which_parameter].valor[column_index] + "' />" ).insertBefore($(parent_node).find('.span_value_variable'));
+	}
+
+	$('.width-dynamic').on('input', function() {
+	    var inputWidth = $(this).textWidth()+10;
+	    opened_input_value_vector_variable = this;
+	    $(this).focus();
+
+	    var tmpStr = $(this).val();
+		$(this).val('');
+		$(this).val(tmpStr);
+
+	    $(this).css({
+	        width: inputWidth
+	    })
+	}).trigger('input');
+
+	$('.width-dynamic').focusout(function() {
+		/// update array:
+		if ($(this).val().trim()) {
+			if (programa.funcoes[which_function].variaveis[which_parameter].tipo == tiposDados.real) {
+				programa.funcoes[which_function].variaveis[which_parameter].valor[column_index] = parseFloat($(this).val().trim());
+			} else {
+
+				if (programa.funcoes[which_function].variaveis[which_parameter].tipo == tiposDados.integer) {
+					programa.funcoes[which_function].variaveis[which_parameter].valor[column_index] = parseInt($(this).val().trim());
+				} else {
+					programa.funcoes[which_function].variaveis[which_parameter].valor[column_index] = $(this).val().trim();
+				}
+
+			}
+		}
+		$(this).remove();
+
+		/// update elements:
+		opened_name_value_vector_variable = false;
+		opened_input_value_vector_variable = false;
+
+		renderAlgorithm();
+	});
+
+	$('.width-dynamic').on('keydown', function(e) {
+		var code = e.keyCode || e.which;
+		if(code == 13) {
+			if ($(this).val().trim()) {
+				if (programa.funcoes[which_function].variaveis[which_parameter].tipo == tiposDados.real) {
+					programa.funcoes[which_function].variaveis[which_parameter].valor[column_index] = parseFloat($(this).val().trim());
+				} else {
+
+					if (programa.funcoes[which_function].variaveis[which_parameter].tipo == tiposDados.integer) {
+						programa.funcoes[which_function].variaveis[which_parameter].valor[column_index] = parseInt($(this).val().trim());
+					} else {
+						programa.funcoes[which_function].variaveis[which_parameter].valor[column_index] = $(this).val().trim();
+					}
+
+				}
+			}
+			$(this).remove();
+
+			/// update elements:
+			opened_name_value_vector_variable = false;
+			opened_input_value_vector_variable = false;
+
+			renderAlgorithm();
+		}
+		if(code == 27) {
+			if (programa.funcoes[which_function].variaveis[which_parameter].tipo == tiposDados.real) {
+				$(parent_node).find('.span_value_variable').text(programa.funcoes[which_function].variaveis[which_parameter].valor[column_index].toFixed(1));
+			} else {
+				$(parent_node).find('.span_value_variable').text(programa.funcoes[which_function].variaveis[which_parameter].valor[column_index]);
+			}
+
+			$(this).remove();
+
+			/// update elements:
+			opened_name_value_vector_variable = false;
+			opened_input_value_vector_variable = false;
+		}
+	});
+}
+
+var opened_name_value_matrix_variable = false;
+var opened_input_value_matrix_variable = null;
+var sequence_name_opened_value_matrix_variable;
+var sequence_function_opened_value_matrix_variable;
+function enableVarMatrixValueUpdate(parent_node, which_function, which_parameter, row_index, column_index) {
+	if (opened_name_value_matrix_variable) {
+		$(opened_input_value_matrix_variable).focus();
+		return;
+	}
+	opened_name_value_matrix_variable = true;
+	sequence_name_opened_value_matrix_variable = which_parameter;
+	sequence_function_opened_value_matrix_variable = which_function;
+
+	$(parent_node).find('.span_value_variable').text('');
+
+	if (programa.funcoes[which_function].variaveis[which_parameter].tipo == tiposDados.real) {
+		$( "<input type='text' class='width-dynamic input_name_function' autocomplete='off' autocorrect='off' autocapitalize='off' spellcheck='false' value='"
+			+ programa.funcoes[which_function].variaveis[which_parameter].valor[row_index][column_index].toFixed(1) + "' />" ).insertBefore($(parent_node).find('.span_value_variable'));
+	} else {
+		$( "<input type='text' class='width-dynamic input_name_function' autocomplete='off' autocorrect='off' autocapitalize='off' spellcheck='false' value='"
+			+ programa.funcoes[which_function].variaveis[which_parameter].valor[row_index][column_index] + "' />" ).insertBefore($(parent_node).find('.span_value_variable'));
+	}
+
+	$('.width-dynamic').on('input', function() {
+	    var inputWidth = $(this).textWidth()+10;
+	    opened_input_value_matrix_variable = this;
+	    $(this).focus();
+
+	    var tmpStr = $(this).val();
+		$(this).val('');
+		$(this).val(tmpStr);
+
+	    $(this).css({
+	        width: inputWidth
+	    })
+	}).trigger('input');
+
+	$('.width-dynamic').focusout(function() {
+		/// update array:
+		if ($(this).val().trim()) {
+			if (programa.funcoes[which_function].variaveis[which_parameter].tipo == tiposDados.real) {
+				programa.funcoes[which_function].variaveis[which_parameter].valor[row_index][column_index] = parseFloat($(this).val().trim());
+			} else {
+
+				if (programa.funcoes[which_function].variaveis[which_parameter].tipo == tiposDados.integer) {
+					programa.funcoes[which_function].variaveis[which_parameter].valor[row_index][column_index] = parseInt($(this).val().trim());
+				} else {
+					programa.funcoes[which_function].variaveis[which_parameter].valor[row_index][column_index] = $(this).val().trim();
+				}
+
+			}
+		}
+		$(this).remove();
+
+		/// update elements:
+		opened_name_value_matrix_variable = false;
+		opened_input_value_matrix_variable = false;
+
+		renderAlgorithm();
+	});
+
+	$('.width-dynamic').on('keydown', function(e) {
+		var code = e.keyCode || e.which;
+		if(code == 13) {
+			if ($(this).val().trim()) {
+				if (programa.funcoes[which_function].variaveis[which_parameter].tipo == tiposDados.real) {
+					programa.funcoes[which_function].variaveis[which_parameter].valor[row_index][column_index] = parseFloat($(this).val().trim());
+				} else {
+
+					if (programa.funcoes[which_function].variaveis[which_parameter].tipo == tiposDados.integer) {
+						programa.funcoes[which_function].variaveis[which_parameter].valor[row_index][column_index] = parseInt($(this).val().trim());
+					} else {
+						programa.funcoes[which_function].variaveis[which_parameter].valor[row_index][column_index] = $(this).val().trim();
+					}
+
+				}
+			}
+			$(this).remove();
+
+			/// update elements:
+			opened_name_value_matrix_variable = false;
+			opened_input_value_matrix_variable = false;
+
+			renderAlgorithm();
+		}
+		if(code == 27) {
+			if (programa.funcoes[which_function].variaveis[which_parameter].tipo == tiposDados.real) {
+				$(parent_node).find('.span_value_variable').text(programa.funcoes[which_function].variaveis[which_parameter].valor[row_index][column_index].toFixed(1));
+			} else {
+				$(parent_node).find('.span_value_variable').text(programa.funcoes[which_function].variaveis[which_parameter].valor[row_index][column_index]);
+			}
+
+			$(this).remove();
+
+			/// update elements:
+			opened_name_value_matrix_variable = false;
+			opened_input_value_matrix_variable = false;
+		}
+	});
+}
+
+var opened_name_value_variable = false;
+var opened_input_value_variable = null;
+var sequence_name_opened_value_variable;
+var sequence_function_opened_value_variable;
+function enableVarValueUpdate(parent_node, which_function, which_parameter) {
+	if (opened_name_value_variable) {
+		$(opened_input_value_variable).focus();
+		return;
+	}
+	opened_name_value_variable = true;
+	sequence_name_opened_value_variable = which_parameter;
+	sequence_function_opened_value_variable = which_function;
+
+	$(parent_node).find('.span_value_variable').text('');
+	if (programa.funcoes[which_function].variaveis[which_parameter].tipo == tiposDados.real) {
+		$( "<input type='text' class='width-dynamic input_name_function' autocomplete='off' autocorrect='off' autocapitalize='off' spellcheck='false' value='"
+			+ programa.funcoes[which_function].variaveis[which_parameter].valor.toFixed(1) + "' />" ).insertBefore($(parent_node).find('.span_value_variable'));
+	} else {
+		$( "<input type='text' class='width-dynamic input_name_function' autocomplete='off' autocorrect='off' autocapitalize='off' spellcheck='false' value='"
+			+ programa.funcoes[which_function].variaveis[which_parameter].valor + "' />" ).insertBefore($(parent_node).find('.span_value_variable'));
+	}
+
+	$('.width-dynamic').on('input', function() {
+	    var inputWidth = $(this).textWidth()+10;
+	    opened_input_value_variable = this;
+	    $(this).focus();
+
+	    var tmpStr = $(this).val();
+		$(this).val('');
+		$(this).val(tmpStr);
+
+	    $(this).css({
+	        width: inputWidth
+	    })
+	}).trigger('input');
+
+	$('.width-dynamic').focusout(function() {
+		/// update array:
+		if ($(this).val().trim()) {
+			if (programa.funcoes[which_function].variaveis[which_parameter].tipo == tiposDados.real) {
+				programa.funcoes[which_function].variaveis[which_parameter].valor = parseFloat($(this).val().trim());
+			} else{
+				if (programa.funcoes[which_function].variaveis[which_parameter].tipo == tiposDados.integer) {
+					programa.funcoes[which_function].variaveis[which_parameter].valor = parseInt($(this).val().trim());
+				} else {
+					programa.funcoes[which_function].variaveis[which_parameter].valor = $(this).val().trim();
+				}
+				
+			}
+		}
+		$(this).remove();
+
+		/// update elements:
+		opened_name_value_variable = false;
+		opened_input_value_variable = false;
+
+		renderAlgorithm();
+	});
+
+	$('.width-dynamic').on('keydown', function(e) {
+		var code = e.keyCode || e.which;
+		if(code == 13) {
+			if ($(this).val().trim()) {
+				if (programa.funcoes[which_function].variaveis[which_parameter].tipo == tiposDados.real) {
+					programa.funcoes[which_function].variaveis[which_parameter].valor = parseFloat($(this).val().trim());
+				} else{
+					if (programa.funcoes[which_function].variaveis[which_parameter].tipo == tiposDados.integer) {
+						programa.funcoes[which_function].variaveis[which_parameter].valor = parseInt($(this).val().trim());
+					} else {
+						programa.funcoes[which_function].variaveis[which_parameter].valor = $(this).val().trim();
+					}
+					
+				}
+			}
+			$(this).remove();
+
+			/// update elements:
+			opened_name_value_variable = false;
+			opened_input_value_variable = false;
+
+			renderAlgorithm();
+		}
+		if(code == 27) {
+			if (programa.funcoes[which_function].variaveis[which_parameter].tipo == tiposDados.real) {
+				$(parent_node).find('.span_value_variable').text(programa.funcoes[which_function].variaveis[which_parameter].valor.toFixed(1));
+			} else{
+				$(parent_node).find('.span_value_variable').text(programa.funcoes[which_function].variaveis[which_parameter].valor);
+			}
+
+			$(this).remove();
+
+			/// update elements:
+			opened_name_value_variable = false;
+			opened_input_value_variable = false;
+		}
+	});
 }
 
 var opened_name_variable = false;
@@ -455,7 +940,7 @@ function renderFunctionParameters(function_obj, sequence) {
 		  	for (tm in tiposDados) {
 		  		i ++;
 		  		if (i == 1) { continue; }
-		  		if (i == (Object.keys(tiposDados).length - 1)) { break; }
+		  		if (i == (Object.keys(tiposDados).length)) { break; }
 
 		  		ret += '<div class="item ' + ((par_temp.tipo == tm && par_temp.dimensoes < 1) ? ' selected ' : '') + ' seq_'+j+' fun_'+sequence+' '+tm+'" >'+i18n(tm)+'</div>';
 
@@ -512,7 +997,7 @@ function renderVariables(function_obj, sequence) {
 		  	for (tm in tiposDados) {
 		  		i ++;
 		  		if (i == 1) { continue; }
-		  		if (i == (Object.keys(tiposDados).length - 1)) { break; }
+		  		if (i == (Object.keys(tiposDados).length)) { break; }
 
 		  		ret += '<div class="item ' + (par_temp.tipo == tm ? ' selected ' : '') + ' seq_'+j+' fun_'+sequence+' '+tm+'" >'+i18n(tm)+'</div>';
 
@@ -534,12 +1019,84 @@ function renderVariables(function_obj, sequence) {
 			    	+ '</div>';	
 		  	}
 
-    		ret += '</div></div>';
+    		ret += '</div></div>  = ';
+
+    		if (par_temp.dimensoes == 0) {
+    			if (par_temp.tipo == tiposDados.real) {
+    				ret += '<div class="div_valor_var"><span class="span_value_variable" ondblclick="enableVarValueUpdate(this.parentNode, '+sequence+', '+j+')" >'+par_temp.valor.toFixed(1)+'</span> <i class="icon small pencil alternate enable_edit_name_function" onclick="enableVarValueUpdate(this.parentNode, '+sequence+', '+j+')"></i></div> ';
+    			} else {
+    				if (par_temp.tipo == tiposDados.boolean) {
+	    				ret += '<div class="div_valor_var"><span class="span_value_variable" ondblclick="alternateBooleanVarValue(this.parentNode, '+sequence+', '+j+')" >'+par_temp.valor+'</span> <i class="icon small pencil alternate enable_edit_name_function" onclick="alternateBooleanVarValue(this.parentNode, '+sequence+', '+j+')"></i></div> ';
+	    			} else {
+    					ret += '<div class="div_valor_var"><span class="span_value_variable" ondblclick="enableVarValueUpdate(this.parentNode, '+sequence+', '+j+')" >'+par_temp.valor+'</span> <i class="icon small pencil alternate enable_edit_name_function" onclick="enableVarValueUpdate(this.parentNode, '+sequence+', '+j+')"></i></div> ';
+	    			}
+    			}
+    		} else {
+    			ret += '<table class="tabela_var">';
+
+    			if (par_temp.dimensoes == 1) {
+    				ret += '<tr>';
+    				if (par_temp.tipo == tiposDados.real) {
+    					for (var k = 0; k < par_temp.colunas; k++) {
+	    					ret += '<td><span class="span_value_variable" ondblclick="enableVarVectorValueUpdate(this.parentNode, '+sequence+', '+j+', '+k+')" >'+par_temp.valor[k].toFixed(1)+'</span>'+'</td>';
+	    				}
+    				} else {
+    					for (var k = 0; k < par_temp.colunas; k++) {
+    						if (par_temp.tipo == tiposDados.boolean) {
+    							ret += '<td><span class="span_value_variable" ondblclick="alternateBooleanVarVectorValue(this.parentNode, '+sequence+', '+j+', '+k+')" >'+par_temp.valor[k]+'</span>'+'</td>';
+    						} else {
+    							ret += '<td><span class="span_value_variable" ondblclick="enableVarVectorValueUpdate(this.parentNode, '+sequence+', '+j+', '+k+')" >'+par_temp.valor[k]+'</span>'+'</td>';
+    						}
+    					}
+    				}
+    				
+    				ret += '</tr>';
+    				ret += '</table>';
+
+    				ret += '<div class="buttons_manage_columns"><i class="ui icon minus square outline" onclick="removeColumnVector('+sequence+', '+j+')"></i>'
+    			    	+ ' <i class="ui icon plus square outline" onclick="addColumnVector('+sequence+', '+j+')"></i></div>';
+    			}
+
+    			if (par_temp.dimensoes == 2) {
+    				if (par_temp.tipo == tiposDados.real) {
+    					for (var l = 0; l < par_temp.linhas; l++) {
+		    				ret += '<tr>';
+		    				for (var k = 0; k < par_temp.colunas; k++) {
+		    					ret += '<td><span class="span_value_variable" ondblclick="enableVarMatrixValueUpdate(this.parentNode, '+sequence+', '+j+', '+l+', '+k+')" >'+par_temp.valor[l][k].toFixed(1)+'</span>'+'</td>';
+		    				} 
+		    				ret += '</tr>';
+	    				}
+    				} else {
+    					for (var l = 0; l < par_temp.linhas; l++) {
+		    				ret += '<tr>';
+		    				for (var k = 0; k < par_temp.colunas; k++) {
+		    					if (par_temp.tipo == tiposDados.boolean) { 
+		    						ret += '<td><span class="span_value_variable" ondblclick="alternateBooleanVarMatrixValue(this.parentNode, '+sequence+', '+j+', '+l+', '+k+')" >'+par_temp.valor[l][k]+'</span>'+'</td>';
+		    					} else {
+		    						ret += '<td><span class="span_value_variable" ondblclick="enableVarMatrixValueUpdate(this.parentNode, '+sequence+', '+j+', '+l+', '+k+')" >'+par_temp.valor[l][k]+'</span>'+'</td>';
+		    					}
+		    				} 
+		    				ret += '</tr>';
+	    				}
+    				}
+    				if (par_temp.linhas == 0) {
+    					ret += '<tr><td></td></tr>';
+    				}
+    				ret += '<tr><td colspan="'+par_temp.colunas+'" class="tr_manage_lines"><i class="ui icon minus square outline" onclick="removeLineMatrix('+sequence+', '+j+')"></i>'
+    			    	+ ' <i class="ui icon plus square outline" onclick="addLineMatrix('+sequence+', '+j+')"></i></td></tr>';
+    				ret += '</table>';
+
+    				ret += '<div class="buttons_manage_columns"><i class="ui icon minus square outline" onclick="removeColumnMatrix('+sequence+', '+j+')"></i>'
+    			    	+ ' <i class="ui icon plus square outline" onclick="addColumnMatrix('+sequence+', '+j+')"></i></div>';
+    			}
+
+    			
+    		}
 
 
 
 
-			ret += ' = ' + par_temp.valor + ' <i class="red icon times remove_parameter" onclick="deleteVariable('+sequence+', '+j+')"></i></div>';
+			ret += ' <i class="red icon times remove_parameter" onclick="deleteVariable('+sequence+', '+j+')"></i></div>';
 
 		}
 	}
