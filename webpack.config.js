@@ -11,16 +11,16 @@ module.exports = {
         fs: 'empty',
     },
     module: {
-        rules: [
-            {
-                test: /\.js$/,
-                loader: 'babel-loader',
-                query: {
-                    presets: ['env']
-                }
-            },
-            { test: /\.g4/, loader: 'antlr4-webpack-loader' }
-        ]
+        rules: [{
+            test: /\.js$/,
+            loader: 'babel-loader',
+            query: {
+                presets: ['env']
+            }
+        }, {
+            test: /\.g4/,
+            loader: 'antlr4-webpack-loader'
+        }]
     },
     stats: {
         colors: true

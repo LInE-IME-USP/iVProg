@@ -14,6 +14,7 @@ export class AnalisadorSintatico {
       this.lexerClass.PR_LOGICO,
       this.lexerClass.PR_CADEIA
     ];
+    this.functionTypes = this.variableTypes.push(this.lexerClass.PR_VAZIO);
   }
 
   parseTree () {
@@ -33,16 +34,25 @@ export class AnalisadorSintatico {
 
   parseProgram () {
     const token = this.getToken();
+    let globalVars = [];
+    let functions = [];
 
     if(this.lexerClass.PR_PROGRAMA === token.type) {
       this.pos++;
       this.consumeNewLines();
       this.checkOpenCurly();
       this.pos++;
-      this.consumeNewLines();
-      const globalVars = this.parseGlobalVariables();
-      this.consumeNewLines();
-      const functions = []; // this.parseFunctions();
+      while(true) {
+        this.consumeNewLines();
+        const token = this.getToken();
+        if (token.type === this.lexerClass.PR_CONST || token.type === this.lexerClass.ID) {
+          globalVars = globalVars.concat(this.parseGlobalVariables());
+        } else if (token.type === this.lexerClass.PR_FUNCAO) {
+          functions = functions.concat([]);
+        } else {
+          break;
+        }
+      }
       this.consumeNewLines();
       this.checkCloseCurly();
       this.pos++;
@@ -135,7 +145,7 @@ export class AnalisadorSintatico {
         throw SyntaxError.createError('new line or \';\'', eosToken);
       }
 
-      if (decl === null){
+      if (decl === null) {
         break;
       } else {
         vars = vars.concat(decl);
@@ -154,12 +164,8 @@ export class AnalisadorSintatico {
     const constToken = this.getToken();
     if(constToken.type === this.lexerClass.PR_CONST) {
       this.pos++;
-      const typeToken = this.getToken();
-      if(!this.isVariableType(typeToken)) {
-        throw SyntaxError.createError(this.getTypesAsString(), typeToken);
-      }
-      this.pos++;;
-      return this.parseDeclararion(typeToken, true);
+      const typeString = this.parseType();
+      return this.parseDeclararion(typeString, true);
     } else if(this.isVariableType(constToken)) {
       this.pos++;
       return this.parseDeclararion(constToken);
@@ -171,17 +177,13 @@ export class AnalisadorSintatico {
 
   /*
   * Parses a declarion of the form: type --- id --- (= --- EAnd)?
-  * @returns Declararion(const, type, id, initVal?)
+  * @returns a list of Declararion(const, type, id, initVal?)
   **/
-  parseDeclararion (typeToken, isConst = false) {
+  parseDeclararion (typeString, isConst = false) {
     let initial = null;
     let dim1 = null;
     let dim2 = null;
-    const idToken = this.getToken();
-    if(idToken.type !== this.lexerClass.ID) {
-      throw SyntaxError.createError('ID', idToken);
-    }
-    this.pos++;
+    const idString = this.parseID();
     // Check for array or vector
     // ID[int/IDi][int/IDj]
     if (this.checkOpenBrace(true)) {
@@ -209,18 +211,18 @@ export class AnalisadorSintatico {
       this.pos++;
       return [{
         isConst: isConst,
-        tipo: typeToken.text,
-        id: idToken.text,
+        tipo: typeString,
+        id: idString,
         lines: dim1,
         columns: dim2,
         initial: initial
       }]
-      .concat(this.parseDeclararion(typeToken, isConst));
+      .concat(this.parseDeclararion(typeString, isConst));
     } else {
        return [{
         isConst: isConst,
-        tipo: typeToken.text,
-        id: idToken.text,
+        tipo: typeString,
+        id: idString,
         lines: dim1,
         columns: dim2,
         initial: initial
@@ -292,10 +294,11 @@ export class AnalisadorSintatico {
   parseFunctions () {
     let list = [];
     while(true) {
-      const f = this.parseFunction();
-      if(f === null)
+      const func = this.parseFunction();
+      if(func === null)
         break;
-
+      else
+        list.push(func);
     }
     return list;
   }
@@ -306,6 +309,7 @@ export class AnalisadorSintatico {
   * The block object has two attributes: declarations and commands
   **/
   parseFunction () {
+    let formalParams = [];
     const token = this.getToken();
     if(token.type !== this.lexerClass.PR_FUNCAO) {
       //throw SyntaxError.createError(this.lexer.literalNames[this.lexerClass.PR_FUNCAO], token);
@@ -313,23 +317,64 @@ export class AnalisadorSintatico {
     }
     this.pos++;
     this.consumeNewLines();
-    const returnType = this.parseFunctionType();
+    const returnType = this.parseType(true);
     this.consumeNewLines();
-    const functionID = this.parseFunctionID();
+    const functionID = this.parseID();
     this.consumeNewLines();
     this.checkOpenParenthesis();
     this.pos++;
     this.consumeNewLines();
-    const formalParams = []; // formal parameters list
-    this.consumeNewLines();
-    this.checkCloseParenthesis();
-    this.pos++;
+    if (!this.checkCloseParenthesis(true)) {
+      formalParams = this.parseFormalParameters(); // formal parameters 
+      this.consumeNewLines();
+      this.checkCloseParenthesis();
+      this.pos++;
+    } else {
+      this.pos++;
+    }
     this.consumeNewLines();
     const commandsBlock = this.parseFunctionBody();
     return {returnType: returnType, id: functionID, formalParams: formalParams, block: commandsBlock};
   }
 
-  parseFunctionID () {
+  /*
+  * Parse the formal parameters of a function.
+  * @returns a list of objects with the following attributes: type, id and dimensions.
+  **/
+  parseFormalParameters () {
+    const list = [];
+    while(true) {
+      let dimensions = 0;
+      this.consumeNewLines();
+      const typeString = this.parseType();
+      this.pos++;
+      this.consumeNewLines();
+      const idString = this.parseID();
+      this.pos++;
+      this.consumeNewLines();
+      if (this.checkOpenBrace(true)) {
+        this.pos++;
+        dimensions++;
+        this.checkCloseBrace();
+        this.pos++;
+        if(this.checkOpenBrace(true)) {
+          this.pos++;
+          dimensions++;
+          this.checkCloseBrace();
+          this.pos++;
+        }
+      }
+      list.push({type: typeString, id: idString, dimensions: dimensions});
+      this.consumeNewLines();
+      const commaToken = this.getToken();
+      if (commaToken.type !== this.lexerClass.VIRGULA)
+        break;
+      this.pos++;
+    }
+    return list;
+  }
+
+  parseID () {
     const token = this.getToken();
     if(token.type !== this.lexerClass.ID) {
       throw SyntaxError.createError('ID', token);
@@ -338,11 +383,11 @@ export class AnalisadorSintatico {
     return token.text;
   }
 
-  parseFunctionType () {
+  parseType (isFunction = false) {
     const token = this.getToken();
-    if(token.type === this.lexerClass.ID) {
+    if(token.type === this.lexerClass.ID && isFunction) {
       return 'void';
-    } else if (token.type === this.lexerClass.PR_VAZIO) {
+    } else if (token.type === this.lexerClass.PR_VAZIO && isFunction) {
       this.pos++;
       return 'void';
     } else if (this.isVariableType(token)) {
@@ -356,21 +401,41 @@ export class AnalisadorSintatico {
           return 'real';
         case this.lexerClass.PR_CADEIA:
           return 'string';
+        default:
+          break;
       }
     }
+    
+    throw SyntaxError.createError(this.getTypesAsString(isFunction), token);
   }
 
   parseFunctionBody () {
+    let variablesDecl = [];
     this.checkOpenCurly();
     this.pos++;
     while(true) {
       this.consumeNewLines();
       const token = this.getToken();
+      if (isVariableType(token)) {
+        this.pos++;
+        variablesDecl = variablesDecl.concat(this.parseDeclararion(token));
+      } else if (token.type === this.lexerClass.ID) {
+        this.pos++;
+        const equalOrParenthesis = this.getToken();
+        if (equalOrParenthesis.type === this.lexerClass.ATRIBUICAO) {
+
+        } else if (equalOrParenthesis.type === this.lexerClass.ABRE_PAR) {
+
+        } else {
+          throw SyntaxError.createError("= or (", equalOrParenthesis);
+        }
+      }
     }
   }
 
-  getTypesAsString () {
-    return this.variableTypes.map( x => this.lexer.literalNames[x])
+  getTypesAsString (isFunction = false) {
+    const types = isFunction ? this.functionTypes : this.variableTypes;
+    return types.map( x => this.lexer.literalNames[x])
       .reduce((o, n) => {
         if (o.length <= 0)
           return n;

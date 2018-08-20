@@ -11,15 +11,7 @@ const ivprogLexer = Lexers[lang];
 
 const input = `programa {
   const real PI
-  inteiro i
-  const inteiro a[5][5], b, c[i]
-
-  funcao
-  inteiro teste()
-  {
-    inteiro i[5];
-  }
-
+  const inteiro a[5][5]
 }`;
 const lexer = new ivprogLexer(new InputStream(input));
 const stream = new CommonTokenStream(lexer);

@@ -11,6 +11,6 @@ export class SyntaxError extends Error {
 
   constructor (...msg) {
     super(...msg);
-    Error.captureStackTrace(this, SyntaxError);
+    //Error.captureStackTrace(this, SyntaxError);
   }
 }
