@@ -1,5 +1,6 @@
 import { CommonTokenStream, InputStream } from 'antlr4/index';
 import { ArrayAccess, FunctionCall} from './expressions/';
+import { Return, Break, Atribution } from './commands/';
 import { SyntaxError } from './SyntaxError';
 
 export class IVProgParser {
@@ -135,15 +136,26 @@ export class IVProgParser {
       }
     }
     return true;
-  } 
+  }
+
+  checkEOS (attempt = false)  {
+    const eosToken = this.getToken();
+    if (eosToken.type !== this.lexerClass.EOS) {
+      if (!attempt)
+        throw SyntaxError.createError('new line or \';\'', eosToken);
+      else
+        return false;
+    }
+    return true;
+  }
 
   parseGlobalVariables () {
     let vars = [];
     while(true) {
       const decl = this.parseMaybeConst();
       const eosToken = this.getToken();
-      if (decl !== null && eosToken.type !== this.lexerClass.EOS) {
-        throw SyntaxError.createError('new line or \';\'', eosToken);
+      if (decl !== null) {
+        this.checkEOS();
       }
 
       if (decl === null) {
@@ -202,10 +214,11 @@ export class IVProgParser {
 
     const equalsToken = this.getToken();
     if(equalsToken.type === this.lexerClass.EQUAL) {
-      //process Expression(EAnd) => initial != null
-      console.log("= found");
+      this.pos++;
+      this.consumeNewLines();
+      initial = this.parseExpressionOR();
     }
-
+    this.consumeNewLines();
     const commaToken = this.getToken();
     if(commaToken.type === this.lexerClass.COMMA) {
       console.log("comma found");
@@ -220,6 +233,7 @@ export class IVProgParser {
       }]
       .concat(this.parseDeclararion(typeString, isConst));
     } else {
+      this.pos--;
        return [{
         isConst: isConst,
         tipo: typeString,
@@ -289,12 +303,16 @@ export class IVProgParser {
     let valor = text.replace("\\b", "\b");
     valor = valor.replace("\\t", "\t");
     valor = valor.replace("\\n", "\n");
-    valor = valor.replace("\f", "\f");
     valor = valor.replace("\\r", "\r");
     valor = valor.replace("\\\"", "\"");
     valor = valor.replace("\\\'", "\'");
     valor = valor.replace("\\\\", "\\");
-    return {type: 'string', value: valor};    
+    return {type: 'string', value: valor};
+  }
+
+  getBoolLiteral (token) {
+    const val = token.type === this.lexerClass.RK_True ? true : false;
+    return {type: 'bool', value: val};
   }
 
   /*
@@ -410,7 +428,7 @@ export class IVProgParser {
         case this.lexerClass.RK_INTEGER:
           return 'int';
         case this.lexerClass.RK_LOGIC:
-          return 'logic';
+          return 'bool';
         case this.lexerClass.RK_REAL:
           return 'real';
         case this.lexerClass.RK_STRING:
@@ -431,44 +449,74 @@ export class IVProgParser {
     while(true) {
       this.consumeNewLines();
       const token = this.getToken();
+      let cmd = null;
       if (isVariableType(token)) {
         this.pos++;
         variablesDecl = variablesDecl.concat(this.parseDeclararion(token));
-      } else if (token.type === this.lexerClass.ID) {
+        this.checkEOS();
         this.pos++;
-        this.consumeNewLines();
-        const equalOrParenthesis = this.getToken();
-        if (equalOrParenthesis.type === this.lexerClass.EQUAL) {
-          this.pos++
-          // parse Expression (EAnd)
-
-        } else if (equalOrParenthesis.type === this.lexerClass.OPEN_PARENTHESIS) {
-          // parse function call => ID '(' actual parameters list ')'
-          // actual parameter => EAnd
-        } else {
-          throw SyntaxError.createError("= or (", equalOrParenthesis);
-        }
+        cmd = -1;
+      } else if (token.type === this.lexerClass.ID) {
+        cmd = this.parseIDCommand();
       } else if (token.type === this.lexerClass.RK_RETURN) {
-        // parse EAnd
+        cmd = this.parseReturn();
       } else if (token.type === this.lexerClass.RK_WHILE) {
 
       } else if (token.type === this.lexerClass.RK_FOR) {
 
       } else if (token.type === this.lexerClass.RK_BREAK) {
-        
+        cmd = this.parseBreak();
       } else if (token.type === this.lexerClass.RK_SWITCH) {
         
       } else if (token.type === this.lexerClass.RK_DO) {
         
       } else if (token.type === this.lexerClass.RK_IF) {
         
-      } else {
-        break;
       }
+
+      if (cmd === null)
+        break;
+      if(cmd !== -1)
+        commands.push(cmd);
     }
     this.consumeNewLines();
     this.checkCloseCurly();
     return {variables: variablesDecl, commands: commands};
+  }
+
+  parseBreak () {
+    this.pos++;
+    this.checkEOS();
+    this.pos++;
+    return (new Break());
+  }
+
+  parseReturn () {
+    this.pos++;
+    const exp = this.parseExpressionOR();
+    this.checkEOS();
+    this.pos++;
+    return (new Return(exp));
+  }
+
+  parseIDCommand () {
+    const id = this.parseID();
+    this.consumeNewLines();
+    const equalOrParenthesis = this.getToken();
+    if (equalOrParenthesis.type === this.lexerClass.EQUAL) {
+      this.pos++
+      const exp = this.parseExpressionOR();
+      this.checkEOS();
+      this.pos++;
+      return (new Atribution(id, exp));
+    } else if (equalOrParenthesis.type === this.lexerClass.OPEN_PARENTHESIS) {
+      const actualParameters = this.parseActualParameters();
+      this.checkEOS();
+      this.pos++;
+      return (new FunctionCall(id, actualParameters));
+    } else {
+      throw SyntaxError.createError("= or (", equalOrParenthesis);
+    }
   }
 
   /*
@@ -514,7 +562,7 @@ export class IVProgParser {
       exp2 = this.parseExpressionAND();
     }
 
-    return {left: exp1, op: or, right: exp2};
+    return {left: exp1, op: and, right: exp2};
   }
 
   parseExpressionNot () {
@@ -588,7 +636,8 @@ export class IVProgParser {
       case this.lexerClass.STRING:
         this.pos++;
         return this.getStringLiteral(token);
-      case this.lexerClass.BOOLEAN:
+      case this.lexerClass.RK_TRUE:
+      case this.lexerClass.RK_FALSE:
         this.pos++;
         return this.getBoolLiteral(token);
       case this.lexerClass.ID:
@@ -599,7 +648,8 @@ export class IVProgParser {
   }
 
   parseIDTerm () {
-    const id = this.parseID(); 
+    const id = this.parseID();
+    const last = this.pos;
     this.consumeNewLines(); // DANGEROUS: exp = ID eos => results in inapropriate syntax error
     if(this.checkOpenBrace(true)) {
       this.pos++;
@@ -615,6 +665,8 @@ export class IVProgParser {
         this.consumeNewLines();
         this.checkCloseBrace();
         this.pos++;
+      } else {
+        this.pos--;
       }
 
       return new ArrayAccess(id, firstIndex, secondIndex);
@@ -632,6 +684,7 @@ export class IVProgParser {
       }
       return new FunctionCall(id, actualParameters);
     } else {
+      this.pos = last;
       return id;
     }
   }
@@ -645,6 +698,28 @@ export class IVProgParser {
     this.checkCloseParenthesis();
     this.pos++;
     return exp;
+  }
+
+  parseActualParameters () {
+    this.checkOpenParenthesis();
+    this.pos++;
+    list = [];
+    while (true) {
+      this.consumeNewLines();
+      const exp = this.parseExpressionOR();
+      this.consumeNewLines();
+      list.push(exp);
+      const commaToken = this.getToken();
+      if (commaToken.type !== this.lexerClass.COMMA) {
+        break;
+      } else {
+        this.pos++;
+      }  
+    }
+    this.consumeNewLines();
+    this.checkCloseParenthesis();
+    this.pos++;
+    return list;
   }
 
   getTypesAsString (isFunction = false) {

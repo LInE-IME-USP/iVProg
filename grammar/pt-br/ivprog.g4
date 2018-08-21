@@ -76,11 +76,11 @@ RK_ELSE
   : 'senao'
   ;
 
-fragment RK_FALSE
+RK_FALSE
   : 'falso'
   ;
 
-fragment RK_TRUE
+RK_TRUE
   : 'verdadeiro'
   ;
 
@@ -157,11 +157,6 @@ COLON
 
 NOT_OPERATOR
   : RK_LOGICAL_NOT
-  ;
-
-BOOLEAN
-  : RK_TRUE
-  | RK_FALSE
   ;
 
 ID
