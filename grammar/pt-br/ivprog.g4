@@ -12,7 +12,7 @@ RK_VOID
   : 'vazio'
   ;
 
-RK_LOGIC
+RK_BOOLEAN
   : 'logico'
   ;
 
@@ -159,7 +159,7 @@ NOT_OPERATOR
   : RK_LOGICAL_NOT
   ;
 
-LOGICO
+BOOLEAN
   : RK_TRUE
   | RK_FALSE
   ;

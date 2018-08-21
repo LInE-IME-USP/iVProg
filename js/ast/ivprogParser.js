@@ -1,4 +1,5 @@
 import { CommonTokenStream, InputStream } from 'antlr4/index';
+import { ArrayAccess, FunctionCall} from './expressions/';
 import { SyntaxError } from './SyntaxError';
 
 export class IVProgParser {
@@ -11,7 +12,7 @@ export class IVProgParser {
     this.pos = 1;
     this.variableTypes = [this.lexerClass.RK_INTEGER,
       this.lexerClass.RK_REAL,
-      this.lexerClass.RK_LOGIC,
+      this.lexerClass.RK_BOOLEAN,
       this.lexerClass.RK_STRING
     ];
     this.functionTypes = this.variableTypes.concat(this.lexerClass.RK_VOID);
@@ -139,7 +140,7 @@ export class IVProgParser {
   parseGlobalVariables () {
     let vars = [];
     while(true) {
-      const decl = this.parseHasConst();
+      const decl = this.parseMaybeConst();
       const eosToken = this.getToken();
       if (decl !== null && eosToken.type !== this.lexerClass.EOS) {
         throw SyntaxError.createError('new line or \';\'', eosToken);
@@ -160,7 +161,7 @@ export class IVProgParser {
   * at global variables declaration level
   * @returns Declararion(const, type, id, initVal?)
   **/
-  parseHasConst () {
+  parseMaybeConst () {
     const constToken = this.getToken();
     if(constToken.type === this.lexerClass.RK_CONST) {
       this.pos++;
@@ -188,12 +189,12 @@ export class IVProgParser {
     // ID[int/IDi][int/IDj]
     if (this.checkOpenBrace(true)) {
       this.pos++;
-      dim1 = this.getArrayDimension();
+      dim1 = this.parseArrayDimension();
       this.checkCloseBrace();
       this.pos++;
       if(this.checkOpenBrace(true)) {
         this.pos++;
-        dim2 = this.getArrayDimension();
+        dim2 = this.parseArrayDimension();
         this.checkCloseBrace();
         this.pos++;
       }
@@ -246,12 +247,12 @@ export class IVProgParser {
   * Reads the next token of the stream to check if it is a Integer or an ID.
   * @returns Integer | ID
   **/
-  getArrayDimension () {
+  parseArrayDimension () {
     const dimToken = this.getToken();
     if(dimToken.type === this.lexerClass.INTEGER) {
       //parse as int literal
       this.pos++;
-      return this.parseIntLiteral(dimToken);
+      return this.getIntLiteral(dimToken);
     } else if(dimToken.type === this.lexerClass.ID) {
       //parse as variable
       this.pos++;
@@ -266,7 +267,7 @@ export class IVProgParser {
   * It checks for binary and hexadecimal integers.
   * @returns object with fields type and value
   **/
-  parseIntLiteral (token) {
+  getIntLiteral (token) {
     const text = token.text;
     let val = null;
     if(text.match('^0b|^0B')) {
@@ -279,8 +280,21 @@ export class IVProgParser {
     return {type: 'int', value: val};
   }
 
-  parseRealLiteral (token) {
+  getRealLiteral (token) {
     return {type: 'real', value: parseFloat(token.text)};
+  }
+
+  getStringLiteral (token) {
+    const text = token.text;
+    let valor = text.replace("\\b", "\b");
+    valor = valor.replace("\\t", "\t");
+    valor = valor.replace("\\n", "\n");
+    valor = valor.replace("\f", "\f");
+    valor = valor.replace("\\r", "\r");
+    valor = valor.replace("\\\"", "\"");
+    valor = valor.replace("\\\'", "\'");
+    valor = valor.replace("\\\\", "\\");
+    return {type: 'string', value: valor};    
   }
 
   /*
@@ -460,9 +474,9 @@ export class IVProgParser {
   /*
   * Parses an Expression following the structure:
   *
-  * EAnd  => EOR ( 'and' EAnd)? #expression and
+  * EOR  => EAnd ( 'or' EOR)? #expression and
   *
-  * EOR   => ENot ('or' EAnd)? #expression or
+  * EOR   => ENot ('and' EOR)? #expression or
   *
   * ENot  => 'not'? ER #expression not
   *
@@ -475,38 +489,39 @@ export class IVProgParser {
   * term  => literal || arrayAccess || FuncCall || ID || '('EAnd')'
   **/
   parseExpressionOR () {
-    const andEpxression1 = this.parseExpressionAND();
-    let andEpxression2 = null;
+    const exp1 = this.parseExpressionAND();
+    let exp2 = null;
     let or = null;
     const maybeAnd = this.getToken();
     if (maybeAnd.type === this.lexerClass.OR_OPERATOR) {
       this.pos++;
       or = 'or';
-      andEpxression2 = this.parseExpressionAND();
+      exp2 = this.parseExpressionOR();
     }
 
-    return {left: andEpxression1, op:or, right: andEpxression2};
+    return {left: exp1, op:or, right: exp2};
   }
 
   parseExpressionAND () {
-    const eNot1 = this.parseExpressionNot();
+    const exp1 = this.parseExpressionNot();
     let and = null;
-    let eNot2 = null;
+    let exp2 = null;
+    this.consumeNewLines();
     const andToken = this.getToken();
     if (andToken.type === this.lexerClass.AND_OPERATOR) {
       this.pos++;
       and = 'and';
-      eNot2 = this.parseExpressionNot();
+      exp2 = this.parseExpressionAND();
     }
 
-    return {left: eNot1, op: or, right: eNot2};
+    return {left: exp1, op: or, right: exp2};
   }
 
   parseExpressionNot () {
-    this.consumeNewLines();
     let not = null;
-    const notToken = this.getToken();
-    if (notToken.type === this.lexerClass.NOT_OPERATOR) {
+    this.consumeNewLines();
+    const maybeNotToken = this.getToken();
+    if (maybeNotToken.type === this.lexerClass.NOT_OPERATOR) {
       this.pos++;
       not = 'not';
     }
@@ -515,9 +530,122 @@ export class IVProgParser {
     return {left: null, op: not, right: eRel};
   }
 
+  parseExpressionRel () {
+    const exp1 = this.parseExpression();
+    let rel = null;
+    let exp2 = null;
+    this.consumeNewLines();
+    const relToken = this.getToken();
+    if(relToken.type === this.lexerClass.RELATIONAL_OPERATOR) {
+      this.pos++;
+      rel = relToken.text; // TODO: source code line/column information
+      exp2 = this.parseExpression();
+    }
 
+    return {left: exp1, op: rel, right: exp2};
+  }
 
+  parseExpression () {
+    const factor = this.parseFactor();
+    let op = null;
+    let exp = null;
+    this.consumeNewLines();
+    const sumOpToken = this.getToken();
+    if(sumOpToken.type === this.lexerClass.SUM_OP) {
+      this.pos++;
+      op = sumOpToken.text; // TODO: source code line/column information
+      exp = this.parseExpression();
+    }
 
+    return {left: factor, op: op, right: exp};
+  }
+
+  parseFactor () {
+    const term = this.parseTerm();
+    let op = null;
+    let factor = null;
+    this.consumeNewLines();
+    const multOpToken = this.getToken();
+    if(multOpToken.type === this.lexerClass.MULTI_OP) {
+      this.pos++;
+      op = multOpToken.text; // TODO: source code line/column information
+      factor = this.parseFactor();
+    }
+
+    return {left: term, op: op, right: factor};
+  }
+
+  parseTerm () {
+    this.consumeNewLines();
+    const token = this.getToken();
+    switch(token.type) {
+      case this.lexerClass.INTEGER:
+        this.pos++;
+        return this.getIntLiteral(token);
+      case this.lexerClass.REAL:
+        this.pos++;
+        return this.getRealLiteral(token);
+      case this.lexerClass.STRING:
+        this.pos++;
+        return this.getStringLiteral(token);
+      case this.lexerClass.BOOLEAN:
+        this.pos++;
+        return this.getBoolLiteral(token);
+      case this.lexerClass.ID:
+        return this.parseIDTerm();
+      case this.lexerClass.OPEN_PARENTHESIS:
+        return this.parseParenthesisExp();
+    }
+  }
+
+  parseIDTerm () {
+    const id = this.parseID(); 
+    this.consumeNewLines(); // DANGEROUS: exp = ID eos => results in inapropriate syntax error
+    if(this.checkOpenBrace(true)) {
+      this.pos++;
+      const firstIndex = this.parseExpression();
+      let secondIndex = null;
+      this.consumeNewLines();
+      this.checkCloseBrace();
+      this.pos++;
+      this.consumeNewLines(); // DANGEROUS: exp = v1 + v2 + v[i] eos => results in inapropriate syntax error
+      if(this.checkOpenBrace(true)){
+        this.pos++;
+        secondIndex = this.parseExpression();
+        this.consumeNewLines();
+        this.checkCloseBrace();
+        this.pos++;
+      }
+
+      return new ArrayAccess(id, firstIndex, secondIndex);
+
+    } else if (this.checkOpenParenthesis(true)) {
+      this.pos++;
+      let actualParameters = [];
+      if(!this.checkCloseParenthesis(true)) {
+        actualParameters = this.parseActualParameters();
+        this.consumeNewLines();
+        this.checkCloseParenthesis();
+        this.pos++;
+      } else {
+        this.pos++;
+      }
+      return new FunctionCall(id, actualParameters);
+    } else {
+      return id;
+    }
+  }
+
+  parseParenthesisExp () {
+    this.checkOpenParenthesis();
+    this.pos++;
+    this.consumeNewLines();
+    const exp = this.parseExpressionOR();
+    this.consumeNewLines();
+    this.checkCloseParenthesis();
+    this.pos++;
+    return exp;
+  }
 
   getTypesAsString (isFunction = false) {
     const types = isFunction ? this.functionTypes : this.variableTypes;
