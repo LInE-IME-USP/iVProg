@@ -13,6 +13,7 @@ const input = `programa {
   const real PI
   const inteiro a[5][5]
 }`;
+let input2 = 'test = i\nb = i + 1\n';
 const lexer = new ivprogLexer(new InputStream(input));
 const stream = new CommonTokenStream(lexer);
 stream.fill();
@@ -23,9 +24,9 @@ while ((token = stream.LT(i)).type !== ivprogLexer.EOF && token.type !== ivprogL
     console.log('\n')
     i++;
 }
-const anaSin = new IVProgParser(input, ivprogLexer);
+const anaSin = new IVProgParser(input2, ivprogLexer);
 try {
-  console.log(anaSin.parseTree().global);
+  console.log(anaSin.parseIDCommand());
 } catch(a) {
   console.log(a);
 }

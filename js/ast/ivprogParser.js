@@ -50,7 +50,7 @@ export class IVProgParser {
         if (token.type === this.lexerClass.RK_CONST || token.type === this.lexerClass.ID) {
           globalVars = globalVars.concat(this.parseGlobalVariables());
         } else if (token.type === this.lexerClass.RK_FUNCTION) {
-          functions = functions.concat([]);
+          functions = functions.concat(this.parseFunctions());
         } else {
           break;
         }
@@ -201,12 +201,16 @@ export class IVProgParser {
     // ID[int/IDi][int/IDj]
     if (this.checkOpenBrace(true)) {
       this.pos++;
+      this.consumeNewLines();
       dim1 = this.parseArrayDimension();
+      this.consumeNewLines();
       this.checkCloseBrace();
       this.pos++;
       if(this.checkOpenBrace(true)) {
         this.pos++;
+        this.consumeNewLines();
         dim2 = this.parseArrayDimension();
+        this.consumeNewLines();
         this.checkCloseBrace();
         this.pos++;
       }
@@ -215,14 +219,14 @@ export class IVProgParser {
     const equalsToken = this.getToken();
     if(equalsToken.type === this.lexerClass.EQUAL) {
       this.pos++;
-      this.consumeNewLines();
       initial = this.parseExpressionOR();
     }
-    this.consumeNewLines();
+    
     const commaToken = this.getToken();
     if(commaToken.type === this.lexerClass.COMMA) {
       console.log("comma found");
       this.pos++;
+      this.consumeNewLines();
       return [{
         isConst: isConst,
         tipo: typeString,
@@ -233,7 +237,6 @@ export class IVProgParser {
       }]
       .concat(this.parseDeclararion(typeString, isConst));
     } else {
-      this.pos--;
        return [{
         isConst: isConst,
         tipo: typeString,
@@ -315,6 +318,10 @@ export class IVProgParser {
     return {type: 'bool', value: val};
   }
 
+  parseArrayLiteral () {
+
+  }
+
   /*
   * Returns an object {type: 'variable', value: value}.
   * @returns object with fields type and value
@@ -348,11 +355,8 @@ export class IVProgParser {
       return null;
     }
     this.pos++;
-    this.consumeNewLines();
     const returnType = this.parseType(true);
-    this.consumeNewLines();
     const functionID = this.parseID();
-    this.consumeNewLines();
     this.checkOpenParenthesis();
     this.pos++;
     this.consumeNewLines();
@@ -377,13 +381,8 @@ export class IVProgParser {
     const list = [];
     while(true) {
       let dimensions = 0;
-      this.consumeNewLines();
       const typeString = this.parseType();
-      this.pos++;
-      this.consumeNewLines();
       const idString = this.parseID();
-      this.pos++;
-      this.consumeNewLines();
       if (this.checkOpenBrace(true)) {
         this.pos++;
         dimensions++;
@@ -397,11 +396,11 @@ export class IVProgParser {
         }
       }
       list.push({type: typeString, id: idString, dimensions: dimensions});
-      this.consumeNewLines();
       const commaToken = this.getToken();
       if (commaToken.type !== this.lexerClass.COMMA)
         break;
       this.pos++;
+      this.consumeNewLines();
     }
     return list;
   }
@@ -446,11 +445,11 @@ export class IVProgParser {
     let commands = [];
     this.checkOpenCurly();
     this.pos++;
+    this.consumeNewLines();
     while(true) {
-      this.consumeNewLines();
       const token = this.getToken();
       let cmd = null;
-      if (isVariableType(token)) {
+      if (this.isVariableType(token)) {
         this.pos++;
         variablesDecl = variablesDecl.concat(this.parseDeclararion(token));
         this.checkEOS();
@@ -481,6 +480,8 @@ export class IVProgParser {
     }
     this.consumeNewLines();
     this.checkCloseCurly();
+    this.pos++;
+    this.consumeNewLines();
     return {variables: variablesDecl, commands: commands};
   }
 
@@ -501,7 +502,6 @@ export class IVProgParser {
 
   parseIDCommand () {
     const id = this.parseID();
-    this.consumeNewLines();
     const equalOrParenthesis = this.getToken();
     if (equalOrParenthesis.type === this.lexerClass.EQUAL) {
       this.pos++
@@ -544,6 +544,7 @@ export class IVProgParser {
     if (maybeAnd.type === this.lexerClass.OR_OPERATOR) {
       this.pos++;
       or = 'or';
+      this.consumeNewLines();
       exp2 = this.parseExpressionOR();
     }
 
@@ -554,11 +555,11 @@ export class IVProgParser {
     const exp1 = this.parseExpressionNot();
     let and = null;
     let exp2 = null;
-    this.consumeNewLines();
     const andToken = this.getToken();
     if (andToken.type === this.lexerClass.AND_OPERATOR) {
       this.pos++;
       and = 'and';
+      this.consumeNewLines();
       exp2 = this.parseExpressionAND();
     }
 
@@ -567,7 +568,6 @@ export class IVProgParser {
 
   parseExpressionNot () {
     let not = null;
-    this.consumeNewLines();
     const maybeNotToken = this.getToken();
     if (maybeNotToken.type === this.lexerClass.NOT_OPERATOR) {
       this.pos++;
@@ -582,7 +582,6 @@ export class IVProgParser {
     const exp1 = this.parseExpression();
     let rel = null;
     let exp2 = null;
-    this.consumeNewLines();
     const relToken = this.getToken();
     if(relToken.type === this.lexerClass.RELATIONAL_OPERATOR) {
       this.pos++;
@@ -597,7 +596,6 @@ export class IVProgParser {
     const factor = this.parseFactor();
     let op = null;
     let exp = null;
-    this.consumeNewLines();
     const sumOpToken = this.getToken();
     if(sumOpToken.type === this.lexerClass.SUM_OP) {
       this.pos++;
@@ -612,7 +610,6 @@ export class IVProgParser {
     const term = this.parseTerm();
     let op = null;
     let factor = null;
-    this.consumeNewLines();
     const multOpToken = this.getToken();
     if(multOpToken.type === this.lexerClass.MULTI_OP) {
       this.pos++;
@@ -624,7 +621,6 @@ export class IVProgParser {
   }
 
   parseTerm () {
-    this.consumeNewLines();
     const token = this.getToken();
     switch(token.type) {
       case this.lexerClass.INTEGER:
@@ -650,7 +646,6 @@ export class IVProgParser {
   parseIDTerm () {
     const id = this.parseID();
     const last = this.pos;
-    this.consumeNewLines(); // DANGEROUS: exp = ID eos => results in inapropriate syntax error
     if(this.checkOpenBrace(true)) {
       this.pos++;
       const firstIndex = this.parseExpression();
@@ -658,7 +653,6 @@ export class IVProgParser {
       this.consumeNewLines();
       this.checkCloseBrace();
       this.pos++;
-      this.consumeNewLines(); // DANGEROUS: exp = v1 + v2 + v[i] eos => results in inapropriate syntax error
       if(this.checkOpenBrace(true)){
         this.pos++;
         secondIndex = this.parseExpression();
@@ -673,6 +667,7 @@ export class IVProgParser {
 
     } else if (this.checkOpenParenthesis(true)) {
       this.pos++;
+      this.consumeNewLines();
       let actualParameters = [];
       if(!this.checkCloseParenthesis(true)) {
         actualParameters = this.parseActualParameters();
@@ -707,13 +702,13 @@ export class IVProgParser {
     while (true) {
       this.consumeNewLines();
       const exp = this.parseExpressionOR();
-      this.consumeNewLines();
       list.push(exp);
       const commaToken = this.getToken();
       if (commaToken.type !== this.lexerClass.COMMA) {
         break;
       } else {
         this.pos++;
+        this.consumeNewLines();
       }  
     }
     this.consumeNewLines();

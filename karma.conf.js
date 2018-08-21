@@ -9,7 +9,7 @@ module.exports = function(config) {
     //files/patterns to load in the browser
     files: [
       './node_modules/phantomjs-polyfill-find/find-polyfill.js',
-      {pattern: 'tests/*.js',watched:true,served:true,included:true}
+      {pattern: 'tests/*.spec.js',watched:true,served:true,included:true}
       /*parameters*/
           //watched: if autoWatch is true all files that have set watched to true will be watched for changes
           //served: should the files be served by Karma's webserver?
