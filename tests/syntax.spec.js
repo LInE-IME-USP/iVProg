@@ -1,7 +1,7 @@
 import Lexers from './../grammar/';
 import {
-    AnalisadorSintatico
-} from './../js/asa/analisadorSintatico';
+    IVProgParser
+} from './../js/ast/ivprogParser';
 describe("Testing Syntax Analysis for default", () => {
 
     var input;
@@ -40,7 +40,7 @@ describe("Testing Syntax Analysis for default", () => {
           }],
           functions: []
         };
-        const as = new AnalisadorSintatico(input, lexer);
+        const as = new IVProgParser(input, lexer);
         expect(as.parseTree()).toEqual(asa);
     });
 });

@@ -1,7 +1,7 @@
 import { CommonTokenStream, InputStream } from 'antlr4/index';
 import { SyntaxError } from './SyntaxError';
 
-export class AnalisadorSintatico {
+export class IVProgParser {
 
   constructor (input, lexerClass) {
     this.lexerClass = lexerClass;
@@ -9,12 +9,12 @@ export class AnalisadorSintatico {
     this.tokenStream = new CommonTokenStream(this.lexer);
     this.tokenStream.fill();
     this.pos = 1;
-    this.variableTypes = [this.lexerClass.PR_INTEIRO,
-      this.lexerClass.PR_REAL,
-      this.lexerClass.PR_LOGICO,
-      this.lexerClass.PR_CADEIA
+    this.variableTypes = [this.lexerClass.RK_INTEGER,
+      this.lexerClass.RK_REAL,
+      this.lexerClass.RK_LOGIC,
+      this.lexerClass.RK_STRING
     ];
-    this.functionTypes = this.variableTypes.push(this.lexerClass.PR_VAZIO);
+    this.functionTypes = this.variableTypes.concat(this.lexerClass.RK_VOID);
   }
 
   parseTree () {
@@ -37,7 +37,7 @@ export class AnalisadorSintatico {
     let globalVars = [];
     let functions = [];
 
-    if(this.lexerClass.PR_PROGRAMA === token.type) {
+    if(this.lexerClass.RK_PROGRAM === token.type) {
       this.pos++;
       this.consumeNewLines();
       this.checkOpenCurly();
@@ -45,9 +45,9 @@ export class AnalisadorSintatico {
       while(true) {
         this.consumeNewLines();
         const token = this.getToken();
-        if (token.type === this.lexerClass.PR_CONST || token.type === this.lexerClass.ID) {
+        if (token.type === this.lexerClass.RK_CONST || token.type === this.lexerClass.ID) {
           globalVars = globalVars.concat(this.parseGlobalVariables());
-        } else if (token.type === this.lexerClass.PR_FUNCAO) {
+        } else if (token.type === this.lexerClass.RK_FUNCTION) {
           functions = functions.concat([]);
         } else {
           break;
@@ -62,20 +62,20 @@ export class AnalisadorSintatico {
       }
       return {global: globalVars, functions: functions};
     } else {
-      throw SyntaxError.createError(this.lexer.literalNames[this.lexerClass.PR_PROGRAMA], token);
+      throw SyntaxError.createError(this.lexer.literalNames[this.lexerClass.RK_PROGRAM], token);
     }
   }
 
   checkOpenCurly () {
     const token = this.getToken();
-    if(this.lexerClass.ABRE_CHA !== token.type){
+    if(this.lexerClass.OPEN_CURLY !== token.type){
       throw SyntaxError.createError('{', token);
     }
   }
 
   checkCloseCurly () {
     const token = this.getToken();
-    if(this.lexerClass.FECHA_CHA !== token.type){
+    if(this.lexerClass.CLOSE_CURLY !== token.type){
       throw SyntaxError.createError('}', token);
     }
   }
@@ -90,7 +90,7 @@ export class AnalisadorSintatico {
   **/
   checkOpenBrace (attempt = false) {
     const token = this.getToken();
-    if(this.lexerClass.ABRE_COL !== token.type){
+    if(this.lexerClass.OPEN_BRACE !== token.type){
       if (!attempt) {
         throw SyntaxError.createError('[', token);
       } else {
@@ -102,7 +102,7 @@ export class AnalisadorSintatico {
 
   checkCloseBrace (attempt = false) {
     const token = this.getToken();
-    if(this.lexerClass.FECHA_COL !== token.type){
+    if(this.lexerClass.CLOSE_BRACE !== token.type){
       if (!attempt) {
         throw SyntaxError.createError(']', token);
       } else {
@@ -114,7 +114,7 @@ export class AnalisadorSintatico {
 
   checkOpenParenthesis (attempt = false) {
     const token = this.getToken();
-    if(this.lexerClass.ABRE_PAR !== token.type){
+    if(this.lexerClass.OPEN_PARENTHESIS !== token.type){
       if (!attempt) {
         throw SyntaxError.createError('(', token);
       } else {
@@ -126,7 +126,7 @@ export class AnalisadorSintatico {
 
   checkCloseParenthesis (attempt = false) {
     const token = this.getToken();
-    if(this.lexerClass.FECHA_PAR !== token.type){
+    if(this.lexerClass.CLOSE_PARENTHESIS !== token.type){
       if (!attempt) {
         throw SyntaxError.createError(')', token);
       } else {
@@ -162,7 +162,7 @@ export class AnalisadorSintatico {
   **/
   parseHasConst () {
     const constToken = this.getToken();
-    if(constToken.type === this.lexerClass.PR_CONST) {
+    if(constToken.type === this.lexerClass.RK_CONST) {
       this.pos++;
       const typeString = this.parseType();
       return this.parseDeclararion(typeString, true);
@@ -200,13 +200,13 @@ export class AnalisadorSintatico {
     }
 
     const equalsToken = this.getToken();
-    if(equalsToken.type === this.lexerClass.ATRIBUICAO) {
+    if(equalsToken.type === this.lexerClass.EQUAL) {
       //process Expression(EAnd) => initial != null
       console.log("= found");
     }
 
     const commaToken = this.getToken();
-    if(commaToken.type === this.lexerClass.VIRGULA) {
+    if(commaToken.type === this.lexerClass.COMMA) {
       console.log("comma found");
       this.pos++;
       return [{
@@ -248,7 +248,7 @@ export class AnalisadorSintatico {
   **/
   getArrayDimension () {
     const dimToken = this.getToken();
-    if(dimToken.type === this.lexerClass.INTEIRO) {
+    if(dimToken.type === this.lexerClass.INTEGER) {
       //parse as int literal
       this.pos++;
       return this.parseIntLiteral(dimToken);
@@ -311,7 +311,7 @@ export class AnalisadorSintatico {
   parseFunction () {
     let formalParams = [];
     const token = this.getToken();
-    if(token.type !== this.lexerClass.PR_FUNCAO) {
+    if(token.type !== this.lexerClass.RK_FUNCTION) {
       //throw SyntaxError.createError(this.lexer.literalNames[this.lexerClass.PR_FUNCAO], token);
       return null;
     }
@@ -367,7 +367,7 @@ export class AnalisadorSintatico {
       list.push({type: typeString, id: idString, dimensions: dimensions});
       this.consumeNewLines();
       const commaToken = this.getToken();
-      if (commaToken.type !== this.lexerClass.VIRGULA)
+      if (commaToken.type !== this.lexerClass.COMMA)
         break;
       this.pos++;
     }
@@ -387,19 +387,19 @@ export class AnalisadorSintatico {
     const token = this.getToken();
     if(token.type === this.lexerClass.ID && isFunction) {
       return 'void';
-    } else if (token.type === this.lexerClass.PR_VAZIO && isFunction) {
+    } else if (token.type === this.lexerClass.RK_VOID && isFunction) {
       this.pos++;
       return 'void';
     } else if (this.isVariableType(token)) {
       this.pos++;
       switch(token.type) {
-        case this.lexerClass.PR_INTEIRO:
+        case this.lexerClass.RK_INTEGER:
           return 'int';
-        case this.lexerClass.PR_LOGICO:
+        case this.lexerClass.RK_LOGIC:
           return 'logic';
-        case this.lexerClass.PR_REAL:
+        case this.lexerClass.RK_REAL:
           return 'real';
-        case this.lexerClass.PR_CADEIA:
+        case this.lexerClass.RK_STRING:
           return 'string';
         default:
           break;
@@ -411,6 +411,7 @@ export class AnalisadorSintatico {
 
   parseFunctionBody () {
     let variablesDecl = [];
+    let commands = [];
     this.checkOpenCurly();
     this.pos++;
     while(true) {
@@ -421,17 +422,102 @@ export class AnalisadorSintatico {
         variablesDecl = variablesDecl.concat(this.parseDeclararion(token));
       } else if (token.type === this.lexerClass.ID) {
         this.pos++;
+        this.consumeNewLines();
         const equalOrParenthesis = this.getToken();
-        if (equalOrParenthesis.type === this.lexerClass.ATRIBUICAO) {
+        if (equalOrParenthesis.type === this.lexerClass.EQUAL) {
+          this.pos++
+          // parse Expression (EAnd)
 
-        } else if (equalOrParenthesis.type === this.lexerClass.ABRE_PAR) {
-
+        } else if (equalOrParenthesis.type === this.lexerClass.OPEN_PARENTHESIS) {
+          // parse function call => ID '(' actual parameters list ')'
+          // actual parameter => EAnd
         } else {
           throw SyntaxError.createError("= or (", equalOrParenthesis);
         }
+      } else if (token.type === this.lexerClass.RK_RETURN) {
+        // parse EAnd
+      } else if (token.type === this.lexerClass.RK_WHILE) {
+
+      } else if (token.type === this.lexerClass.RK_FOR) {
+
+      } else if (token.type === this.lexerClass.RK_BREAK) {
+        
+      } else if (token.type === this.lexerClass.RK_SWITCH) {
+        
+      } else if (token.type === this.lexerClass.RK_DO) {
+        
+      } else if (token.type === this.lexerClass.RK_IF) {
+        
+      } else {
+        break;
       }
     }
+    this.consumeNewLines();
+    this.checkCloseCurly();
+    return {variables: variablesDecl, commands: commands};
   }
+
+  /*
+  * Parses an Expression following the structure:
+  *
+  * EAnd  => EOR ( 'and' EAnd)? #expression and
+  *
+  * EOR   => ENot ('or' EAnd)? #expression or
+  *
+  * ENot  => 'not'? ER #expression not
+  *
+  * ER    => E ((>=, <=, ==, >, <) E)? #expression relational
+  *
+  * E     => factor ((+, -) E)? #expression
+  *
+  * factor=> term ((*, /, %) factor)?
+  *
+  * term  => literal || arrayAccess || FuncCall || ID || '('EAnd')'
+  **/
+  parseExpressionOR () {
+    const andEpxression1 = this.parseExpressionAND();
+    let andEpxression2 = null;
+    let or = null;
+    const maybeAnd = this.getToken();
+    if (maybeAnd.type === this.lexerClass.OR_OPERATOR) {
+      this.pos++;
+      or = 'or';
+      andEpxression2 = this.parseExpressionAND();
+    }
+
+    return {left: andEpxression1, op:or, right: andEpxression2};
+  }
+
+  parseExpressionAND () {
+    const eNot1 = this.parseExpressionNot();
+    let and = null;
+    let eNot2 = null;
+    const andToken = this.getToken();
+    if (andToken.type === this.lexerClass.AND_OPERATOR) {
+      this.pos++;
+      and = 'and';
+      eNot2 = this.parseExpressionNot();
+    }
+
+    return {left: eNot1, op: or, right: eNot2};
+  }
+
+  parseExpressionNot () {
+    this.consumeNewLines();
+    let not = null;
+    const notToken = this.getToken();
+    if (notToken.type === this.lexerClass.NOT_OPERATOR) {
+      this.pos++;
+      not = 'not';
+    }
+    const eRel = this.parseExpressionRel();
+
+    return {left: null, op: not, right: eRel};
+  }
+
+
+
+
 
   getTypesAsString (isFunction = false) {
     const types = isFunction ? this.functionTypes : this.variableTypes;

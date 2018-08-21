@@ -1,166 +1,167 @@
 lexer grammar ivprog;
-
-PR_PROGRAMA
+// BEGIN i18n Lexical rules
+RK_PROGRAM
   : 'programa'
   ;
 
-PR_REAL
+RK_REAL
   : 'real'
   ;
 
-PR_VAZIO
+RK_VOID
   : 'vazio'
   ;
 
-PR_LOGICO
+RK_LOGIC
   : 'logico'
   ;
 
-PR_CADEIA
+RK_STRING
   : 'cadeia'
   ;
 
-PR_INTEIRO
+RK_INTEGER
   : 'inteiro'
   ;
 
-PR_CARACTER
+RK_CHARACTER
   : 'caractere'
   ;    
 
-PR_ESCOLHA
+RK_SWITCH
   : 'escolha'
   ;
 
-PR_CASO
+RK_CASE
   : 'caso'
   ;
 
-PR_CONTRARIO
+RK_DEFAULT
   : 'contrario'
   ;
 
-PR_CONST
+RK_CONST
   : 'const'
   ;
 
-PR_FUNCAO
+RK_FUNCTION
   : 'funcao'
   ;
 
-PR_RETORNE
+RK_RETURN
   : 'retorne'
   ;  
 
-PR_PARA
+RK_FOR
   : 'para'
   ;
 
-PR_PARE
+RK_BREAK
   : 'pare'
   ;
 
-PR_FACA
+RK_DO
   : 'faca'
   ;
 
-PR_ENQUANTO
+RK_WHILE
   : 'enquanto'
   ;
 
-PR_SE
+RK_IF
   : 'se'
   ;
 
-PR_SENAO
+RK_ELSE
   : 'senao'
   ;
 
-fragment PR_FALSO
+fragment RK_FALSE
   : 'falso'
   ;
 
-fragment PR_VERDADEIRO
+fragment RK_TRUE
   : 'verdadeiro'
   ;
 
-fragment PR_NAO_LOGICO
+fragment RK_LOGICAL_NOT
   : 'nao'
   ;
 
-fragment PR_E_LOGICO
+fragment RK_LOGICAL_AND
   : 'E'
   ;
 
-fragment PR_OU_LOGICO
+fragment RK_LOGICAL_OR
   : 'OU'
   ;
+// END i18n Lexical rules
 
 // GAMBIARRA   : '.' |'á'| 'à'| 'ã'|'â'|'é'|'ê'|'í'|'ó'|'ô'|'õ'|'ú'|'ü'|'ç'|'Ä'|'À'|'Ã'|'Â'|'É'|'Ê'|'Ë'|'Ó'|'Ô'|'Õ'|'Ú'|'Ü'|'Ç'|'#'|'$'|'"'|'§'|'?'|'¹'|'²'|'³'|'£'|'¢'|'¬'|'ª'|'º'|'~'|'\''|'`'|'\\'|'@';
 
-ABRE_PAR
+OPEN_PARENTHESIS
   : '('
   ;
 
-FECHA_PAR
+CLOSE_PARENTHESIS
   : ')'
   ;
 
-ABRE_COL
+OPEN_BRACE
   : '['
   ;
 
-FECHA_COL
+CLOSE_BRACE
   : ']'
   ;
 
-ABRE_CHA
+OPEN_CURLY
   : '{'
   ;
 
-FECHA_CHA
+CLOSE_CURLY
   : '}'
   ;
 
-VIRGULA
+COMMA
   : ','
   ;
 
-ATRIBUICAO
+EQUAL
   : '='
   ;
 
-OPERADOR_SOMA
+SUM_OP
   : ('+'|'-')
   ;
 
-OPERADOR_MULTIPLICATIVO
+MULTI_OP
   : ('*'|'/'|'%')
   ;
 
-OPERADOR_E
-  : PR_E_LOGICO
+AND_OPERATOR
+  : RK_LOGICAL_AND
   ;
 
-OPERADOR_OU
-  : PR_OU_LOGICO
+OR_OPERATOR
+  : RK_LOGICAL_OR
   ;
 
-OPERADOR_RELACIONAL
+RELATIONAL_OPERATOR
   : ('>='|'=='|'<='|'>'|'<')
   ;
 
-DPONTOS
+COLON
   : ':'
   ;
 
-OPERADOR_NAO
-  : PR_NAO_LOGICO
+NOT_OPERATOR
+  : RK_LOGICAL_NOT
   ;
 
 LOGICO
-  : PR_VERDADEIRO
-  | PR_FALSO
+  : RK_TRUE
+  | RK_FALSE
   ;
 
 ID
@@ -169,9 +170,9 @@ ID
 
 // ID_BIBLIOTECA     : ID '.' ID;
 
-INTEIRO
+INTEGER
   : [0-9]+
-  | ('0x'|'0X')(DIGIT_HEX)+
+  | ('0x'|'0X')(HEX_DIGIT)+
   | ('0b'|'0B')[0-1]+
   ;
 
@@ -179,57 +180,57 @@ REAL
   : [0-9]+ '.' [0-9]+
   ;
 
-CADEIA
-  : '"' CADEIA_CARACTER* '"'
+STRING
+  : '"' STRING_CHARACTER* '"'
   ;
     
-fragment CADEIA_CARACTER //String como definido em https://github.com/antlr/grammars-v4/blob/master/java8/Java8.g4
+fragment STRING_CHARACTER //String como definido em https://github.com/antlr/grammars-v4/blob/master/java8/Java8.g4
   : ~["\\\r\n]
-  | SEQ_ESC
+  | ESC_SEQ
   ;
 
-CARACTER //Caracter como definido em https://github.com/antlr/grammars-v4/blob/master/java8/Java8.g4
-  : '\'' ( SEQ_ESC | ~['\\\r\n]) '\''
+CHARACTER //Caracter como definido em https://github.com/antlr/grammars-v4/blob/master/java8/Java8.g4
+  : '\'' ( ESC_SEQ | ~['\\\r\n]) '\''
   ;
 
-ESPACO 
+WHITESPACE 
   : ( ' ' | '\t') -> skip
   ;
 
-fragment PONTO_VIRGULA
+fragment SEMICOLON
   : ';'
   ;
 
 EOS
   : [\r\n]+
-  | PONTO_VIRGULA
+  | SEMICOLON
   ;
 
-fragment DIGIT_HEX
+fragment HEX_DIGIT
   : [0-9a-fA-F]
   ;
 
-fragment DIGIT_OCTAL
+fragment OCTAL_DIGIT
   : [0-7]
   ;
 
-fragment SEQ_ESC
+fragment ESC_SEQ
   : '\\' ('b'|'t'|'n'|'f'|'r'|'"'|'\''|'\\')
   | ESC_UNICODE
   | ESC_OCTAL
   ;
 
 fragment ESC_OCTAL
-  : '\\' [0-3] DIGIT_OCTAL DIGIT_OCTAL
-  | '\\' DIGIT_OCTAL DIGIT_OCTAL
-  | '\\' DIGIT_OCTAL
+  : '\\' [0-3] OCTAL_DIGIT OCTAL_DIGIT
+  | '\\' OCTAL_DIGIT OCTAL_DIGIT
+  | '\\' OCTAL_DIGIT
   ;
 
 fragment ESC_UNICODE
-  : '\\' 'u' DIGIT_HEX DIGIT_HEX DIGIT_HEX DIGIT_HEX
+  : '\\' 'u' HEX_DIGIT HEX_DIGIT HEX_DIGIT HEX_DIGIT
   ;
 
-COMENTARIO
+COMMENTS
   : ('//' ~('\n'|'\r')* '\r'? '\n'
     | '/*' .*? '*/') -> channel(HIDDEN)
   ;

@@ -39,6 +39,7 @@
     "karma-mocha-reporter": "^2.2.5",
     "karma-phantomjs-launcher": "^1.0.4",
     "karma-webpack": "^3.0.0",
+    "phantomjs-polyfill-find": "github:ptim/phantomjs-polyfill-find",
     "webpack": "^4.16.5",
     "webpack-cli": "^3.1.0"
   },
