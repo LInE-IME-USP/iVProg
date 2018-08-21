@@ -153,7 +153,7 @@ body {
 	float: left;
 }
 
-.remove_function_button, .minimize_function_button {
+.remove_function_button, .minimize_function_button, .add_var_top_button, .add_command_top_button {
 	float: right;
 }
 
@@ -161,6 +161,7 @@ body {
 .ui.icon.button.minimize_function_button {
 	background: none;
 	padding: 0;
+	margin-top: 12px;
 }
 
 .ui.segment.variables_list_div,
@@ -179,6 +180,16 @@ body {
 .ui.labeled.icon.button.add_variable_button,
 .ui.labeled.icon.button.add_command_button {
 	
+}
+
+.program_signature {
+	font-weight: bold;
+	margin: -3px 0 10px -5px;
+}
+
+.program_final {
+	font-weight: bold;
+	margin: 5px 0 0 -5px;
 }
 
 .parameters_list {
@@ -207,5 +218,42 @@ div.buttons_manage_columns {
 	text-align: center;
 }
 .div_valor_var {
+	display: inline;
+}
+.ui.comment span {
+	font-style: italic;
+}
+.ui.comment {
+	border: 1px solid gray;
+	padding: 5px;
+	border-radius: 5px;
+	margin: 5px;
+	background: #f9f9f9;
+}
+
+.add_var_top_button {
+	padding-right: 50px;
+}
+
+.function_signature_div {
+	min-height: 40px;
+	padding-top: 8px;
+}
+
+.move_function {
+	margin-top: 9px;
+}
+
+.div_start_minimize_v {
+	float: right;
+	width: 22px; 
+	height: 10px;
+}
+
+.global_var {
+	margin-bottom: 10px;
+}
+
+.list_globals {
 	display: inline;
 }

@@ -29,6 +29,11 @@
 		"es": "real",
 		"pt": "real"
 	},
+	"program": {
+		"en": "program",
+		"es": "programa",
+		"pt": "programa"
+	},
 	"text": {
 		"en": "text",
 		"es": "texto",
@@ -69,6 +74,11 @@
 		"es": "nuevo_variable",
 		"pt": "nova_variável"
 	},
+	"new_global": {
+		"en": "new_global",
+		"es": "nuevo_global",
+		"pt": "nova_global"
+	},
 	"new_function": {
 		"en": "new_function",
 		"es": "nueva_función",
@@ -78,5 +88,15 @@
 		"en": "vector",
 		"es": "vector",
 		"pt": "vetor"
+	},
+	"text_comment_start": {
+		"en": "Initial comment of function...",
+		"es": "Comentario inicial de la función...",
+		"pt": "Comentário inicial da função..."
+	},
+	"text_comment_main": {
+		"en": "This is the main function...",
+		"es": "Esta es la función principal...",
+		"pt": "Esta é a função principal..."
 	}
 }

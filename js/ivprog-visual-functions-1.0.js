@@ -1,12 +1,21 @@
 var counter_new_functions = 0;
 var counter_new_parameters = 0;
 var counter_new_variables = 0;
+var counter_new_globals = 0;
 
 function addFunctionHandler() {
-	new_function = new Funcao(i18n("new_function") + "_" + counter_new_functions);
+	new_function = new Funcao(i18n("new_function") + "_" + counter_new_functions, tiposDados.void, 0, new Array(), false, false, null, new Comentario(i18n('text_comment_start')));
 	adicionarFuncao(new_function);
 
 	counter_new_functions ++;
+	renderAlgorithm();
+}
+
+function addGlobalVar() {
+	var v = new Variavel(tiposDados.integer, i18n('new_global') + '_' + counter_new_globals, 1);
+	counter_new_globals ++;
+
+	programa.globais.push(v);
 	renderAlgorithm();
 }
 
@@ -34,10 +43,151 @@ function renderAlgorithm() {
 	for (i = 0; i < programa.funcoes.length; i++) {
 		appendFunction(programa.funcoes[i], i);
 	}
+
+	if (programa.globais.length > 0) {
+		renderGlobals();
+	}
+
 	$('.data_types_dropdown').dropdown();
 	
 	$('.parameter_data_types_dropdown').dropdown();
 	addHandlers();
+
+}
+
+function renderGlobals() {
+	var ret = "";
+	if (programa.globais.length > 0) {
+
+		$('.list_globals').empty();
+
+		for (var j = 0; j < programa.globais.length; j++) {
+
+			var par_temp = programa.globais[j];
+
+			ret += '<div class="ui label name_variable"><span class="span_name_variable" ondblclick="enableNameGlobalUpdate(this.parentNode, '+j+')">'+par_temp.nome+'</span> <i class="icon small pencil alternate enable_edit_name_parameter" onclick="enableNameGlobalUpdate(this.parentNode, '+j+')"></i>';
+
+			ret += '<div class="ui dropdown global_type seq_'+j+'">';
+  	
+		  	if (par_temp.dimensoes > 0) {
+		  		ret += '<div class="text seq_'+j+'">'+ i18n(tiposDados.vector)+':'+i18n(par_temp.tipo);
+		  		for (i = 0; i < par_temp.dimensoes; i ++) {
+		  			ret += ' [ ] ';
+		  		}
+
+		  		ret += '</div>';
+		  	} else {
+		  		ret += '<div class="text seq_'+j+'">'+i18n(par_temp.tipo)+'</div>';
+		  	}
+
+		  	ret += '<i class="dropdown icon"></i>'
+		  		+ '<div class="menu seq_'+j+'">';
+
+		  	var i = 0;
+		  	for (tm in tiposDados) {
+		  		i ++;
+		  		if (i == 1) { continue; }
+		  		if (i == (Object.keys(tiposDados).length)) { break; }
+
+		  		ret += '<div class="item ' + (par_temp.tipo == tm ? ' selected ' : '') + ' seq_'+j+' '+tm+'" >'+i18n(tm)+'</div>';
+
+		  	}
+
+		  	i = 0;
+		  	for (tm in tiposDados) {
+		  		i ++;
+		  		if (i == 1) { continue; }
+		  		if (i == (Object.keys(tiposDados).length)) { break; }
+
+		  		ret += '<div class="item seq_'+j+' ">'
+			    	+ '<i class="dropdown icon"></i>'
+			    	+  i18n(tiposDados.vector)+':'+i18n(tm)
+			      	+  '<div class="menu seq_'+j+' ">'
+				        + '<div class="item seq_'+j+' '+tm+'" data-text="'+ i18n(tiposDados.vector)+':'+i18n(tm)+' [ ] ">[ ]</div>'
+				        + '<div class="item seq_'+j+' '+tm+'" data-text="'+ i18n(tiposDados.vector)+':'+i18n(tm)+' [ ] [ ] ">[ ] [ ] </div>'
+			      	+  '</div>'
+			    	+ '</div>';	
+		  	}
+
+    		ret += '</div></div>  = ';
+
+    		if (par_temp.dimensoes == 0) {
+    			if (par_temp.tipo == tiposDados.real) {
+    				ret += '<div class="div_valor_var"><span class="span_value_variable" ondblclick="enableGlobalValueUpdate(this.parentNode, '+j+')" >'+par_temp.valor.toFixed(1)+'</span> <i class="icon small pencil alternate enable_edit_name_function" onclick="enableGlobalValueUpdate(this.parentNode, '+j+')"></i></div> ';
+    			} else {
+    				if (par_temp.tipo == tiposDados.boolean) {
+	    				ret += '<div class="div_valor_var"><span class="span_value_variable" ondblclick="alternateBooleanGlobalValue(this.parentNode, '+j+')" >'+par_temp.valor+'</span> <i class="icon small pencil alternate enable_edit_name_function" onclick="alternateBooleanGlobalValue(this.parentNode, '+j+')"></i></div> ';
+	    			} else {
+    					ret += '<div class="div_valor_var"><span class="span_value_variable" ondblclick="enableGlobalValueUpdate(this.parentNode, '+j+')" >'+par_temp.valor+'</span> <i class="icon small pencil alternate enable_edit_name_function" onclick="enableGlobalValueUpdate(this.parentNode, '+j+')"></i></div> ';
+	    			}
+    			}
+    		} else {
+    			ret += '<table class="tabela_var">';
+
+    			if (par_temp.dimensoes == 1) {
+    				ret += '<tr>';
+    				if (par_temp.tipo == tiposDados.real) {
+    					for (var k = 0; k < par_temp.colunas; k++) {
+	    					ret += '<td><span class="span_value_variable" ondblclick="enableGlobalVectorValueUpdate(this.parentNode, '+j+', '+k+')" >'+par_temp.valor[k].toFixed(1)+'</span>'+'</td>';
+	    				}
+    				} else {
+    					for (var k = 0; k < par_temp.colunas; k++) {
+    						if (par_temp.tipo == tiposDados.boolean) {
+    							ret += '<td><span class="span_value_variable" ondblclick="alternateBooleanGlobalVectorValue(this.parentNode, '+j+', '+k+')" >'+par_temp.valor[k]+'</span>'+'</td>';
+    						} else {
+    							ret += '<td><span class="span_value_variable" ondblclick="enableGlobalVectorValueUpdate(this.parentNode, '+j+', '+k+')" >'+par_temp.valor[k]+'</span>'+'</td>';
+    						}
+    					}
+    				}
+    				
+    				ret += '</tr>';
+    				ret += '</table>';
+
+    				ret += '<div class="buttons_manage_columns"><i class="ui icon minus square outline" onclick="removeGlobalColumnVector('+j+')"></i>'
+    			    	+ ' <i class="ui icon plus square outline" onclick="addGlobalColumnVector('+j+')"></i></div>';
+    			}
+
+    			if (par_temp.dimensoes == 2) {
+    				if (par_temp.tipo == tiposDados.real) {
+    					for (var l = 0; l < par_temp.linhas; l++) {
+		    				ret += '<tr>';
+		    				for (var k = 0; k < par_temp.colunas; k++) {
+		    					ret += '<td><span class="span_value_variable" ondblclick="enableGlobalMatrixValueUpdate(this.parentNode, '+j+', '+l+', '+k+')" >'+par_temp.valor[l][k].toFixed(1)+'</span>'+'</td>';
+		    				} 
+		    				ret += '</tr>';
+	    				}
+    				} else {
+    					for (var l = 0; l < par_temp.linhas; l++) {
+		    				ret += '<tr>';
+		    				for (var k = 0; k < par_temp.colunas; k++) {
+		    					if (par_temp.tipo == tiposDados.boolean) { 
+		    						ret += '<td><span class="span_value_variable" ondblclick="alternateBooleanGlobalMatrixValue(this.parentNode, '+j+', '+l+', '+k+')" >'+par_temp.valor[l][k]+'</span>'+'</td>';
+		    					} else {
+		    						ret += '<td><span class="span_value_variable" ondblclick="enableGlobalMatrixValueUpdate(this.parentNode, '+j+', '+l+', '+k+')" >'+par_temp.valor[l][k]+'</span>'+'</td>';
+		    					}
+		    				} 
+		    				ret += '</tr>';
+	    				}
+    				}
+    				if (par_temp.linhas == 0) {
+    					ret += '<tr><td></td></tr>';
+    				}
+    				ret += '<tr><td colspan="'+par_temp.colunas+'" class="tr_manage_lines"><i class="ui icon minus square outline" onclick="removeLineGlobalMatrix('+j+')"></i>'
+    			    	+ ' <i class="ui icon plus square outline" onclick="addLineGlobalMatrix('+j+')"></i></td></tr>';
+    				ret += '</table>';
+
+    				ret += '<div class="buttons_manage_columns"><i class="ui icon minus square outline" onclick="removeColumnGlobalMatrix('+j+')"></i>'
+    			    	+ ' <i class="ui icon plus square outline" onclick="addColumnGlobalMatrix('+j+')"></i></div>';
+    			}
+    			
+    		}
+
+			ret += ' <i class="red icon times remove_parameter" onclick="deleteGlobal('+j+')"></i></div>';
+
+		}
+	}
+
+	$('.list_globals').append(ret); 
 }
 
 function addHandlers() {
@@ -117,6 +267,32 @@ function addHandlers() {
 				for (tm in tiposDados) {
 					if ($selectedItem.hasClass(tm)) {
 						updateVariableType(fun, seq, tm, dim);
+						break;
+					} 
+				}
+
+		    }
+		});
+
+  	$('.ui.dropdown.global_type').dropdown({
+		    onChange: function(value, text, $selectedItem) {
+
+		    	classList = $selectedItem.attr('class').split(/\s+/);
+		    	var fun;
+				var seq;
+				$.each(classList, function(index, item) {
+
+				    if (item.indexOf("seq_") > -1) {
+				        seq = item.split("seq_")[1];
+				    }
+				});
+				var dim = 0;
+				if (value.indexOf(i18n(tiposDados.vector)) > -1) {
+					dim = value.split('[').length - 1;
+				}
+				for (tm in tiposDados) {
+					if ($selectedItem.hasClass(tm)) {
+						updateGlobalType(seq, tm, dim);
 						break;
 					} 
 				}
@@ -800,6 +976,95 @@ function enableNameVariableUpdate(parent_node, which_function, which_parameter) 
 
 }
 
+var opened_name_comment = false;
+var opened_input_comment = null;
+var sequence_name_opened_comment;
+var sequence_function_opened_comment;
+function enableCommentUpdate(parent_node, function_index, is_function_comment, comment_index) {
+	if (opened_name_comment) {
+		$(opened_input_comment).focus();
+		return;
+	}
+	opened_name_comment = true;
+	sequence_name_opened_comment = comment_index;
+	sequence_function_opened_comment = function_index;
+
+	$(parent_node).find('.span_comment_text').text('');
+	
+	var temp_value = "";
+
+	if (is_function_comment) {
+		temp_value = programa.funcoes[function_index].comentario_funcao.texto_comentario;
+	} else {
+		temp_value = programa.funcoes[function_index].comandos[comment_index].texto_comentario;
+	}
+	$( "<input type='text' class='width-dynamic input_name_function' autocomplete='off' autocorrect='off' autocapitalize='off' spellcheck='false' value='"+temp_value+"' />" ).insertBefore($(parent_node).find('.span_comment_text'));
+
+	$('.width-dynamic').on('input', function() {
+	    var inputWidth = $(this).textWidth()+10;
+	    opened_input_comment = this;
+	    $(this).focus();
+
+	    var tmpStr = $(this).val();
+		$(this).val('');
+		$(this).val(tmpStr);
+
+	    $(this).css({
+	        width: inputWidth
+	    })
+	}).trigger('input');
+
+	$('.width-dynamic').focusout(function() {
+		/// update array:
+		if ($(this).val().trim()) {
+
+			var n_value = $(this).val().trim();
+			if (is_function_comment) {
+				programa.funcoes[function_index].comentario_funcao.texto_comentario = n_value;
+			} else {
+				temp_value = programa.funcoes[function_index].comandos[comment_index].texto_comentario = n_value;
+			}
+		}
+		$(this).remove();
+
+		/// update elements:
+		opened_name_comment = false;
+		opened_input_comment = false;
+
+		renderAlgorithm();
+	});
+
+	$('.width-dynamic').on('keydown', function(e) {
+		var code = e.keyCode || e.which;
+		if(code == 13) {
+			if ($(this).val().trim()) {
+				var n_value = $(this).val().trim();
+				if (is_function_comment) {
+					programa.funcoes[function_index].comentario_funcao.texto_comentario = n_value;
+				} else {
+					temp_value = programa.funcoes[function_index].comandos[comment_index].texto_comentario = n_value;
+				}
+			}
+			$(this).remove();
+
+			/// update elements:
+			opened_name_comment = false;
+			opened_input_comment = false;
+
+			renderAlgorithm();
+		}
+		if(code == 27) {
+			$(parent_node).find('.span_comment_text').text(temp_value);
+
+			$(this).remove();
+
+			/// update elements:
+			opened_name_comment = false;
+			opened_input_comment = false;
+		}
+	});
+}
+
 var opened_name_parameter = false;
 var opened_input_parameter = null;
 var sequence_name_opened_parameter;
@@ -877,13 +1142,20 @@ function removeParameter(parent_node, which_function, which_parameter) {
 }
 
 function appendFunction(function_obj, sequence) {
-	var appender = '<div class="ui secondary segment function_div list-group-item">'
-		+ '<span class="glyphicon glyphicon-move" aria-hidden="true"><i class="icon sort alternate vertical"></i></span>'
-		
-		+ (!function_obj.eh_principal ? '<button class="ui icon button large remove_function_button" onclick="removeFunctionHandler(this.parentNode, '+sequence+')"><i class="red icon times"></i></button>' : '')
-		+ '<button class="ui icon button tiny minimize_function_button" onclick="minimizeFunctionHandler(this.parentNode, '+sequence+')"><i class="icon window minimize"></i></button>'
+	var appender = '<div class="ui secondary segment function_div list-group-item">';
 
-		+ '<div class="function_signature_div">'+i18n('function')+' ';
+	if (function_obj.comentario_funcao) {
+		appender += renderComment(function_obj.comentario_funcao, sequence, true, -1);
+	}
+		
+	appender += '<span class="glyphicon glyphicon-move move_function" aria-hidden="true"><i class="icon sort alternate vertical"></i></span>';
+
+	appender += (!function_obj.eh_principal ? '<button class="ui icon button large remove_function_button" onclick="removeFunctionHandler(this.parentNode, '+sequence+')"><i class="red icon times"></i></button>' : '<div class="div_start_minimize_v"> </div>')
+		+ '<button class="ui icon button tiny minimize_function_button" onclick="minimizeFunctionHandler(this.parentNode, '+sequence+')"><i class="icon window minimize"></i></button>';
+
+	appender += '<div class="ui icon buttons add_var_top_button"><div class="ui icon button" onclick="addVariable('+sequence+')"><i class="icon superscript"></i></div><div class="ui icon button"><i class="icon code"></i></div></div>';
+
+	appender += '<div class="function_signature_div">'+i18n('function')+' ';
 
 
     if (function_obj.eh_principal) {
@@ -901,16 +1173,26 @@ function appendFunction(function_obj, sequence) {
 	appender += '</div> ) {</div>'
 		+ (function_obj.esta_oculta ? ' <div class="function_area" style="display: none;"> ' : ' <div class="function_area"> ')
 
-		+ '<div class="ui top attached segment variables_list_div"><div class="ui teal small labeled icon button add_variable_button" onclick="addVariable('+sequence+')">'+i18n('Variable')+'<i class="add icon"></i></div>'
+		+ '<div class="ui top attached segment variables_list_div">'
 		+ renderVariables(function_obj, sequence)
 		+ '</div>'
-		+ '<div class="ui bottom attached segment commands_list_div"><div class="ui teal small labeled icon button add_command_button seq_'+sequence+'">'+i18n('Command')+'<i class="add icon"></i></div></div>'		
+		+ '<div class="ui bottom attached segment commands_list_div"></div>'		
 
 		+ '<div class="function_close_div">}</div>'
 		+ '</div>'
 		+ '</div>';
 
 	$('.all_functions').append(appender); 
+}
+
+
+function renderComment(comment_obj, function_index, is_function_comment, comment_index) {
+	var ret = '';
+	ret += '<div class="ui comment"> <i class="ui icon small quote left"></i> <span class="span_comment_text" ondblclick="enableCommentUpdate(this.parentNode, '+function_index+', '
+		+is_function_comment+', '+comment_index+')"> ' + comment_obj.texto_comentario + ' </span>';
+	ret += '</div>';
+
+	return ret;
 }
 
 // Essa função imprime os parâmetros e cria os elementos para a sua manipulação
