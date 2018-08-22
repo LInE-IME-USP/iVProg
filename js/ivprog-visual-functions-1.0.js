@@ -44,6 +44,7 @@ function renderAlgorithm() {
 		appendFunction(programa.funcoes[i], i);
 	}
 
+	$('.list_globals').empty();
 	if (programa.globais.length > 0) {
 		renderGlobals();
 	}
@@ -55,17 +56,27 @@ function renderAlgorithm() {
 
 }
 
+function deleteGlobal(which_global) {
+	programa.globais.splice(which_global, 1);
+	renderAlgorithm();
+}
+
+function alternateGlobalConst(which_global) {
+	programa.globais[which_global].eh_constante = !programa.globais[which_global].eh_constante;
+	renderAlgorithm();
+}
+
 function renderGlobals() {
 	var ret = "";
 	if (programa.globais.length > 0) {
-
-		$('.list_globals').empty();
 
 		for (var j = 0; j < programa.globais.length; j++) {
 
 			var par_temp = programa.globais[j];
 
-			ret += '<div class="ui label name_variable"><span class="span_name_variable" ondblclick="enableNameGlobalUpdate(this.parentNode, '+j+')">'+par_temp.nome+'</span> <i class="icon small pencil alternate enable_edit_name_parameter" onclick="enableNameGlobalUpdate(this.parentNode, '+j+')"></i>';
+			ret += '<div class="ui label name_variable"><div class="global_const">const: ';
+
+			ret += '<i class="ui icon toggle '+(par_temp.eh_constante?"on":"off")+' " onclick="alternateGlobalConst('+j+')"></i></div><span class="span_name_variable" ondblclick="enableNameGlobalUpdate(this.parentNode, '+j+')">'+par_temp.nome+'</span> <i class="icon small pencil alternate enable_edit_name_parameter" onclick="enableNameGlobalUpdate(this.parentNode, '+j+')"></i>';
 
 			ret += '<div class="ui dropdown global_type seq_'+j+'">';
   	
@@ -302,6 +313,66 @@ function addHandlers() {
 
 }
 
+function updateGlobalType(wich_variable, new_value, new_dimensions) {
+	programa.globais[wich_variable].tipo = new_value;
+	programa.globais[wich_variable].dimensoes = new_dimensions;
+
+	if (new_dimensions > 0) {
+		programa.globais[wich_variable].linhas = new_dimensions;
+		programa.globais[wich_variable].colunas = 2;
+	}
+
+	if (new_value == tiposDados.integer) {
+		if (new_dimensions == 0) {
+			programa.globais[wich_variable].valor = 1;
+		}
+		if (new_dimensions == 1) {
+			programa.globais[wich_variable].valor = [1, 1];
+		}
+		if (new_dimensions == 2) {
+			programa.globais[wich_variable].valor = [[1, 1], [1, 1]];
+		}
+	}
+
+	if (new_value == tiposDados.real) {
+		if (new_dimensions == 0) {
+			programa.globais[wich_variable].valor = 1.0;
+		}
+		if (new_dimensions == 1) {
+			programa.globais[wich_variable].valor = [1.0, 1.0];
+		}
+		if (new_dimensions == 2) {
+			programa.globais[wich_variable].valor = [[1.0, 1.0], [1.0, 1.0]];
+		}
+	}
+
+	if (new_value == tiposDados.text) {
+		if (new_dimensions == 0) {
+			programa.globais[wich_variable].valor = i18n(tiposDados.text);
+		}
+		if (new_dimensions == 1) {
+			programa.globais[wich_variable].valor = [i18n(tiposDados.text), i18n(tiposDados.text)];
+		}
+		if (new_dimensions == 2) {
+			programa.globais[wich_variable].valor = [[i18n(tiposDados.text), i18n(tiposDados.text)], [i18n(tiposDados.text), i18n(tiposDados.text)]];
+		}
+	}
+
+	if (new_value == tiposDados.boolean) {
+		if (new_dimensions == 0) {
+			programa.globais[wich_variable].valor = true;
+		}
+		if (new_dimensions == 1) {
+			programa.globais[wich_variable].valor = [true, true];
+		}
+		if (new_dimensions == 2) {
+			programa.globais[wich_variable].valor = [[true, true], [true, true]];
+		}
+	}
+
+	renderAlgorithm();
+}
+
 function updateVariableType(wich_function, wich_variable, new_value, new_dimensions) {
 	programa.funcoes[wich_function].variaveis[wich_variable].tipo = new_value;
 	programa.funcoes[wich_function].variaveis[wich_variable].dimensoes = new_dimensions;
@@ -362,6 +433,24 @@ function updateVariableType(wich_function, wich_variable, new_value, new_dimensi
 	renderAlgorithm();
 }
 
+function addGlobalColumnVector(which_variable) {
+	programa.globais[which_variable].colunas ++;
+
+	if (programa.globais[which_variable].tipo == tiposDados.integer) {
+		programa.globais[which_variable].valor.push(1);
+	}
+	if (programa.globais[which_variable].tipo == tiposDados.real) {
+		programa.globais[which_variable].valor.push(1.0);
+	}
+	if (programa.globais[which_variable].tipo == tiposDados.text) {
+		programa.globais[which_variable].valor.push(i18n(tiposDados.text));
+	}
+	if (programa.globais[which_variable].tipo == tiposDados.boolean) {
+		programa.globais[which_variable].valor.push(true);
+	}
+	renderAlgorithm();
+}
+
 function addColumnVector(which_function, which_variable) {
 	programa.funcoes[which_function].variaveis[which_variable].colunas ++;
 
@@ -409,6 +498,35 @@ function addColumnMatrix(which_function, which_variable) {
 	renderAlgorithm();
 }
 
+function addColumnGlobalMatrix(which_variable) {
+	programa.globais[which_variable].colunas ++;
+
+	if (programa.globais[which_variable].tipo == tiposDados.integer) {
+		for (i = 0; i < programa.globais[which_variable].linhas; i++) {
+			programa.globais[which_variable].valor[i].push(1);
+		}
+	}
+
+	if (programa.globais[which_variable].tipo == tiposDados.real) {
+		for (i = 0; i < programa.globais[which_variable].linhas; i++) {
+			programa.globais[which_variable].valor[i].push(1.0);
+		}
+	}
+
+	if (programa.globais[which_variable].tipo == tiposDados.text) {
+		for (i = 0; i < programa.globais[which_variable].linhas; i++) {
+			programa.globais[which_variable].valor[i].push(i18n(tiposDados.text));
+		}
+	}
+
+	if (programa.globais[which_variable].tipo == tiposDados.boolean) {
+		for (i = 0; i < programa.globais[which_variable].linhas; i++) {
+			programa.globais[which_variable].valor[i].push(true);
+		}
+	}
+	renderAlgorithm();
+}
+
 function addLineMatrix(which_function, which_variable) {
 	programa.funcoes[which_function].variaveis[which_variable].linhas ++;
 
@@ -445,6 +563,54 @@ function addLineMatrix(which_function, which_variable) {
 	renderAlgorithm();
 }
 
+
+function addLineGlobalMatrix(which_variable) {
+	programa.globais[which_variable].linhas ++;
+
+	if (programa.globais[which_variable].tipo == tiposDados.integer) {
+		var n_l = [];
+		for (i = 0; i < programa.globais[which_variable].colunas; i++) {
+			n_l.push(1);
+		}
+		programa.globais[which_variable].valor.push(n_l);
+	}
+	if (programa.globais[which_variable].tipo == tiposDados.real) {
+		var n_l = [];
+		for (i = 0; i < programa.globais[which_variable].colunas; i++) {
+			n_l.push(1.0);
+		}
+		programa.globais[which_variable].valor.push(n_l);
+	}
+
+	if (programa.globais[which_variable].tipo == tiposDados.text) {
+		var n_l = [];
+		for (i = 0; i < programa.globais[which_variable].colunas; i++) {
+			n_l.push(i18n(tiposDados.text));
+		}
+		programa.globais[which_variable].valor.push(n_l);
+	}
+
+	if (programa.globais[which_variable].tipo == tiposDados.boolean) {
+		var n_l = [];
+		for (i = 0; i < programa.globais[which_variable].colunas; i++) {
+			n_l.push(true);
+		}
+		programa.globais[which_variable].valor.push(n_l);
+	}
+	renderAlgorithm();
+}
+
+
+function removeGlobalColumnVector(which_variable) {
+	if (programa.globais[which_variable].colunas == 0) {
+		return;
+	}
+
+	programa.globais[which_variable].colunas --;
+	programa.globais[which_variable].valor.splice(programa.globais[which_variable].valor.length - 1, 1);
+	renderAlgorithm();
+}
+
 function removeColumnVector(which_function, which_variable) {
 	if (programa.funcoes[which_function].variaveis[which_variable].colunas == 0) {
 		return;
@@ -465,6 +631,31 @@ function removeColumnMatrix(which_function, which_variable) {
 	for (i = 0; i < programa.funcoes[which_function].variaveis[which_variable].linhas; i++) {
 		programa.funcoes[which_function].variaveis[which_variable].valor[i].splice(programa.funcoes[which_function].variaveis[which_variable].valor[i].length - 1, 1);
 	}
+
+	renderAlgorithm();
+}
+
+function removeColumnGlobalMatrix(which_variable) {
+	if (programa.globais[which_variable].colunas == 0) {
+		return;
+	}
+
+	programa.globais[which_variable].colunas --;
+
+	for (i = 0; i < programa.globais[which_variable].linhas; i++) {
+		programa.globais[which_variable].valor[i].splice(programa.globais[which_variable].valor[i].length - 1, 1);
+	}
+
+	renderAlgorithm();
+}
+
+function removeLineGlobalMatrix(which_variable) {
+	if (programa.globais[which_variable].linhas == 0) {
+		return;
+	}
+
+	programa.globais[which_variable].linhas --;
+	programa.globais[which_variable].valor.splice(programa.globais[which_variable].valor.length - 1, 1);
 
 	renderAlgorithm();
 }
@@ -518,6 +709,75 @@ function updateParameterType(wich_function, wich_parameter, new_value, new_dimen
 	programa.funcoes[wich_function].lista_parametros[wich_parameter].tipo = new_value;
 	programa.funcoes[wich_function].lista_parametros[wich_parameter].dimensoes = new_dimensions;
 
+}
+
+var opened_name_global = false;
+var opened_input_global = null;
+var sequence_name_opened_global;
+function enableNameGlobalUpdate(div_el, sequence) {
+	if (opened_name_global) {
+		$(opened_input_global).focus();
+		return;
+	}
+	opened_name_global = true;
+	sequence_name_opened_global = sequence;
+
+	$(div_el).find('.span_name_variable').text('');
+	$( "<input type='text' class='width-dynamic input_name_function' autocomplete='off' autocorrect='off' autocapitalize='off' spellcheck='false' value='"+programa.globais[sequence].nome+"' />" ).insertBefore($(div_el).find('.span_name_variable'));
+
+	$('.width-dynamic').on('input', function() {
+	    var inputWidth = $(this).textWidth()+10;
+	    opened_input_global = this;
+	    $(this).focus();
+
+	    var tmpStr = $(this).val();
+		$(this).val('');
+		$(this).val(tmpStr);
+
+	    $(this).css({
+	        width: inputWidth
+	    })
+	}).trigger('input');
+
+	$('.width-dynamic').focusout(function() {
+		/// update array:
+		if ($(this).val().trim()) {
+			programa.globais[sequence].nome = $(this).val().trim();
+		}
+		$(this).remove();
+
+		/// update elements:
+		opened_name_global = false;
+		opened_input_global = false;
+
+		renderAlgorithm();
+	});
+
+	$('.width-dynamic').on('keydown', function(e) {
+		var code = e.keyCode || e.which;
+		if(code == 13) {
+			if ($(this).val().trim()) {
+				programa.globais[sequence].nome = $(this).val().trim();
+			}
+			$(this).remove();
+
+			/// update elements:
+			opened_name_global = false;
+			opened_input_global = false;
+
+			renderAlgorithm();
+		}
+		if(code == 27) {
+			$(div_el).find('.span_name_function').text(programa.globais[sequence].nome);
+
+			$(this).remove();
+
+			/// update elements:
+			opened_name_global = false;
+			opened_input_global = false;
+		}
+	});
+	
 }
 
 var opened_name_function = false;
@@ -594,8 +854,23 @@ function alternateBooleanVarVectorValue(parent_node, which_function, which_var, 
 	renderAlgorithm();
 }
 
+function alternateBooleanGlobalVectorValue(parent_node, which_var, column_index) {
+	programa.globais[which_var].valor[column_index] = !programa.globais[which_var].valor[column_index];
+	renderAlgorithm();
+}
+
 function alternateBooleanVarMatrixValue(parent_node, which_function, which_var, row_index, column_index) {
 	programa.funcoes[which_function].variaveis[which_var].valor[row_index][column_index] = !programa.funcoes[which_function].variaveis[which_var].valor[row_index][column_index];
+	renderAlgorithm();
+}
+
+function alternateBooleanGlobalMatrixValue(parent_node, which_var, row_index, column_index) {
+	programa.globais[which_var].valor[row_index][column_index] = !programa.globais[which_var].valor[row_index][column_index];
+	renderAlgorithm();
+}
+
+function alternateBooleanGlobalValue(parent_node, which_var) {
+	programa.globais[which_var].valor = !programa.globais[which_var].valor;
 	renderAlgorithm();
 }
 
@@ -603,6 +878,107 @@ function alternateBooleanVarValue(parent_node, which_function, which_var) {
 	programa.funcoes[which_function].variaveis[which_var].valor = !programa.funcoes[which_function].variaveis[which_var].valor;
 	renderAlgorithm();
 }
+
+
+var opened_name_value_vector_global_ = false;
+var opened_input_value_vector_global_ = null;
+var sequence_name_opened_value_vector_global_;
+function enableGlobalVectorValueUpdate(parent_node, which_parameter, column_index) {
+	if (opened_name_value_vector_global_) {
+		$(opened_input_value_vector_global_).focus();
+		return;
+	}
+	opened_name_value_vector_global_ = true;
+	sequence_name_opened_value_vector_global_ = which_parameter;
+
+	$(parent_node).find('.span_value_variable').text('');
+
+	if (programa.globais[which_parameter].tipo == tiposDados.real) {
+		$( "<input type='text' class='width-dynamic input_name_function' autocomplete='off' autocorrect='off' autocapitalize='off' spellcheck='false' value='"
+			+ programa.globais[which_parameter].valor[column_index].toFixed(1) + "' />" ).insertBefore($(parent_node).find('.span_value_variable'));
+	} else {
+		$( "<input type='text' class='width-dynamic input_name_function' autocomplete='off' autocorrect='off' autocapitalize='off' spellcheck='false' value='"
+			+ programa.globais[which_parameter].valor[column_index] + "' />" ).insertBefore($(parent_node).find('.span_value_variable'));
+	}
+
+	$('.width-dynamic').on('input', function() {
+	    var inputWidth = $(this).textWidth()+10;
+	    opened_input_value_vector_global_ = this;
+	    $(this).focus();
+
+	    var tmpStr = $(this).val();
+		$(this).val('');
+		$(this).val(tmpStr);
+
+	    $(this).css({
+	        width: inputWidth
+	    })
+	}).trigger('input');
+
+	$('.width-dynamic').focusout(function() {
+		/// update array:
+		if ($(this).val().trim()) {
+			if (programa.globais[which_parameter].tipo == tiposDados.real) {
+				programa.globais[which_parameter].valor[column_index] = parseFloat($(this).val().trim());
+			} else {
+
+				if (programa.globais[which_parameter].tipo == tiposDados.integer) {
+					programa.globais[which_parameter].valor[column_index] = parseInt($(this).val().trim());
+				} else {
+					programa.globais[which_parameter].valor[column_index] = $(this).val().trim();
+				}
+
+			}
+		}
+		$(this).remove();
+
+		/// update elements:
+		opened_name_value_vector_global_ = false;
+		opened_input_value_vector_global_ = false;
+
+		renderAlgorithm();
+	});
+
+	$('.width-dynamic').on('keydown', function(e) {
+		var code = e.keyCode || e.which;
+		if(code == 13) {
+			if ($(this).val().trim()) {
+				if (programa.globais[which_parameter].tipo == tiposDados.real) {
+					programa.globais[which_parameter].valor[column_index] = parseFloat($(this).val().trim());
+				} else {
+
+					if (programa.globais[which_parameter].tipo == tiposDados.integer) {
+						programa.globais[which_parameter].valor[column_index] = parseInt($(this).val().trim());
+					} else {
+						programa.globais[which_parameter].valor[column_index] = $(this).val().trim();
+					}
+
+				}
+			}
+			$(this).remove();
+
+			/// update elements:
+			opened_name_value_vector_global_ = false;
+			opened_input_value_vector_global_ = false;
+
+			renderAlgorithm();
+		}
+		if(code == 27) {
+			if (programa.globais[which_parameter].tipo == tiposDados.real) {
+				$(parent_node).find('.span_value_variable').text(programa.globais[which_parameter].valor[column_index].toFixed(1));
+			} else {
+				$(parent_node).find('.span_value_variable').text(programa.globais[which_parameter].valor[column_index]);
+			}
+
+			$(this).remove();
+
+			/// update elements:
+			opened_name_value_vector_global_ = false;
+			opened_input_value_vector_global_ = false;
+		}
+	});
+}
+
 
 var opened_name_value_vector_variable = false;
 var opened_input_value_vector_variable = null;
@@ -705,6 +1081,108 @@ function enableVarVectorValueUpdate(parent_node, which_function, which_parameter
 	});
 }
 
+
+var opened_name_value_matrix_global_v = false;
+var opened_input_value_matrix_global_v = null;
+var sequence_name_opened_value_matrix_global_v;
+function enableGlobalMatrixValueUpdate(parent_node, which_parameter, row_index, column_index) {
+	if (opened_name_value_matrix_global_v) {
+		$(opened_input_value_matrix_global_v).focus();
+		return;
+	}
+	opened_name_value_matrix_global_v = true;
+	sequence_name_opened_value_matrix_global_v = which_parameter;
+
+	$(parent_node).find('.span_value_variable').text('');
+
+	if (programa.globais[which_parameter].tipo == tiposDados.real) {
+		$( "<input type='text' class='width-dynamic input_name_function' autocomplete='off' autocorrect='off' autocapitalize='off' spellcheck='false' value='"
+			+ programa.globais[which_parameter].valor[row_index][column_index].toFixed(1) + "' />" ).insertBefore($(parent_node).find('.span_value_variable'));
+	} else {
+		$( "<input type='text' class='width-dynamic input_name_function' autocomplete='off' autocorrect='off' autocapitalize='off' spellcheck='false' value='"
+			+ programa.globais[which_parameter].valor[row_index][column_index] + "' />" ).insertBefore($(parent_node).find('.span_value_variable'));
+	}
+
+	$('.width-dynamic').on('input', function() {
+	    var inputWidth = $(this).textWidth()+10;
+	    opened_input_value_matrix_global_v = this;
+	    $(this).focus();
+
+	    var tmpStr = $(this).val();
+		$(this).val('');
+		$(this).val(tmpStr);
+
+	    $(this).css({
+	        width: inputWidth
+	    })
+	}).trigger('input');
+
+	$('.width-dynamic').focusout(function() {
+		/// update array:
+		if ($(this).val().trim()) {
+			if (programa.globais[which_parameter].tipo == tiposDados.real) {
+				programa.globais[which_parameter].valor[row_index][column_index] = parseFloat($(this).val().trim());
+			} else {
+
+				if (programa.globais[which_parameter].tipo == tiposDados.integer) {
+					programa.globais[which_parameter].valor[row_index][column_index] = parseInt($(this).val().trim());
+				} else {
+					programa.globais[which_parameter].valor[row_index][column_index] = $(this).val().trim();
+				}
+
+			}
+		}
+		$(this).remove();
+
+		/// update elements:
+		opened_name_value_matrix_global_v = false;
+		opened_input_value_matrix_global_v = false;
+
+		renderAlgorithm();
+	});
+
+	$('.width-dynamic').on('keydown', function(e) {
+		var code = e.keyCode || e.which;
+		if(code == 13) {
+			if ($(this).val().trim()) {
+				if (programa.globais[which_parameter].tipo == tiposDados.real) {
+					programa.globais[which_parameter].valor[row_index][column_index] = parseFloat($(this).val().trim());
+				} else {
+
+					if (programa.globais[which_parameter].tipo == tiposDados.integer) {
+						programa.globais[which_parameter].valor[row_index][column_index] = parseInt($(this).val().trim());
+					} else {
+						programa.globais[which_parameter].valor[row_index][column_index] = $(this).val().trim();
+					}
+
+				}
+			}
+			$(this).remove();
+
+			/// update elements:
+			opened_name_value_matrix_global_v = false;
+			opened_input_value_matrix_global_v = false;
+
+			renderAlgorithm();
+		}
+		if(code == 27) {
+			if (programa.globais[which_parameter].tipo == tiposDados.real) {
+				$(parent_node).find('.span_value_variable').text(programa.globais[which_parameter].valor[row_index][column_index].toFixed(1));
+			} else {
+				$(parent_node).find('.span_value_variable').text(programa.globais[which_parameter].valor[row_index][column_index]);
+			}
+
+			$(this).remove();
+
+			/// update elements:
+			opened_name_value_matrix_global_v = false;
+			opened_input_value_matrix_global_v = false;
+		}
+	});
+}
+
+
+
 var opened_name_value_matrix_variable = false;
 var opened_input_value_matrix_variable = null;
 var sequence_name_opened_value_matrix_variable;
@@ -805,6 +1283,104 @@ function enableVarMatrixValueUpdate(parent_node, which_function, which_parameter
 		}
 	});
 }
+
+
+var opened_name_value_global_var = false;
+var opened_input_value_global_ar = null;
+var sequence_name_opened_value_global_var;
+function enableGlobalValueUpdate(parent_node, which_parameter) {
+	if (opened_name_value_global_var) {
+		$(opened_input_value_global_ar).focus();
+		return;
+	}
+	opened_name_value_global_var = true;
+	sequence_name_opened_value_global_var = which_parameter;
+
+	$(parent_node).find('.span_value_variable').text('');
+	if (programa.globais[which_parameter].tipo == tiposDados.real) {
+		$( "<input type='text' class='width-dynamic input_name_function' autocomplete='off' autocorrect='off' autocapitalize='off' spellcheck='false' value='"
+			+ programa.globais[which_parameter].valor.toFixed(1) + "' />" ).insertBefore($(parent_node).find('.span_value_variable'));
+	} else {
+		$( "<input type='text' class='width-dynamic input_name_function' autocomplete='off' autocorrect='off' autocapitalize='off' spellcheck='false' value='"
+			+ programa.globais[which_parameter].valor + "' />" ).insertBefore($(parent_node).find('.span_value_variable'));
+	}
+
+	$('.width-dynamic').on('input', function() {
+	    var inputWidth = $(this).textWidth()+10;
+	    opened_input_value_global_ar = this;
+	    $(this).focus();
+
+	    var tmpStr = $(this).val();
+		$(this).val('');
+		$(this).val(tmpStr);
+
+	    $(this).css({
+	        width: inputWidth
+	    })
+	}).trigger('input');
+
+	$('.width-dynamic').focusout(function() {
+		/// update array:
+		if ($(this).val().trim()) {
+			if (programa.globais[which_parameter].tipo == tiposDados.real) {
+				programa.globais[which_parameter].valor = parseFloat($(this).val().trim());
+			} else{
+				if (programa.globais[which_parameter].tipo == tiposDados.integer) {
+					programa.globais[which_parameter].valor = parseInt($(this).val().trim());
+				} else {
+					programa.globais[which_parameter].valor = $(this).val().trim();
+				}
+				
+			}
+		}
+		$(this).remove();
+
+		/// update elements:
+		opened_name_value_global_var = false;
+		opened_input_value_global_ar = false;
+
+		renderAlgorithm();
+	});
+
+	$('.width-dynamic').on('keydown', function(e) {
+		var code = e.keyCode || e.which;
+		if(code == 13) {
+			if ($(this).val().trim()) {
+				if (programa.globais[which_parameter].tipo == tiposDados.real) {
+					programa.globais[which_parameter].valor = parseFloat($(this).val().trim());
+				} else{
+					if (programa.globais[which_parameter].tipo == tiposDados.integer) {
+						programa.globais[which_parameter].valor = parseInt($(this).val().trim());
+					} else {
+						programa.globais[which_parameter].valor = $(this).val().trim();
+					}
+					
+				}
+			}
+			$(this).remove();
+
+			/// update elements:
+			opened_name_value_global_var = false;
+			opened_input_value_global_ar = false;
+
+			renderAlgorithm();
+		}
+		if(code == 27) {
+			if (programa.globais[which_parameter].tipo == tiposDados.real) {
+				$(parent_node).find('.span_value_variable').text(programa.globais[which_parameter].valor.toFixed(1));
+			} else{
+				$(parent_node).find('.span_value_variable').text(programa.globais[which_parameter].valor);
+			}
+
+			$(this).remove();
+
+			/// update elements:
+			opened_name_value_global_var = false;
+			opened_input_value_global_ar = false;
+		}
+	});
+}
+
 
 var opened_name_value_variable = false;
 var opened_input_value_variable = null;

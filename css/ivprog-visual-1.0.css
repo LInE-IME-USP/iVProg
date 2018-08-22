@@ -254,6 +254,7 @@ div.buttons_manage_columns {
 	margin-bottom: 10px;
 }
 
-.list_globals {
+.list_globals, .global_const {
 	display: inline;
+	cursor: pointer;
 }
