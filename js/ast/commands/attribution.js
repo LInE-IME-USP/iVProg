@@ -1,4 +1,4 @@
-export class Atribution {
+export class Attribution {
   
   constructor (id, expression) {
     this.id = id;

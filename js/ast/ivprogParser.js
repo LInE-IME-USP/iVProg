@@ -555,7 +555,7 @@ export class IVProgParser {
       const exp = this.parseExpressionOR();
       this.checkEOS();
       this.pos++;
-      return (new Commands.Atribution(id, exp));
+      return (new Commands.Attribution(id, exp));
     } else if (equalOrParenthesis.type === this.lexerClass.OPEN_PARENTHESIS) {
       const actualParameters = this.parseActualParameters();
       this.checkEOS();
@@ -581,7 +581,7 @@ export class IVProgParser {
     const exp = this.parseExpressionOR();
     this.checkEOS();
     this.pos++;
-    return new Commands.Atribution(id, exp);
+    return new Commands.Attribution(id, exp);
   }
 
   /*
