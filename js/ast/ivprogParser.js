@@ -1,9 +1,22 @@
 import { CommonTokenStream, InputStream } from 'antlr4/index';
-import { ArrayAccess, FunctionCall} from './expressions/';
-import { Return, Break, Atribution } from './commands/';
+import * as Expressions from './expressions/';
+import * as Commands from './commands/';
 import { SyntaxError } from './SyntaxError';
 
 export class IVProgParser {
+
+  static get BASE () {
+    return 0;
+  }
+  static get FUNCTION () {
+    return 1;
+  }
+  static get COMMAND () {
+    return 2;
+  }
+  static get LOOP () {
+    return 4;
+  }
 
   constructor (input, lexerClass) {
     this.lexerClass = lexerClass;
@@ -17,6 +30,7 @@ export class IVProgParser {
       this.lexerClass.RK_STRING
     ];
     this.functionTypes = this.variableTypes.concat(this.lexerClass.RK_VOID);
+    this.parsingArrayDimension = 0;
   }
 
   parseTree () {
@@ -50,7 +64,7 @@ export class IVProgParser {
         if (token.type === this.lexerClass.RK_CONST || token.type === this.lexerClass.ID) {
           globalVars = globalVars.concat(this.parseGlobalVariables());
         } else if (token.type === this.lexerClass.RK_FUNCTION) {
-          functions = functions.concat(this.parseFunctions());
+          functions = functions.concat(this.parseFunction());
         } else {
           break;
         }
@@ -150,22 +164,11 @@ export class IVProgParser {
   }
 
   parseGlobalVariables () {
-    let vars = [];
-    while(true) {
-      const decl = this.parseMaybeConst();
-      const eosToken = this.getToken();
-      if (decl !== null) {
-        this.checkEOS();
-      }
-
-      if (decl === null) {
-        break;
-      } else {
-        vars = vars.concat(decl);
-        this.pos++;
-      }
-    }
-    return vars;
+    const decl = this.parseMaybeConst();
+    const eosToken = this.getToken();
+    this.checkEOS();
+    this.pos++;
+    return decl;
   }
 
   /*
@@ -183,7 +186,7 @@ export class IVProgParser {
       this.pos++;
       return this.parseDeclararion(constToken);
     } else {
-      return null;
+      throw SyntaxError.createError(this.lexer.literalNames[this.lexerClass.RK_CONST] + ' or ' + this.getTypesAsString(), constToken);
     }
 
   }
@@ -221,30 +224,22 @@ export class IVProgParser {
       this.pos++;
       initial = this.parseExpressionOR();
     }
-    
+    let declaration = null;
+    if (dim1 !== null) {
+      declaration = new Commands.ArrayDeclaration(idString,
+        typeString, dim1, dim2, initial, isConst);
+    } else {
+      declaration = new Commands.Declaration(idString, typeString, initial, isConst);
+    }
     const commaToken = this.getToken();
     if(commaToken.type === this.lexerClass.COMMA) {
       console.log("comma found");
       this.pos++;
       this.consumeNewLines();
-      return [{
-        isConst: isConst,
-        tipo: typeString,
-        id: idString,
-        lines: dim1,
-        columns: dim2,
-        initial: initial
-      }]
+      return [declaration]
       .concat(this.parseDeclararion(typeString, isConst));
     } else {
-       return [{
-        isConst: isConst,
-        tipo: typeString,
-        id: idString,
-        lines: dim1,
-        columns: dim2,
-        initial: initial
-      }]
+       return [declaration]
     }
   }
 
@@ -294,32 +289,53 @@ export class IVProgParser {
     } else {
       val = parseInt(text);
     }
-    return {type: 'int', value: val};
+    return new Expressions.IntLiteral(val);
   }
 
   getRealLiteral (token) {
-    return {type: 'real', value: parseFloat(token.text)};
+    return new Expressions.RealLiteral(parseFloat(token.text));
   }
 
   getStringLiteral (token) {
     const text = token.text;
-    let valor = text.replace("\\b", "\b");
-    valor = valor.replace("\\t", "\t");
-    valor = valor.replace("\\n", "\n");
-    valor = valor.replace("\\r", "\r");
-    valor = valor.replace("\\\"", "\"");
-    valor = valor.replace("\\\'", "\'");
-    valor = valor.replace("\\\\", "\\");
-    return {type: 'string', value: valor};
+    let value = text.replace("\\b", "\b");
+    value = value.replace("\\t", "\t");
+    value = value.replace("\\n", "\n");
+    value = value.replace("\\r", "\r");
+    value = value.replace("\\\"", "\"");
+    value = value.replace("\\\'", "\'");
+    value = value.replace("\\\\", "\\");
+    return new Expressions.StringLiteral(value);
   }
 
   getBoolLiteral (token) {
     const val = token.type === this.lexerClass.RK_True ? true : false;
-    return {type: 'bool', value: val};
+    return new Expressions.BoolLiteral(val);
   }
 
   parseArrayLiteral () {
-
+    this.checkOpenCurly();
+    const beginArray = this.getToken();
+    if (this.parsingArrayDimension >= 2) {
+      // TODO: better error message
+      throw new Error(`Array dimensions exceed maximum size of 2 at line ${beginArray.line}`);
+    }
+    this.pos++;
+    this.parsingArrayDimension++;
+    this.consumeNewLines();
+    const data = this.parseExpressionList();
+    this.consumeNewLines();
+    this.checkCloseCurly()
+    this.pos++;
+    this.parsingArrayDimension--;
+    if (this.parsingArrayDimension === 0) {
+      if (!data.isValid) {
+      // TODO: better error message
+      console.log('invalid array');
+      throw new Error(`Invalid array at line ${beginArray.line}`);
+    }
+    }
+    return new Expressions.ArrayLiteral(data);
   }
 
   /*
@@ -327,19 +343,7 @@ export class IVProgParser {
   * @returns object with fields type and value
   **/
   parseVariable (token) {
-    return {type: 'variable', value: token.text};
-  }
-
-  parseFunctions () {
-    let list = [];
-    while(true) {
-      const func = this.parseFunction();
-      if(func === null)
-        break;
-      else
-        list.push(func);
-    }
-    return list;
+    return new Expressions.VariableLiteral(token.text);
   }
 
   /*
@@ -369,7 +373,7 @@ export class IVProgParser {
       this.pos++;
     }
     this.consumeNewLines();
-    const commandsBlock = this.parseFunctionBody();
+    const commandsBlock = this.parseCommandBlock();
     return {returnType: returnType, id: functionID, formalParams: formalParams, block: commandsBlock};
   }
 
@@ -440,9 +444,9 @@ export class IVProgParser {
     throw SyntaxError.createError(this.getTypesAsString(isFunction), token);
   }
 
-  parseFunctionBody () {
+  parseCommandBlock (scope = IVProgParser.FUNCTION) {
     let variablesDecl = [];
-    let commands = [];
+    const commands = [];
     this.checkOpenCurly();
     this.pos++;
     this.consumeNewLines();
@@ -450,6 +454,10 @@ export class IVProgParser {
       const token = this.getToken();
       let cmd = null;
       if (this.isVariableType(token)) {
+        if(scope !== IVProgParser.FUNCTION) {
+          // TODO better error message
+          throw new Error(`Cannot declare variable here (line ${token.line})`);
+        }
         this.pos++;
         variablesDecl = variablesDecl.concat(this.parseDeclararion(token));
         this.checkEOS();
@@ -460,10 +468,14 @@ export class IVProgParser {
       } else if (token.type === this.lexerClass.RK_RETURN) {
         cmd = this.parseReturn();
       } else if (token.type === this.lexerClass.RK_WHILE) {
-
+        cmd = this.parseWhile();
       } else if (token.type === this.lexerClass.RK_FOR) {
-
-      } else if (token.type === this.lexerClass.RK_BREAK) {
+        cmd = this.parseFor();
+      } else if (token.type === this.lexerClass.RK_BREAK ) {
+        if(scope !== IVProgParser.LOOP) {
+          // TODO better error message
+          throw new Error("Break cannot be used outside of a loop.");
+        }
         cmd = this.parseBreak();
       } else if (token.type === this.lexerClass.RK_SWITCH) {
         
@@ -485,19 +497,54 @@ export class IVProgParser {
     return {variables: variablesDecl, commands: commands};
   }
 
+  parseFor () {
+    this.pos++;
+    this.checkOpenParenthesis();
+    this.pos++;
+    this.consumeNewLines();
+    const attribution = this.parseForAttribution();
+    this.consumeNewLines();
+    const condition = this.parseExpressionOR();
+    this.checkEOS();
+    this.pos++;
+    const increment = this.parseForAttribution(true);
+    this.checkCloseParenthesis()
+    this.pos++;
+    this.consumeNewLines();
+    const commandsBlock = this.parseCommandBlock(IVProgParser.LOOP);
+    return new Commands.For(attribution, condition, increment, commandsBlock);
+  }
+
+  parseWhile () {
+    this.pos++;
+    this.checkOpenParenthesis();
+    this.pos++;
+    this.consumeNewLines();
+    const logicalExpression = this.parseExpressionOR();
+    this.consumeNewLines();
+    this.checkCloseParenthesis();
+    this.pos++;
+    this.consumeNewLines();
+    const cmdBlocks = this.parseCommandBlock(IVProgParser.LOOP);
+    return new Commands.While(logicalExpression, cmdBlocks);
+  }
+
   parseBreak () {
     this.pos++;
     this.checkEOS();
     this.pos++;
-    return (new Break());
+    return (new Commands.Break());
   }
 
   parseReturn () {
     this.pos++;
-    const exp = this.parseExpressionOR();
-    this.checkEOS();
+    let exp = null;
+    if(!this.checkEOS(true)) {
+      const exp = this.parseExpressionOR();
+      this.checkEOS();
+    }
     this.pos++;
-    return (new Return(exp));
+    return new Commands.Return(exp);
   }
 
   parseIDCommand () {
@@ -508,15 +555,33 @@ export class IVProgParser {
       const exp = this.parseExpressionOR();
       this.checkEOS();
       this.pos++;
-      return (new Atribution(id, exp));
+      return (new Commands.Atribution(id, exp));
     } else if (equalOrParenthesis.type === this.lexerClass.OPEN_PARENTHESIS) {
       const actualParameters = this.parseActualParameters();
       this.checkEOS();
       this.pos++;
-      return (new FunctionCall(id, actualParameters));
+      return (new Expressions.FunctionCall(id, actualParameters));
     } else {
       throw SyntaxError.createError("= or (", equalOrParenthesis);
     }
+  }
+
+  parseForAttribution (isLast = false) {
+    if(!isLast)
+      this.consumeNewLines();
+    if(this.checkEOS(true)) {
+      return null;
+    }
+    const id = this.parseID();
+    const equal = this.getToken();
+    if (equal.type !== this.lexerClass.EQUAL) {
+      throw SyntaxError.createError('=', equal);
+    }
+    this.pos++
+    const exp = this.parseExpressionOR();
+    this.checkEOS();
+    this.pos++;
+    return new Commands.Atribution(id, exp);
   }
 
   /*
@@ -636,10 +701,14 @@ export class IVProgParser {
       case this.lexerClass.RK_FALSE:
         this.pos++;
         return this.getBoolLiteral(token);
+      case this.lexerClass.OPEN_CURLY:
+        return this.parseArrayLiteral();
       case this.lexerClass.ID:
         return this.parseIDTerm();
       case this.lexerClass.OPEN_PARENTHESIS:
         return this.parseParenthesisExp();
+      default:
+        throw SyntaxError.createError('Terminal', token);
     }
   }
 
@@ -663,7 +732,7 @@ export class IVProgParser {
         this.pos--;
       }
 
-      return new ArrayAccess(id, firstIndex, secondIndex);
+      return new Expressions.ArrayAccess(id, firstIndex, secondIndex);
 
     } else if (this.checkOpenParenthesis(true)) {
       this.pos++;
@@ -677,7 +746,7 @@ export class IVProgParser {
       } else {
         this.pos++;
       }
-      return new FunctionCall(id, actualParameters);
+      return new Expressions.FunctionCall(id, actualParameters);
     } else {
       this.pos = last;
       return id;
@@ -698,22 +767,27 @@ export class IVProgParser {
   parseActualParameters () {
     this.checkOpenParenthesis();
     this.pos++;
-    list = [];
-    while (true) {
-      this.consumeNewLines();
+    this.consumeNewLines();
+    list = this.parseExpressionList();
+    this.consumeNewLines();
+    this.checkCloseParenthesis();
+    this.pos++;
+    return list;
+  }
+
+  parseExpressionList () {
+    const list = [];
+    while(true) {
       const exp = this.parseExpressionOR();
       list.push(exp);
-      const commaToken = this.getToken();
-      if (commaToken.type !== this.lexerClass.COMMA) {
+      const maybeToken = this.getToken();
+      if (maybeToken.type !== this.lexerClass.COMMA) {
         break;
       } else {
         this.pos++;
         this.consumeNewLines();
-      }  
+      }
     }
-    this.consumeNewLines();
-    this.checkCloseParenthesis();
-    this.pos++;
     return list;
   }
 

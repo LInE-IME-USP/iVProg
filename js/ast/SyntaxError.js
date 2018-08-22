@@ -6,11 +6,11 @@ export class SyntaxError extends Error {
   }
 
   static getErrorString (symbol, token) {
-    return `Syntax error: Expecting '${symbol}' but found ${token.text} at line:${token.line}, column:${token.column}`;
+    return `Syntax error: Expecting '${symbol}' but found '${token.text}' at line:${token.line}, column:${token.column}`;
   }
 
   constructor (...msg) {
     super(...msg);
-    //Error.captureStackTrace(this, SyntaxError);
+    Error.captureStackTrace(this, SyntaxError);
   }
 }
