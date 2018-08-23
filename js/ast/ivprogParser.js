@@ -377,7 +377,12 @@ export class IVProgParser {
     }
     this.consumeNewLines();
     const commandsBlock = this.parseCommandBlock();
-    return new Commands.Function(functionID, returnType, formalParams, commandsBlock);
+    const func = new Commands.Function(functionID, returnType, formalParams, commandsBlock);
+    if (functionID === null && !func.isMain) {
+      // TODO: better error message
+      throw new Error("");
+    }
+    return func;
   }
 
   /*
