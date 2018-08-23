@@ -720,8 +720,10 @@ export class IVProgParser {
     }
     this.pos++
     const exp = this.parseExpressionOR();
-    this.checkEOS();
-    this.pos++;
+    if(!isLast) {
+      this.checkEOS();
+      this.pos++;
+    }
     return new Commands.Assign(id, exp);
   }
 
