@@ -6,6 +6,8 @@ import { BoolLiteral } from './boolLiteral';
 import { StringLiteral } from './stringLiteral';
 import { ArrayLiteral } from './arrayLiteral';
 import { VariableLiteral } from './variableLiteral';
+import { InfixApp } from './infixApp';
+import { UnaryApp } from './unaryApp';
 
 export {
 	ArrayAccess,
@@ -15,5 +17,7 @@ export {
   BoolLiteral,
   StringLiteral,
   ArrayLiteral,
-  VariableLiteral
+  VariableLiteral,
+  InfixApp,
+  UnaryApp
 };

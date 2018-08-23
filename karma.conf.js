@@ -1,4 +1,5 @@
 const webpackConfig = require('./webpack.config.js');
+process.env.CHROME_BIN = '/snap/bin/chromium';
  
 module.exports = function(config) {
   config.set({
@@ -8,7 +9,6 @@ module.exports = function(config) {
     exclude: [],
     //files/patterns to load in the browser
     files: [
-      './node_modules/phantomjs-polyfill-find/find-polyfill.js',
       {pattern: 'tests/*.spec.js',watched:true,served:true,included:true}
       /*parameters*/
           //watched: if autoWatch is true all files that have set watched to true will be watched for changes
@@ -32,7 +32,7 @@ module.exports = function(config) {
     //list of frameworks you want to use, only jasmine is installed automatically
     frameworks: ['jasmine'],
     //list of browsers to launch and capture
-    browsers: ['PhantomJS'/*,'PhantomJS','Firefox','Edge','ChromeCanary','Opera','IE','Safari'*/],
+    browsers: ['ChromeHeadless'/*,'PhantomJS','Firefox','Edge','ChromeCanary','Opera','IE','Safari'*/],
     //list of reporters to use
     reporters: ['mocha','kjhtml'/*,'dots','progress','spec'*/],
     

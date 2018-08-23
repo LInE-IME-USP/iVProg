@@ -1,8 +1,9 @@
 import { Literal } from './literal';
+import {Types} from './../types';
 export class StringLiteral extends Literal {
   
   constructor(value) {
-    super('string');
+    super(Types.STRING);
     this.value = value;
   }
 }

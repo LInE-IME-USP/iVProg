@@ -1,10 +1,12 @@
 import { CommonTokenStream, InputStream } from 'antlr4/index';
 import * as Expressions from './expressions/';
 import * as Commands from './commands/';
+import { Types } from './types';
 import { SyntaxError } from './SyntaxError';
 
 export class IVProgParser {
 
+  // <BEGIN scope consts>
   static get BASE () {
     return 0;
   }
@@ -17,6 +19,7 @@ export class IVProgParser {
   static get LOOP () {
     return 4;
   }
+  // </ END scope consts>
 
   constructor (input, lexerClass) {
     this.lexerClass = lexerClass;
@@ -360,7 +363,7 @@ export class IVProgParser {
     }
     this.pos++;
     const returnType = this.parseType(true);
-    const functionID = this.parseID();
+    const functionID = this.parseID(IVProgParser.FUNCTION);
     this.checkOpenParenthesis();
     this.pos++;
     this.consumeNewLines();
@@ -409,39 +412,44 @@ export class IVProgParser {
     return list;
   }
 
-  parseID () {
+  parseID (scope = IVProgParser.BASE) {
     const token = this.getToken();
     if(token.type !== this.lexerClass.ID) {
       throw SyntaxError.createError('ID', token);
-    }
+    } 
     this.pos++;
+    if (scope === IVProgParser.FUNCTION) {
+      if (token.text === this.lexerClass.MAIN_FUNCTION_NAME){
+        return null;
+      }
+    }
     return token.text;
   }
 
-  parseType (isFunction = false) {
+  parseType (scope = IVProgParser.BASE) {
     const token = this.getToken();
-    if(token.type === this.lexerClass.ID && isFunction) {
-      return 'void';
-    } else if (token.type === this.lexerClass.RK_VOID && isFunction) {
+    if(token.type === this.lexerClass.ID && scope === IVProgParser.FUNCTION) {
+      return Types.VOID;
+    } else if (token.type === this.lexerClass.RK_VOID && scope === IVProgParser.FUNCTION) {
       this.pos++;
-      return 'void';
+      return Types.VOID;
     } else if (this.isVariableType(token)) {
       this.pos++;
       switch(token.type) {
         case this.lexerClass.RK_INTEGER:
-          return 'int';
+          return Types.INTEGER;
         case this.lexerClass.RK_LOGIC:
-          return 'bool';
+          return Types.BOOLEAN;
         case this.lexerClass.RK_REAL:
-          return 'real';
+          return Types.REAL;
         case this.lexerClass.RK_STRING:
-          return 'string';
+          return Types.STRING;
         default:
           break;
       }
     }
     
-    throw SyntaxError.createError(this.getTypesAsString(isFunction), token);
+    throw SyntaxError.createError(this.getTypesAsString(scope), token);
   }
 
   parseCommandBlock (scope = IVProgParser.FUNCTION) {
@@ -502,12 +510,12 @@ export class IVProgParser {
     this.checkOpenParenthesis();
     this.pos++;
     this.consumeNewLines();
-    const attribution = this.parseForAttribution();
+    const attribution = this.parseForAssign();
     this.consumeNewLines();
     const condition = this.parseExpressionOR();
     this.checkEOS();
     this.pos++;
-    const increment = this.parseForAttribution(true);
+    const increment = this.parseForAssign(true);
     this.checkCloseParenthesis()
     this.pos++;
     this.consumeNewLines();
@@ -555,7 +563,7 @@ export class IVProgParser {
       const exp = this.parseExpressionOR();
       this.checkEOS();
       this.pos++;
-      return (new Commands.Attribution(id, exp));
+      return (new Commands.Assign(id, exp));
     } else if (equalOrParenthesis.type === this.lexerClass.OPEN_PARENTHESIS) {
       const actualParameters = this.parseActualParameters();
       this.checkEOS();
@@ -566,7 +574,7 @@ export class IVProgParser {
     }
   }
 
-  parseForAttribution (isLast = false) {
+  parseForAssign (isLast = false) {
     if(!isLast)
       this.consumeNewLines();
     if(this.checkEOS(true)) {
@@ -581,7 +589,7 @@ export class IVProgParser {
     const exp = this.parseExpressionOR();
     this.checkEOS();
     this.pos++;
-    return new Commands.Attribution(id, exp);
+    return new Commands.Assign(id, exp);
   }
 
   /*
@@ -603,86 +611,76 @@ export class IVProgParser {
   **/
   parseExpressionOR () {
     const exp1 = this.parseExpressionAND();
-    let exp2 = null;
-    let or = null;
     const maybeAnd = this.getToken();
     if (maybeAnd.type === this.lexerClass.OR_OPERATOR) {
       this.pos++;
-      or = 'or';
+      const or = 'or';
       this.consumeNewLines();
-      exp2 = this.parseExpressionOR();
+      const exp2 = this.parseExpressionOR();
+      return new Expressions.InfixApp(or, exp1, exp2);
     }
-
-    return {left: exp1, op:or, right: exp2};
+    return exp1;
   }
 
   parseExpressionAND () {
     const exp1 = this.parseExpressionNot();
-    let and = null;
-    let exp2 = null;
     const andToken = this.getToken();
     if (andToken.type === this.lexerClass.AND_OPERATOR) {
       this.pos++;
-      and = 'and';
+      const and = 'and';
       this.consumeNewLines();
-      exp2 = this.parseExpressionAND();
+      const exp2 = this.parseExpressionAND();
+      return new Expressions.InfixApp(and, exp1, exp2);
     }
-
-    return {left: exp1, op: and, right: exp2};
+    return exp1;
   }
 
   parseExpressionNot () {
-    let not = null;
     const maybeNotToken = this.getToken();
     if (maybeNotToken.type === this.lexerClass.NOT_OPERATOR) {
       this.pos++;
-      not = 'not';
+      const not = 'not';
+      const exp1 = this.parseExpressionRel();
+      return new Expressions.UnaryApp(not, exp1);
+    } else {
+      return this.parseExpressionRel();
     }
-    const eRel = this.parseExpressionRel();
-
-    return {left: null, op: not, right: eRel};
   }
 
   parseExpressionRel () {
     const exp1 = this.parseExpression();
-    let rel = null;
-    let exp2 = null;
     const relToken = this.getToken();
     if(relToken.type === this.lexerClass.RELATIONAL_OPERATOR) {
       this.pos++;
-      rel = relToken.text; // TODO: source code line/column information
-      exp2 = this.parseExpression();
+      const rel = relToken.text; // TODO: source code line/column information
+      const exp2 = this.parseExpression();
+      return new Expressions.InfixApp(rel, exp1, exp2);
     }
-
-    return {left: exp1, op: rel, right: exp2};
+    return exp1;
   }
 
   parseExpression () {
     const factor = this.parseFactor();
-    let op = null;
-    let exp = null;
     const sumOpToken = this.getToken();
     if(sumOpToken.type === this.lexerClass.SUM_OP) {
       this.pos++;
-      op = sumOpToken.text; // TODO: source code line/column information
-      exp = this.parseExpression();
+      const op = sumOpToken.text; // TODO: source code line/column information
+      const exp = this.parseExpression();
+      return new Expressions.InfixApp(op, factor, exp);
     }
-
-    return {left: factor, op: op, right: exp};
+    return factor;
   }
 
   parseFactor () {
     const term = this.parseTerm();
-    let op = null;
-    let factor = null;
     const multOpToken = this.getToken();
     if(multOpToken.type === this.lexerClass.MULTI_OP) {
       this.pos++;
-      op = multOpToken.text; // TODO: source code line/column information
-      factor = this.parseFactor();
+      const op = multOpToken.text; // TODO: source code line/column information
+      const factor = this.parseFactor();
+      return new Expressions.InfixApp(op, term, factor);
     }
-
-    return {left: term, op: op, right: factor};
+    return term;
   }
 
   parseTerm () {
@@ -791,8 +789,8 @@ export class IVProgParser {
     return list;
   }
 
-  getTypesAsString (isFunction = false) {
-    const types = isFunction ? this.functionTypes : this.variableTypes;
+  getTypesAsString (scope = IVProgParser.BASE) {
+    const types = scope === IVProgParser.FUNCTION ? this.functionTypes : this.variableTypes;
     return types.map( x => this.lexer.literalNames[x])
       .reduce((o, n) => {
         if (o.length <= 0)
