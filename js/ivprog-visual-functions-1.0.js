@@ -201,7 +201,72 @@ function renderGlobals() {
 	$('.list_globals').append(ret); 
 }
 
+var has_element_created_draged = false;
+var which_element_is_draged = null;
+
+function createCommentDragObject() {
+	var ret = '';
+	ret += '<div class="ui comment created_element"> <i class="ui icon small quote left"></i> <span class="span_comment_text" "> Testando </span>';
+	ret += '</div>';
+
+	has_element_created_draged = true;
+	which_element_is_draged = tiposComandos.comment;
+
+	$('body').append(ret);
+}
+
+var myDraggable = null;
+// Yeah... we're going to hack the widget
+var widget = null;
+var clickEvent = null;
+
+function flutuateCreatedElement() {
+	$('.created_element').css('top', mouseY);
+    $('.created_element').css('left', mouseX);
+
+
+      myDraggable = $('.created_element').draggable();
+  
+	  // Yeah... we're going to hack the widget
+	  widget = myDraggable.data('ui-draggable');
+	  clickEvent = null;
+	  
+	  myDraggable.click(function(event){
+
+
+	      if(!clickEvent){
+	        widget._mouseStart(event);
+	        clickEvent = event;
+	      }
+	      else {
+	        widget._mouseUp(event);
+	        clickEvent = null;
+	      }
+	    });
+	    
+	  $(document).mousemove(function(event){
+	    if(clickEvent){
+	      // We need to set this to our own clickEvent, otherwise
+	      // it won't position correctly.
+	      widget._mouseDownEvent = clickEvent;
+	      widget._mouseMove(event);
+	    }
+	  });
+
+}
+
 function addHandlers() {
+
+	$('.ui.buttons .dropdown').dropdown({
+		    onChange: function(value, text, $selectedItem) {
+		    	if (value == tiposComandos.comment) {
+		    		createCommentDragObject();
+		    	}
+
+		    	flutuateCreatedElement();
+
+		    }
+		});
 
 	$('.ui.dropdown.function_return')
     	.dropdown({
@@ -1717,6 +1782,29 @@ function removeParameter(parent_node, which_function, which_parameter) {
 	renderAlgorithm();
 }
 
+
+function manageDragableCommands(sequence) {
+	var el = document.getElementById('menu_commands_'+sequence);
+
+	var sortable = Sortable.create(el, {
+	    handle: '.created_element',
+	    animation: 100,
+	    draggable: '.item',
+	    ghostClass: 'ghost',
+	    group: {
+	    	name: 'commands_area_'+sequence,
+	    	pull: 'clone'
+	    },
+	    onEnd: function (evt) {
+	      updateSequenceFunctionHandler(evt.oldIndex, evt.newIndex);
+	    }
+    });
+
+
+
+}
+
+
 function appendFunction(function_obj, sequence) {
 	var appender = '<div class="ui secondary segment function_div list-group-item">';
 
@@ -1729,7 +1817,15 @@ function appendFunction(function_obj, sequence) {
 	appender += (!function_obj.eh_principal ? '<button class="ui icon button large remove_function_button" onclick="removeFunctionHandler(this.parentNode, '+sequence+')"><i class="red icon times"></i></button>' : '<div class="div_start_minimize_v"> </div>')
 		+ '<button class="ui icon button tiny minimize_function_button" onclick="minimizeFunctionHandler(this.parentNode, '+sequence+')"><i class="icon window minimize"></i></button>';
 
-	appender += '<div class="ui icon buttons add_var_top_button"><div class="ui icon button" onclick="addVariable('+sequence+')"><i class="icon superscript"></i></div><div class="ui icon button"><i class="icon code"></i></div></div>';
+	appender += '<div class="ui icon buttons add_var_top_button"><div class="ui icon button" onclick="addVariable('+sequence+')"><i class="icon superscript"></i></div>';
+	
+	appender += '<div class="ui icon button dropdown" ><i class="icon code"></i> <div class="menu" id="menu_commands_'+sequence+'"> ';
+	appender += '<a class="item" data-text="'+tiposComandos.reader+'"><i class="download icon"></i> ' +i18n('text_read_var')+ '</a>'
+			  + '<a class="item" data-text="'+tiposComandos.writer+'"><i class="upload icon"></i> '+i18n('text_write_var')+'</a>'
+			  + '<a class="item create_comment" data-text="'+tiposComandos.comment+'"><i class="quote left icon"></i> '+i18n('text_comment')+'</a>'
+				+ '</div></div></div>';
+
+
 
 	appender += '<div class="function_signature_div">'+i18n('function')+' ';
 
@@ -1759,6 +1855,8 @@ function appendFunction(function_obj, sequence) {
 		+ '</div>';
 
 	$('.all_functions').append(appender); 
+
+	manageDragableCommands(sequence);
 }
 
 

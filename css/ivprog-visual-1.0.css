@@ -258,3 +258,11 @@ div.buttons_manage_columns {
 	display: inline;
 	cursor: pointer;
 }
+
+.created_element {
+	position: absolute;
+	width: 50%;
+	z-index: 99999999;
+	opacity: .8;
+	cursor: move;
+}

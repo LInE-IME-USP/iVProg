@@ -44,6 +44,18 @@ var button_ready = function() {
 
   $('.ivprog_visual_panel').removeClass("loading");
 
+  $(document).mousemove(function(e){
+    var parentOffset = $('.ivprog_visual_panel').offset();; 
+   
+    mouseX = e.pageX - parentOffset.left + 300;
+    mouseY = e.pageY - parentOffset.top + 100;
+
+    /*$('.created_element').css('top', mouseY);
+    $('.created_element').css('left', mouseX);*/
+
+  });
+
+
   //Sortable:
   Sortable.create(listWithHandle, {
     handle: '.glyphicon-move',
@@ -56,6 +68,9 @@ var button_ready = function() {
   });
 
 };
+
+var mouseX;
+var mouseY;
 
 // attach ready event
 $(document)

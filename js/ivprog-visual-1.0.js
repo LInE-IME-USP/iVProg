@@ -3,7 +3,7 @@
 // Não adicionar elementos ao tipoDados, pois existem componentes que dependem do seu tamanho e isso afetará seu funcionamento
 var tiposDados = Object.freeze({void:"void", integer:"integer", real:"real", text:"text", boolean:"boolean", vector:"vector"});
 
-var tiposComandos = Object.freeze({comment:"comment"});
+var tiposComandos = Object.freeze({comment:"comment", reader:"reader", writer:"writer"});
 
 var Variavel = function(tipo, nome, valor, dimensoes = 0, eh_constante = false, linhas = 0, colunas = 0) {
 	this.tipo = tipo;
@@ -41,7 +41,6 @@ var Expressao = function(conteudo) {
 
 };
 
-
 var Programa = function () {
 	this.funcoes = new Array();
 	this.globais = new Array();
@@ -62,7 +61,7 @@ function adicionarVariavel(funcao, variavel) {
 
 // Adicionando a função principal automaticamente
 var programa = new Programa();
-var funcaoPrincipal = new Funcao(i18n("start"), tiposDados.void, 0, new Array(), true);
+var funcaoPrincipal = new Funcao(i18n("start"), tiposDados.void, 0, [], true);
 funcaoPrincipal.comentario_funcao = new Comentario(i18n('text_comment_main'));
 
 //funcaoPrincipal.lista_parametros.push(new Variavel(tiposDados.text, "args"));
@@ -70,7 +69,7 @@ funcaoPrincipal.comentario_funcao = new Comentario(i18n('text_comment_main'));
 
 adicionarFuncao(funcaoPrincipal);
 
-var funcaoSomar = new Funcao("somar", tiposDados.integer, 0, new Array(), false, false, null, new Comentario(i18n('text_comment_start')));
+var funcaoSomar = new Funcao("somar", tiposDados.integer, 0, [], false, false, null, new Comentario(i18n('text_comment_start')));
 funcaoSomar.lista_parametros.push(new Variavel(tiposDados.integer, "a"));
 funcaoSomar.lista_parametros.push(new Variavel(tiposDados.integer, "b"));
 

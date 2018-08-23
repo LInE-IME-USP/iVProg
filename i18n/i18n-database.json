@@ -98,5 +98,20 @@
 		"en": "This is the main function...",
 		"es": "Esta es la función principal...",
 		"pt": "Esta é a função principal..."
+	},
+	"text_read_var": {
+		"en": "Reading data",
+		"es": "Leyendo datos",
+		"pt": "Leitura de dados"
+	},
+	"text_write_var": {
+		"en": "Writing data",
+		"es": "Escribir datos",
+		"pt": "Escrita de dados"
+	},
+	"text_comment": {
+		"en": "Comment",
+		"es": "Comentario",
+		"pt": "Comentário"
 	}
 }
