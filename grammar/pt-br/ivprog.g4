@@ -1,11 +1,11 @@
 lexer grammar ivprog;
-// BEGIN i18n Lexical rules
 
 @lexer::members{
   //Translate to fit your language
   ivprog.MAIN_FUNCTION_NAME = "inicio";
 }
 
+// BEGIN i18n Lexical rules
 RK_PROGRAM
   : 'programa'
   ;

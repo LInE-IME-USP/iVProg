@@ -377,7 +377,7 @@ export class IVProgParser {
     }
     this.consumeNewLines();
     const commandsBlock = this.parseCommandBlock();
-    return {returnType: returnType, id: functionID, formalParams: formalParams, block: commandsBlock};
+    return new Commands.Function(functionID, returnType, formalParams, commandsBlock);
   }
 
   /*
@@ -490,7 +490,7 @@ export class IVProgParser {
       } else if (token.type === this.lexerClass.RK_DO) {
         
       } else if (token.type === this.lexerClass.RK_IF) {
-        
+        cmd = this.parseIf();
       }
 
       if (cmd === null)
@@ -503,6 +503,33 @@ export class IVProgParser {
     this.pos++;
     this.consumeNewLines();
     return {variables: variablesDecl, commands: commands};
+  }
+
+  parseIf () {
+    this.pos++;
+    this.checkOpenParenthesis();
+    this.pos++;
+    this.consumeNewLines();
+    const logicalExpression = this.parseExpressionOR();
+    this.consumeNewLines();
+    this.checkCloseParenthesis();
+    this.pos++;
+    this.consumeNewLines();
+    const cmdBlocks = this.parseCommandBlock(IVProgParser.COMMAND);
+
+    const maybeElse = this.getToken();
+    if(maybeElse.type === this.lexerClass.RK_ELSE) {
+      this.pos++;
+      this.consumeNewLines();
+      let elseBlock = null;
+      if(this.checkOpenCurly(true)) {
+        elseBlock = this.parseCommandBlock(IVProgParser.COMMAND);
+      } else {
+        elseBlock = this.parseIf();
+      }
+      return new Commands.If(logicalExpression, cmdBlocks, elseBlock);
+    }
+    return new Commands.If(logicalExpression, cmdBlocks, null);
   }
 
   parseFor () {
