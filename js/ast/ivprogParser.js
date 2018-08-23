@@ -507,7 +507,7 @@ export class IVProgParser {
     this.checkCloseCurly();
     this.pos++;
     this.consumeNewLines();
-    return {variables: variablesDecl, commands: commands};
+    return new Commands.CommandBlock(variablesDecl, commands);
   }
 
   parseIfThenElse () {
