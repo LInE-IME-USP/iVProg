@@ -16,7 +16,7 @@ export class IVProgParser {
   static get COMMAND () {
     return 2;
   }
-  static get LOOP () {
+  static get BREAKABLE () {
     return 4;
   }
   // </ END scope consts>
@@ -485,13 +485,13 @@ export class IVProgParser {
       } else if (token.type === this.lexerClass.RK_FOR) {
         cmd = this.parseFor();
       } else if (token.type === this.lexerClass.RK_BREAK ) {
-        if(scope !== IVProgParser.LOOP) {
+        if(scope !== IVProgParser.BREAKABLE) {
           // TODO better error message
           throw new Error("Break cannot be used outside of a loop.");
         }
         cmd = this.parseBreak();
       } else if (token.type === this.lexerClass.RK_SWITCH) {
-        
+        cmd = this.parseSwitchCase();
       } else if (token.type === this.lexerClass.RK_DO) {
         cmd = this.parseDoWhile();
       } else if (token.type === this.lexerClass.RK_IF) {
@@ -508,6 +508,26 @@ export class IVProgParser {
     this.pos++;
     this.consumeNewLines();
     return new Commands.CommandBlock(variablesDecl, commands);
+  }
+
+  parseSwitchCase () {
+    this.pos++;
+    this.checkOpenParenthesis();
+    this.pos++;
+    this.consumeNewLines();
+    const exp = this.parseExpressionOR();
+    this.consumeNewLines();
+    this.checkCloseParenthesis();
+    this.pos++;
+    this.consumeNewLines();
+    this.checkOpenCurly();
+    this.pos++;
+    this.consumeNewLines();
+    const switchCases = this.parseCases();
+    this.consumeNewLines();
+    this.checkCloseCurly();
+    this.pos++;
+    this.consumeNewLines();
   }
 
   parseDoWhile () {
@@ -573,7 +593,7 @@ export class IVProgParser {
     this.checkCloseParenthesis()
     this.pos++;
     this.consumeNewLines();
-    const commandsBlock = this.parseCommandBlock(IVProgParser.LOOP);
+    const commandsBlock = this.parseCommandBlock(IVProgParser.BREAKABLE);
     return new Commands.For(attribution, condition, increment, commandsBlock);
   }
 
@@ -587,7 +607,7 @@ export class IVProgParser {
     this.checkCloseParenthesis();
     this.pos++;
     this.consumeNewLines();
-    const cmdBlocks = this.parseCommandBlock(IVProgParser.LOOP);
+    const cmdBlocks = this.parseCommandBlock(IVProgParser.BREAKABLE);
     return new Commands.While(logicalExpression, cmdBlocks);
   }
 
