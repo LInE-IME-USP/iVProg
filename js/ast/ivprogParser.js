@@ -495,7 +495,7 @@ export class IVProgParser {
       } else if (token.type === this.lexerClass.RK_DO) {
         
       } else if (token.type === this.lexerClass.RK_IF) {
-        cmd = this.parseIf();
+        cmd = this.parseIfThenElse();
       }
 
       if (cmd === null)
@@ -510,7 +510,7 @@ export class IVProgParser {
     return {variables: variablesDecl, commands: commands};
   }
 
-  parseIf () {
+  parseIfThenElse () {
     this.pos++;
     this.checkOpenParenthesis();
     this.pos++;
@@ -530,11 +530,11 @@ export class IVProgParser {
       if(this.checkOpenCurly(true)) {
         elseBlock = this.parseCommandBlock(IVProgParser.COMMAND);
       } else {
-        elseBlock = this.parseIf();
+        elseBlock = this.parseIfThenElse();
       }
-      return new Commands.If(logicalExpression, cmdBlocks, elseBlock);
+      return new Commands.IfThenElse(logicalExpression, cmdBlocks, elseBlock);
     }
-    return new Commands.If(logicalExpression, cmdBlocks, null);
+    return new Commands.IfThenElse(logicalExpression, cmdBlocks, null);
   }
 
   parseFor () {

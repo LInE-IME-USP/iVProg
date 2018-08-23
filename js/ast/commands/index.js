@@ -6,8 +6,8 @@ import { ArrayDeclaration } from './arrayDeclaration';
 import { While } from './while';
 import { For } from './for';
 import { Function } from './function';
-import { If } from './if';
+import { IfThenElse } from './ifThenElse';
 
 export {
-  Break, Return, Assign, Declaration, ArrayDeclaration, While, For, Function, If
+  Break, Return, Assign, Declaration, ArrayDeclaration, While, For, Function, IfThenElse
 };
