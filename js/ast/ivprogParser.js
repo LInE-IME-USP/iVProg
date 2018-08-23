@@ -493,7 +493,7 @@ export class IVProgParser {
       } else if (token.type === this.lexerClass.RK_SWITCH) {
         
       } else if (token.type === this.lexerClass.RK_DO) {
-        
+        cmd = this.parseDoWhile();
       } else if (token.type === this.lexerClass.RK_IF) {
         cmd = this.parseIfThenElse();
       }
@@ -508,6 +508,28 @@ export class IVProgParser {
     this.pos++;
     this.consumeNewLines();
     return new Commands.CommandBlock(variablesDecl, commands);
+  }
+
+  parseDoWhile () {
+    this.pos++;
+    this.consumeNewLines();
+    const commandsBlock = this.parseCommandBlock();
+    this.consumeNewLines(); //Maybe not...
+    const whileToken = this.getToken();
+    if (whileToken !== this.lexerClass.RK_WHILE) {
+      throw SyntaxError.createError(this.lexer.literalNames[this.lexerClass.RK_WHILE], whileToken);
+    }
+    this.pos++;
+    this.checkOpenParenthesis();
+    this.pos++;
+    this.consumeNewLines();
+    const condition = this.parseExpressionOR();
+    this.consumeNewLines();
+    this.checkCloseParenthesis();
+    this.pos++;
+    this.checkEOS();
+
+    return new Commands.DoWhile(condition, commandsBlock);
   }
 
   parseIfThenElse () {

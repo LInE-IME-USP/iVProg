@@ -1,4 +1,5 @@
 export class While {
+
   constructor (expression, commandBlock) {
     this.expression = expression;
     this.commandBlock = commandBlock;
@@ -6,5 +7,9 @@ export class While {
 
   get commands () {
     return this.commandBlock.commands;
+  }
+
+  get testFirst () {
+  	return true;
   }
 }
