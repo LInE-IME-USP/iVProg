@@ -85,18 +85,26 @@ export class IVProgParser {
     }
   }
 
-  checkOpenCurly () {
+  checkOpenCurly (attempt = false) {
     const token = this.getToken();
     if(this.lexerClass.OPEN_CURLY !== token.type){
-      throw SyntaxError.createError('{', token);
+      if(!attempt)
+        throw SyntaxError.createError('{', token);
+      else
+        return false;
     }
+    return true;
   }
 
-  checkCloseCurly () {
+  checkCloseCurly (attempt = false) {
     const token = this.getToken();
     if(this.lexerClass.CLOSE_CURLY !== token.type){
-      throw SyntaxError.createError('}', token);
+      if(!attempt)
+        throw SyntaxError.createError('}', token);
+      else
+        return false;
     }
+    return true;
   }
 
   /* It checks if the current token at position pos is a ']'.
@@ -457,57 +465,74 @@ export class IVProgParser {
     throw SyntaxError.createError(this.getTypesAsString(scope), token);
   }
 
-  parseCommandBlock (scope = IVProgParser.FUNCTION) {
+  parseCommandBlock (scope = IVProgParser.FUNCTION, optionalCurly = false) {
     let variablesDecl = [];
     const commands = [];
-    this.checkOpenCurly();
-    this.pos++;
-    this.consumeNewLines();
-    while(true) {
-      const token = this.getToken();
-      let cmd = null;
-      if (this.isVariableType(token)) {
-        if(scope !== IVProgParser.FUNCTION) {
-          // TODO better error message
-          throw new Error(`Cannot declare variable here (line ${token.line})`);
-        }
-        this.pos++;
-        variablesDecl = variablesDecl.concat(this.parseDeclararion(token));
-        this.checkEOS();
-        this.pos++;
-        cmd = -1;
-      } else if (token.type === this.lexerClass.ID) {
-        cmd = this.parseIDCommand();
-      } else if (token.type === this.lexerClass.RK_RETURN) {
-        cmd = this.parseReturn();
-      } else if (token.type === this.lexerClass.RK_WHILE) {
-        cmd = this.parseWhile();
-      } else if (token.type === this.lexerClass.RK_FOR) {
-        cmd = this.parseFor();
-      } else if (token.type === this.lexerClass.RK_BREAK ) {
-        if(scope !== IVProgParser.BREAKABLE) {
-          // TODO better error message
-          throw new Error("Break cannot be used outside of a loop.");
-        }
-        cmd = this.parseBreak();
-      } else if (token.type === this.lexerClass.RK_SWITCH) {
-        cmd = this.parseSwitchCase();
-      } else if (token.type === this.lexerClass.RK_DO) {
-        cmd = this.parseDoWhile();
-      } else if (token.type === this.lexerClass.RK_IF) {
-        cmd = this.parseIfThenElse();
-      }
-
-      if (cmd === null)
-        break;
-      if(cmd !== -1)
-        commands.push(cmd);
+    let hasOpen = false;
+    if (this.checkOpenCurly(optionalCurly)) {
+      this.pos++;
+      hasOpen = true;
     }
     this.consumeNewLines();
-    this.checkCloseCurly();
-    this.pos++;
+    while(true) {
+
+      const cmd = this.parseCommand(scope);
+      if (cmd === null)
+        break;
+      if(cmd !== -1) {
+        if (cmd instanceof Commands.Declaration) {
+          variablesDecl.push(cmd);
+        } else {
+          commands.push(cmd);
+        }
+      }
+    }
     this.consumeNewLines();
+    if (hasOpen) {
+      this.checkCloseCurly()
+      this.pos++;
+      this.consumeNewLines();
+    }
     return new Commands.CommandBlock(variablesDecl, commands);
+  }
+
+  parseCommand (scope) {
+    const token = this.getToken();
+    let cmd = null;
+    if (this.isVariableType(token)) {
+      if(scope !== IVProgParser.FUNCTION) {
+        // TODO better error message
+        throw new Error(`Cannot declare variable here (line ${token.line})`);
+      }
+      this.pos++;
+      cmd = this.parseDeclararion(token);
+      this.checkEOS();
+      this.pos++;
+    } else if (token.type === this.lexerClass.ID) {
+      cmd = this.parseIDCommand();
+    } else if (token.type === this.lexerClass.RK_RETURN) {
+      cmd = this.parseReturn();
+    } else if (token.type === this.lexerClass.RK_WHILE) {
+      cmd = this.parseWhile();
+    } else if (token.type === this.lexerClass.RK_FOR) {
+      cmd = this.parseFor();
+    } else if (token.type === this.lexerClass.RK_BREAK ) {
+      if(scope !== IVProgParser.BREAKABLE) {
+        // TODO better error message
+        throw new Error("Break cannot be used outside of a loop.");
+      }
+      cmd = this.parseBreak();
+    } else if (token.type === this.lexerClass.RK_SWITCH) {
+      cmd = this.parseSwitchCase();
+    } else if (token.type === this.lexerClass.RK_DO) {
+      cmd = this.parseDoWhile();
+    } else if (token.type === this.lexerClass.RK_IF) {
+      cmd = this.parseIfThenElse();
+    } else if (this.checkEOS(true)){
+      this.pos++;
+      cmd = -1;
+    }
+    return cmd;
   }
 
   parseSwitchCase () {
@@ -533,7 +558,7 @@ export class IVProgParser {
   parseDoWhile () {
     this.pos++;
     this.consumeNewLines();
-    const commandsBlock = this.parseCommandBlock();
+    const commandsBlock = this.parseCommandBlock(IVProgParser.BREAKABLE);
     this.consumeNewLines(); //Maybe not...
     const whileToken = this.getToken();
     if (whileToken !== this.lexerClass.RK_WHILE) {
@@ -664,6 +689,14 @@ export class IVProgParser {
     this.checkEOS();
     this.pos++;
     return new Commands.Assign(id, exp);
+  }
+
+  parseCases () {
+    const token = this.getToken();
+    if(token.type !== this.lexerClass.RK_CASE) {
+      throw SyntaxError.createError(this.lexer.literalNames[this.lexerClass.RK_CASE], token);
+    }
+
   }
 
   /*
