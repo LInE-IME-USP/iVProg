@@ -8,6 +8,7 @@ import { For } from './for';
 import { Function } from './function';
 import { IfThenElse } from './ifThenElse';
 import { CommandBlock } from './commandBlock';
+import { DoWhile } from './doWhile';
 
 export {
   Break,
@@ -19,5 +20,6 @@ export {
   For,
   Function,
   IfThenElse,
-  CommandBlock
+  CommandBlock,
+  DoWhile
 };

@@ -34,6 +34,7 @@ export class IVProgParser {
     ];
     this.functionTypes = this.variableTypes.concat(this.lexerClass.RK_VOID);
     this.parsingArrayDimension = 0;
+    this.scope = [];
   }
 
   parseTree () {
@@ -44,6 +45,22 @@ export class IVProgParser {
     // if(index === null)
     //   index = this.pos;
     return this.tokenStream.LT(index);
+  }
+
+  insideScope (scope) {
+    if(this.scope.length <= 0) {
+      return IVProgParser.BASE === scope;
+    } else {
+      return this.scope[this.scope.length-1] === scope;
+    }
+  }
+
+  pushScope (scope) {
+    this.scope.push(scope);
+  }
+
+  popScope () {
+    return this.scope.pop();
   }
 
   isEOF () {
@@ -363,6 +380,7 @@ export class IVProgParser {
   * The block object has two attributes: declarations and commands
   **/
   parseFunction () {
+    this.pushScope(IVProgParser.FUNCTION);
     let formalParams = [];
     const token = this.getToken();
     if(token.type !== this.lexerClass.RK_FUNCTION) {
@@ -370,8 +388,8 @@ export class IVProgParser {
       return null;
     }
     this.pos++;
-    const returnType = this.parseType(IVProgParser.FUNCTION);
-    const functionID = this.parseID(IVProgParser.FUNCTION);
+    const returnType = this.parseType();
+    const functionID = this.parseID();
     this.checkOpenParenthesis();
     this.pos++;
     this.consumeNewLines();
@@ -390,6 +408,7 @@ export class IVProgParser {
       // TODO: better error message
       throw new Error(`Function ${this.lexerClass.MAIN_FUNCTION_NAME} must return void (line ${token.line})`);
     }
+    this.popScope();
     return func;
   }
 
@@ -425,13 +444,13 @@ export class IVProgParser {
     return list;
   }
 
-  parseID (scope = IVProgParser.BASE) {
+  parseID () {
     const token = this.getToken();
     if(token.type !== this.lexerClass.ID) {
       throw SyntaxError.createError('ID', token);
     } 
     this.pos++;
-    if (scope === IVProgParser.FUNCTION) {
+    if (this.insideScope(IVProgParser.FUNCTION)) {
       if (token.text === this.lexerClass.MAIN_FUNCTION_NAME){
         return null;
       }
@@ -439,11 +458,11 @@ export class IVProgParser {
     return token.text;
   }
 
-  parseType (scope = IVProgParser.BASE) {
+  parseType () {
     const token = this.getToken();
-    if(token.type === this.lexerClass.ID && scope === IVProgParser.FUNCTION) {
+    if(token.type === this.lexerClass.ID && this.insideScope(IVProgParser.FUNCTION)) {
       return Types.VOID;
-    } else if (token.type === this.lexerClass.RK_VOID && scope === IVProgParser.FUNCTION) {
+    } else if (token.type === this.lexerClass.RK_VOID && this.insideScope(IVProgParser.FUNCTION)) {
       this.pos++;
       return Types.VOID;
     } else if (this.isVariableType(token)) {
@@ -462,10 +481,10 @@ export class IVProgParser {
       }
     }
     
-    throw SyntaxError.createError(this.getTypesAsString(scope), token);
+    throw SyntaxError.createError(this.getTypesAsString(), token);
   }
 
-  parseCommandBlock (scope = IVProgParser.FUNCTION, optionalCurly = false) {
+  parseCommandBlock (optionalCurly = false) {
     let variablesDecl = [];
     const commands = [];
     let hasOpen = false;
@@ -476,7 +495,7 @@ export class IVProgParser {
     this.consumeNewLines();
     while(true) {
 
-      const cmd = this.parseCommand(scope);
+      const cmd = this.parseCommand();
       if (cmd === null)
         break;
       if(cmd !== -1) {
@@ -496,11 +515,11 @@ export class IVProgParser {
     return new Commands.CommandBlock(variablesDecl, commands);
   }
 
-  parseCommand (scope) {
+  parseCommand () {
     const token = this.getToken();
     let cmd = null;
     if (this.isVariableType(token)) {
-      if(scope !== IVProgParser.FUNCTION) {
+      if(!this.insideScope(IVProgParser.FUNCTION)) {
         // TODO better error message
         throw new Error(`Cannot declare variable here (line ${token.line})`);
       }
@@ -517,7 +536,7 @@ export class IVProgParser {
     } else if (token.type === this.lexerClass.RK_FOR) {
       cmd = this.parseFor();
     } else if (token.type === this.lexerClass.RK_BREAK ) {
-      if(scope !== IVProgParser.BREAKABLE) {
+      if(!this.insideScope(IVProgParser.BREAKABLE)) {
         // TODO better error message
         throw new Error("Break cannot be used outside of a loop.");
       }
@@ -536,6 +555,7 @@ export class IVProgParser {
   }
 
   parseSwitchCase () {
+    this.pushScope(IVProgParser.BREAKABLE);
     this.pos++;
     this.checkOpenParenthesis();
     this.pos++;
@@ -553,15 +573,19 @@ export class IVProgParser {
     this.checkCloseCurly();
     this.pos++;
     this.consumeNewLines();
+
+    this.popScope();
+    return null;
   }
 
   parseDoWhile () {
     this.pos++;
     this.consumeNewLines();
-    const commandsBlock = this.parseCommandBlock(IVProgParser.BREAKABLE);
+    this.pushScope(IVProgParser.BREAKABLE);
+    const commandsBlock = this.parseCommandBlock();
     this.consumeNewLines(); //Maybe not...
     const whileToken = this.getToken();
-    if (whileToken !== this.lexerClass.RK_WHILE) {
+    if (whileToken.type !== this.lexerClass.RK_WHILE) {
       throw SyntaxError.createError(this.lexer.literalNames[this.lexerClass.RK_WHILE], whileToken);
     }
     this.pos++;
@@ -573,11 +597,16 @@ export class IVProgParser {
     this.checkCloseParenthesis();
     this.pos++;
     this.checkEOS();
-
+    this.popScope();
     return new Commands.DoWhile(condition, commandsBlock);
   }
 
   parseIfThenElse () {
+    if(this.insideScope(IVProgParser.BREAKABLE)) {
+      this.pushScope(IVProgParser.BREAKABLE);
+    } else {
+      this.pushScope(IVProgParser.COMMAND);
+    }
     this.pos++;
     this.checkOpenParenthesis();
     this.pos++;
@@ -587,7 +616,7 @@ export class IVProgParser {
     this.checkCloseParenthesis();
     this.pos++;
     this.consumeNewLines();
-    const cmdBlocks = this.parseCommandBlock(IVProgParser.COMMAND);
+    const cmdBlocks = this.parseCommandBlock();
 
     const maybeElse = this.getToken();
     if(maybeElse.type === this.lexerClass.RK_ELSE) {
@@ -595,16 +624,18 @@ export class IVProgParser {
       this.consumeNewLines();
       let elseBlock = null;
       if(this.checkOpenCurly(true)) {
-        elseBlock = this.parseCommandBlock(IVProgParser.COMMAND);
+        elseBlock = this.parseCommandBlock();
       } else {
         elseBlock = this.parseIfThenElse();
       }
       return new Commands.IfThenElse(logicalExpression, cmdBlocks, elseBlock);
     }
+    this.popScope();
     return new Commands.IfThenElse(logicalExpression, cmdBlocks, null);
   }
 
   parseFor () {
+    this.pushScope(IVProgParser.BREAKABLE);
     this.pos++;
     this.checkOpenParenthesis();
     this.pos++;
@@ -618,11 +649,13 @@ export class IVProgParser {
     this.checkCloseParenthesis()
     this.pos++;
     this.consumeNewLines();
-    const commandsBlock = this.parseCommandBlock(IVProgParser.BREAKABLE);
+    const commandsBlock = this.parseCommandBlock();
+    this.popScope();
     return new Commands.For(attribution, condition, increment, commandsBlock);
   }
 
   parseWhile () {
+    this.pushScope(IVProgParser.BREAKABLE);
     this.pos++;
     this.checkOpenParenthesis();
     this.pos++;
@@ -632,7 +665,8 @@ export class IVProgParser {
     this.checkCloseParenthesis();
     this.pos++;
     this.consumeNewLines();
-    const cmdBlocks = this.parseCommandBlock(IVProgParser.BREAKABLE);
+    const cmdBlocks = this.parseCommandBlock();
+    this.popScope();
     return new Commands.While(logicalExpression, cmdBlocks);
   }
 
@@ -896,8 +930,8 @@ export class IVProgParser {
     return list;
   }
 
-  getTypesAsString (scope = IVProgParser.BASE) {
-    const types = scope === IVProgParser.FUNCTION ? this.functionTypes : this.variableTypes;
+  getTypesAsString () {
+    const types = this.insideScope(IVProgParser.FUNCTION) ? this.functionTypes : this.variableTypes;
     return types.map( x => this.lexer.literalNames[x])
       .reduce((o, n) => {
         if (o.length <= 0)
