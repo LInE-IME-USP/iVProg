@@ -860,6 +860,9 @@ export class IVProgParser {
   parseTerm () {
     const token = this.getToken();
     switch(token.type) {
+      case this.lexerClass.SUM_OP:
+        this.pos++;
+        return new Expressions.UnaryApp(token.text, this.parseTerm());
       case this.lexerClass.INTEGER:
         this.pos++;
         return this.getIntLiteral(token);
