@@ -380,7 +380,7 @@ export class IVProgParser {
     const func = new Commands.Function(functionID, returnType, formalParams, commandsBlock);
     if (functionID === null && !func.isMain) {
       // TODO: better error message
-      throw new Error("");
+      throw new Error(`Function ${this.lexerClass.MAIN_FUNCTION_NAME} must return void (line ${token.line})`);
     }
     return func;
   }
