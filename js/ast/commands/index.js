@@ -9,6 +9,8 @@ import { Function } from './function';
 import { IfThenElse } from './ifThenElse';
 import { CommandBlock } from './commandBlock';
 import { DoWhile } from './doWhile';
+import { Switch } from './switch';
+import { Case } from './case';
 
 export {
   Break,
@@ -21,5 +23,7 @@ export {
   Function,
   IfThenElse,
   CommandBlock,
-  DoWhile
+  DoWhile,
+  Switch,
+  Case
 };

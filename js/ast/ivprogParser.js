@@ -568,14 +568,14 @@ export class IVProgParser {
     this.checkOpenCurly();
     this.pos++;
     this.consumeNewLines();
-    const switchCases = this.parseCases();
+    const casesList = this.parseCases();
     this.consumeNewLines();
     this.checkCloseCurly();
     this.pos++;
     this.consumeNewLines();
 
     this.popScope();
-    return null;
+    return new Commands.Switch(casesList);
   }
 
   parseDoWhile () {
@@ -730,7 +730,38 @@ export class IVProgParser {
     if(token.type !== this.lexerClass.RK_CASE) {
       throw SyntaxError.createError(this.lexer.literalNames[this.lexerClass.RK_CASE], token);
     }
-
+    this.pos++;
+    const nextToken = this.getToken();
+    if(nextToken.type === this.lexerClass.RK_DEFAULT) {
+      this.pos++;
+      const colonToken = this.getToken();
+      if (colonToken.type !== this.lexerClass.COLON) {
+        throw SyntaxError.createError(':', colonToken);
+      }
+      this.pos++;
+      this.consumeNewLines();
+      const block = this.parseCommandBlock(true);
+      const defaultCase = new Commands.Case(null);
+      defaultCase.setCommands(block.commands);
+      return [defaultCase];
+    } else {
+      const exp = this.parseExpressionOR();
+      const colonToken = this.getToken();
+      if (colonToken.type !== this.lexerClass.COLON) {
+        throw SyntaxError.createError(':', colonToken);
+      }
+      this.pos++;
+      this.consumeNewLines();
+      const block = this.parseCommandBlock(true);
+      const aCase = new Commands.Case(exp);
+      aCase.setCommands(block.commands);
+      const caseToken = this.getToken();
+      if(caseToken.type === this.lexerClass.RK_CASE) {
+        return [aCase].concat(this.parseCases());
+      } else {
+        return [aCase];
+      }
+    }
   }
 
   /*
