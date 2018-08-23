@@ -362,7 +362,7 @@ export class IVProgParser {
       return null;
     }
     this.pos++;
-    const returnType = this.parseType(true);
+    const returnType = this.parseType(IVProgParser.FUNCTION);
     const functionID = this.parseID(IVProgParser.FUNCTION);
     this.checkOpenParenthesis();
     this.pos++;
