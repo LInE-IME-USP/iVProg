@@ -2,14 +2,11 @@ import Lexers from './../grammar/';
 import {
     IVProgParser
 } from './../js/ast/ivprogParser';
-import {
-    SyntaxError
-} from './../js/ast/SyntaxError';
 
 describe('A complete program code', () => {
     let input = `programa {
       
-      const real PI = 5.5
+      const real PI = 5.7e-10
       inteiro V = -10*2
 
       funcao inteiro test(real i) {
