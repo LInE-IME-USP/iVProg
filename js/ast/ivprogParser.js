@@ -690,7 +690,7 @@ export class IVProgParser {
     this.pos++;
     let exp = null;
     if(!this.checkEOS(true)) {
-      const exp = this.parseExpressionOR();
+      exp = this.parseExpressionOR();
       this.checkEOS();
     }
     this.pos++;
