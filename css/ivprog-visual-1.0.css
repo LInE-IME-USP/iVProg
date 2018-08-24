@@ -265,4 +265,19 @@ div.buttons_manage_columns {
 	z-index: 99999999;
 	opacity: .8;
 	cursor: move;
+	border: 1px solid green;
+}
+
+#outer {
+    background: blue;
+    width: 200px;
+    height: 200px;
+}
+.inner {
+    background: yellow;
+    width: 50px;
+    height: 50px;
+}
+.commands_list_div, .variables_list_div {
+	min-height: 20px;
 }

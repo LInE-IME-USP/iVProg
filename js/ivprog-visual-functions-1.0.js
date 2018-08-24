@@ -204,66 +204,87 @@ function renderGlobals() {
 var has_element_created_draged = false;
 var which_element_is_draged = null;
 
+function ended(event) {
+	var el = document.elementFromPoint(event.clientX, event.clientY);
+	//console.log("elemento que ele soltou:");
+	//console.log(el);
+	
+	$(el).remove();
+
+	var el = document.elementFromPoint(event.clientX, event.clientY);
+	//console.log("depois de remover:");
+	//console.log(el);
+
+
+	// Só irá adicionar se soltar o elemento no espaço para a função correta:
+	if ($(el).data('fun') == function_to_add) {
+		// Se a lista de comandos estiver vazia, então é o primeiro.
+		// Portanto, ele deve soltar o elemento obrigatoriamente no objeto vazio
+		if ((programa.funcoes[function_to_add].comandos == null)  || (programa.funcoes[function_to_add].comandos.length == 0)) {
+			
+				// pode adicionar 
+				programa.funcoes[function_to_add].comandos = [];
+				programa.funcoes[function_to_add].comandos.push(new Comentario(i18n('text_comment')));
+			
+		} else {
+			programa.funcoes[function_to_add].comandos.push(new Comentario(i18n('text_comment')));
+		}
+
+	} else { // Se entrar nesse bloco 'else', quer dizer que o usuário não soltou o elemento necessariamente na div específica
+			 // portanto, devemos procurar nos elementos DOM superiores, se existe algum com o data-fun
+
+		var hier = $(el).parentsUntil(".all_functions");
+		for (i = 0; i < hier.length; i++) {
+			if ($(hier[i]).data('fun') == function_to_add) {
+				programa.funcoes[function_to_add].comandos.push(new Comentario(i18n('text_comment')));
+				break;
+			}
+		}
+
+
+	}
+
+	renderAlgorithm();
+
+}
+
+
 function createCommentDragObject() {
 	var ret = '';
-	ret += '<div class="ui comment created_element"> <i class="ui icon small quote left"></i> <span class="span_comment_text" "> Testando </span>';
+	ret += '<div class="ui comment created_element" onclick="ended(event)" id="sera"> <i class="ui icon small quote left"></i> <span class="span_comment_text" "> '+i18n('text_comment')+' </span>';
 	ret += '</div>';
 
-	has_element_created_draged = true;
-	which_element_is_draged = tiposComandos.comment;
-
-	$('body').append(ret);
+	return ret;
 }
 
-var myDraggable = null;
-// Yeah... we're going to hack the widget
-var widget = null;
-var clickEvent = null;
-
-function flutuateCreatedElement() {
-	$('.created_element').css('top', mouseY);
-    $('.created_element').css('left', mouseX);
-
-
-      myDraggable = $('.created_element').draggable();
-  
-	  // Yeah... we're going to hack the widget
-	  widget = myDraggable.data('ui-draggable');
-	  clickEvent = null;
-	  
-	  myDraggable.click(function(event){
-
-
-	      if(!clickEvent){
-	        widget._mouseStart(event);
-	        clickEvent = event;
-	      }
-	      else {
-	        widget._mouseUp(event);
-	        clickEvent = null;
-	      }
-	    });
-	    
-	  $(document).mousemove(function(event){
-	    if(clickEvent){
-	      // We need to set this to our own clickEvent, otherwise
-	      // it won't position correctly.
-	      widget._mouseDownEvent = clickEvent;
-	      widget._mouseMove(event);
-	    }
-	  });
-
-}
+var function_to_add = -1;
 
 function addHandlers() {
+
+	$('.create_comment').on('click', function(e){
+
+		has_element_created_draged = true;
+		which_element_is_draged = tiposComandos.command;
+
+		function_to_add = $(e.target).data('fun');
+
+		var inner = $(createCommentDragObject()).draggable().appendTo("body");
+	    
+	    inner.css("position", "absolute");
+	    
+	    e.type = "mousedown.draggable";
+	    e.target = inner[0];
+	    inner.css("left", e.pageX - 15);
+	    inner.css("top", e.pageY - 15);
+	    inner.trigger(e);
+		
+	});
 
 	$('.ui.buttons .dropdown').dropdown({
 		    onChange: function(value, text, $selectedItem) {
 		    	if (value == tiposComandos.comment) {
-		    		createCommentDragObject();
+		    		
 		    	}
-
-		    	flutuateCreatedElement();
 
 		    }
 		});
@@ -1806,7 +1827,7 @@ function manageDragableCommands(sequence) {
 
 
 function appendFunction(function_obj, sequence) {
-	var appender = '<div class="ui secondary segment function_div list-group-item">';
+	var appender = '<div class="ui secondary segment function_div list-group-item" data-fun="'+sequence+'">';
 
 	if (function_obj.comentario_funcao) {
 		appender += renderComment(function_obj.comentario_funcao, sequence, true, -1);
@@ -1820,9 +1841,9 @@ function appendFunction(function_obj, sequence) {
 	appender += '<div class="ui icon buttons add_var_top_button"><div class="ui icon button" onclick="addVariable('+sequence+')"><i class="icon superscript"></i></div>';
 	
 	appender += '<div class="ui icon button dropdown" ><i class="icon code"></i> <div class="menu" id="menu_commands_'+sequence+'"> ';
-	appender += '<a class="item" data-text="'+tiposComandos.reader+'"><i class="download icon"></i> ' +i18n('text_read_var')+ '</a>'
-			  + '<a class="item" data-text="'+tiposComandos.writer+'"><i class="upload icon"></i> '+i18n('text_write_var')+'</a>'
-			  + '<a class="item create_comment" data-text="'+tiposComandos.comment+'"><i class="quote left icon"></i> '+i18n('text_comment')+'</a>'
+	appender += '<a class="item" data-text="'+tiposComandos.reader+'" data-fun="'+sequence+'"><i class="download icon"></i> ' +i18n('text_read_var')+ '</a>'
+			  + '<a class="item" data-text="'+tiposComandos.writer+'" data-fun="'+sequence+'"><i class="upload icon"></i> '+i18n('text_write_var')+'</a>'
+			  + '<a class="item create_comment" data-text="'+tiposComandos.comment+'" data-fun="'+sequence+'"><i class="quote left icon"></i> '+i18n('text_comment')+'</a>'
 				+ '</div></div></div>';
 
 
@@ -1848,9 +1869,20 @@ function appendFunction(function_obj, sequence) {
 		+ '<div class="ui top attached segment variables_list_div">'
 		+ renderVariables(function_obj, sequence)
 		+ '</div>'
-		+ '<div class="ui bottom attached segment commands_list_div"></div>'		
+		+ '<div class="ui bottom attached segment commands_list_div" data-fun="'+sequence+'">';
 
-		+ '<div class="function_close_div">}</div>'
+
+	if (programa.funcoes[sequence].comandos) {
+		for (l = 0; l < programa.funcoes[sequence].comandos.length; l++) {
+			if (programa.funcoes[sequence].comandos[l].tipo == tiposComandos.comment) {
+				appender += renderComment(programa.funcoes[sequence].comandos[l], sequence, false, l);
+			}
+		}
+	}
+
+	appender += '</div>';
+
+	appender += '<div class="function_close_div">}</div>'
 		+ '</div>'
 		+ '</div>';
 

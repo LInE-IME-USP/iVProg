@@ -73,4 +73,4 @@ var funcaoSomar = new Funcao("somar", tiposDados.integer, 0, [], false, false, n
 funcaoSomar.lista_parametros.push(new Variavel(tiposDados.integer, "a"));
 funcaoSomar.lista_parametros.push(new Variavel(tiposDados.integer, "b"));
 
-adicionarFuncao(funcaoSomar);
+//adicionarFuncao(funcaoSomar);
