@@ -220,8 +220,8 @@ export class IVProgParser {
       const typeString = this.parseType();
       return this.parseDeclararion(typeString, true);
     } else if(this.isVariableType(constToken)) {
-      this.pos++;
-      return this.parseDeclararion(constToken);
+      const typeString = this.parseType();
+      return this.parseDeclararion(typeString);
     } else {
       throw SyntaxError.createError(this.lexer.literalNames[this.lexerClass.RK_CONST] + ' or ' + this.getTypesAsString(), constToken);
     }
