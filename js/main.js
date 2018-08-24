@@ -2,6 +2,7 @@ import {
     InputStream,
     CommonTokenStream
 } from 'antlr4/index';
+import * as Commands from './ast/commands';
 import { IVProgParser } from './ast/ivprogParser';
 import Lexers from '../grammar/';
 
@@ -11,18 +12,20 @@ const ivprogLexer = Lexers[lang];
 
 const input = `programa {
 
-  const real PI = 5.5
-  inteiro V = -10*2
+  const real C = 6.8-5.8+1
+             
+  funcao abc() {
+     inteiro a = 8
+     se (a * C > 80) {
+        a = 0
+     } senao se(verdadeiro) {
+        a = -1
+       fun()
+     }
+  }
 
-  funcao inteiro test(real i) {
-    escolha (i) {
-      caso 1:
-        i = i + 5
-        retorne i
-      caso contrario:
-        i =  i * 2 + 3
-        retorne i
-    }
+  funcao real fun() {
+    retorne 3
   }
 }`;
 
@@ -40,7 +43,19 @@ const anaSin = new IVProgParser(input, ivprogLexer);
 try {
   const data = anaSin.parseTree();
   console.log(data);
-  $('#json-renderer').jsonViewer(data);
+  var editor = new JsonEditor('#json-renderer', data);
+  $('#btn').click( () => {
+    const input = $('#input').val();
+    const analiser = new IVProgParser(input, ivprogLexer);
+    try {
+      const data = analiser.parseTree();
+      console.log(data);
+      editor.load(data);  
+    } catch (error) {
+      alert(error);
+    }
+    
+  });
 } catch(a) {
   console.log(a);
 }

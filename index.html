@@ -1,13 +1,45 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <link rel="stylesheet" href="js/json-viewer/jquery.json-viewer.css">
+  <link rel="stylesheet" type="text/css" href="js/semantic/semantic.min.css">
   <title></title>
 </head>
 <body>
-  <pre id="json-renderer"></pre>
+    <div style="padding-top: 50px;content: ''"></div>
+  <div class="ui container grid">
+    
+    <div class="four wide column">
+      <div class="row">
+        <textarea class="ui form control" name="input" id="input" cols="100" rows="30">
+            programa {
+
+              const real C = 5.5
+             
+              funcao inteiro inicio() {
+               inteiro a = 8
+               se (a * C > 80) {
+                a = 0
+               } senao {
+                 a = -1
+               }
+              }
+             }
+        </textarea>
+      </div>
+      <div class="row">
+          <button class="ui button" id="btn">Generate AST</button>
+      </div>
+    </div>
+    <div class="six wide column">
+      <div style="overflow-y: scroll; height: 20%;">
+          <pre id="json-renderer" class="ui right floated"></pre>
+      </div>
+    </div>
+  </div>
+  
+  
 </body>
 <script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
-<script type="text/javascript" src="js/json-viewer/jquery.json-viewer.js"></script>
+<script type="text/javascript" src="js/jquery.json-editor.min.js"></script>
 <script type="text/javascript" src="build/ivprog.bundle.js"></script>
 </html>
