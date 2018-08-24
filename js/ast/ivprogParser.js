@@ -346,7 +346,7 @@ export class IVProgParser {
   }
 
   getBoolLiteral (token) {
-    const val = token.type === this.lexerClass.RK_True ? true : false;
+    const val = token.type === this.lexerClass.RK_TRUE ? true : false;
     return new Expressions.BoolLiteral(val);
   }
 
@@ -634,11 +634,14 @@ export class IVProgParser {
     if(maybeElse.type === this.lexerClass.RK_ELSE) {
       this.pos++;
       this.consumeNewLines();
+      const maybeIf = this.getToken();
       let elseBlock = null;
       if(this.checkOpenCurly(true)) {
         elseBlock = this.parseCommandBlock();
-      } else {
+      } else if(maybeIf.type === this.lexerClass.RK_IF) {
         elseBlock = this.parseIfThenElse();
+      } else {
+        throw SyntaxError.createError('if or {', maybeIf);
       }
       return new Commands.IfThenElse(logicalExpression, cmdBlocks, elseBlock);
     }
