@@ -30,6 +30,12 @@ var button_ready = function() {
     .dropdown()
   ;
 
+  $('.ui.dropdown')
+    .dropdown()
+  ;
+
+  $('.program_signature_text').text(i18n('program'));
+
 
   $('.add_function_button').on('click', addFunctionHandler);
 
@@ -37,6 +43,18 @@ var button_ready = function() {
   renderAlgorithm();
 
   $('.ivprog_visual_panel').removeClass("loading");
+
+  $(document).mousemove(function(e){
+    var parentOffset = $('.ivprog_visual_panel').offset();; 
+   
+    mouseX = e.pageX - parentOffset.left + 300;
+    mouseY = e.pageY - parentOffset.top + 100;
+
+    /*$('.created_element').css('top', mouseY);
+    $('.created_element').css('left', mouseX);*/
+
+  });
+
 
   //Sortable:
   Sortable.create(listWithHandle, {
@@ -50,6 +68,9 @@ var button_ready = function() {
   });
 
 };
+
+var mouseX;
+var mouseY;
 
 // attach ready event
 $(document)

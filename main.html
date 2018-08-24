@@ -5,6 +5,11 @@
     <link rel="stylesheet" type="text/css" href="js/semantic/semantic.min.css">
     <link rel="stylesheet" type="text/css" href="css/ivprog-visual-1.0.css">
     <script src="js/jquery-3.3.1.min.js"></script>
+
+    <script src="js/iassign-integration-functions.js"></script>
+
+    <script src="i18n/i18n-engine.js"></script>
+
     <script src="js/semantic/semantic.min.js"></script>
     <script src="js/semantic/semantic-buttons.js"></script>
 
@@ -15,12 +20,15 @@
     <script src="js/Sortable.js"></script>
   </head>
   <body>
+   
     <div class="ui one column doubling stackable grid container">
       <div class="column">
         <div class="ui container main_title">
           <h2>iVProg</h2>
           <span>interactive coding</span>
         </div>
+
+        
 
         <div class="ui container content_margin">
           <div class="content_sub_margin">
@@ -81,6 +89,12 @@
       </div>
 
       <div class="ui one column container segment ivprog_visual_panel loading">
+        <div class="program_signature"><span class="program_signature_text">programa</span> { </div>
+
+        <div class="global_var">
+          <div class="ui icon button" onclick="addGlobalVar()"><i class="icon superscript"></i></div>
+          <div class="list_globals"></div>
+        </div>
 
         <div class="all_functions list-group" id="listWithHandle">
 
@@ -88,12 +102,25 @@
 
 
         <div class="ui teal small labeled icon button add_function_button">
-          Function
+          <data class="i18n" value="Function">Function</data>
           <i class="add icon"></i>
         </div>
+        <div class="program_final">}</div>
 
       </div>
       
     </div>
+
+    <i class="icon trash alternate outline huge" onmouseover="console.log('oi');" ></i>
+
+
+
+
+
+
+
+
+
+
   </body>
 </html>
