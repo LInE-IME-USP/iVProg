@@ -25,7 +25,7 @@ describe('A complete program code', () => {
 
     it(`should not result in SyntaxError`, () => {
         const as = new IVProgParser(input, lexer);
-        const fun = as.parseFunction.bind(as);
+        const fun = as.parseTree.bind(as);
         expect(fun).not.toThrow(SyntaxError);
     });
 });

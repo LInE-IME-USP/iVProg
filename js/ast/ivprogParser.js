@@ -191,6 +191,15 @@ export class IVProgParser {
     return true;
   }
 
+  consumeForSemiColon () {
+    const eosToken = this.getToken();
+    if (eosToken.type === this.lexerClass.EOS && eosToken.text.match(';')) {
+      this.pos++;
+      return;  
+    }
+    throw SyntaxError.createError(';', eosToken);
+  }
+
   parseGlobalVariables () {
     const decl = this.parseMaybeConst();
     const eosToken = this.getToken();
@@ -631,6 +640,7 @@ export class IVProgParser {
       return new Commands.IfThenElse(logicalExpression, cmdBlocks, elseBlock);
     }
     this.popScope();
+
     return new Commands.IfThenElse(logicalExpression, cmdBlocks, null);
   }
 
@@ -643,8 +653,7 @@ export class IVProgParser {
     const attribution = this.parseForAssign();
     this.consumeNewLines();
     const condition = this.parseExpressionOR();
-    this.checkEOS();
-    this.pos++;
+    this.consumeForSemiColon();
     const increment = this.parseForAssign(true);
     this.checkCloseParenthesis()
     this.pos++;
@@ -721,8 +730,7 @@ export class IVProgParser {
     this.pos++
     const exp = this.parseExpressionOR();
     if(!isLast) {
-      this.checkEOS();
-      this.pos++;
+      this.consumeForSemiColon();
     }
     return new Commands.Assign(id, exp);
   }
