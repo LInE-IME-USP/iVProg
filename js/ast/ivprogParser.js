@@ -81,7 +81,7 @@ export class IVProgParser {
       while(true) {
         this.consumeNewLines();
         const token = this.getToken();
-        if (token.type === this.lexerClass.RK_CONST || token.type === this.lexerClass.ID) {
+        if (token.type === this.lexerClass.RK_CONST || this.isVariableType(token)) {
           globalVars = globalVars.concat(this.parseGlobalVariables());
         } else if (token.type === this.lexerClass.RK_FUNCTION) {
           functions = functions.concat(this.parseFunction());

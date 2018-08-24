@@ -10,20 +10,20 @@ const lang = 'pt_br';
 const ivprogLexer = Lexers[lang];
 
 const input = `programa {
-        const inteiro a[1][1] = {
-            {
-              1,2,3
-            },
-            {
-              1,3
-            }
-        }
 
-        funcao inicio() {
-            retorna
-        }
-    }`;
-// let input2 = 'test = i\nb = i + 1\n';
+  const real PI = 5.5
+  inteiro V = -10*2
+
+  funcao inteiro test(real i) {
+    escolha (i) {
+      caso 1:
+        retorne 0
+      caso contrario:
+        retorne 4
+    }
+  }
+}`;
+
 // const lexer = new ivprogLexer(new InputStream(input));
 // const stream = new CommonTokenStream(lexer);
 // stream.fill();

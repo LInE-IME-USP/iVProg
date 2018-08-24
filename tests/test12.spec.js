@@ -11,7 +11,7 @@ describe('SwitchCase command', () => {
       escolha (i) {
         caso 1:
           retorne 0
-        casocontrario:
+        caso contrario:
           retorne 4
       }
     }`;
@@ -20,6 +20,6 @@ describe('SwitchCase command', () => {
     it(`should not result in SyntaxError`, () => {
         const as = new IVProgParser(input, lexer);
         const fun = as.parseFunction.bind(as);
-        expect(fun).not.toThrow(SyntaxError);
+        expect(fun).not.toThrow();
     });
 });

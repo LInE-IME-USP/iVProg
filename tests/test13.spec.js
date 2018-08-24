@@ -16,7 +16,7 @@ describe('A complete program code', () => {
         escolha (i) {
           caso 1:
             retorne 0
-          casocontrario:
+          caso contrario:
             retorne 4
         }
       }
@@ -26,6 +26,6 @@ describe('A complete program code', () => {
     it(`should not result in SyntaxError`, () => {
         const as = new IVProgParser(input, lexer);
         const fun = as.parseTree.bind(as);
-        expect(fun).not.toThrow(SyntaxError);
+        expect(fun).not.toThrow();
     });
 });

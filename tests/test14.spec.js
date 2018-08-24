@@ -6,7 +6,7 @@ import {
     SyntaxError
 } from './../js/ast/SyntaxError';
 
-describe('For command', () => {
+describe('For with no \';\'', () => {
     let input = `funcao inteiro test(real i) {
       inteiro a = 5 + i
       a = 5 + G[i][6]
