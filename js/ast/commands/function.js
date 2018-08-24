@@ -1,3 +1,5 @@
+import { Types } from './../types';
+
 export class Function {
 
   constructor(name, returnType, formalParameters, commandBlock) {
@@ -8,7 +10,7 @@ export class Function {
   }
 
   get isMain () {
-    return this.name === null && this.returnType === 'void';
+    return this.name === null && this.returnType === Types.VOID;
   }
 
   get commands () {

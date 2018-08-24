@@ -532,8 +532,10 @@ export class IVProgParser {
         // TODO better error message
         throw new Error(`Cannot declare variable here (line ${token.line})`);
       }
-      this.pos++;
-      cmd = this.parseDeclararion(token);
+      this.pushScope(IVProgParser.BASE);
+      const varType = this.parseType();
+      this.popScope();
+      cmd = this.parseDeclararion(varType);
       this.checkEOS();
       this.pos++;
     } else if (token.type === this.lexerClass.ID) {
@@ -951,7 +953,7 @@ export class IVProgParser {
     this.checkOpenParenthesis();
     this.pos++;
     this.consumeNewLines();
-    list = this.parseExpressionList();
+    const list = this.parseExpressionList();
     this.consumeNewLines();
     this.checkCloseParenthesis();
     this.pos++;
