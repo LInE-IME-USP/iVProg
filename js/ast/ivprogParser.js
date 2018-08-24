@@ -953,6 +953,10 @@ export class IVProgParser {
   parseActualParameters () {
     this.checkOpenParenthesis();
     this.pos++;
+    if(this.checkCloseParenthesis(true)) {
+      this.pos++;
+      return [];
+    }
     this.consumeNewLines();
     const list = this.parseExpressionList();
     this.consumeNewLines();
