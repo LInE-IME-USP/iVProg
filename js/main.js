@@ -17,9 +17,11 @@ const input = `programa {
   funcao inteiro test(real i) {
     escolha (i) {
       caso 1:
-        retorne 0
+        i = i + 5
+        retorne i
       caso contrario:
-        retorne 4
+        i =  i * 2 + 3
+        retorne i
     }
   }
 }`;
@@ -36,7 +38,9 @@ const input = `programa {
 // }
 const anaSin = new IVProgParser(input, ivprogLexer);
 try {
-  console.log(anaSin.parseTree());
+  const data = anaSin.parseTree();
+  console.log(data);
+  $('#json-renderer').jsonViewer(data);
 } catch(a) {
   console.log(a);
 }
