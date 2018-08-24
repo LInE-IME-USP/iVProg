@@ -218,10 +218,10 @@ export class IVProgParser {
     if(constToken.type === this.lexerClass.RK_CONST) {
       this.pos++;
       const typeString = this.parseType();
-      return this.parseDeclararion(typeString, true);
+      return this.parseDeclaration(typeString, true);
     } else if(this.isVariableType(constToken)) {
       const typeString = this.parseType();
-      return this.parseDeclararion(typeString);
+      return this.parseDeclaration(typeString);
     } else {
       throw SyntaxError.createError(this.lexer.literalNames[this.lexerClass.RK_CONST] + ' or ' + this.getTypesAsString(), constToken);
     }
@@ -232,7 +232,7 @@ export class IVProgParser {
   * Parses a declarion of the form: type --- id --- (= --- EAnd)?
   * @returns a list of Declararion(const, type, id, initVal?)
   **/
-  parseDeclararion (typeString, isConst = false) {
+  parseDeclaration (typeString, isConst = false) {
     let initial = null;
     let dim1 = null;
     let dim2 = null;
@@ -274,7 +274,7 @@ export class IVProgParser {
       this.pos++;
       this.consumeNewLines();
       return [declaration]
-      .concat(this.parseDeclararion(typeString, isConst));
+      .concat(this.parseDeclaration(typeString, isConst));
     } else {
        return [declaration]
     }
@@ -508,8 +508,8 @@ export class IVProgParser {
       if (cmd === null)
         break;
       if(cmd !== -1) {
-        if (cmd instanceof Commands.Declaration) {
-          variablesDecl.push(cmd);
+        if (cmd instanceof Array) {
+          variablesDecl = variablesDecl.concat(cmd);
         } else {
           commands.push(cmd);
         }
@@ -526,7 +526,6 @@ export class IVProgParser {
 
   parseCommand () {
     const token = this.getToken();
-    let cmd = null;
     if (this.isVariableType(token)) {
       if(!this.insideScope(IVProgParser.FUNCTION)) {
         // TODO better error message
@@ -535,34 +534,36 @@ export class IVProgParser {
       this.pushScope(IVProgParser.BASE);
       const varType = this.parseType();
       this.popScope();
-      cmd = this.parseDeclararion(varType);
+      const cmd = this.parseDeclaration(varType);
       this.checkEOS();
       this.pos++;
+      return cmd;
     } else if (token.type === this.lexerClass.ID) {
-      cmd = this.parseIDCommand();
+      return this.parseIDCommand();
     } else if (token.type === this.lexerClass.RK_RETURN) {
-      cmd = this.parseReturn();
+      return this.parseReturn();
     } else if (token.type === this.lexerClass.RK_WHILE) {
-      cmd = this.parseWhile();
+      return this.parseWhile();
     } else if (token.type === this.lexerClass.RK_FOR) {
-      cmd = this.parseFor();
+      return this.parseFor();
     } else if (token.type === this.lexerClass.RK_BREAK ) {
       if(!this.insideScope(IVProgParser.BREAKABLE)) {
         // TODO better error message
         throw new Error("Break cannot be used outside of a loop.");
       }
-      cmd = this.parseBreak();
+      return this.parseBreak();
     } else if (token.type === this.lexerClass.RK_SWITCH) {
-      cmd = this.parseSwitchCase();
+      return this.parseSwitchCase();
     } else if (token.type === this.lexerClass.RK_DO) {
-      cmd = this.parseDoWhile();
+      return this.parseDoWhile();
     } else if (token.type === this.lexerClass.RK_IF) {
-      cmd = this.parseIfThenElse();
+      return this.parseIfThenElse();
     } else if (this.checkEOS(true)){
       this.pos++;
-      cmd = -1;
+      return -1;
+    } else {
+      return null;
     }
-    return cmd;
   }
 
   parseSwitchCase () {
