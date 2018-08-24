@@ -641,7 +641,8 @@ export class IVProgParser {
       } else if(maybeIf.type === this.lexerClass.RK_IF) {
         elseBlock = this.parseIfThenElse();
       } else {
-        throw SyntaxError.createError('if or {', maybeIf);
+        // TODO better error message
+        throw SyntaxError.createError(`${this.lexer.literalNames[this.lexerClass.RK_IF]} or {`, maybeIf);
       }
       return new Commands.IfThenElse(logicalExpression, cmdBlocks, elseBlock);
     }

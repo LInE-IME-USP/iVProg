@@ -13,6 +13,7 @@ npm-debug.log
 yarn-error.log
 testem.log
 /typings
+grammar/**/.antlr/
 
 # System Files
 .DS_Store

@@ -179,18 +179,23 @@ INTEGER
 
 REAL
   : [0-9]+ '.' [0-9]+
+  | [0-9]+ '.' [0-9]* ExponentPart
+  ;
+
+fragment ExponentPart
+  : [eE] [+-]? [0-9]+
   ;
 
 STRING
   : '"' STRING_CHARACTER* '"'
   ;
     
-fragment STRING_CHARACTER //String como definido em https://github.com/antlr/grammars-v4/blob/master/java8/Java8.g4
+fragment STRING_CHARACTER //String as defined at https://github.com/antlr/grammars-v4/blob/master/java8/Java8.g4
   : ~["\\\r\n]
   | ESC_SEQ
   ;
 
-CHARACTER //Caracter como definido em https://github.com/antlr/grammars-v4/blob/master/java8/Java8.g4
+CHARACTER //Character as defined at https://github.com/antlr/grammars-v4/blob/master/java8/Java8.g4
   : '\'' ( ESC_SEQ | ~['\\\r\n]) '\''
   ;
 
