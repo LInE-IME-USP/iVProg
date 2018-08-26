@@ -1,6 +1,7 @@
 export class Switch {
   
-  constructor (cases) {
+  constructor (expression, cases) {
+    this.expression = expression;
     this.cases = cases;
   }
 }
