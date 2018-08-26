@@ -1,23 +1,27 @@
+import { Modes } from './../mode';
 export class Store {
 
   constructor () {
     this.store = {};
     this.nextStore = null;
+    this.mode = Modes.RUN;
+  }
+
+  cloneStore () {
+    return Object.assign(new Store(), this);
   }
 
   extendStore (nextStore) {
-    return Object.assign(new Store, {
-      store: this.store,
-      nextStore: nextStore
-    });
+   this.nextStore = nextStore;
   }
 
-  findVariable (id) {
+  applyStore (id) {
     if(!this.store[id]) {
       if (this.nextStore === null) {
-        throw new Error("Undefined variable: " + id);
+        // TODO: better error message
+        throw new Error(`Variable ${id} is not defined.`);
       } else {
-        return this.nextStore.findVariable(id);
+        return this.nextStore.applyStore(id);
       }
     }
     return this.store[id];
@@ -34,16 +38,33 @@ export class Store {
     return true;
   }
 
-  updateVariable (id, storeObj) {
-    if(!this.isDefined(id)) {
-      this.store[id] =  storeObj;
-    } else {
-      const old = this.findVariable(id);
-      if (storeObj.type !== old.type) {
-        throw new Error(`${storeObj.value} is not compatible with ${old.type}`);
+  updateStore (id, storeObj) {
+    if(!this.store[id]) {
+      if (this.nextStore !== null) {
+        this.nextStore.updateStore(id, storeObj);
       } else {
-        this.store[id] = storeObj;
+        throw new Error(`Variable ${id} is not defined.`);  
       }
+    } else {
+      const old = this.applyStore(id);
+      if (!old.isCompatible(storeObj)) {
+        // TODO: better error message
+        throw new Error(`${storeObj.value} is not compatible with ${id} of type ${old.type}`);
+      } else if (old.readOnly) {
+        // TODO: better error message
+        throw new Error(`Cannot change value, ${id} is read-only`);
+      } else {
+        this.store[id] = Object.freeze(storeObj);
+      }
+    }
+  }
+
+  insertStore (id, storeObj) {
+    if(this.store(id)) {
+      // TODO: Better error message
+      throw new Error(`Variable ${id} is already defined.`);
+    } else {
+      this.store[id] = Object.freeze(storeObj)
     }
   }
 }

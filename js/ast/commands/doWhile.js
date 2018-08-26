@@ -2,8 +2,8 @@ import { While } from './while';
 
 export class DoWhile extends While {
 
-  constructor(condition, commandBlock) {
-    super(condition, commandBlock);
+  constructor(expression, commandBlock) {
+    super(expression, commandBlock);
   }
 
   get testFirst () {
