@@ -11,8 +11,6 @@ import { CommandBlock } from './commandBlock';
 import { DoWhile } from './doWhile';
 import { Switch } from './switch';
 import { Case } from './case';
-// A Proxy to the expression which do what is required. No need to write a new one
-import { FunctionCall } from './../expressions/functionCall';
 
 export {
   Break,
@@ -27,6 +25,5 @@ export {
   CommandBlock,
   DoWhile,
   Switch,
-  Case,
-  FunctionCall
+  Case
 };

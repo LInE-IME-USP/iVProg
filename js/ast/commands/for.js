@@ -1,6 +1,6 @@
 export class For {
-  constructor (assignment, condition, increment, commandBlock) {
-    this.assignment = assignment;
+  constructor (attribution, condition, increment, commandBlock) {
+    this.attribution = attribution;
     this.condition = condition;
     this.increment = increment;
     this.commandBlock = commandBlock;

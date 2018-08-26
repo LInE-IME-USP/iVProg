@@ -3,6 +3,5 @@ export const Types = Object.freeze({
   REAL: Symbol("real"),
   STRING: Symbol("string"),
   BOOLEAN: Symbol("bool"),
-  VOID: Symbol("void"),
-  ARRAY: Symbol("array")
+  VOID: Symbol("void")
 });
