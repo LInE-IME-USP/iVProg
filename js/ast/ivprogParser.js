@@ -587,7 +587,7 @@ export class IVProgParser {
     this.consumeNewLines();
 
     this.popScope();
-    return new Commands.Switch(casesList);
+    return new Commands.Switch(exp, casesList);
   }
 
   parseDoWhile () {
@@ -717,7 +717,7 @@ export class IVProgParser {
       const actualParameters = this.parseActualParameters();
       this.checkEOS();
       this.pos++;
-      return (new Expressions.FunctionCall(id, actualParameters));
+      return (new Commands.FunctionCall(id, actualParameters));
     } else {
       throw SyntaxError.createError("= or (", equalOrParenthesis);
     }
