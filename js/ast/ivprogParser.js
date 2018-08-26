@@ -2,6 +2,7 @@ import { CommonTokenStream, InputStream } from 'antlr4/index';
 import * as Expressions from './expressions/';
 import * as Commands from './commands/';
 import { Types } from './types';
+import { convertFromString } from './operators';
 import { SyntaxError } from './SyntaxError';
 
 export class IVProgParser {
@@ -803,7 +804,7 @@ export class IVProgParser {
     const maybeAnd = this.getToken();
     if (maybeAnd.type === this.lexerClass.OR_OPERATOR) {
       this.pos++;
-      const or = 'or';
+      const or = convertFromString('or');
       this.consumeNewLines();
       const exp2 = this.parseExpressionOR();
       return new Expressions.InfixApp(or, exp1, exp2);
@@ -816,7 +817,7 @@ export class IVProgParser {
     const andToken = this.getToken();
     if (andToken.type === this.lexerClass.AND_OPERATOR) {
       this.pos++;
-      const and = 'and';
+      const and = convertFromString('and');
       this.consumeNewLines();
       const exp2 = this.parseExpressionAND();
       return new Expressions.InfixApp(and, exp1, exp2);
@@ -828,7 +829,7 @@ export class IVProgParser {
     const maybeNotToken = this.getToken();
     if (maybeNotToken.type === this.lexerClass.NOT_OPERATOR) {
       this.pos++;
-      const not = 'not';
+      const not = convertFromString('not');
       const exp1 = this.parseExpressionRel();
       return new Expressions.UnaryApp(not, exp1);
     } else {
@@ -841,7 +842,7 @@ export class IVProgParser {
     const relToken = this.getToken();
     if(relToken.type === this.lexerClass.RELATIONAL_OPERATOR) {
       this.pos++;
-      const rel = relToken.text; // TODO: source code line/column information
+      const rel = convertFromString(relToken.text); // TODO: source code line/column information
       const exp2 = this.parseExpression();
       return new Expressions.InfixApp(rel, exp1, exp2);
     }
@@ -853,7 +854,7 @@ export class IVProgParser {
     const sumOpToken = this.getToken();
     if(sumOpToken.type === this.lexerClass.SUM_OP) {
       this.pos++;
-      const op = sumOpToken.text; // TODO: source code line/column information
+      const op = convertFromString(sumOpToken.text); // TODO: source code line/column information
       const exp = this.parseExpression();
       return new Expressions.InfixApp(op, factor, exp);
     }
@@ -865,7 +866,7 @@ export class IVProgParser {
     const multOpToken = this.getToken();
     if(multOpToken.type === this.lexerClass.MULTI_OP) {
       this.pos++;
-      const op = multOpToken.text; // TODO: source code line/column information
+      const op = convertFromString(multOpToken.text); // TODO: source code line/column information
       const factor = this.parseFactor();
       return new Expressions.InfixApp(op, term, factor);
     }
@@ -877,7 +878,7 @@ export class IVProgParser {
     switch(token.type) {
       case this.lexerClass.SUM_OP:
         this.pos++;
-        return new Expressions.UnaryApp(token.text, this.parseTerm());
+        return new Expressions.UnaryApp(convertFromString(token.text), this.parseTerm());
       case this.lexerClass.INTEGER:
         this.pos++;
         return this.getIntLiteral(token);
