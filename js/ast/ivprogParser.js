@@ -587,7 +587,7 @@ export class IVProgParser {
     this.consumeNewLines();
 
     this.popScope();
-    return new Commands.Switch(casesList);
+    return new Commands.Switch(exp, casesList);
   }
 
   parseDoWhile () {
