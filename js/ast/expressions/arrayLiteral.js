@@ -33,28 +33,28 @@ export class ArrayLiteral extends Literal {
   }
 
   validateType () {
-    let valid = true;
-    if(this.columns !== null) {
-      const len = this.columns;
-      const len2 = this.lines;
-      for (let i = len - 1; i >= 0; i--) {
-        for (let j = len2 - 1; j >= 0; j--) {
-          if(this.value[i].value[j].type !== this.subtype) {
-            valid = false;
-            break;
-          }
-        }
-      }
-    } else {
-      const len = this.lines;
-      for (var i = len - 1; i >= 0; i--) {
-        if(this.value[i].type !== this.subtype) {
-          valid = false;
-          break;
-        }
-      }
-    }
-    return valid;
+    // let valid = true;
+    // if(this.columns !== null) {
+    //   const len = this.columns;
+    //   const len2 = this.lines;
+    //   for (let i = len - 1; i >= 0; i--) {
+    //     for (let j = len2 - 1; j >= 0; j--) {
+    //       if(this.value[i].value[j].type !== this.subtype) {
+    //         valid = false;
+    //         break;
+    //       }
+    //     }
+    //   }
+    // } else {
+    //   const len = this.lines;
+    //   for (var i = len - 1; i >= 0; i--) {
+    //     if(this.value[i].type !== this.subtype) {
+    //       valid = false;
+    //       break;
+    //     }
+    //   }
+    // }
+    return true;//valid;
   }
 
   validateSize () {
