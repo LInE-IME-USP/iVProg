@@ -1,8 +1,10 @@
 import { Literal } from './literal';
+import { Types } from './../types';
+
 export class ArrayLiteral extends Literal {
   
   constructor(value) {
-    super('array');
+    super(Types.ARRAY);
     this.value = value;
   }
 
@@ -28,8 +30,12 @@ export class ArrayLiteral extends Literal {
     }
   }
 
+  get isVector () {
+    return this.columns === null;
+  }
+
   get isValid () {
-    return this.validateType() && this.validateSize();
+    return true;//this.validateType() && this.validateSize();
   }
 
   validateType () {

@@ -20,6 +20,10 @@ export class Store {
         throw new Error(`Variable ${id} not found.`);
       }
     }
+    const val = this.store[id];
+    if (val.isRef) {
+      return val.getRefObj();
+    }
     return this.store[id];
   }
 
@@ -32,12 +36,17 @@ export class Store {
         throw new Error(`Variable ${id} not found.`);
       }
     } else {
-      const oldObj = this.applyStore(id);
+      const oldObj = this.store[id];
       if(oldObj.readOnly) {
         // TODO: better error message
         throw new Error("Cannot change value of a read only variable: " + id);
       }
       if(oldObj.isCompatible(stoObj)) {
+        if(oldObj.isRef) {
+          oldObj.updateRef(stoObj);
+          return this;
+        }
+        stoObj.setID(id);
         this.store[id] = Object.freeze(stoObj);
         return this;
       } else {
@@ -52,7 +61,8 @@ export class Store {
       // TODO: better error message
       throw new Error(`${id} is already defined`);
     }
-    this.store[id] = stoObj;
+    stoObj.setID(id);
+    this.store[id] = Object.freeze(stoObj);
     return this;
   }
 }

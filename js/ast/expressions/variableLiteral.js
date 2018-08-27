@@ -1,8 +1,10 @@
 import { Literal } from './literal';
+import { Types } from './../types';
+
 export class VariableLiteral extends Literal {
   
-  constructor(value) {
-    super('variable');
-    this.value = value;
+  constructor(id) {
+    super(Types.UNDEFINED);
+    this.id = id;
   }
 }

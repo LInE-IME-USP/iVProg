@@ -1,10 +1,12 @@
 import { Store } from './store/store';
 import { StoreObject } from './store/storeObject';
 import { StoreObjectArray } from './store/storeObjectArray';
+import { StoreObjectRef } from './store/storeObjectRef';
 import { Modes } from './modes';
 import { Context } from './context';
-import { Types } from './../ast/types';
+import { Types, toInt } from './../ast/types';
 import { Operators } from './../ast/operators';
+import { NAMES } from './definedFunctions';
 import { canApplyInfixOp, canApplyUnaryOp } from './compatibilityTable';
 import * as Commands from './../ast/commands/';
 import * as Expressions from './../ast/expressions/';
@@ -29,7 +31,7 @@ export class IVProgProcessor {
   }
 
   checkContext(context) {
-    return this.context[this.context.length] === context;
+    return this.context[this.context.length - 1] === context;
   }
 
   ignoreSwitchCases (store) {
@@ -85,7 +87,9 @@ export class IVProgProcessor {
     funcStore = this.associateParameters(func.formalParameters, actualParameters, store, funcStore);
     this.context.push(Context.FUNCTION);
     this.stores.push(funcStore);
-    const result = this.executeCommands(funcStore, func.commands);
+    const result = this.executeCommands(funcStore, func.variablesDeclarations).then(sto => {
+      return this.executeCommands(sto, func.commands)
+    });
     this.stores.pop();
     this.context.pop();
     return result;
@@ -102,8 +106,16 @@ export class IVProgProcessor {
         switch (v.dimensions) {
           case 1: {
             if (vl.lines > 0 && vl.columns === null
-              && vl.subtype === v.subtype) {
-              calleeStore.insertStore(v.id, vl);
+              && vl.subtype === v.type) {
+              if(v.byRef && !vl.inStore) {
+                throw new Error('You must inform a variable as parameter');
+              }
+              if(v.byRef) {
+                const ref = new StoreObjectRef(vl.id, callerStore);
+                calleeStore.insertStore(v.id, ref);
+              } else {
+                calleeStore.insertStore(v.id, vl);
+              }
             } else {
               // TODO: Better error message
               throw new Error(`Parameter ${v.id} is not compatible with the value given.`);
@@ -112,8 +124,13 @@ export class IVProgProcessor {
           }
           case 2: {
             if (vl.lines > 0 && vl.columns > 0
-              && vl.subtype === v.subtype) {
-              calleeStore.insertStore(v.id, vl);
+              && vl.subtype === v.type) {
+                if(v.byRef) {
+                  const ref = new StoreObjectRef(vl.id, callerStore);
+                  calleeStore.insertStore(v.id, ref);
+                } else {
+                  calleeStore.insertStore(v.id, vl);
+                }
             } else {
               // TODO: Better error message
               throw new Error(`Parameter ${v.id} is not compatible with the value given.`);
@@ -121,11 +138,18 @@ export class IVProgProcessor {
             break;
           }
           case 0: {
-            if (vl.type !== v.type) {
+            if(v.byRef && !vl.inStore) {
+              throw new Error('You must inform a variable as parameter');
+            } else if (v.type !== Types.ALL && vl.type !== v.type) {
               // TODO: Better error message
               throw new Error(`Parameter ${v.id} is not compatible with ${vl.type}.`);
             } else {
-              calleeStore.insertStore(v.id, vl);
+              if(v.byRef) {
+                const ref = new StoreObjectRef(vl.id, callerStore);
+                calleeStore.insertStore(v.id, ref);
+              } else {
+                calleeStore.insertStore(v.id, vl);
+              }
             }
           }
         }
@@ -186,9 +210,56 @@ export class IVProgProcessor {
       return this.executeSwitch(store, cmd);
     } else if (cmd instanceof Commands.FunctionCall) {
       return this.executeFunctionCall(store, cmd);
+    } else if (cmd instanceof Commands.SysCall) {
+      return this.executeSysCall(store, cmd);
     } else {
       throw new Error("!!!CRITICAL A unknown command was found!!!\n" + cmd);
     }
+  }
+
+  executeSysCall (store, cmd) {
+    if (cmd.id === NAMES.WRITE) {
+      this.runWriteFunction(store)
+    }
+  }
+
+  runWriteFunction (store) {
+    const val = store.applyStore('p1');
+    this.output.appendText(val.val);
+    return Promise.resolve(store);
+  }
+
+  runReadFunction (store) {
+    const typeToConvert = store.applyStore('p1').type;
+    const listenInput = (text) => {
+      if (typeToConvert === Types.INTEGER) {
+        const val = toInt(text);
+        return new StoreObject(Types.INTEGER, val);
+      } else if (typeToConvert === Types.REAL) {
+        return new StoreObject(Types.REAL, parseFloat(text));
+      } else if (typeToConvert === Types.BOOLEAN) {
+        
+      } else if (typeToConvert === Types.STRING) {
+        return new StoreObject(Types.STRING, text);
+      }
+    }
+
+    return Promise.resolve(store).then( sto => {
+      let received = false;
+      const notify = (text) => {
+        received = true;
+        const result = listenInput(text);
+        sto.updateStore('p1', result);
+      }
+      const obj = {notify: notify.bind(this)}
+      this.input.registerListener(obj);
+      this.input.requestInput();
+      while(!received) {
+        continue;
+      }
+      this.input.removeListener(obj);
+      return sto;
+    });
   }
 
   executeFunctionCall (store, cmd) {
@@ -210,7 +281,7 @@ export class IVProgProcessor {
           });
         } else {
           const $value = this.evaluateExpression(sto,
-            new Expressions.InfixApp('==', switchExp, aCase.expression));
+            new Expressions.InfixApp(Operators.EQ, switchExp, aCase.expression));
           return $value.then(vl => {
             if (vl.value) {
               const $newSto = this.executeCommand(result.sto,aCase.commands);
@@ -228,7 +299,6 @@ export class IVProgProcessor {
     try {
       this.context.push(Context.BREAKABLE);
       let breakLoop = false;
-      const case0 = cmd.cases[0];
       let $result = Promise.resolve({wasTrue: false, sto: store});
       for (let index = 0; index < cmd.cases.length && !breakLoop; index++) {
         const aCase = cmd.cases[index];
@@ -236,7 +306,12 @@ export class IVProgProcessor {
         $result.then( r => breakLoop = this.ignoreSwitchCases(r.sto));
       }
       this.context.pop();
-      return result.then(r => r.sto);
+      return result.then(r => {
+        if(r.sto.mode === Modes.BREAK) {
+          r.sto.mode = Modes.RUN;
+        }
+        return r.sto;
+      });
     } catch (error) {
       return Promise.reject(error);
     }
@@ -264,6 +339,11 @@ export class IVProgProcessor {
       this.context.push(Context.BREAKABLE);
       const $newStore = this.executeCommands(store, cmd.commands);
       return $newStore.then(sto => {
+        if(sto.mode === Modes.BREAK) {
+          this.context.pop();
+          sto.mode = Modes.RUN;
+          return Promise.resolve(sto);
+        }
         const $value = this.evaluateExpression(sto, cmd.expression);
         return $value.then(vl => {
           if (vl.type !== Types.BOOLEAN) {
@@ -295,6 +375,10 @@ export class IVProgProcessor {
             const $newStore = this.executeCommands(store, cmd.commands);
             return $newStore.then(sto => {
               this.context.pop();
+              if (sto.mode === Modes.BREAK) {
+                sto.mode = Modes.RUN;
+                return Promise.resolve(sto);
+              }
               return this.executeCommand(sto, cmd);
             });
           } else {
@@ -379,19 +463,13 @@ export class IVProgProcessor {
     try {
       const $value = this.evaluateExpression(store, cmd.initial);
       if(cmd instanceof Commands.ArrayDeclaration) {
-        const temp = new StoreObjectArray(decl.subtype, decl.lines, decl.columns, null, decl.isConst);
-        store.insertStore(decl.id, temp);
-        return $value.then(vl => {
-          store.updateStore(decl.id, vl)
-          return store;
-        });
+        const temp = new StoreObjectArray(cmd.subtype, cmd.lines, cmd.columns, null, cmd.isConst);
+        store.insertStore(cmd.id, temp);
+        return $value.then(vl => store.updateStore(cmd.id, vl));
       } else {
-        const temp = new StoreObject(decl.type, null, decl.isConst);
-        store.insertStore(decl.id, temp);
-        return $value.then(vl => {
-          store.updateStore(decl.id, vl)
-          return store;
-        });
+        const temp = new StoreObject(cmd.type, null, cmd.isConst);
+        store.insertStore(cmd.id, temp);
+        return $value.then(vl => store.updateStore(cmd.id, vl));
       }
     } catch (e) {
       return Promise.reject(e);
@@ -434,7 +512,7 @@ export class IVProgProcessor {
   }
 
   evaluateArrayLiteral (store, exp) {
-    if(exp.columns !== null) {
+    if(!exp.isVector) {
       let column = [];
       for (let i = 0; i < exp.lines; i++) {
         const line = [];
@@ -446,15 +524,21 @@ export class IVProgProcessor {
         column.push(stoArray);
       }
       const arr = new StoreObjectArray(column[0].subtype, column.length, column[0].lines, column);
-      return Promise.resolve(arr);
+      if(arr.isValid)
+        return Promise.resolve(arr);
+      else
+        return Promise.reject(new Error(`Invalid array`))
     } else {
       let line = [];
       for (let i = 0; i < exp.lines; i++) {
-        const $value = this.evaluateExpression(store, exp.value[i].value[j]);
+        const $value = this.evaluateExpression(store, exp.value[i]);
         $value.then(value => line.push(value));
       }
       const stoArray = new StoreObjectArray(line[0].type, line.length, null, line);
-      return Promise.resolve(stoArray);
+      if(stoArray.isValid)
+        return Promise.resolve(stoArray);
+      else
+        return Promise.reject(new Error(`Invalid array`))
     }
   }
 

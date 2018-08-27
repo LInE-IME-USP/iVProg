@@ -11,6 +11,8 @@ import { CommandBlock } from './commandBlock';
 import { DoWhile } from './doWhile';
 import { Switch } from './switch';
 import { Case } from './case';
+import { SysCall } from './sysCall';
+import { FormalParameter } from './formalParameter';
 
 export {
   Break,
@@ -25,5 +27,7 @@ export {
   CommandBlock,
   DoWhile,
   Switch,
-  Case
+  Case,
+  SysCall,
+  FormalParameter
 };
