@@ -34,6 +34,16 @@
 		"es": "programa",
 		"pt": "programa"
 	},
+	"read": {
+		"en": "read",
+		"es": "leia",
+		"pt": "leer"
+	},
+	"write": {
+		"en": "write",
+		"es": "escribe",
+		"pt": "escreva"
+	},
 	"text": {
 		"en": "text",
 		"es": "texto",
@@ -113,5 +123,41 @@
 		"en": "Comment",
 		"es": "Comentario",
 		"pt": "Comentário"
+	},
+	"text_attribution": {
+		"en": "Attribution",
+		"es": "Atribución",
+		"pt": "Atribuição"
+	},
+	"text_iftrue": {
+		"en": "If true then",
+		"es": "Si es verdadero, entonces",
+		"pt": "Se verdadeiro então"
+	},
+	"text_repeatNtimes": {
+		"en": "Repeat N times",
+		"es": "Repita N veces",
+		"pt": "Repita N vezes"
+	},
+	"text_whiletrue": {
+		"en": "While true",
+		"es": "Si bien es verdadero",
+		"pt": "Enquanto verdadeiro"
+	},
+	"text_dowhiletrue": {
+		"en": "Do while true",
+		"es": "Hacer si bien es verdadero",
+		"pt": "Faça enquanto verdadeiro"
+	},
+	"text_switch": {
+		"en": "Switch",
+		"es": "Cambiar",
+		"pt": "Escolha"
+	},
+	"text_functioncall": {
+		"en": "Function call",
+		"es": "Función chamada",
+		"pt": "Chamada de função"
 	}
+
 }

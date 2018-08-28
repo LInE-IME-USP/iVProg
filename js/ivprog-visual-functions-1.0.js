@@ -204,54 +204,251 @@ function renderGlobals() {
 var has_element_created_draged = false;
 var which_element_is_draged = null;
 
-function ended(event) {
-	var el = document.elementFromPoint(event.clientX, event.clientY);
-	//console.log("elemento que ele soltou:");
-	//console.log(el);
-	
-	$(el).remove();
+function manageCommand(event) {
+	$( ".created_element" ).each(function( index ) { 
+		$(this).remove();
+	});
 
 	var el = document.elementFromPoint(event.clientX, event.clientY);
-	//console.log("depois de remover:");
-	//console.log(el);
-
 
 	// Só irá adicionar se soltar o elemento no espaço para a função correta:
 	if ($(el).data('fun') == function_to_add) {
 		// Se a lista de comandos estiver vazia, então é o primeiro.
 		// Portanto, ele deve soltar o elemento obrigatoriamente no objeto vazio
 		if ((programa.funcoes[function_to_add].comandos == null)  || (programa.funcoes[function_to_add].comandos.length == 0)) {
-			
 				// pode adicionar 
 				programa.funcoes[function_to_add].comandos = [];
-				programa.funcoes[function_to_add].comandos.push(new Comentario(i18n('text_comment')));
+
+				programa.funcoes[function_to_add].comandos.push(createElementGenericFunction());
+
+				console.log("PP1");
 			
-		} else {
-			programa.funcoes[function_to_add].comandos.push(new Comentario(i18n('text_comment')));
+		} else { // Entra nesse else, caso já existam outros comandos no bloco:
+
+			findNearbyCommandToAdd(el, event);
+
+			console.log("PP2");
 		}
 
 	} else { // Se entrar nesse bloco 'else', quer dizer que o usuário não soltou o elemento necessariamente na div específica
 			 // portanto, devemos procurar nos elementos DOM superiores, se existe algum com o data-fun
 
-		var hier = $(el).parentsUntil(".all_functions");
+		/*var hier = $(el).parentsUntil(".all_functions");
 		for (i = 0; i < hier.length; i++) {
 			if ($(hier[i]).data('fun') == function_to_add) {
-				programa.funcoes[function_to_add].comandos.push(new Comentario(i18n('text_comment')));
+
+				programa.funcoes[function_to_add].comandos.push(createElementGenericFunction());
+
 				break;
 			}
-		}
+		}*/
 
+		findPositionAndInsertCommand(el, event);
 
 	}
+
+
+	//console.log("onde soltou:");
+	//console.log(el);
+
+	
+	has_element_created_draged = false;
+	which_element_is_draged = null;
+	function_to_add = -1;
 
 	renderAlgorithm();
 
 }
 
 
+function findNearbyCommandToAdd(el, event) {
+
+	var all_sub = $('#function_drag_cmd_' + function_to_add).find('div');
+	console.log(all_sub);
+
+	var menor_distancia = 999999999;
+	var elemento_menor_distancia = null;
+	var antes = true;
+
+	var t_bot;
+	var t_top;
+	// Descobrindo o elemento mais próximo:
+	for (i = 0; i < all_sub.length; i++) {
+		
+		t_top = all_sub[i].getBoundingClientRect().top;
+		t_bot = all_sub[i].getBoundingClientRect().top + all_sub[i].getBoundingClientRect().height;
+
+		if ((t_top - event.clientY) < menor_distancia) {
+			menor_distancia = event.clientY - t_top;
+			elemento_menor_distancia = all_sub[i];
+		}
+	}
+
+
+	programa.funcoes[function_to_add].comandos.splice($(elemento_menor_distancia).data('index'), 0, createElementGenericFunction());
+
+	console.log("\n\nRESULTADO: ");
+	console.log("elemento mais próximo: ");
+	console.log(elemento_menor_distancia);
+	console.log("antes? " + antes);
+	console.log("menor distancia: " + menor_distancia);
+}
+
+function findPositionAndInsertCommand(el, event) {
+
+	var identificado_local = false;
+	if ($(el).data('command') >= 0) {
+		console.log("soltou em cima de um command: ");
+
+		// primeiro: descobrir se ele soltou para adicionar antes ou depois:
+		var metade_componente = el.getBoundingClientRect().top + (el.getBoundingClientRect().height / 2);
+		var antes = false;
+		if (event.clientY < metade_componente) {
+			antes = true;
+		}
+
+		// segundo: descobrir o contexto que está sendo inserido o comando:
+		// se o data-parent for 0, então, ele não está inserido em um sub-bloco
+		if ($(el).data('parent') == "0") {
+			// vai adicionar no bloco da função 
+			if (antes) {
+				programa.funcoes[function_to_add].comandos.splice($(el).data('index'), 0, createElementGenericFunction());
+			} else {
+				programa.funcoes[function_to_add].comandos.splice($(el).data('index') + 1, 0, createElementGenericFunction());
+			}
+
+		} else { // caso exista mais informação no parent, então, deve-se descobrir a hierarquia
+
+		}
+
+		identificado_local = true;
+	}
+
+	if (identificado_local == false) {
+		var hier = $(el).parentsUntil(".all_functions");
+		for (i = 0; i < hier.length; i++) {
+			console.log("elemento índice: " + i);
+			console.log(hier[i]);
+
+			if ($(hier[i]).data('command') >= 0) {
+				console.log("soltou em cima de um elemento dentro de um command!");
+				identificado_local = true;
+				break;
+			}
+		}
+	}
+
+}
+
+
+function createElementGenericFunction() {
+	if (which_element_is_draged == tiposComandos.comment) {
+		return new Comentario(i18n('text_comment'));
+	}
+	if (which_element_is_draged == tiposComandos.reader) {
+		return new Leitura(null);
+	}
+	if (which_element_is_draged == tiposComandos.writer) {
+		return new Escrita(null);
+	}
+	if (which_element_is_draged == tiposComandos.attribution) {
+		return new Atribuicao(null, null);
+	}
+	if (which_element_is_draged == tiposComandos.iftrue) {
+		return new SeVerdadeiro(null, null, null);
+	}
+	if (which_element_is_draged == tiposComandos.repeatNtimes) {
+		return new RepitaNVezes(null, null, null, null);
+	} 
+	if (which_element_is_draged == tiposComandos.whiletrue) {
+		return new EnquantoVerdadeiro(null, null);
+	}
+	if (which_element_is_draged == tiposComandos.dowhiletrue) {
+		return new FacaEnquantoVerdadeiro(null, null);
+	}
+	if (which_element_is_draged == tiposComandos.switch) {
+		return new Escolha(null, null);
+	}
+	if (which_element_is_draged == tiposComandos.functioncall) {
+		return new ChamadaFuncao(null, null);
+	}
+}
+
+function createWriterObject() {
+	var ret = '';
+	ret += '<div class="ui writer created_element" onclick="manageCommand(event)"> <i class="ui icon small upload"></i> <span> '+i18n('write')+' x </span>';
+	ret += '</div>';
+
+	return ret;
+}
+
 function createCommentDragObject() {
 	var ret = '';
-	ret += '<div class="ui comment created_element" onclick="ended(event)" id="sera"> <i class="ui icon small quote left"></i> <span class="span_comment_text" "> '+i18n('text_comment')+' </span>';
+	ret += '<div class="ui comment created_element" onclick="manageCommand(event)"> <i class="ui icon small quote left"></i> <span class="span_comment_text" "> '+i18n('text_comment')+' </span>';
+	ret += '</div>';
+
+	return ret;
+}
+
+function createReaderObject() {
+	var ret = '';
+	ret += '<div class="ui reader created_element" onclick="manageCommand(event)"> <i class="ui icon small download"></i> <span> '+i18n('read')+' x </span>';
+	ret += '</div>';
+
+	return ret;
+}
+
+function createAttributionDragObject() {
+	var ret = '';
+	ret += '<div class="ui attribution created_element" onclick="manageCommand(event)"> <i class="ui icon small arrow left"></i> <span> x = 1 + 1 </span>';
+	ret += '</div>';
+
+	return ret;
+}
+
+function createIfTrueDragObject() {
+	var ret = '';
+	ret += '<div class="ui iftrue created_element" onclick="manageCommand(event)"> <i class="ui icon small random"></i> <span> if (x < 1) { } </span>';
+	ret += '</div>';
+
+	return ret;
+}
+
+function createRepeatNtimesDragObject() {
+	var ret = '';
+	ret += '<div class="ui repeatNtimes created_element" onclick="manageCommand(event)"> <i class="ui icon small sync"></i> <span> para (x = 0; x < 10; x ++) { } </span>';
+	ret += '</div>';
+
+	return ret;
+}
+
+function createWhileTrueDragObject() {
+	var ret = '';
+	ret += '<div class="ui whiletrue created_element" onclick="manageCommand(event)"> <i class="ui icon small sync"></i> <span> enquanto(x < 10) { } </span>';
+	ret += '</div>';
+
+	return ret;
+}
+
+function createDoWhileTrueDragObject() {
+	var ret = '';
+	ret += '<div class="ui dowhiletrue created_element" onclick="manageCommand(event)"> <i class="ui icon small sync"></i> <span> faça {<br>} enquanto(x < 10) </span>';
+	ret += '</div>';
+
+	return ret;
+}
+
+function createSwitchDragObject() {
+	var ret = '';
+	ret += '<div class="ui switch created_element" onclick="manageCommand(event)"> <i class="ui icon small random"></i> <span> escolha (x) { <br> caso 1: <br> caso 2: <br> } </span>';
+	ret += '</div>';
+
+	return ret;
+}
+
+function createFunctioncallDragObject() {
+	var ret = '';
+	ret += '<div class="ui functioncall created_element" onclick="manageCommand(event)"> <i class="hand point right icon"></i> <span> funcao() </span>';
 	ret += '</div>';
 
 	return ret;
@@ -261,17 +458,17 @@ var function_to_add = -1;
 
 function addHandlers() {
 
-	$('.create_comment').on('click', function(e){
+	
+	$('.create_functioncall').on('click', function(e){
 
 		has_element_created_draged = true;
-		which_element_is_draged = tiposComandos.command;
+		which_element_is_draged = tiposComandos.functioncall;
 
-		function_to_add = $(e.target).data('fun');
+		function_to_add = $(e.target).data('fun'); 
 
-		var inner = $(createCommentDragObject()).draggable().appendTo("body");
+		var inner = $(createFunctioncallDragObject()).draggable().appendTo("body");
 	    
 	    inner.css("position", "absolute");
-	    
 	    e.type = "mousedown.draggable";
 	    e.target = inner[0];
 	    inner.css("left", e.pageX - 15);
@@ -280,14 +477,185 @@ function addHandlers() {
 		
 	});
 
-	$('.ui.buttons .dropdown').dropdown({
-		    onChange: function(value, text, $selectedItem) {
-		    	if (value == tiposComandos.comment) {
-		    		
-		    	}
+	$('.create_switch').on('click', function(e){
 
-		    }
-		});
+		has_element_created_draged = true;
+		which_element_is_draged = tiposComandos.switch;
+
+		function_to_add = $(e.target).data('fun');
+
+		var inner = $(createSwitchDragObject()).draggable().appendTo("body");
+	    
+	    inner.css("position", "absolute");
+	    e.type = "mousedown.draggable";
+	    e.target = inner[0];
+	    inner.css("left", e.pageX - 15);
+	    inner.css("top", e.pageY - 15);
+	    inner.trigger(e);
+		
+	});
+
+	$('.create_dowhiletrue').on('click', function(e){
+
+		has_element_created_draged = true;
+		which_element_is_draged = tiposComandos.dowhiletrue;
+
+		function_to_add = $(e.target).data('fun');
+
+		var inner = $(createDoWhileTrueDragObject()).draggable().appendTo("body");
+	    
+	    inner.css("position", "absolute");
+	    e.type = "mousedown.draggable";
+	    e.target = inner[0];
+	    inner.css("left", e.pageX - 15);
+	    inner.css("top", e.pageY - 15);
+	    inner.trigger(e);
+		
+	});
+
+	$('.create_whiletrue').on('click', function(e){
+
+		has_element_created_draged = true;
+		which_element_is_draged = tiposComandos.whiletrue;
+
+		function_to_add = $(e.target).data('fun');
+
+		var inner = $(createWhileTrueDragObject()).draggable().appendTo("body");
+	    
+	    inner.css("position", "absolute");
+	    e.type = "mousedown.draggable";
+	    e.target = inner[0];
+	    inner.css("left", e.pageX - 15);
+	    inner.css("top", e.pageY - 15);
+	    inner.trigger(e);
+		
+	});
+
+	$('.create_repeatNtimes').on('click', function(e){
+
+		has_element_created_draged = true;
+		which_element_is_draged = tiposComandos.repeatNtimes;
+
+		function_to_add = $(e.target).data('fun');
+
+		var inner = $(createRepeatNtimesDragObject()).draggable().appendTo("body");
+	    
+	    inner.css("position", "absolute");
+	    e.type = "mousedown.draggable";
+	    e.target = inner[0];
+	    inner.css("left", e.pageX - 15);
+	    inner.css("top", e.pageY - 15);
+	    inner.trigger(e);
+		
+	});
+
+	$('.create_iftrue').on('click', function(e){
+
+		has_element_created_draged = true;
+		which_element_is_draged = tiposComandos.iftrue;
+
+		function_to_add = $(e.target).data('fun');
+
+		var inner = $(createIfTrueDragObject()).draggable().appendTo("body");
+	    
+	    inner.css("position", "absolute");
+	    e.type = "mousedown.draggable";
+	    e.target = inner[0];
+	    inner.css("left", e.pageX - 15);
+	    inner.css("top", e.pageY - 15);
+	    inner.trigger(e);
+		
+	});
+
+	$('.create_comment').on('click', function(e){
+
+		has_element_created_draged = true;
+		which_element_is_draged = tiposComandos.comment;
+
+		function_to_add = $(e.target).data('fun');
+
+		var inner = $(createCommentDragObject()).draggable().appendTo("body");
+	    
+	    inner.css("position", "absolute");
+	    e.type = "mousedown.draggable";
+	    e.target = inner[0];
+	    inner.css("left", e.pageX - 15);
+	    inner.css("top", e.pageY - 15);
+	    inner.trigger(e);
+		
+	});
+
+	$('.create_attribution').on('click', function(e){
+
+		has_element_created_draged = true;
+		which_element_is_draged = tiposComandos.attribution;
+
+		function_to_add = $(e.target).data('fun');
+
+		var inner = $(createAttributionDragObject()).draggable().appendTo("body");
+	    
+	    inner.css("position", "absolute");
+	    e.type = "mousedown.draggable";
+	    e.target = inner[0];
+	    inner.css("left", e.pageX - 15);
+	    inner.css("top", e.pageY - 15);
+	    inner.trigger(e);
+		
+	});
+
+	$('.create_writer').on('click', function(e){
+
+		has_element_created_draged = true;
+		which_element_is_draged = tiposComandos.writer;
+
+		function_to_add = $(e.target).data('fun');
+
+		var inner = $(createWriterObject()).draggable().appendTo("body");
+	    
+	    inner.css("position", "absolute");
+	    e.type = "mousedown.draggable";
+	    e.target = inner[0];
+	    inner.css("left", e.pageX - 15);
+	    inner.css("top", e.pageY - 15);
+	    inner.trigger(e);
+		
+	});
+
+	$('.create_reader').on('click', function(e){
+
+		has_element_created_draged = true;
+		which_element_is_draged = tiposComandos.reader;
+
+		function_to_add = $(e.target).data('fun');
+
+		var inner = $(createReaderObject()).draggable().appendTo("body");
+	    
+	    inner.css("position", "absolute");
+	    e.type = "mousedown.draggable";
+	    e.target = inner[0];
+	    inner.css("left", e.pageX - 15);
+	    inner.css("top", e.pageY - 15);
+	    inner.trigger(e);
+		
+	});
+
+	for (i = 0; i < programa.funcoes.length; i++) {
+
+		  Sortable.create(document.getElementById('function_drag_cmd_' + i), {
+		    handle: '.command_drag',
+		    animation: 100,
+		    ghostClass: 'ghost',
+		    group: 'commands_inside_function_drag_' + i,
+		    onEnd: function (evt) {
+		      //updateSequenceFunctionHandler(evt.oldIndex, evt.newIndex);
+		    },
+		    onStart: function (evt) {
+				console.log("começou");
+			}
+		  });
+	}
+
+	$('.ui.buttons .dropdown').dropdown();
 
 	$('.ui.dropdown.function_return')
     	.dropdown({
@@ -1804,28 +2172,6 @@ function removeParameter(parent_node, which_function, which_parameter) {
 }
 
 
-function manageDragableCommands(sequence) {
-	var el = document.getElementById('menu_commands_'+sequence);
-
-	var sortable = Sortable.create(el, {
-	    handle: '.created_element',
-	    animation: 100,
-	    draggable: '.item',
-	    ghostClass: 'ghost',
-	    group: {
-	    	name: 'commands_area_'+sequence,
-	    	pull: 'clone'
-	    },
-	    onEnd: function (evt) {
-	      updateSequenceFunctionHandler(evt.oldIndex, evt.newIndex);
-	    }
-    });
-
-
-
-}
-
-
 function appendFunction(function_obj, sequence) {
 	var appender = '<div class="ui secondary segment function_div list-group-item" data-fun="'+sequence+'">';
 
@@ -1840,10 +2186,17 @@ function appendFunction(function_obj, sequence) {
 
 	appender += '<div class="ui icon buttons add_var_top_button"><div class="ui icon button" onclick="addVariable('+sequence+')"><i class="icon superscript"></i></div>';
 	
-	appender += '<div class="ui icon button dropdown" ><i class="icon code"></i> <div class="menu" id="menu_commands_'+sequence+'"> ';
-	appender += '<a class="item" data-text="'+tiposComandos.reader+'" data-fun="'+sequence+'"><i class="download icon"></i> ' +i18n('text_read_var')+ '</a>'
-			  + '<a class="item" data-text="'+tiposComandos.writer+'" data-fun="'+sequence+'"><i class="upload icon"></i> '+i18n('text_write_var')+'</a>'
+	appender += '<div class="ui icon button dropdown" ><i class="icon code"></i> <div class="menu"> ';
+	appender += '<a class="item create_reader" data-text="'+tiposComandos.reader+'" data-fun="'+sequence+'"><i class="download icon"></i> ' +i18n('text_read_var')+ '</a>'
+			  + '<a class="item create_writer" data-text="'+tiposComandos.writer+'" data-fun="'+sequence+'"><i class="upload icon"></i> '+i18n('text_write_var')+'</a>'
 			  + '<a class="item create_comment" data-text="'+tiposComandos.comment+'" data-fun="'+sequence+'"><i class="quote left icon"></i> '+i18n('text_comment')+'</a>'
+			  + '<a class="item create_attribution" data-text="'+tiposComandos.comment+'" data-fun="'+sequence+'"><i class="arrow left icon"></i> '+i18n('text_attribution')+'</a>'
+			  + '<a class="item create_iftrue" data-text="'+tiposComandos.iftrue+'" data-fun="'+sequence+'"><i class="random icon"></i> '+i18n('text_iftrue')+'</a>'
+			  + '<a class="item create_repeatNtimes" data-text="'+tiposComandos.repeatNtimes+'" data-fun="'+sequence+'"><i class="sync icon"></i> '+i18n('text_repeatNtimes')+'</a>'
+			  + '<a class="item create_whiletrue" data-text="'+tiposComandos.whiletrue+'" data-fun="'+sequence+'"><i class="sync icon"></i> '+i18n('text_whiletrue')+'</a>'
+			  + '<a class="item create_dowhiletrue" data-text="'+tiposComandos.dowhiletrue+'" data-fun="'+sequence+'"><i class="sync icon"></i> '+i18n('text_dowhiletrue')+'</a>'
+			  + '<a class="item create_switch" data-text="'+tiposComandos.switch+'" data-fun="'+sequence+'"><i class="list icon"></i> '+i18n('text_switch')+'</a>'
+			  + '<a class="item create_functioncall" data-text="'+tiposComandos.functioncall+'" data-fun="'+sequence+'"><i class="hand point right icon"></i> '+i18n('text_functioncall')+'</a>'
 				+ '</div></div></div>';
 
 
@@ -1869,13 +2222,40 @@ function appendFunction(function_obj, sequence) {
 		+ '<div class="ui top attached segment variables_list_div">'
 		+ renderVariables(function_obj, sequence)
 		+ '</div>'
-		+ '<div class="ui bottom attached segment commands_list_div" data-fun="'+sequence+'">';
+		+ '<div class="ui bottom attached segment commands_list_div" id="function_drag_cmd_'+sequence+'" data-fun="'+sequence+'">';
 
 
 	if (programa.funcoes[sequence].comandos) {
 		for (l = 0; l < programa.funcoes[sequence].comandos.length; l++) {
 			if (programa.funcoes[sequence].comandos[l].tipo == tiposComandos.comment) {
-				appender += renderComment(programa.funcoes[sequence].comandos[l], sequence, false, l);
+				appender += renderComment(programa.funcoes[sequence].comandos[l], sequence, false, l, 0);
+			}
+			if (programa.funcoes[sequence].comandos[l].tipo == tiposComandos.reader) {
+				appender += renderReader(programa.funcoes[sequence].comandos[l], sequence, l, 0);
+			}
+			if (programa.funcoes[sequence].comandos[l].tipo == tiposComandos.writer) {
+				appender += renderWriter(programa.funcoes[sequence].comandos[l], sequence, l, 0);
+			}
+			if (programa.funcoes[sequence].comandos[l].tipo == tiposComandos.attribution) {
+				appender += renderAttribution(programa.funcoes[sequence].comandos[l], sequence, l, 0);
+			}
+			if (programa.funcoes[sequence].comandos[l].tipo == tiposComandos.iftrue) {
+				appender += renderIfTrue(programa.funcoes[sequence].comandos[l], sequence, l, 0);
+			}
+			if (programa.funcoes[sequence].comandos[l].tipo == tiposComandos.repeatNtimes) {
+				appender += renderRepeatNtimes(programa.funcoes[sequence].comandos[l], sequence, l, 0);
+			}
+			if (programa.funcoes[sequence].comandos[l].tipo == tiposComandos.whiletrue) {
+				appender += renderWhiletrue(programa.funcoes[sequence].comandos[l], sequence, l, 0);
+			}
+			if (programa.funcoes[sequence].comandos[l].tipo == tiposComandos.dowhiletrue) {
+				appender += renderDowhiletrue(programa.funcoes[sequence].comandos[l], sequence, l, 0);
+			}
+			if (programa.funcoes[sequence].comandos[l].tipo == tiposComandos.switch) {
+				appender += renderSwitch(programa.funcoes[sequence].comandos[l], sequence, l, 0);
+			}
+			if (programa.funcoes[sequence].comandos[l].tipo == tiposComandos.functioncall) {
+				appender += renderFunctioncall(programa.funcoes[sequence].comandos[l], sequence, l, 0);
 			}
 		}
 	}
@@ -1886,15 +2266,84 @@ function appendFunction(function_obj, sequence) {
 		+ '</div>'
 		+ '</div>';
 
-	$('.all_functions').append(appender); 
-
-	manageDragableCommands(sequence);
+	$('.all_functions').append(appender);
 }
 
-
-function renderComment(comment_obj, function_index, is_function_comment, comment_index) {
+function renderFunctioncall(functioncall_obj, function_index, functioncall_index, data_parent) {
 	var ret = '';
-	ret += '<div class="ui comment"> <i class="ui icon small quote left"></i> <span class="span_comment_text" ondblclick="enableCommentUpdate(this.parentNode, '+function_index+', '
+	ret += '<div class="ui functioncall" data-index="'+functioncall_index+'" data-command="'+functioncall_index+'" data-parent="'+data_parent+'"> <i class="hand point right icon command_drag"></i> <span> funcao() </span>';
+	ret += '</div>';
+
+	return ret;
+}
+
+function renderSwitch(switch_obj, function_index, repeat_index, data_parent) {
+	var ret = '';
+	ret += '<div class="ui switch" data-index="'+repeat_index+'" data-parent="'+data_parent+'"> <i class="ui icon small random command_drag" ></i> <span> escolha (x) { <br> caso 1: <br> caso 2: <br> }</span>';
+	ret += '</div>';
+
+	return ret;
+}
+
+function renderDowhiletrue(dowhiletrue_obj, function_index, repeat_index, data_parent) {
+	var ret = '';
+	ret += '<div class="ui dowhiletrue" data-index="'+repeat_index+'" data-parent="'+data_parent+'"> <i class="ui icon small random command_drag"></i> <span> faça  { <br> } enquanto (x < 10);</span>';
+	ret += '</div>';
+
+	return ret;
+}
+
+function renderWhiletrue(whiletrue_obj, function_index, repeat_index, data_parent) {
+	var ret = '';
+	ret += '<div class="ui whiletrue" data-index="'+repeat_index+'" data-parent="'+data_parent+'"> <i class="ui icon small random command_drag"></i> <span> enquanto (x < 10) { <br> }</span>';
+	ret += '</div>';
+
+	return ret;
+}
+
+function renderRepeatNtimes(repeat_obj, function_index, repeat_index, data_parent) {
+	var ret = '';
+	ret += '<div class="ui iftrue" data-index="'+repeat_index+'" data-parent="'+data_parent+'"> <i class="ui icon small random command_drag"></i> <span> para (x = 0; x < 10; x ++) { <br> }</span>';
+	ret += '</div>';
+
+	return ret;
+}
+
+function renderIfTrue(writer_obj, function_index, iftrue_index, data_parent) {
+	var ret = '';
+	ret += '<div class="ui iftrue" data-index="'+iftrue_index+'" data-parent="'+data_parent+'"> <i class="ui icon small random command_drag"></i> <span> if (x < 1) { <br> } else { <br> }</span>';
+	ret += '</div>';
+
+	return ret;
+}
+
+function renderAttribution(writer_obj, function_index, attr_index, data_parent) {
+	var ret = '';
+	ret += '<div class="ui attribution" data-index="'+attr_index+'" data-command="'+attr_index+'" data-parent="'+data_parent+'"> <i class="ui icon small arrow left command_drag"></i> <span> x =  1 + 1</span>';
+	ret += '</div>';
+
+	return ret;
+}
+
+function renderWriter(writer_obj, function_index, reader_index, data_parent) {
+	var ret = '';
+	ret += '<div class="ui writer" data-index="'+reader_index+'" data-command="'+reader_index+'" data-parent="'+data_parent+'"> <i class="ui icon small upload command_drag"></i> <span>'+i18n('write')+' x</span>';
+	ret += '</div>';
+
+	return ret;
+}
+
+function renderReader(reader_obj, function_index, reader_index, data_parent) {
+	var ret = '';
+	ret += '<div class="ui reader" data-index="'+reader_index+'" data-command="'+reader_index+'" data-parent="'+data_parent+'"> <i class="ui icon small download command_drag"></i> <span>'+i18n('read')+' x</span>';
+	ret += '</div>';
+
+	return ret;
+}
+
+function renderComment(comment_obj, function_index, is_function_comment, comment_index, data_parent) {
+	var ret = '';
+	ret += '<div class="ui comment" data-index="'+comment_index+'" data-command="'+comment_index+'" data-parent="'+data_parent+'"> <i class="ui icon small quote left '+(is_function_comment?'':'command_drag')+'"></i> <span class="span_comment_text" ondblclick="enableCommentUpdate(this.parentNode, '+function_index+', '
 		+is_function_comment+', '+comment_index+')"> ' + comment_obj.texto_comentario + ' </span>';
 	ret += '</div>';
 

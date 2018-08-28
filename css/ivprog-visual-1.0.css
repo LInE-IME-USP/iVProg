@@ -144,7 +144,7 @@ body {
 	margin: 0;
 }
 
-.glyphicon-move {
+.glyphicon-move, .command_drag {
   cursor: move;
   cursor: -webkit-grabbing;
 }
@@ -223,7 +223,7 @@ div.buttons_manage_columns {
 .ui.comment span {
 	font-style: italic;
 }
-.ui.comment {
+.ui.comment, .ui.reader, .ui.writer, .ui.attribution, .ui.iftrue, .ui.repeatNtimes, .ui.whiletrue, .ui.dowhiletrue, .ui.switch, .ui.functioncall {
 	border: 1px solid gray;
 	padding: 5px;
 	border-radius: 5px;

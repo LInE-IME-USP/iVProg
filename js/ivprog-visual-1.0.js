@@ -3,7 +3,8 @@
 // Não adicionar elementos ao tipoDados, pois existem componentes que dependem do seu tamanho e isso afetará seu funcionamento
 var tiposDados = Object.freeze({void:"void", integer:"integer", real:"real", text:"text", boolean:"boolean", vector:"vector"});
 
-var tiposComandos = Object.freeze({comment:"comment", reader:"reader", writer:"writer"});
+var tiposComandos = Object.freeze({comment:"comment", reader:"reader", writer:"writer", attribution:"attribution", iftrue:"iftrue",
+ repeatNtimes:"repeatNtimes", whiletrue:"whiletrue", dowhiletrue:"dowhiletrue", switch:"switch", functioncall:"functioncall"});
 
 var Variavel = function(tipo, nome, valor, dimensoes = 0, eh_constante = false, linhas = 0, colunas = 0) {
 	this.tipo = tipo;
@@ -32,14 +33,61 @@ var Comentario = function(texto_comentario) {
 	this.texto_comentario = texto_comentario;
 };
 
-var Comando = function(tipo) {
-	this.tipo = tipo;
+var Leitura = function(variavel) {
+	this.tipo = tiposComandos.reader;
+	this.variavel = variavel;
 };
 
-var Expressao = function(conteudo) {
+var Escrita = function(conteudo) {
+	this.tipo = tiposComandos.writer;
 	this.conteudo = conteudo;
+};
+
+var Atribuicao = function(variavel, expressao) {
+	this.tipo = tiposComandos.attribution;
+	this.variavel = variavel;
+	this.expressao = expressao;
+};
+
+var SeVerdadeiro = function(expressao, commands_block, commands_else) {
+	this.tipo = tiposComandos.iftrue;
+	this.expressao = expressao;
+	this.commands_block = commands_block;
+	this.commands_else = commands_else;
+};
+
+var RepitaNVezes = function(expressao1, expressao2, expressao3, commands_block) {
+	this.tipo = tiposComandos.repeatNtimes;
+	this.expressao1 = expressao1;
+	this.expressao2 = expressao2;
+	this.expressao3 = expressao3;
+	this.commands_block = commands_block;
+};
+
+var EnquantoVerdadeiro = function(expressao, commands_block) {
+	this.tipo = tiposComandos.whiletrue;
+	this.expressao = expressao;
+	this.commands_block = commands_block;
+};
+
+var FacaEnquantoVerdadeiro = function(expressao, commands_block) {
+	this.tipo = tiposComandos.dowhiletrue;
+	this.expressao = expressao;
+	this.commands_block = commands_block;
+};
+
+var Escolha = function(variavel, lista_casos_e_blocos) {
+	this.tipo = tiposComandos.switch;
+	this.variavel = variavel;
+	this.lista_casos_e_blocos = lista_casos_e_blocos;
 
 };
+
+var ChamadaFuncao = function(funcao, lista_parametros) {
+	this.tipo = tiposComandos.functioncall;
+	this.funcao = funcao;
+	this.lista_parametros = lista_parametros;
+}
 
 var Programa = function () {
 	this.funcoes = new Array();
