@@ -28,7 +28,8 @@ export class DOMInput extends Input{
     this.listeners.push(listener);
   }
 
-  requestInput () {
+  requestInput (callback) {
+    this.listeners.push(callback);
     this.el.focus();
   }
 
@@ -39,9 +40,10 @@ export class DOMInput extends Input{
   }
 
   notifyInput (text) {
-    this.listeners.forEach(l => {
-      l.notify(text);
+    this.listeners.forEach(resolve => {
+      resolve(l);
     })
+    this.listeners.splice(0, this.listeners.length);
   }
 
 }
