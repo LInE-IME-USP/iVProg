@@ -272,13 +272,14 @@ export class IVProgProcessor {
   }
 
   executeSwitch (store, cmd) {
+    this.context.push(Context.BREAKABLE);
     const auxCaseFun = (promise, switchExp, aCase) => {
       return promise.then( result => {
         const sto = result.sto;
         if (this.ignoreSwitchCases(sto)) {
           return Promise.resolve(result);
         } else if (result.wasTrue || aCase.isDefault) {
-          const $newSto = this.executeCommand(result.sto,aCase.commands);
+          const $newSto = this.executeCommands(result.sto,aCase.commands);
           return $newSto.then(nSto => {
             return Promise.resolve({wasTrue: true, sto: nSto});
           });
@@ -287,7 +288,7 @@ export class IVProgProcessor {
             new Expressions.InfixApp(Operators.EQ, switchExp, aCase.expression));
           return $value.then(vl => {
             if (vl.value) {
-              const $newSto = this.executeCommand(result.sto,aCase.commands);
+              const $newSto = this.executeCommands(result.sto,aCase.commands);
               return $newSto.then(nSto => {
                 return Promise.resolve({wasTrue: true, sto: nSto});
               });
@@ -300,7 +301,6 @@ export class IVProgProcessor {
     }
 
     try {
-      this.context.push(Context.BREAKABLE);
       let breakLoop = false;
       let $result = Promise.resolve({wasTrue: false, sto: store});
       for (let index = 0; index < cmd.cases.length && !breakLoop; index++) {
@@ -308,8 +308,8 @@ export class IVProgProcessor {
         $result = auxCaseFun($result, cmd.expression, aCase);
         $result.then( r => breakLoop = this.ignoreSwitchCases(r.sto));
       }
-      this.context.pop();
-      return result.then(r => {
+      return $result.then(r => {
+        this.context.pop();
         if(r.sto.mode === Modes.BREAK) {
           r.sto.mode = Modes.RUN;
         }
@@ -489,13 +489,21 @@ export class IVProgProcessor {
           const value = values[2];
           const temp = new StoreObjectArray(cmd.subtype, line, column, null, cmd.isConst);
           store.insertStore(cmd.id, temp);
-          return  store.updateStore(cmd.id, value);
+          if(value !== null)
+            return  store.updateStore(cmd.id, value);
+          else
+            return store;
         });
         
       } else {
         const temp = new StoreObject(cmd.type, null, cmd.isConst);
         store.insertStore(cmd.id, temp);
-        return $value.then(vl => store.updateStore(cmd.id, vl));
+        return $value.then(vl => {
+          if (vl !== null)
+            return store.updateStore(cmd.id, vl)
+          else
+            return store;
+        });
       }
     } catch (e) {
       return Promise.reject(e);
@@ -535,7 +543,14 @@ export class IVProgProcessor {
       return Promise.reject(new Error(`Function ${exp.id} cannot be used inside an expression`));
     }
     const $newStore = this.runFunction(func, exp.actualParameters, store);
-    return $newStore.then( sto => sto.applyStore('$'));
+    return $newStore.then( sto => {
+      const val = sto.applyStore('$');
+      if (val.type === Types.ARRAY) {
+        return Promise.resolve(Object.assign(new StoreObjectArray(null,null,null,null,null), val));
+      } else {
+        return Promise.resolve(Object.assign(new StoreObject(null,null), val));
+      }
+    });
   }
 
   evaluateArrayLiteral (store, exp) {
@@ -577,7 +592,11 @@ export class IVProgProcessor {
   evaluateVariableLiteral (store, exp) {
     try {
       const val = store.applyStore(exp.id);
-      return Promise.resolve(val);
+      if (val.type === Types.ARRAY) {
+        return Promise.resolve(Object.assign(new StoreObjectArray(null,null,null,null), val));
+      } else {
+        return Promise.resolve(Object.assign(new StoreObject(null,null), val));
+      }
     } catch (error) {
       return Promise.reject(error);
     }
@@ -632,9 +651,9 @@ export class IVProgProcessor {
   }
 
   evaluateUnaryApp (store, unaryApp) {
-    const $left = this.evaluateExpression(store, infixApp.left);
+    const $left = this.evaluateExpression(store, unaryApp.left);
     return $left.then( left => {
-      if (!canApplyUnaryOp(infixApp.op, left)) {
+      if (!canApplyUnaryOp(unaryApp.op, left)) {
         // TODO: better urgent error message
         return Promise.reject(new Error(`Cannot use this op to ${left.type}`));
       }

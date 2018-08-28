@@ -3,7 +3,7 @@ import {Types} from './../js/ast/types';
 import { IVProgParser } from './../js/ast/ivprogParser';
 import { IVProgProcessor} from './../js/processor/ivprogProcessor'
 
-describe('An Array initialization with expressions', function (done) {
+describe('An Array initialization with expressions', function () {
 
   const input = `programa {
 
@@ -15,7 +15,7 @@ describe('An Array initialization with expressions', function (done) {
   const lexer = Lexers['pt_br'];
   const result = [4,15];
 
-  it(`should produce a valid state`, function () {
+  it(`should produce a valid state`, function (done) {
     const parser = new IVProgParser(input, lexer);
     const exec = new IVProgProcessor(parser.parseTree());
     exec.interpretAST().then(sto => {

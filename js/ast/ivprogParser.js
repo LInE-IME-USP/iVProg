@@ -904,24 +904,12 @@ export class IVProgParser {
         this.consumeNewLines();
         this.checkCloseBrace();
         this.pos++;
-      } else {
-        this.pos--;
       }
 
       return new Expressions.ArrayAccess(id, firstIndex, secondIndex);
 
     } else if (this.checkOpenParenthesis(true)) {
-      this.pos++;
-      this.consumeNewLines();
-      let actualParameters = [];
-      if(!this.checkCloseParenthesis(true)) {
-        actualParameters = this.parseActualParameters();
-        this.consumeNewLines();
-        this.checkCloseParenthesis();
-        this.pos++;
-      } else {
-        this.pos++;
-      }
+      const actualParameters = this.parseActualParameters();
       return new Expressions.FunctionCall(id, actualParameters);
     } else {
       this.pos = last;
