@@ -51,7 +51,7 @@ export class Store {
         return this;
       } else {
         // TODO: better error message
-        throw new Error(`${stoObj.type} is not compatible with the value given`);
+        throw new Error(`${oldObj.type} is not compatible with the value given`);
       }
     }
   }

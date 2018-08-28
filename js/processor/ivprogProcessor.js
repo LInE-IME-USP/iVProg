@@ -463,9 +463,32 @@ export class IVProgProcessor {
     try {
       const $value = this.evaluateExpression(store, cmd.initial);
       if(cmd instanceof Commands.ArrayDeclaration) {
-        const temp = new StoreObjectArray(cmd.subtype, cmd.lines, cmd.columns, null, cmd.isConst);
-        store.insertStore(cmd.id, temp);
-        return $value.then(vl => store.updateStore(cmd.id, vl));
+        const $lines = this.evaluateExpression(store, cmd.lines);
+        const $columns = cmd.columns === null ? null: this.evaluateExpression(store, cmd.columns);
+        return Promise.all([$lines, $columns, $value]).then(values => {
+          const lineSO = values[0];
+          if(lineSO.type !== Types.INTEGER) {
+            // TODO: better error message
+            //SHOULD NOT BE HERE. IT MUST HAVE A SEMANTIC ANALYSIS
+            return Promise.reject(new Error("Array dimension must be of type int"));
+          }
+          const line = lineSO.value;
+          const columnSO = values[1];
+          let column = null
+          if (columnSO !== null) {
+            if(columnSO.type !== Types.INTEGER) {
+              // TODO: better error message
+              //SHOULD NOT BE HERE. IT MUST HAVE A SEMANTIC ANALYSIS
+              return Promise.reject(new Error("Array dimension must be of type int"));
+            }
+            column = columnSO.value;
+          }
+          const value = values[2];
+          const temp = new StoreObjectArray(cmd.subtype, line, column, null, cmd.isConst);
+          store.insertStore(cmd.id, temp);
+          return  store.updateStore(cmd.id, value);
+        });
+        
       } else {
         const temp = new StoreObject(cmd.type, null, cmd.isConst);
         store.insertStore(cmd.id, temp);
@@ -499,6 +522,7 @@ export class IVProgProcessor {
     } else if (exp instanceof Expressions.FunctionCall) {
       return this.evaluateFunctionCall(store, exp);
     }
+    return Promise.resolve(null);
   }
 
   evaluateFunctionCall (store, exp) {
@@ -513,33 +537,34 @@ export class IVProgProcessor {
 
   evaluateArrayLiteral (store, exp) {
     if(!exp.isVector) {
-      let column = [];
-      for (let i = 0; i < exp.lines; i++) {
-        const line = [];
-        for (let j = 0; j < exp.columns; j++) {
-          const $value = this.evaluateExpression(store, exp.value[i].value[j]);
-          $value.then(value => line.push(value));
-        }
-        const stoArray = new StoreObjectArray(line[0].type, line.length, null, line);
-        column.push(stoArray);
-      }
-      const arr = new StoreObjectArray(column[0].subtype, column.length, column[0].lines, column);
-      if(arr.isValid)
-        return Promise.resolve(arr);
-      else
-        return Promise.reject(new Error(`Invalid array`))
+      const $matrix = this.evaluateMatrix(store, exp.value);
+      return $matrix.then(list => {
+        const arr = new StoreObjectArray(list[0].subtype, list.length, list[0].lines, list);
+        if(arr.isValid)
+          return Promise.resolve(arr);
+        else
+          return Promise.reject(new Error(`Invalid array`))
+      });
     } else {
-      let line = [];
-      for (let i = 0; i < exp.lines; i++) {
-        const $value = this.evaluateExpression(store, exp.value[i]);
-        $value.then(value => line.push(value));
-      }
-      const stoArray = new StoreObjectArray(line[0].type, line.length, null, line);
-      if(stoArray.isValid)
-        return Promise.resolve(stoArray);
-      else
-        return Promise.reject(new Error(`Invalid array`))
+      return this.evaluateVector(store, exp.value).then(list => {
+        const stoArray = new StoreObjectArray(list[0].type, list.length, null, list);
+        if(stoArray.isValid)
+          return Promise.resolve(stoArray);
+        else
+          return Promise.reject(new Error(`Invalid array`))
+      });
     }
+  }
+
+  evaluateVector (store, exps) {
+    return Promise.all(exps.map( exp => this.evaluateExpression(store, exp)));
+  }
+
+  evaluateMatrix (store, exps) {
+    return Promise.all(exps.map( vector => {
+      const $vector = this.evaluateVector(store, vector.value)
+      return $vector.then(list => new StoreObjectArray(list[0].type, list.length, null, list))
+    } ));
   }
 
   evaluateLiteral (_, exp) {
@@ -561,24 +586,46 @@ export class IVProgProcessor {
       // TODO: better error message
       return Promise.reject(new Error(`${exp.id} is not of type array`));
     }
-    if (exp.line >= mustBeArray.lines) {
-      // TODO: better error message
-      return Promise.reject(new Error(`${exp.id}: index out of bounds: ${exp.lines}`));
-    }
-    if (exp.column !== null && mustBeArray.columns === null ){
-      // TODO: better error message
-      return Promise.reject(new Error(`${exp.id}: index out of bounds: ${exp.column}`));
-    }
-    if(exp.column !== null && exp.column >= mustBeArray.columns) {
-      // TODO: better error message
-      return Promise.reject(new Error(`${exp.id}: index out of bounds: ${exp.column}`));
-    }
+    const $line = this.evaluateExpression(store, exp.line);
+    const $column = this.evaluateExpression(store, exp.column);
+    return Promise.all([$line, $column]).then(values => {
+      const lineSO = values[0];
+      const columnSO = values[1];
+      if(lineSO.type !== Types.INTEGER) {
+        // TODO: better error message
+        //SHOULD NOT BE HERE. IT MUST HAVE A SEMANTIC ANALYSIS
+        return Promise.reject(new Error("Array dimension must be of type int"));
+      }
+      const line = lineSO.value;
+      let column = null;
+      if(columnSO !== null) {
+        if(columnSO.type !== Types.INTEGER) {
+          // TODO: better error message
+          //SHOULD NOT BE HERE. IT MUST HAVE A SEMANTIC ANALYSIS
+          return Promise.reject(new Error("Array dimension must be of type int"));
+        }
+        column = columnSO.value;
+      }
 
-    if (exp.column !== null) {
-      return Promise.resolve(mustBeArray.value[exp.line][exp.column]);
-    } else {
-      return Promise.resolve(mustBeArray.value[exp.line]);
-    }
+      if (line >= mustBeArray.lines) {
+        // TODO: better error message
+        return Promise.reject(new Error(`${exp.id}: index out of bounds: ${lines}`));
+      }
+      if (column !== null && mustBeArray.columns === null ){
+        // TODO: better error message
+        return Promise.reject(new Error(`${exp.id}: index out of bounds: ${column}`));
+      }
+      if(column !== null && column >= mustBeArray.columns) {
+        // TODO: better error message
+        return Promise.reject(new Error(`${exp.id}: index out of bounds: ${column}`));
+      }
+  
+      if (column !== null) {
+        return Promise.resolve(mustBeArray.value[line].value[column]);
+      } else {
+        return Promise.resolve(mustBeArray.value[line]);
+      }
+    });
   }
 
   evaluateUnaryApp (store, unaryApp) {

@@ -39,7 +39,7 @@ export class StoreObjectArray extends StoreObject {
 
   get isValid () {
     if (this.value !== null) {
-      if( this.isVector()) {
+      if( this.isVector) {
         if(this.value.length !== this.lines) {
           return false;
         }
