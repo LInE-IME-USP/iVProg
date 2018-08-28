@@ -125,12 +125,15 @@ export class IVProgProcessor {
           case 2: {
             if (vl.lines > 0 && vl.columns > 0
               && vl.subtype === v.type) {
-                if(v.byRef) {
-                  const ref = new StoreObjectRef(vl.id, callerStore);
-                  calleeStore.insertStore(v.id, ref);
-                } else {
-                  calleeStore.insertStore(v.id, vl);
-                }
+              if(v.byRef && !vl.inStore) {
+                throw new Error('You must inform a variable as parameter');
+              }
+              if(v.byRef) {
+                const ref = new StoreObjectRef(vl.id, callerStore);
+                calleeStore.insertStore(v.id, ref);
+              } else {
+                calleeStore.insertStore(v.id, vl);
+              }
             } else {
               // TODO: Better error message
               throw new Error(`Parameter ${v.id} is not compatible with the value given.`);
