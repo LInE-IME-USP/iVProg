@@ -29,8 +29,9 @@ export class Store {
 
   updateStore (id, stoObj) {
     if(!this.store[id]) {
-      if(this.extendStore !== null) {
-        return this.extendStore.updateStore(id, stoObj);
+      if(this.nextStore !== null) {
+        this.nextStore.updateStore(id, stoObj);
+        return this;
       } else {
         // TODO: better error message
         throw new Error(`Variable ${id} not found.`);

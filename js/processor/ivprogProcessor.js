@@ -84,15 +84,17 @@ export class IVProgProcessor {
     const funcNameStoreObject = new StoreObject(Types.STRING, funcName, true);
     funcStore.insertStore('$', returnStoreObject);
     funcStore.insertStore('$name', funcNameStoreObject);
-    funcStore = this.associateParameters(func.formalParameters, actualParameters, store, funcStore);
-    this.context.push(Context.FUNCTION);
-    this.stores.push(funcStore);
-    const result = this.executeCommands(funcStore, func.variablesDeclarations).then(sto => {
-      return this.executeCommands(sto, func.commands)
+    const newFuncStore$ = this.associateParameters(func.formalParameters, actualParameters, store, funcStore);
+    return newFuncStore$.then(sto => {
+      this.context.push(Context.FUNCTION);
+      this.stores.push(sto);
+      return this.executeCommands(sto, func.variablesDeclarations)
+        .then(stoWithVars => this.executeCommands(stoWithVars, func.commands)).then(finalSto => {
+          this.stores.pop();
+          this.context.pop();
+          return finalSto;
+        });
     });
-    this.stores.pop();
-    this.context.pop();
-    return result;
   }
 
   associateParameters (formalList, actualList, callerStore, calleeStore) {
@@ -100,65 +102,77 @@ export class IVProgProcessor {
       // TODO: Better error message
       throw new Error("Numbers of parameters doesn't match");
     }
-    formalList.forEach((v, i) => {
-      this.evaluateExpression(callerStore, actualList[i])
-      .then(vl => {
-        switch (v.dimensions) {
+    const promises$ = actualList.map(actualParameter => this.evaluateExpression(callerStore, actualParameter));
+    return Promise.all(promises$).then(values => {
+      for (let i = 0; i < values.length; i++) {
+        const stoObj = values[i];
+        const formalParameter = formalList[i];
+        switch (formalParameter.dimensions) {
           case 1: {
-            if (vl.lines > 0 && vl.columns === null
-              && vl.subtype === v.type) {
-              if(v.byRef && !vl.inStore) {
+            if (stoObj.lines > 0 && stoObj.columns === null
+              && stoObj.subtype === formalParameter.type) {
+
+              if(formalParameter.byRef && !stoObj.inStore) {
                 throw new Error('You must inform a variable as parameter');
               }
-              if(v.byRef) {
-                const ref = new StoreObjectRef(vl.id, callerStore);
-                calleeStore.insertStore(v.id, ref);
+
+              if(formalParameter.byRef) {
+                const ref = new StoreObjectRef(stoObj.id, callerStore);
+                calleeStore.insertStore(formalParameter.id, ref);
               } else {
-                calleeStore.insertStore(v.id, vl);
+                calleeStore.insertStore(formalParameter.id, stoObj);
               }
+
             } else {
               // TODO: Better error message
-              throw new Error(`Parameter ${v.id} is not compatible with the value given.`);
+              throw new Error(`Parameter ${formalParameter.id} is not compatible with the value given.`);
             }
             break;
           }
           case 2: {
-            if (vl.lines > 0 && vl.columns > 0
-              && vl.subtype === v.type) {
-              if(v.byRef && !vl.inStore) {
+            if (stoObj.lines > 0 && stoObj.columns > 0
+              && stoObj.subtype === formalParameter.type) {
+
+              if(formalParameter.byRef && !stoObj.inStore) {
                 throw new Error('You must inform a variable as parameter');
               }
-              if(v.byRef) {
-                const ref = new StoreObjectRef(vl.id, callerStore);
-                calleeStore.insertStore(v.id, ref);
+
+              if(formalParameter.byRef) {
+                const ref = new StoreObjectRef(stoObj.id, callerStore);
+                calleeStore.insertStore(formalParameter.id, ref);
               } else {
-                calleeStore.insertStore(v.id, vl);
+                calleeStore.insertStore(formalParameter.id, stoObj);
               }
+
             } else {
               // TODO: Better error message
-              throw new Error(`Parameter ${v.id} is not compatible with the value given.`);
+              throw new Error(`Parameter ${formalParameter.id} is not compatible with the value given.`);
             }
             break;
           }
           case 0: {
-            if(v.byRef && !vl.inStore) {
+            if(formalParameter.byRef && !stoObj.inStore) {
+
               throw new Error('You must inform a variable as parameter');
-            } else if (v.type !== Types.ALL && vl.type !== v.type) {
+            } else if (formalParameter.type !== Types.ALL && stoObj.type !== formalParameter.type) {
+
               // TODO: Better error message
-              throw new Error(`Parameter ${v.id} is not compatible with ${vl.type}.`);
+              throw new Error(`Parameter ${formalParameter.id} is not compatible with ${stoObj.type}.`);
             } else {
-              if(v.byRef) {
-                const ref = new StoreObjectRef(vl.id, callerStore);
-                calleeStore.insertStore(v.id, ref);
+
+              if(formalParameter.byRef) {
+                const ref = new StoreObjectRef(stoObj.id, callerStore);
+                calleeStore.insertStore(formalParameter.id, ref);
               } else {
-                calleeStore.insertStore(v.id, vl);
+                calleeStore.insertStore(formalParameter.id, stoObj);
               }
+
             }
           }
         }
-      });
+      }
+      return calleeStore;
     });
-    return calleeStore;
   }
 
   executeCommands (store, cmds) {
@@ -222,46 +236,37 @@ export class IVProgProcessor {
 
   executeSysCall (store, cmd) {
     if (cmd.id === NAMES.WRITE) {
-      this.runWriteFunction(store)
+      return this.runWriteFunction(store)
+    } else if (cmd.id === NAMES.READ) {
+      return this.runReadFunction(store);
     }
   }
 
   runWriteFunction (store) {
     const val = store.applyStore('p1');
-    this.output.appendText(val.val);
+    this.output.sendOutput(val.val);
     return Promise.resolve(store);
   }
 
   runReadFunction (store) {
-    const typeToConvert = store.applyStore('p1').type;
-    const listenInput = (text) => {
+    const request = new Promise((resolve, _) => {
+      this.input.requestInput(resolve);
+    });
+    return request.then(text => {
+      const typeToConvert = store.applyStore('p1').type;
+      let stoObj = null;
       if (typeToConvert === Types.INTEGER) {
         const val = toInt(text);
-        return new StoreObject(Types.INTEGER, val);
+        stoObj = new StoreObject(Types.INTEGER, val);
       } else if (typeToConvert === Types.REAL) {
-        return new StoreObject(Types.REAL, parseFloat(text));
+        stoObj = new StoreObject(Types.REAL, parseFloat(text));
       } else if (typeToConvert === Types.BOOLEAN) {
-        
+        stoObj = new StoreObject(Types.BOOLEAN, true);
       } else if (typeToConvert === Types.STRING) {
-        return new StoreObject(Types.STRING, text);
+        stoObj = new StoreObject(Types.STRING, text);
       }
-    }
-
-    return Promise.resolve(store).then( sto => {
-      let received = false;
-      const notify = (text) => {
-        received = true;
-        const result = listenInput(text);
-        sto.updateStore('p1', result);
-      }
-      const obj = {notify: notify.bind(this)}
-      this.input.registerListener(obj);
-      this.input.requestInput();
-      while(!received) {
-        continue;
-      }
-      this.input.removeListener(obj);
-      return sto;
+      store.updateStore('p1', stoObj);
+      return Promise.resolve(store);
     });
   }
 
@@ -401,13 +406,19 @@ export class IVProgProcessor {
 
   executeIfThenElse (store, cmd) {
     try {
-      const $value = this.evaluateExpression(cmd.condition);
+      const $value = this.evaluateExpression(store, cmd.condition);
       return $value.then(vl => {
         if(vl.type === Types.BOOLEAN) {
           if(vl.value) {
-            return this.executeCommands(store, cmd.ifTrue);
+            return this.executeCommands(store, cmd.ifTrue.commands);
+          } else if( cmd.ifFalse !== null){
+            if(cmd.ifFalse instanceof Commands.IfThenElse) {
+              return this.executeCommand(store, cmd.ifFalse);
+            } else {
+              return this.executeCommands(store, cmd.ifFalse.commands);
+            }
           } else {
-            return this.executeCommands(store, cmd.ifFalse);
+            return Promise.resolve(store);
           }
         } else {
           // TODO: Better error message -- Inform line and column from token!!!!
@@ -426,7 +437,12 @@ export class IVProgProcessor {
       const $value = this.evaluateExpression(store, cmd.expression);
       const funcName = store.applyStore('$name');
       return $value.then(vl => {
-        if (funcType.type !== vl.type) {
+
+        if(vl === null && funcType === Types.VOID) {
+          return Promise.resolve(store);
+        }
+
+        if (vl === null || funcType.type !== vl.type) {
           // TODO: Better error message -- Inform line and column from token!!!!
           // THIS IF SHOULD BE IN A SEMANTIC ANALYSER
           return Promise.reject(new Error(`Function ${funcName.value} must return ${funcType.type} instead of ${vl.type}.`));
@@ -489,10 +505,10 @@ export class IVProgProcessor {
           const value = values[2];
           const temp = new StoreObjectArray(cmd.subtype, line, column, null, cmd.isConst);
           store.insertStore(cmd.id, temp);
-          if(value !== null)
-            return  store.updateStore(cmd.id, value);
-          else
-            return store;
+          if(value !== null) {
+            store.updateStore(cmd.id, value);
+          }
+          return store;
         });
         
       } else {
@@ -500,9 +516,8 @@ export class IVProgProcessor {
         store.insertStore(cmd.id, temp);
         return $value.then(vl => {
           if (vl !== null)
-            return store.updateStore(cmd.id, vl)
-          else
-            return store;
+            store.updateStore(cmd.id, vl)
+          return store;
         });
       }
     } catch (e) {
@@ -533,6 +548,7 @@ export class IVProgProcessor {
     } else if (exp instanceof Expressions.FunctionCall) {
       return this.evaluateFunctionCall(store, exp);
     }
+    console.log('null exp');
     return Promise.resolve(null);
   }
 

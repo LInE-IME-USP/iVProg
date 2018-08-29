@@ -8,7 +8,7 @@
             "type": "node",
             "request": "launch",
             "name": "Launch Program",
-            "program": "${workspaceFolder}/js/main.js"
+            "program": "${workspaceFolder}/build/ivprog.bundle.js"
         }
     ]
 }
