@@ -19,6 +19,7 @@ describe('An assignment to a variable', function () {
     const exec = new IVProgProcessor(parser.parseTree());
     exec.interpretAST().then(sto => {
       done(new Error('Should not have resolved'));
-    }).catch( _ => done());
+    }).catch( _ => {expect(1).toEqual(1);
+    done();});
   });
 });
