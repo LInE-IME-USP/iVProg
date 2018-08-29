@@ -281,3 +281,6 @@ div.buttons_manage_columns {
 .commands_list_div, .variables_list_div {
 	min-height: 20px;
 }
+.block_commands {
+	min-height: 20px;
+}

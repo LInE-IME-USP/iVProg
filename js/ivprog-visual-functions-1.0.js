@@ -284,14 +284,14 @@ function findNearbyCommandToAdd(el, event) {
 		}
 	}
 
-
-	programa.funcoes[function_to_add].comandos.splice($(elemento_menor_distancia).data('index'), 0, createElementGenericFunction());
-
-	console.log("\n\nRESULTADO: ");
-	console.log("elemento mais próximo: ");
-	console.log(elemento_menor_distancia);
-	console.log("antes? " + antes);
-	console.log("menor distancia: " + menor_distancia);
+	borda_inferior = elemento_menor_distancia.parentNode.getBoundingClientRect().top + elemento_menor_distancia.parentNode.getBoundingClientRect().height;
+	
+	// Está mais próximo da borda de baixo, ou seja.. inserir por último:
+	if ((borda_inferior - event.clientY) < menor_distancia) {
+		programa.funcoes[function_to_add].comandos.push(createElementGenericFunction());
+	} else {
+		programa.funcoes[function_to_add].comandos.splice($(elemento_menor_distancia).data('index'), 0, createElementGenericFunction());
+	}
 }
 
 function findPositionAndInsertCommand(el, event) {
@@ -640,8 +640,24 @@ function addHandlers() {
 	});
 
 	for (i = 0; i < programa.funcoes.length; i++) {
+		var x_temp = '#function_drag_cmd_' + i + " .block_commands";
+		console.log("OLHA: " + x_temp);
+		$( x_temp ).each(function( index ) { 
+			Sortable.create(this, {
+			    handle: '.command_drag',
+			    animation: 100,
+			    ghostClass: 'ghost',
+			    group: 'commands_inside_function_drag_' + i,
+			    onEnd: function (evt) {
+			      //updateSequenceFunctionHandler(evt.oldIndex, evt.newIndex);
+			    },
+			    onStart: function (evt) {
+					console.log("começou");
+				}
+			});
+		});
 
-		  Sortable.create(document.getElementById('function_drag_cmd_' + i), {
+		Sortable.create(document.getElementById('function_drag_cmd_' + i), {
 		    handle: '.command_drag',
 		    animation: 100,
 		    ghostClass: 'ghost',
@@ -652,7 +668,7 @@ function addHandlers() {
 		    onStart: function (evt) {
 				console.log("começou");
 			}
-		  });
+		});
 	}
 
 	$('.ui.buttons .dropdown').dropdown();
@@ -2311,7 +2327,17 @@ function renderRepeatNtimes(repeat_obj, function_index, repeat_index, data_paren
 
 function renderIfTrue(writer_obj, function_index, iftrue_index, data_parent) {
 	var ret = '';
-	ret += '<div class="ui iftrue" data-index="'+iftrue_index+'" data-parent="'+data_parent+'"> <i class="ui icon small random command_drag"></i> <span> if (x < 1) { <br> } else { <br> }</span>';
+	ret += '<div class="ui iftrue" data-index="'+iftrue_index+'" data-parent="'+data_parent+'"> <i class="ui icon small random command_drag"></i> <span> if (x < 1) { </span>';
+	ret += '<div class="ui block_commands">';
+
+	ret += '</div>';
+	ret += '<span> } else { </span>';
+
+	ret += '<div class="ui block_commands">';
+
+	ret += '</div>';
+
+	ret += '<span> }</span>';
 	ret += '</div>';
 
 	return ret;
