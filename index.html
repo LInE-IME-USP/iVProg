@@ -2,6 +2,25 @@
 <html>
 <head>
   <link rel="stylesheet" type="text/css" href="js/semantic/semantic.min.css">
+  <style>
+    .ivprog-io-output {
+      border: 1px solid gainsboro;
+      width: 80%;
+      height: 360px;
+      overflow-y: scroll;
+      background-color: black;
+      color: white;
+    }
+
+    .ivprog-io-input {
+      width: 80%;
+      margin-top: 10px;
+      border: 1.5px solid green;
+      height: 3rem;
+      color: black;
+      font-size: 12pt;
+    }
+  </style>
   <title></title>
 </head>
 <body>
@@ -27,13 +46,19 @@
         </textarea>
       </div>
       <div class="row">
-          <button class="ui button" id="btn">Generate AST</button>
+          <button class="ui button" id="btn">Run</button>
       </div>
     </div>
     <div class="six wide column">
-      <div style="overflow-y: scroll; height: 20%;">
-          <pre id="json-renderer" class="ui right floated"></pre>
+      <div id="dom-out" class="ivprog-io-output">
+
       </div>
+      <input id="dom-in" type="text" class="ivprog-io-input">
+    </div>
+    <div class="six wide column">
+        <div style="overflow-y: scroll; height: 70%;">
+            <pre id="json-renderer" class="ui right floated"></pre>
+        </div>
     </div>
   </div>
   

@@ -4,7 +4,7 @@ import {Types} from './../ast/types';
 function createOutputFun () {
   const block = new Commands.CommandBlock([], [new Commands.SysCall('$write')]);
   const func = new Commands.Function('$write', Types.VOID,
-    [new Commands.FormalParameter(Types.ALL, 'p1', 0, true)],
+    [new Commands.FormalParameter(Types.ALL, 'p1', 0, false)],
     block);
   return func;
 }
