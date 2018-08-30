@@ -4,6 +4,7 @@ import * as Commands from './commands/';
 import { Types, toInt, toString } from './types';
 import { convertFromString } from './operators';
 import { SyntaxError } from './SyntaxError';
+import { NAMES } from './../processor/definedFunctions';
 
 export class IVProgParser {
 
@@ -700,10 +701,10 @@ export class IVProgParser {
       this.pos++;
       return (new Commands.Assign(id, exp));
     } else if (equalOrParenthesis.type === this.lexerClass.OPEN_PARENTHESIS) {
-      const actualParameters = this.parseActualParameters();
+      const funcCall = this.parseFunctionCallCommand(id);
       this.checkEOS();
       this.pos++;
-      return (new Expressions.FunctionCall(id, actualParameters));
+      return funcCall;
     } else {
       throw SyntaxError.createError("= or (", equalOrParenthesis);
     }
@@ -909,12 +910,31 @@ export class IVProgParser {
       return new Expressions.ArrayAccess(id, firstIndex, secondIndex);
 
     } else if (this.checkOpenParenthesis(true)) {
-      const actualParameters = this.parseActualParameters();
-      return new Expressions.FunctionCall(id, actualParameters);
+      return this.parseFunctionCallExpression(id);
     } else {
       this.pos = last;
       return new Expressions.VariableLiteral(id);
     }
+  }
+
+  getFunctionName (id) {
+    if (id === this.lexerClass.READ_FUNCTION_NAME) {
+      return NAMES.READ;
+    } else if (id === this.lexerClass.WRITE_FUNCTION_NAME) {
+      return NAMES.WRITE;
+    } else {
+      return id;
+    }
+  }
+
+  parseFunctionCallExpression (id) {
+    const actualParameters = this.parseActualParameters();
+    const funcName = this.getFunctionName(id);
+    return new Expressions.FunctionCall(funcName, actualParameters);
+  }
+
+  parseFunctionCallCommand (id) {
+    return this.parseFunctionCallExpression(id);
   }
 
   parseParenthesisExp () {

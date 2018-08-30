@@ -6,7 +6,7 @@ import { Modes } from './modes';
 import { Context } from './context';
 import { Types, toInt } from './../ast/types';
 import { Operators } from './../ast/operators';
-import { NAMES } from './definedFunctions';
+import { NAMES, LanguageDefinedFunction } from './definedFunctions';
 import { canApplyInfixOp, canApplyUnaryOp } from './compatibilityTable';
 import * as Commands from './../ast/commands/';
 import * as Expressions from './../ast/expressions/';
@@ -68,12 +68,20 @@ export class IVProgProcessor {
   }
 
   findFunction (name) {
-    const val = this.ast.functions.find( v => v.name === name);
-    if (!!!val) {
-      // TODO: better error message;
-      throw new Error(`Function ${name} is not defined.`);
+    if(name.match(/^\$.+$/)) {
+      const fun = LanguageDefinedFunction[name];
+      if(!!!fun) {
+        throw new Error("!!!Internal Error. Language defined function not implemented -> " + name + "!!!");
+      }
+      return fun;
+    } else {
+      const val = this.ast.functions.find( v => v.name === name);
+      if (!!!val) {
+        // TODO: better error message;
+        throw new Error(`Function ${name} is not defined.`);
+      }
+      return val;
     }
-    return val;
   }
 
   runFunction (func, actualParameters, store) {
@@ -162,6 +170,8 @@ export class IVProgProcessor {
 
               if(formalParameter.byRef) {
                 const ref = new StoreObjectRef(stoObj.id, callerStore);
+                console.log('it\'s a ref...');
+                console.log(ref);
                 calleeStore.insertStore(formalParameter.id, ref);
               } else {
                 calleeStore.insertStore(formalParameter.id, stoObj);
@@ -271,9 +281,12 @@ export class IVProgProcessor {
   }
 
   executeFunctionCall (store, cmd) {
-    const func = this.findFunction(cmd.id);
-    this.runFunction(func, cmd.actualParameters, store);
-    return Promise.resolve(store);
+    return new Promise((resolve, reject) => {
+      const func = this.findFunction(cmd.id);
+      this.runFunction(func, cmd.actualParameters, store)
+        .then(_ => resolve(store))
+        .catch(err => reject(err));
+    }); 
   }
 
   executeSwitch (store, cmd) {

@@ -13,6 +13,7 @@ import { Switch } from './switch';
 import { Case } from './case';
 import { SysCall } from './sysCall';
 import { FormalParameter } from './formalParameter';
+import { FunctionCall } from './../expressions/functionCall'; //Proxy to expression since they do exatcly the same thing
 
 export {
   Break,
@@ -29,5 +30,6 @@ export {
   Switch,
   Case,
   SysCall,
-  FormalParameter
+  FormalParameter,
+  FunctionCall
 };

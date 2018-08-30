@@ -2,9 +2,9 @@ import { StoreObject } from './storeObject';
 
 export class StoreObjectRef extends StoreObject {
 
-  constructor (id, store) {
+  constructor (refID, store) {
     super(null, null, false);
-    this.setID(id);
+    this.refID = refID;
     this.store = store;
   }
 
@@ -13,22 +13,22 @@ export class StoreObjectRef extends StoreObject {
   }
 
   get type () {
-    return this.store.applyStore(this.id).type;
+    return this.store.applyStore(this.refID).type;
   }
 
   get value () {
-    return this.store.applyStore(this.id).value;
+    return this.store.applyStore(this.refID).value;
   }
 
   getRefObj () {
-    return this.store.applyStore(this.id);
+    return this.store.applyStore(this.refID);
   }
 
   updateRef (stoObj) {
-    this.store.updateStore(this.id, stoObj);
+    this.store.updateStore(this.refID, stoObj);
   }
 
   isCompatible (another) {
-    return this.store.applyStore(this.id).isCompatible(another);
+    return this.store.applyStore(this.refID).isCompatible(another);
   }
 }

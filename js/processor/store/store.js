@@ -57,6 +57,10 @@ export class Store {
     }
   }
 
+  //In case of future use of ref, it needs to have a special function to update the storeRefObject
+  // and no the StoreObject refferenced by it
+  // updateStoreRef(id, stoObjAddress) {...}
+
   insertStore (id, stoObj) {
     if (this.store[id]) {
       // TODO: better error message
