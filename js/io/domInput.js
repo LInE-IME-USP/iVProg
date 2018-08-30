@@ -4,6 +4,7 @@ import $ from 'jquery';
 export class DOMInput extends Input{
 
   constructor (element) {
+    super();
     this.el = $(element);
     this.listeners = [];
     this.setupEvents();
@@ -21,22 +22,9 @@ export class DOMInput extends Input{
     });
   }
 
-  registerListener (listener) {
-    if(!listener.notify) {
-      throw new Error("InternalError: Input listener must implement a notify function.");
-    }
-    this.listeners.push(listener);
-  }
-
   requestInput (callback) {
     this.listeners.push(callback);
     this.el.focus();
-  }
-
-  removeListener (listener) {
-    const idx = this.listeners.indexOf(listener);
-    if (idx)
-      this.listeners.splice(idx, 1);
   }
 
   notifyInput (text) {
