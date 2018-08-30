@@ -29,7 +29,7 @@ export class DOMInput extends Input{
 
   notifyInput (text) {
     this.listeners.forEach(resolve => {
-      resolve(l);
+      resolve(text);
     })
     this.listeners.splice(0, this.listeners.length);
   }
