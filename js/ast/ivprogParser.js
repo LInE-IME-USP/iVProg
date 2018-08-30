@@ -1,9 +1,10 @@
 import { CommonTokenStream, InputStream } from 'antlr4/index';
 import * as Expressions from './expressions/';
 import * as Commands from './commands/';
-import { Types } from './types';
+import { Types, toInt, toString } from './types';
 import { convertFromString } from './operators';
 import { SyntaxError } from './SyntaxError';
+import { NAMES } from './../processor/definedFunctions';
 
 export class IVProgParser {
 
@@ -319,15 +320,7 @@ export class IVProgParser {
   **/
   getIntLiteral (token) {
     const text = token.text;
-    let val = null;
-    if(text.match('^0b|^0B')) {
-      val = parseInt(text.substring(2), 2);
-    } else if (text.match('^0x|^0X')) {
-      val = parseInt(text.substring(2), 16);
-    } else {
-      val = parseInt(text);
-    }
-    return new Expressions.IntLiteral(val);
+    return new Expressions.IntLiteral(toInt(text));
   }
 
   getRealLiteral (token) {
@@ -336,14 +329,7 @@ export class IVProgParser {
 
   getStringLiteral (token) {
     const text = token.text;
-    let value = text.replace("\\b", "\b");
-    value = value.replace("\\t", "\t");
-    value = value.replace("\\n", "\n");
-    value = value.replace("\\r", "\r");
-    value = value.replace("\\\"", "\"");
-    value = value.replace("\\\'", "\'");
-    value = value.replace("\\\\", "\\");
-    return new Expressions.StringLiteral(value);
+    return new Expressions.StringLiteral(toString(text));
   }
 
   getBoolLiteral (token) {
@@ -367,11 +353,11 @@ export class IVProgParser {
     this.pos++;
     this.parsingArrayDimension--;
     if (this.parsingArrayDimension === 0) {
-      if (!data.isValid) {
-      // TODO: better error message
-      console.log('invalid array');
-      throw new Error(`Invalid array at line ${beginArray.line}`);
-    }
+      // if (!data.isValid) {
+      //   // TODO: better error message
+      //   console.log('invalid array');
+      //   throw new Error(`Invalid array at line ${beginArray.line}`);
+      // }
     }
     return new Expressions.ArrayLiteral(data);
   }
@@ -444,7 +430,7 @@ export class IVProgParser {
           this.pos++;
         }
       }
-      list.push({type: typeString, id: idString, dimensions: dimensions});
+      list.push(new Commands.FormalParameter(typeString, idString, dimensions));
       const commaToken = this.getToken();
       if (commaToken.type !== this.lexerClass.COMMA)
         break;
@@ -715,10 +701,10 @@ export class IVProgParser {
       this.pos++;
       return (new Commands.Assign(id, exp));
     } else if (equalOrParenthesis.type === this.lexerClass.OPEN_PARENTHESIS) {
-      const actualParameters = this.parseActualParameters();
+      const funcCall = this.parseFunctionCallCommand(id);
       this.checkEOS();
       this.pos++;
-      return (new Expressions.FunctionCall(id, actualParameters));
+      return funcCall;
     } else {
       throw SyntaxError.createError("= or (", equalOrParenthesis);
     }
@@ -919,29 +905,36 @@ export class IVProgParser {
         this.consumeNewLines();
         this.checkCloseBrace();
         this.pos++;
-      } else {
-        this.pos--;
       }
 
       return new Expressions.ArrayAccess(id, firstIndex, secondIndex);
 
     } else if (this.checkOpenParenthesis(true)) {
-      this.pos++;
-      this.consumeNewLines();
-      let actualParameters = [];
-      if(!this.checkCloseParenthesis(true)) {
-        actualParameters = this.parseActualParameters();
-        this.consumeNewLines();
-        this.checkCloseParenthesis();
-        this.pos++;
-      } else {
-        this.pos++;
-      }
-      return new Expressions.FunctionCall(id, actualParameters);
+      return this.parseFunctionCallExpression(id);
     } else {
       this.pos = last;
+      return new Expressions.VariableLiteral(id);
+    }
+  }
+
+  getFunctionName (id) {
+    if (id === this.lexerClass.READ_FUNCTION_NAME) {
+      return NAMES.READ;
+    } else if (id === this.lexerClass.WRITE_FUNCTION_NAME) {
+      return NAMES.WRITE;
+    } else {
       return id;
     }
+  }
+
+  parseFunctionCallExpression (id) {
+    const actualParameters = this.parseActualParameters();
+    const funcName = this.getFunctionName(id);
+    return new Expressions.FunctionCall(funcName, actualParameters);
+  }
+
+  parseFunctionCallCommand (id) {
+    return this.parseFunctionCallExpression(id);
   }
 
   parseParenthesisExp () {

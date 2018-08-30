@@ -1,6 +1,7 @@
 import Lexers from './../grammar/';
 import * as Expressions from './../js/ast/expressions/';
 import * as Commands from './../js/ast/commands/';
+import { Operators } from './../js/ast/operators';
 import {Types} from './../js/ast/types';
 import {
     IVProgParser
@@ -11,6 +12,7 @@ describe('Variable declaration inside a function', () => {
 
       funcao inicio() {
         inteiro a
+        a = a + 1
       }
     }`;
     const lexer = Lexers['pt_br'];
@@ -20,7 +22,9 @@ describe('Variable declaration inside a function', () => {
       functions: [
         new Commands.Function(null,Types.VOID,[],
         new Commands.CommandBlock([
-          new Commands.Declaration('a',Types.INTEGER,null,false)],[]))
+          new Commands.Declaration('a',Types.INTEGER,null,false)],[
+            new Commands.Assign('a',
+              new Expressions.InfixApp(Operators.ADD, new Expressions.VariableLiteral('a'), new Expressions.IntLiteral(1)))]))
       ]
     }
 
