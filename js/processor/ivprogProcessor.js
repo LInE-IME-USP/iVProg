@@ -254,7 +254,7 @@ export class IVProgProcessor {
 
   runWriteFunction (store) {
     const val = store.applyStore('p1');
-    this.output.sendOutput(val.val);
+    this.output.sendOutput(''+val.value);
     return Promise.resolve(store);
   }
 
