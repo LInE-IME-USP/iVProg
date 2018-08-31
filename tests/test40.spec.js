@@ -3,21 +3,21 @@ import { IVProgProcessor} from './../js/processor/ivprogProcessor'
 import { OutputTest } from './../js/util/outputTest';
 import { LanguageService } from '../js/services/languageService';
 
-describe('The write function', function () {
+describe('The LanguageService', function () {
 
-  const code = `programa {
+  const code = `program {
 
-    funcao inicio() {
+    function start() {
       real a = 8.01
-      escreva(a)
+      write(a)
     }
   }`;
 
   const output = new OutputTest();
-
+  localStorage.setItem('ivprog.lang', 'en');
   const lexer = LanguageService.getCurrentLexer();
 
-  it(`should print the value passed to it, no matter it's type`, function (done) {
+  it(`should provide the appropriate lexer`, function (done) {
     const parser = new IVProgParser(code, lexer);
     const exec = new IVProgProcessor(parser.parseTree());
     exec.registerOutput(output);

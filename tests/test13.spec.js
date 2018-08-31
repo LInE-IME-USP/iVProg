@@ -2,8 +2,10 @@ import Lexers from './../grammar/';
 import {
     IVProgParser
 } from './../js/ast/ivprogParser';
+import { LanguageService } from '../js/services/languageService';
 
 describe('A complete program code', () => {
+
     let input = `programa {
       
       const real PI = 5.7e-10
@@ -18,7 +20,7 @@ describe('A complete program code', () => {
         }
       }
     }`;
-    const lexer = Lexers['pt_br'];
+    const lexer = LanguageService.getCurrentLexer();
 
     it(`should not result in SyntaxError`, () => {
         const as = new IVProgParser(input, lexer);

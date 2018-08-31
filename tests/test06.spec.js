@@ -1,10 +1,7 @@
-import Lexers from './../grammar/';
 import {
     IVProgParser
 } from './../js/ast/ivprogParser';
-import {
-    SyntaxError
-} from './../js/ast/SyntaxError';
+import { LanguageService } from '../js/services/languageService';
 
 describe('While command', () => {
     let input = `funcao inteiro test(real i) {
@@ -14,7 +11,7 @@ describe('While command', () => {
         a = a + 1
       }
     }`;
-    const lexer = Lexers['pt_br'];
+    const lexer = LanguageService.getCurrentLexer();
 
     it(`should not result in SyntaxError`, () => {
         const as = new IVProgParser(input, lexer);

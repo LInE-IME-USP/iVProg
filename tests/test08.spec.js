@@ -5,6 +5,7 @@ import {
 import {
     SyntaxError
 } from './../js/ast/SyntaxError';
+import { LanguageService } from '../js/services/languageService';
 
 describe('Break command inside a loop', () => {
     let input = `funcao inteiro test(real i) {
@@ -17,7 +18,7 @@ describe('Break command inside a loop', () => {
         }
       }
     }`;
-    const lexer = Lexers['pt_br'];
+    const lexer = LanguageService.getCurrentLexer();
 
     it(`should not result in SyntaxError`, () => {
         const as = new IVProgParser(input, lexer);

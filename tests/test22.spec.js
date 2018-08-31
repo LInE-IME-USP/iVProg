@@ -1,8 +1,10 @@
 import Lexers from './../grammar/';
 import { IVProgParser } from './../js/ast/ivprogParser';
 import { IVProgProcessor} from './../js/processor/ivprogProcessor'
+import { LanguageService } from '../js/services/languageService';
 
 describe('An assignment to a variable', function () {
+
 
   const input = `programa {
 
@@ -12,7 +14,7 @@ describe('An assignment to a variable', function () {
     }
   }`;
 
-  const lexer = Lexers['pt_br'];
+  const lexer = LanguageService.getCurrentLexer();
 
   it(`should respect the variable type`, function (done) {
     const parser = new IVProgParser(input, lexer);

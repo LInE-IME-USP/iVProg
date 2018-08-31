@@ -1,19 +1,29 @@
 import Lexers from './../../grammar/';
-export class LanguageService {
+import { isNullOrUndefined } from 'util';
 
-  constructor () {
-    throw new Error('LanguageService class must not be instantiated!');
-  }
+const DEFAULT_LANG = 'pt';
 
-  static getLang () {
+export const LanguageService  = ({
+
+  getLang: () => {
     const lang = localStorage.getItem('ivprog.lang');
     if (lang === null) {
       throw new Error("Internal Error. User language information has not been set");
     }
     return lang;
+  },
+
+  getDefaultLang: () => {
+    return DEFAULT_LANG;
+  },
+
+  getCurrentLexer: () => {
+    const lexer = Lexers[LanguageService.getLang()];
+    if(lexer === null || lexer === undefined) {
+      return Lexers[DEFAULT_LANG];
+    } else {
+      return lexer;
+    }
   }
 
-  static getCurrentLexer () {
-    return Lexers[LanguageService.getLang()];
-  }
-}
+});

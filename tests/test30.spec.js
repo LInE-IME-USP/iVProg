@@ -2,6 +2,7 @@ import Lexers from './../grammar/';
 import {Types} from './../js/ast/types';
 import { IVProgParser } from './../js/ast/ivprogParser';
 import { IVProgProcessor} from './../js/processor/ivprogProcessor'
+import { LanguageService } from '../js/services/languageService';
 
 describe('A break command inside a switch..case', function () {
 
@@ -25,7 +26,7 @@ describe('A break command inside a switch..case', function () {
     }
   }`;
 
-  const lexer = Lexers['pt_br'];
+  const lexer = LanguageService.getCurrentLexer();
 
   it(`should terminate it`, function (done) {
     const parser = new IVProgParser(input, lexer);
