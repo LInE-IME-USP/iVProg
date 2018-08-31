@@ -374,6 +374,10 @@ function manageCommand(event) {
 			console.log("ACHO QUE É A SITUAÇÃO DE BLOCO INTERNO");
 			console.log("SOLTOU NO ELEMENTO A SEGUIR: ");
 			console.log(el.relatedObj);
+			console.log("PAI DO ELEMENTO QUE ELA SOLTOU: ");
+			console.log(el.parentNode.relatedObj);
+			//
+			el.parentNode.relatedObj.commands_block.push(createElementGenericFunction());
 
 			/*console.log("elemento superior: ");
 			console.log(programa.funcoes[function_to_add].comandos[caminho[0]]);
