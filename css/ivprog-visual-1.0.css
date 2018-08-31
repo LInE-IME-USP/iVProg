@@ -230,6 +230,9 @@ div.buttons_manage_columns {
 	margin: 5px;
 	background: #f9f9f9;
 }
+.block_commands {
+	z-index: 88;
+}
 
 .add_var_top_button {
 	padding-right: 50px;

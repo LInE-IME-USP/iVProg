@@ -36,8 +36,8 @@
 	},
 	"read": {
 		"en": "read",
-		"es": "leia",
-		"pt": "leer"
+		"es": "leer",
+		"pt": "leia"
 	},
 	"write": {
 		"en": "write",
