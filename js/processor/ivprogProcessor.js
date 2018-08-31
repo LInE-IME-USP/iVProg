@@ -13,7 +13,7 @@ import * as Expressions from './../ast/expressions/';
 
 export class IVProgProcessor {
 
-  constructor(ast) {
+  constructor (ast) {
     this.ast = ast;
     this.globalStore = new Store();
     this.stores = [this.globalStore];

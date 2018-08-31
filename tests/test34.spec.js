@@ -1,9 +1,8 @@
-import Lexers from './../grammar/';
 import { IVProgParser } from './../js/ast/ivprogParser';
 import { IVProgProcessor} from './../js/processor/ivprogProcessor'
+import { LanguageService } from '../js/services/languageService';
 
 describe('IfThenElse command ', function () {
-
   let input = `programa {
 
     funcao inicio() {
@@ -18,7 +17,7 @@ describe('IfThenElse command ', function () {
     }
   }`;
 
-  const lexer = Lexers['pt_br'];
+  const lexer = LanguageService.getCurrentLexer();
 
   it(`should produce a valid state`, function (done) {
     const parser = new IVProgParser(input, lexer);

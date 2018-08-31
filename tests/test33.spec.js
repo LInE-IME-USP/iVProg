@@ -1,6 +1,6 @@
-import Lexers from './../grammar/';
 import { IVProgParser } from './../js/ast/ivprogParser';
 import { IVProgProcessor} from './../js/processor/ivprogProcessor'
+import { LanguageService } from '../js/services/languageService';
 
 describe('A non-const global variable', function () {
 
@@ -24,7 +24,7 @@ describe('A non-const global variable', function () {
     }
   }`;
 
-  const lexer = Lexers['pt_br'];
+  const lexer = LanguageService.getCurrentLexer();
 
   it(`should be modifiable inside a function`, function (done) {
     const parser = new IVProgParser(input, lexer);

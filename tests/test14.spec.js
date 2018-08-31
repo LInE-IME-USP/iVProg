@@ -2,11 +2,11 @@ import Lexers from './../grammar/';
 import {
     IVProgParser
 } from './../js/ast/ivprogParser';
-import {
-    SyntaxError
-} from './../js/ast/SyntaxError';
+import { LanguageService } from '../js/services/languageService';
+
 
 describe('For with no \';\'', () => {
+
     let input = `funcao inteiro test(real i) {
       inteiro a = 5 + i
       a = 5 + G[i][6]
@@ -16,7 +16,7 @@ describe('For with no \';\'', () => {
          a = a
       }
     }`;
-    const lexer = Lexers['pt_br'];
+    const lexer = LanguageService.getCurrentLexer();
 
     it(`should result in SyntaxError`, () => {
         const as = new IVProgParser(input, lexer);

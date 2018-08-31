@@ -6,8 +6,10 @@ import {Types} from './../js/ast/types';
 import {
     IVProgParser
 } from './../js/ast/ivprogParser';
+import { LanguageService } from '../js/services/languageService';
 
 describe('Variable declaration inside a function', () => {
+
     let input = `programa {
 
       funcao inicio() {
@@ -15,7 +17,7 @@ describe('Variable declaration inside a function', () => {
         a = a + 1
       }
     }`;
-    const lexer = Lexers['pt_br'];
+    const lexer = LanguageService.getCurrentLexer();
 
     const ast = {
       global: [ ],

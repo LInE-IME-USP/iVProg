@@ -2,11 +2,10 @@ import Lexers from './../grammar/';
 import {
     IVProgParser
 } from './../js/ast/ivprogParser';
-import {
-    SyntaxError
-} from './../js/ast/SyntaxError';
+import { LanguageService } from '../js/services/languageService';
 
 describe('Break command outside a loop', () => {
+
     let input = `funcao inteiro test(real i) {
       inteiro a = 5 + i
       a = 5 + G[i][6]
@@ -15,8 +14,7 @@ describe('Break command outside a loop', () => {
       }
       pare
     }`;
-    const lexer = Lexers['pt_br'];
-
+    const lexer = LanguageService.getCurrentLexer();
     it(`should result in SyntaxError`, () => {
         const as = new IVProgParser(input, lexer);
         const fun = as.parseFunction.bind(as);

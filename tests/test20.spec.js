@@ -2,8 +2,10 @@ import Lexers from './../grammar/';
 import {Types} from './../js/ast/types';
 import { IVProgParser } from './../js/ast/ivprogParser';
 import { IVProgProcessor} from './../js/processor/ivprogProcessor'
+import { LanguageService } from '../js/services/languageService';
 
 describe('An Array initialization with expressions', function () {
+
 
   const input = `programa {
 
@@ -12,7 +14,7 @@ describe('An Array initialization with expressions', function () {
     }
   }`;
 
-  const lexer = Lexers['pt_br'];
+  const lexer = LanguageService.getCurrentLexer();
   const result = [4,15];
 
   it(`should produce a valid state`, function (done) {
