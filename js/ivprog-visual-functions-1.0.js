@@ -377,7 +377,108 @@ function manageCommand(event) {
 			console.log("PAI DO ELEMENTO QUE ELA SOLTOU: ");
 			console.log(el.parentNode.relatedObj);
 			//
-			el.parentNode.relatedObj.commands_block.push(createElementGenericFunction());
+
+			if ((el.parentNode.relatedObj.tipo == tiposComandos.iftrue)) {
+
+				if ($(el.parentNode).data('if') || $(el).data('if')) {
+
+					if ((el.parentNode.relatedObj.commands_block == null) 
+						|| (el.parentNode.relatedObj.commands_block.length == 0)) {
+
+						el.parentNode.relatedObj.commands_block = [];
+						el.parentNode.relatedObj.commands_block.push(createElementGenericFunction());
+
+					} else {
+
+						if ($(el).data('if')) {
+							// Descobrir qual o elemento mais próximo de onde ele soltou o comando recém criado:
+							console.log("SITUAÇÃO TRATADA NO K1!");
+							getNearbyIndexOfElementOnClick(el, event);
+
+						} else {
+							if (getBeforeOrAfterOrEndAllocate(el, event)) {
+								console.log("K1 ANTECAO! SOLTOU ANTES DO ELEMENTO ALVO");
+
+								el.parentNode.relatedObj.commands_block.splice($(el).data('index'), 0, createElementGenericFunction());
+							} else {
+								console.log("K1 ANTECAO! SOLTOU DEPOIS DO ELEMENTO ALVO");
+
+								el.parentNode.relatedObj.commands_block.splice($(el).data('index') + 1, 0, createElementGenericFunction());
+							}
+						}
+
+						//el.parentNode.relatedObj.commands_block.push(createElementGenericFunction());
+
+					}
+				} else if ($(el.parentNode).data('else') || $(el).data('else')) {
+
+					if ((el.parentNode.relatedObj.commands_else == null) 
+						|| (el.parentNode.relatedObj.commands_else.length == 0)) {
+
+						el.parentNode.relatedObj.commands_else = [];
+						el.parentNode.relatedObj.commands_else.push(createElementGenericFunction());
+
+					} else {
+
+						if ($(el).data('else')) {
+							// Descobrir qual o elemento mais próximo de onde ele soltou o comando recém criado:
+							console.log("SITUAÇÃO TRATADA NO K2!");
+							getNearbyIndexOfElementOnClick(el, event);
+
+						} else {
+
+							if (getBeforeOrAfterOrEndAllocate(el, event)) {
+								console.log("K2 ANTECAO! SOLTOU ANTES DO ELEMENTO ALVO");
+
+								el.parentNode.relatedObj.commands_else.splice($(el).data('index'), 0, createElementGenericFunction());
+
+							} else {
+								console.log("K2 ANTECAO! SOLTOU DEPOIS DO ELEMENTO ALVO");
+
+								el.parentNode.relatedObj.commands_else.splice($(el).data('index') + 1, 0, createElementGenericFunction());
+							}
+						}
+
+						//el.parentNode.relatedObj.commands_else.push(createElementGenericFunction());
+
+					}
+				} else {
+					console.log("soltou dentro do if, fora dos divs corretos... VERIFICAR QUAL ESTÁ MAIS PRÓXIMO... O IF OU O ELSE");
+				}
+
+			} else {
+				if ((el.parentNode.relatedObj.commands_block == null) 
+						|| (el.parentNode.relatedObj.commands_block.length == 0)) {
+					
+					el.parentNode.relatedObj.commands_block = [];
+					el.parentNode.relatedObj.commands_block.push(createElementGenericFunction());
+
+				} else {
+					//programa.funcoes[function_to_add].comandos.splice($(el).data('index') + 1, 0, createElementGenericFunction());
+					// 
+
+					if (typeof $(el).data('subblock') !== 'undefined') {
+						
+						console.log("SITUAÇÃO TRATADA NO K3!");
+
+						getNearbyIndexOfElementOnClick(el, event);
+
+					} else {
+						if (getBeforeOrAfterOrEndAllocate(el, event)) {
+							console.log("K3 ANTECAO! SOLTOU ANTES DO ELEMENTO ALVO");
+
+							el.parentNode.relatedObj.commands_block.splice($(el).data('index'), 0, createElementGenericFunction());
+						} else {
+							console.log("K3 ANTECAO! SOLTOU DEPOIS DO ELEMENTO ALVO");
+
+							el.parentNode.relatedObj.commands_block.splice($(el).data('index') + 1, 0, createElementGenericFunction());
+						}
+					}
+
+					//el.parentNode.relatedObj.commands_block.push(createElementGenericFunction());
+				}
+			}
+			
 
 			/*console.log("elemento superior: ");
 			console.log(programa.funcoes[function_to_add].comandos[caminho[0]]);
@@ -399,6 +500,55 @@ function manageCommand(event) {
 
 	renderAlgorithm();
 
+}
+
+function getNearbyIndexOfElementOnClick(el, event) {
+
+	var all_sub = $(el).find('div');
+
+	var menor_distancia = 999999999;
+	var elemento_menor_distancia = null;
+	var antes = true;
+
+	var t_bot;
+	var t_top;
+	// Descobrindo o elemento mais próximo:
+	for (i = 0; i < all_sub.length; i++) {
+		
+		t_top = all_sub[i].getBoundingClientRect().top;
+		t_bot = all_sub[i].getBoundingClientRect().top + all_sub[i].getBoundingClientRect().height;
+
+		if ((t_top - event.clientY) < menor_distancia) {
+			menor_distancia = event.clientY - t_top;
+			elemento_menor_distancia = all_sub[i];
+		}
+	}
+
+	borda_inferior = elemento_menor_distancia.parentNode.getBoundingClientRect().top + elemento_menor_distancia.parentNode.getBoundingClientRect().height;
+	
+	// Está mais próximo da borda de baixo, ou seja.. inserir por último:
+	if ((borda_inferior - event.clientY) < menor_distancia) {
+
+		if ((el.parentNode.relatedObj.tipo == tiposComandos.iftrue)) {
+			if ($(el).data('else')) {
+				el.parentNode.relatedObj.commands_else.push(createElementGenericFunction());
+				return;
+			}
+		}
+
+		el.parentNode.relatedObj.commands_block.push(createElementGenericFunction());
+	} else {
+
+		if ((el.parentNode.relatedObj.tipo == tiposComandos.iftrue)) {
+			if ($(el).data('else')) {
+				el.parentNode.relatedObj.commands_else.splice($(elemento_menor_distancia).data('index'), 0, createElementGenericFunction());
+				return;
+			}
+		}
+
+		el.parentNode.relatedObj.commands_block.splice($(elemento_menor_distancia).data('index'), 0, createElementGenericFunction());
+
+	}
 }
 
 function findElementByPath(full_path_array) {
