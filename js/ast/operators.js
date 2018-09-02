@@ -1,18 +1,18 @@
 export const Operators = Object.freeze({
-  ADD: 0,
-  SUB: 1,
-  MULT: 2,
-  DIV: 3,
-  MOD: 4,
-  GT: 5,
-  GE: 6,
-  LT: 7,
-  LE: 8,
-  EQ: 9,
-  NEQ: 10,
-  AND: 11,
-  OR: 12,
-  NOT: 13
+  ADD: {ord: 0, value: "+"},
+  SUB: {ord: 1, value: "-"},
+  MULT: {ord: 2, value: '*'},
+  DIV: {ord: 3, value: '/'},
+  MOD: {ord: 4, value: '%'},
+  GT: {ord: 5, value: '>'},
+  GE: {ord: 6, value: '>='},
+  LT: {ord: 7, value: '<'},
+  LE: {ord: 8, value: '<='},
+  EQ: {ord: 9, value: '=='},
+  NEQ: {ord: 10, value: '!='},
+  AND: {ord: 11, value: 'and'},
+  OR: {ord: 12, value: 'or'},
+  NOT: {ord: 13, value: 'not'}
 });
 
 export function convertFromString (op) {

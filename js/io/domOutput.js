@@ -9,8 +9,10 @@ export class DOMOutput extends Output {
   }
 
   sendOutput (text) {
-    text = text.replace(/"/g,'');
+    text = text.replace(/^"/, '');
+    text = text.replace(/"$/, '');
     text = text.replace("\n", '</br>');
+    text = text.replace(/\t/g,'&#9;');
     const span = $('<span />').addClass('ivprog-io-output-text').html(text);
     this.el.append(span);
   }
