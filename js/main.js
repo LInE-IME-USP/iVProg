@@ -19,9 +19,9 @@ console.log(LocalizedStrings.getUI('start'));
 //     i++;
 // }
 // const anaSin = new IVProgParser(input, ivprogLexer);
-//const editor = new JsonEditor('#json-renderer', {});
-//const domIn = new DOMInput('#dom-in');
-//const domOut = new DOMOutput('#dom-out');
+const editor = new JsonEditor('#json-renderer', {});
+const domIn = new DOMInput('#dom-in');
+const domOut = new DOMOutput('#dom-out');
 // proc.interpretAST().then( sto => {
 //   console.log(sto.applyStore('a'));
 // }).catch(e => console.log(e));

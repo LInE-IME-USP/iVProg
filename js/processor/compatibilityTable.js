@@ -1,60 +1,158 @@
 import { Types } from './../ast/types';
 import { Operators } from './../ast/operators';
 
-const InfixCompatibilityTable = Object.freeze([
-  /*Add*/[Types.INTEGER, Types.REAL, Types.STRING],
-  /*Sub*/[Types.INTEGER, Types.REAL],
-  /*Mult*/[Types.INTEGER, Types.REAL],
-  /*Div*/[Types.INTEGER, Types.REAL],
-  /*Mod*/[Types.INTEGER],
-  /*Gt*/[Types.INTEGER, Types.REAL],
-  /*Ge*/[Types.INTEGER, Types.REAL],
-  /*Lt*/[Types.INTEGER, Types.REAL],
-  /*Le*/[Types.INTEGER, Types.REAL],
-  /*Eq*/[Types.INTEGER, Types.REAL, Types.STRING, Types.BOOLEAN],
-  /*Neq*/[Types.INTEGER, Types.REAL, Types.STRING, Types.BOOLEAN],
-  /*And*/[Types.BOOLEAN],
-  /*Or*/[Types.BOOLEAN],
-  /*Not*/null,
-]);
+function buildInfixAddTable () {
+  const table = [[], [], [], []];
 
-const UnaryCompatibilityTable = Object.freeze([
-  /*Add*/[Types.INTEGER, Types.REAL],
-  /*Sub*/[Types.INTEGER, Types.REAL],
-  /*Mult*/null,
-  /*Div*/null,
-  /*Mod*/null,
-  /*Gt*/null,
-  /*Ge*/null,
-  /*Lt*/null,
-  /*Le*/null,
-  /*Eq*/null,
-  /*Neq*/null,
-  /*And*/null,
-  /*Or*/null,
-  /*Not*/[Types.BOOLEAN],
-]);
+  table[Types.INTEGER.ord][Types.INTEGER.ord] = Types.INTEGER;
+  table[Types.INTEGER.ord][Types.REAL.ord] = Types.REAL;
+  table[Types.INTEGER.ord][Types.STRING.ord] = Types.STRING;
 
-export function canApplyUnaryOp (op, a) {
-  const list = UnaryCompatibilityTable[op];
-  if (!!!list) {
-    return false;
-  }
-  const type = list.find(t => t === a.type);
-  if (!!!type) {
-    return false;
-  }
-  return true
+  table[Types.REAL.ord][Types.INTEGER.ord] = Types.REAL;
+  table[Types.REAL.ord][Types.REAL.ord] = Types.REAL;
+  table[Types.REAL.ord][Types.STRING.ord] = Types.STRING;
+
+  table[Types.STRING.ord][Types.INTEGER.ord] = Types.STRING;
+  table[Types.STRING.ord][Types.REAL.ord] = Types.STRING;
+  table[Types.STRING.ord][Types.STRING.ord] = Types.STRING;
+  table[Types.STRING.ord][Types.BOOLEAN.ord] = Types.STRING;
+
+  return table;
 }
 
-export function canApplyInfixOp (op, a, b) {
-  const list = InfixCompatibilityTable[op];
-  if (!!!list) {
-    return false;
+function buildInfixMultiSubTable () {
+  const table = [[], [], [], []];
+
+  table[Types.INTEGER.ord][Types.INTEGER.ord] = Types.INTEGER;
+  table[Types.INTEGER.ord][Types.REAL.ord] = Types.REAL;
+
+  table[Types.REAL.ord][Types.INTEGER.ord] = Types.REAL;
+  table[Types.REAL.ord][Types.REAL.ord] = Types.REAL;
+
+  return table;
+}
+
+function buildInfixDivTable () {
+  const table = [[], [], [], []];
+
+  table[Types.INTEGER.ord][Types.INTEGER.ord] = Types.REAL;
+  table[Types.INTEGER.ord][Types.REAL.ord] = Types.REAL;
+
+  table[Types.REAL.ord][Types.INTEGER.ord] = Types.REAL;
+  table[Types.REAL.ord][Types.REAL.ord] = Types.REAL;
+
+  return table;
+}
+
+function buildInfixEqualityInequalityTable () {
+  const table = [[], [], [], []];
+
+  table[Types.INTEGER.ord][Types.INTEGER.ord] = Types.BOOLEAN;
+
+  table[Types.REAL.ord][Types.REAL.ord] = Types.BOOLEAN;
+
+  table[Types.BOOLEAN.ord][Types.BOOLEAN.ord] = Types.BOOLEAN;
+
+  table[Types.STRING.ord][Types.STRING.ord] = Types.BOOLEAN;
+
+  return table;
+}
+
+function buildInfixRelationalTable () {
+  const table = [[], [], [], []];
+
+  table[Types.INTEGER.ord][Types.INTEGER.ord] = Types.BOOLEAN;
+
+  table[Types.REAL.ord][Types.REAL.ord] = Types.BOOLEAN;
+
+  table[Types.STRING.ord][Types.STRING.ord] = Types.BOOLEAN;
+
+  return table;
+}
+
+function buildInfixAndOrTable () {
+  const table = [[], [], [], []];
+
+  table[Types.BOOLEAN.ord][Types.BOOLEAN.ord] = Types.BOOLEAN;
+
+  return table;
+}
+
+function buildInfixModTable () {
+  const table = [[], [], [], []];
+
+  table[Types.INTEGER.ord][Types.INTEGER.ord] = Types.INTEGER;
+
+  return table;
+}
+
+function buildUnarySumSubList () {
+  const list = [];
+
+  list[Types.INTEGER.ord] = Types.INTEGER;
+
+  list[Types.REAL.ord] = Types.REAL;
+
+  return list;
+}
+
+function buildUnaryNegList () {
+  const list = [];
+
+  list[Types.BOOLEAN.ord] = Types.BOOLEAN;
+
+  return list;
+}
+
+function buildInfixCompatibilityTable () {
+  const compatibilityMap = new WeakMap();
+  compatibilityMap.set(Operators.ADD, buildInfixAddTable());
+  compatibilityMap.set(Operators.SUB, buildInfixMultiSubTable());
+  compatibilityMap.set(Operators.MULT, buildInfixMultiSubTable());
+  compatibilityMap.set(Operators.DIV, buildInfixDivTable());
+  compatibilityMap.set(Operators.EQ, buildInfixEqualityInequalityTable());
+  compatibilityMap.set(Operators.NEQ, buildInfixEqualityInequalityTable());
+  compatibilityMap.set(Operators.GE, buildInfixRelationalTable());
+  compatibilityMap.set(Operators.GT, buildInfixRelationalTable());
+  compatibilityMap.set(Operators.LE, buildInfixRelationalTable());
+  compatibilityMap.set(Operators.LT, buildInfixRelationalTable());
+  compatibilityMap.set(Operators.OR, buildInfixAndOrTable());
+  compatibilityMap.set(Operators.AND, buildInfixAndOrTable());
+  compatibilityMap.set(Operators.MOD, buildInfixModTable());
+  return compatibilityMap;
+}
+
+function buildUnaryCompatibilityTable () {
+  const compatibilityMap = new WeakMap();
+  compatibilityMap.set(Operators.ADD, buildUnarySumSubList());
+  compatibilityMap.set(Operators.SUB, buildUnarySumSubList());
+  compatibilityMap.set(Operators.NOT, buildUnaryNegList());
+  return compatibilityMap;
+}
+
+const infixMap = buildInfixCompatibilityTable();
+const unaryMap = buildUnaryCompatibilityTable();
+
+export function resultTypeAfterInfixOp (operator, leftExpressionType, rightExpressionType) {
+  try {
+    return infixMap.get(operator)[leftExpressionType.ord][rightExpressionType.ord];
+  } catch (e) {
+    if (e instanceof TypeError) {
+      return Types.UNDEFINED;
+    } else {
+      throw e;
+    }
   }
-  const type = list.find(t => t === a.type);
-  if (!!!type) {
-    return false;
+}
+
+export function resultTypeAfterUnaryOp (operator, leftExpressionType) {
+  try {
+    return unaryMap.get(operator)[leftExpressionType.ord];
+  } catch (e) {
+    if (e instanceof TypeError) {
+      return Types.UNDEFINED;
+    } else {
+      throw e;
+    } 
   }
-  return type === b.type;
 }

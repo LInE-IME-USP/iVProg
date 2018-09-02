@@ -1,12 +1,12 @@
 export const Types = Object.freeze({
-  INTEGER: "int",
-  REAL: "real",
-  STRING: "string",
-  BOOLEAN: "bool",
-  VOID: "void",
-  ARRAY: 'array',
-  UNDEFINED: 'undefined',
-  ALL: 'all'
+  INTEGER: {value: "int", ord: 0},
+  REAL: {value: "real", ord: 1},
+  STRING: {value: "string", ord: 2},
+  BOOLEAN: {value: "bool", ord: 3},
+  VOID: {value: "void", ord: 4},
+  ARRAY: {value: 'array', ord: 5},
+  UNDEFINED: {value: 'undefined', ord: 6},
+  ALL: {value: 'all', ord: 7}
 });
 
 export function toInt (str) {
@@ -20,13 +20,15 @@ export function toInt (str) {
 }
 
 export function toString (str) {
-  let value = str.replace("\\b", "\b");
-  value = value.replace("\\t", "\t");
-  value = value.replace("\\n", "\n");
-  value = value.replace("\\r", "\r");
-  value = value.replace("\\\"", "\"");
-  value = value.replace("\\\'", "\'");
-  value = value.replace("\\\\", "\\");
+  let value = str.replace(/^"/, '');
+  value = value.replace(/"$/, '');
+  value = value.replace(/\\b/g, "\b");
+  value = value.replace(/\\t/g, "\t");
+  value = value.replace(/\\n/g, "\n");
+  value = value.replace(/\\r/g, "\r");
+  value = value.replace(/\\\"/g, "\"");
+  value = value.replace(/\\\'/g, "\'");
+  value = value.replace(/\\\\/g, "\\");
   return value;
 }
 
