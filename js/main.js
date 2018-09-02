@@ -1,25 +1,12 @@
-import {
-    InputStream,
-    CommonTokenStream
-} from 'antlr4/index';
-import * as Commands from './ast/commands';
 import { IVProgParser } from './ast/ivprogParser';
-import Lexers from '../grammar/';
 import { IVProgProcessor } from './processor/ivprogProcessor';
 import {DOMInput} from './io/domInput';
 import {DOMOutput} from './io/domOutput';
+import { LanguageService } from './services/languageService';
+import { LocalizedStrings } from './services/localizedStringsService';
 
-const lang = 'pt_br';
-
-const ivprogLexer = Lexers[lang];
-
-const input = `programa {
-             
-  funcao inicio() {
-     inteiro a[2] = {1,2}
-  }
-
-}`;
+const ivprogLexer = LanguageService.getCurrentLexer();
+console.log(LocalizedStrings.getUI('start'));
 
 // const lexer = new ivprogLexer(new InputStream(input));
 // const stream = new CommonTokenStream(lexer);
@@ -32,9 +19,9 @@ const input = `programa {
 //     i++;
 // }
 // const anaSin = new IVProgParser(input, ivprogLexer);
-const editor = new JsonEditor('#json-renderer', {});
-const domIn = new DOMInput('#dom-in');
-const domOut = new DOMOutput('#dom-out');
+//const editor = new JsonEditor('#json-renderer', {});
+//const domIn = new DOMInput('#dom-in');
+//const domOut = new DOMOutput('#dom-out');
 // proc.interpretAST().then( sto => {
 //   console.log(sto.applyStore('a'));
 // }).catch(e => console.log(e));

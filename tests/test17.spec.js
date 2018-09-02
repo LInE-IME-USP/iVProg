@@ -1,4 +1,3 @@
-import Lexers from './../grammar/';
 import * as Expressions from './../js/ast/expressions/';
 import * as Commands from './../js/ast/commands/';
 import { Operators } from './../js/ast/operators';

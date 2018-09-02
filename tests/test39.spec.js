@@ -6,4 +6,5 @@ describe('LanguageService.getLang() ', function () {
   it("should return the value associated to the key ivprog.lang, inside localStorage", function () {
     expect(LanguageService.getLang()).toEqual('pt_br');
   });
+  afterEach(() => localStorage.removeItem('ivprog.lang'));
 });

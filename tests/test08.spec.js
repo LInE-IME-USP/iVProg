@@ -1,10 +1,6 @@
-import Lexers from './../grammar/';
 import {
     IVProgParser
 } from './../js/ast/ivprogParser';
-import {
-    SyntaxError
-} from './../js/ast/SyntaxError';
 import { LanguageService } from '../js/services/languageService';
 
 describe('Break command inside a loop', () => {
