@@ -332,7 +332,8 @@ function manageCommand(event) {
 
 					}
 				} else {
-					console.log("soltou dentro do if, fora dos divs corretos... VERIFICAR QUAL ESTÁ MAIS PRÓXIMO... O IF OU O ELSE");
+					console.log("soltou dentro do if, fora dos divs corretos... VERIFICAR QUAL ESTÁ MAIS PRÓXIMO... O IF OU O ELSE  --- NNN11");
+					discoveryIfOrElse(el, event);
 				}
 
 			} else {
@@ -443,40 +444,62 @@ function manageCommand(event) {
 
 					}
 				} else {
-					console.log("soltou dentro do if, fora dos divs corretos... VERIFICAR QUAL ESTÁ MAIS PRÓXIMO... O IF OU O ELSE");
+					console.log("soltou dentro do if, fora dos divs corretos... VERIFICAR QUAL ESTÁ MAIS PRÓXIMO... O IF OU O ELSE  --- NNN22");
+					discoveryIfOrElse(el, event);
 				}
 
 			} else {
-				if ((el.parentNode.relatedObj.commands_block == null) 
+				console.log("COMEÇAR A TRATAR!...");
+
+				if ((el.parentNode.relatedObj.tipo == tiposComandos.repeatNtimes)
+					|| (el.parentNode.relatedObj.tipo == tiposComandos.whiletrue) 
+					|| (el.parentNode.relatedObj.tipo == tiposComandos.dowhiletrue) 
+					|| (el.parentNode.relatedObj.tipo == tiposComandos.switch) 
+					|| (el.parentNode.relatedObj.tipo == tiposComandos.iftrue)) {
+
+
+					if ((el.parentNode.relatedObj.commands_block == null) 
 						|| (el.parentNode.relatedObj.commands_block.length == 0)) {
 					
-					el.parentNode.relatedObj.commands_block = [];
-					el.parentNode.relatedObj.commands_block.push(createElementGenericFunction());
-
-				} else {
-					//programa.funcoes[function_to_add].comandos.splice($(el).data('index') + 1, 0, createElementGenericFunction());
-					// 
-
-					if (typeof $(el).data('subblock') !== 'undefined') {
-						
-						console.log("SITUAÇÃO TRATADA NO K3!");
-
-						getNearbyIndexOfElementOnClick(el, event);
+						el.parentNode.relatedObj.commands_block = [];
+						el.parentNode.relatedObj.commands_block.push(createElementGenericFunction());
 
 					} else {
-						if (getBeforeOrAfterOrEndAllocate(el, event)) {
-							console.log("K3 ANTECAO! SOLTOU ANTES DO ELEMENTO ALVO");
 
-							el.parentNode.relatedObj.commands_block.splice($(el).data('index'), 0, createElementGenericFunction());
+						if (typeof $(el).data('subblock') !== 'undefined') {
+							
+							console.log("SITUAÇÃO TRATADA NO K3!");
+
+							getNearbyIndexOfElementOnClick(el, event);
+
 						} else {
-							console.log("K3 ANTECAO! SOLTOU DEPOIS DO ELEMENTO ALVO");
+							if (getBeforeOrAfterOrEndAllocate(el, event)) {
+								console.log("K3 ANTECAO! SOLTOU ANTES DO ELEMENTO ALVO");
 
-							el.parentNode.relatedObj.commands_block.splice($(el).data('index') + 1, 0, createElementGenericFunction());
+								el.parentNode.relatedObj.commands_block.splice($(el).data('index'), 0, createElementGenericFunction());
+							} else {
+								console.log("K3 ANTECAO! SOLTOU DEPOIS DO ELEMENTO ALVO");
+
+								el.parentNode.relatedObj.commands_block.splice($(el).data('index') + 1, 0, createElementGenericFunction());
+							}
 						}
+
+						//el.parentNode.relatedObj.commands_block.push(createElementGenericFunction());
 					}
 
-					//el.parentNode.relatedObj.commands_block.push(createElementGenericFunction());
+
+				} else {
+					console.log("AGORA SIM! SITUAÇÃO K4!");
+					console.log("VOU ADICIONAR NO SEGINTE ELEMENTO: ");
+					console.log(el.parentNode.parentNode.relatedObj);
+
+					if (getBeforeOrAfterOrEndAllocate(el.parentNode, event)) {
+						el.parentNode.parentNode.relatedObj.commands_block.splice($(el.parentNode).data('index'), 0, createElementGenericFunction());
+					} else {
+						el.parentNode.parentNode.relatedObj.commands_block.splice($(el.parentNode).data('index') + 1, 0, createElementGenericFunction());
+					}
 				}
+
 			}
 			
 
@@ -499,6 +522,99 @@ function manageCommand(event) {
 	function_to_add = -1;
 
 	renderAlgorithm();
+
+}
+
+function discoveryIfOrElse(el, event) {
+
+	var menor_distancia_acima = 999999999;
+	var menor_distancia_abaixo = 999999999;
+	var elemento_menor_distancia_acima = null;
+	var elemento_menor_distancia_abaixo = null;
+	var antes = true;
+
+	var t_bot;
+	var t_top;
+
+	if ($(el.parentNode).children(".block_commands").length == 0) {
+		
+
+		$(el).children(".block_commands").each(function( index ) { 
+			t_top = this.getBoundingClientRect().top;
+			t_bot = this.getBoundingClientRect().top + this.getBoundingClientRect().height;
+
+			if ((t_top - event.clientY) < menor_distancia_acima) {
+				menor_distancia_acima = event.clientY - t_top;
+				elemento_menor_distancia_acima = this;
+			}
+
+			if ((event.clientY - t_bot) < menor_distancia_abaixo) {
+				menor_distancia_abaixo = event.clientY - t_bot;
+				elemento_menor_distancia_abaixo = this;
+			}		
+
+
+		});
+
+		if (elemento_menor_distancia_abaixo == null && elemento_menor_distancia_acima == null) {
+			return;
+		}
+
+		if (menor_distancia_acima > menor_distancia_abaixo) {
+			// quer adicionar na parte de cima
+			if (typeof $(elemento_menor_distancia_acima).data('if') !== 'undefined') {
+				el.relatedObj.commands_block.splice(0, 0, createElementGenericFunction());
+			} else {
+				el.relatedObj.commands_else.splice(0, 0, createElementGenericFunction());
+			}
+		} else {
+			// quer adicionar na parte de baixo
+			if (typeof $(elemento_menor_distancia_acima).data('if') !== 'undefined') {
+				el.relatedObj.commands_block.push(createElementGenericFunction());
+			} else {
+				el.relatedObj.commands_else.push(createElementGenericFunction());
+			}
+		}
+
+	} else {
+
+		$(el.parentNode).children(".block_commands").each(function( index ) { 
+			t_top = this.getBoundingClientRect().top;
+			t_bot = this.getBoundingClientRect().top + this.getBoundingClientRect().height;
+
+			if ((t_top - event.clientY) < menor_distancia_acima) {
+				menor_distancia_acima = event.clientY - t_top;
+				elemento_menor_distancia_acima = this;
+			}
+
+			if ((event.clientY - t_bot) < menor_distancia_abaixo) {
+				menor_distancia_abaixo = event.clientY - t_bot;
+				elemento_menor_distancia_abaixo = this;
+			}		
+
+
+		});
+
+		if (elemento_menor_distancia_abaixo == null && elemento_menor_distancia_acima == null) {
+			return;
+		}
+
+		if (menor_distancia_acima > menor_distancia_abaixo) {
+			// quer adicionar na parte de cima
+			if (typeof $(elemento_menor_distancia_acima).data('if') !== 'undefined') {
+				el.parentNode.relatedObj.commands_block.splice(0, 0, createElementGenericFunction());
+			} else {
+				el.parentNode.relatedObj.commands_else.splice(0, 0, createElementGenericFunction());
+			}
+		} else {
+			// quer adicionar na parte de baixo
+			if (typeof $(elemento_menor_distancia_acima).data('if') !== 'undefined') {
+				el.parentNode.relatedObj.commands_block.push(createElementGenericFunction());
+			} else {
+				el.parentNode.relatedObj.commands_else.push(createElementGenericFunction());
+			}
+		}
+	}
 
 }
 
