@@ -786,27 +786,27 @@ export class IVProgParser {
   * term  => literal || arrayAccess || FuncCall || ID || '('EAnd')'
   **/
   parseExpressionOR () {
-    const exp1 = this.parseExpressionAND();
-    const maybeAnd = this.getToken();
-    if (maybeAnd.type === this.lexerClass.OR_OPERATOR) {
+    let exp1 = this.parseExpressionAND();
+    while (this.getToken().type === this.lexerClass.OR_OPERATOR) {
       this.pos++;
       const or = convertFromString('or');
       this.consumeNewLines();
-      const exp2 = this.parseExpressionOR();
-      return new Expressions.InfixApp(or, exp1, exp2);
+      const exp2 = this.parseExpressionAND();
+      const finalExp = new Expressions.InfixApp(or, exp1, exp2);
+      exp1 = finalExp
     }
     return exp1;
   }
 
   parseExpressionAND () {
-    const exp1 = this.parseExpressionNot();
-    const andToken = this.getToken();
-    if (andToken.type === this.lexerClass.AND_OPERATOR) {
+    let exp1 = this.parseExpressionNot();
+    while (this.getToken().type === this.lexerClass.AND_OPERATOR) {
       this.pos++;
       const and = convertFromString('and');
       this.consumeNewLines();
-      const exp2 = this.parseExpressionAND();
-      return new Expressions.InfixApp(and, exp1, exp2);
+      const exp2 = this.parseExpressionNot();
+      const finalExp = new Expressions.InfixApp(and, exp1, exp2);
+      exp1 = finalExp;
     }
     return exp1;
   }
@@ -824,37 +824,40 @@ export class IVProgParser {
   }
 
   parseExpressionRel () {
-    const exp1 = this.parseExpression();
-    const relToken = this.getToken();
-    if(relToken.type === this.lexerClass.RELATIONAL_OPERATOR) {
+    let exp1 = this.parseExpression();
+    while (this.getToken().type === this.lexerClass.RELATIONAL_OPERATOR) {
+      const relToken = this.getToken();
       this.pos++;
-      const rel = convertFromString(relToken.text); // TODO: source code line/column information
+      const rel = convertFromString(relToken.text);
       const exp2 = this.parseExpression();
-      return new Expressions.InfixApp(rel, exp1, exp2);
+      const finalExp = new Expressions.InfixApp(rel, exp1, exp2);
+      exp1 = finalExp;
     }
     return exp1;
   }
 
   parseExpression () {
-    const factor = this.parseFactor();
-    const sumOpToken = this.getToken();
-    if(sumOpToken.type === this.lexerClass.SUM_OP) {
+    let factor = this.parseFactor();
+    while (this.getToken().type === this.lexerClass.SUM_OP) {
+      const sumOpToken = this.getToken();
       this.pos++;
-      const op = convertFromString(sumOpToken.text); // TODO: source code line/column information
-      const exp = this.parseExpression();
-      return new Expressions.InfixApp(op, factor, exp);
+      const op = convertFromString(sumOpToken.text);
+      const factor2 = this.parseFactor();
+      const finalExp = new Expressions.InfixApp(op, factor, factor2);
+      factor = finalExp;
     }
     return factor;
   }
 
   parseFactor () {
-    const term = this.parseTerm();
-    const multOpToken = this.getToken();
-    if(multOpToken.type === this.lexerClass.MULTI_OP) {
+    let term = this.parseTerm();
+    while (this.getToken().type === this.lexerClass.MULTI_OP) {
+      const multOpToken = this.getToken();
       this.pos++;
-      const op = convertFromString(multOpToken.text); // TODO: source code line/column information
-      const factor = this.parseFactor();
-      return new Expressions.InfixApp(op, term, factor);
+      const op = convertFromString(multOpToken.text);
+      const term2 =this.parseTerm();
+      const finalExp = new Expressions.InfixApp(op, term, term2);
+      term = finalExp;
     }
     return term;
   }
