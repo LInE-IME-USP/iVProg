@@ -1,3 +1,14 @@
 {
-  
+  "token_missing_one": "Erro de sintaxe: Espera-se $0, mas encontrou-se $1 na linha:$2, coluna:$3",
+  "token_missing_two": "Erro de sintaxe: Esperava-se $0 ou $1 mas encontrou-se $2 na liha:$3, coluna: $4",
+  "eos_missing": "Falta uma nova linha ou ; na linha: $0, coluna: $1",
+  "invalid_type": "$0 na linha: $1, coluna: $2 é um tipo inválido. Os tipos válidos são: $3",
+  "invalid_array_dimension": "A dimensão inválida na linha: $0, coluna: $1. Insira um $2 ou identificador válido do mesmo tipo.",
+  "invalid_array_size": "O tamnho do vetor/matriz excede o máximo de 2 na linha $0",
+  "extra_lines": "Nenhum texto é permitido após '}' em 'programa {...}'",
+  "invalid_main_return": "A função $0 deve retornar $1 na linha $2",
+  "invalid_var_declaration": "Erro na linha $0. Variáveis só podem ser declarados no corpo principal da função e de preferência nas primeiras linhas.",
+  "invalid_break_command": "Erro na linha $0. O comando $1 não pode ser usado fora de uma estrutura de repetição ou 'escolha...caso'",
+  "invalid_terminal": "Não é possível utilizar $0 na expressão da linha: $1, coluna: $2. Tente um valor númerico, variável ou chamada de função.",
+  "id_missing": "Esperava-se um identificador, mas encontrou-se $0 na linha: $1, coluna: $2"
 }

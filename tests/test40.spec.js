@@ -23,6 +23,7 @@ describe('The LanguageService', function () {
     exec.registerOutput(output);
     exec.interpretAST().then(sto => {
       expect(output.list).toEqual(['8.01']);
+      localStorage.removeItem('ivprog.lang');
       done();
     }).catch( err => done(err));
   });

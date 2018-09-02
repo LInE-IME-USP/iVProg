@@ -1,14 +1,14 @@
 import Lexers from './../../grammar/';
-import { isNullOrUndefined } from 'util';
 
-const DEFAULT_LANG = 'pt';
+const DEFAULT_LANG = "pt";
 
-export const LanguageService  = ({
+export const LanguageService  = Object.freeze({
 
   getLang: () => {
     const lang = localStorage.getItem('ivprog.lang');
-    if (lang === null) {
-      throw new Error("Internal Error. User language information has not been set");
+    if (lang === null || lang === undefined) {
+      console.warn("Internal Error. User language information has not been set. Returning default...");
+      return LanguageService.getDefaultLang();
     }
     return lang;
   },

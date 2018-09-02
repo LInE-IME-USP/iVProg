@@ -1,4 +1,3 @@
-import Lexers from './../grammar/';
 import { IVProgParser } from './../js/ast/ivprogParser';
 import { LanguageService } from './../js/services/languageService';
 

@@ -1,7 +1,3 @@
-import Lexers from './../grammar/';
-import * as Expressions from './../js/ast/expressions/';
-import * as Commands from './../js/ast/commands/';
-import {Types} from './../js/ast/types';
 import {
     IVProgParser
 } from './../js/ast/ivprogParser';
