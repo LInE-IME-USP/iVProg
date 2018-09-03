@@ -3,7 +3,7 @@ import * as Expressions from './expressions/';
 import * as Commands from './commands/';
 import { Types, toInt, toString } from './types';
 import { convertFromString } from './operators';
-import { SyntaxError } from './SyntaxError';
+import { SyntaxErrorFactory } from './error/syntaxErrorFactory';
 import { NAMES } from './../processor/definedFunctions';
 
 export class IVProgParser {
@@ -96,11 +96,11 @@ export class IVProgParser {
       this.pos++;
       this.consumeNewLines();
       if(!this.isEOF()) {
-        throw new Error("No extra characters are allowed after 'program {...}'");
+        throw SyntaxErrorFactory.extra_lines();
       }
       return {global: globalVars, functions: functions};
     } else {
-      throw SyntaxError.createError(this.lexer.literalNames[this.lexerClass.RK_PROGRAM], token);
+      throw SyntaxErrorFactory.token_missing_one(this.lexer.literalNames[this.lexerClass.RK_PROGRAM], token);
     }
   }
 
@@ -108,7 +108,7 @@ export class IVProgParser {
     const token = this.getToken();
     if(this.lexerClass.OPEN_CURLY !== token.type){
       if(!attempt)
-        throw SyntaxError.createError('{', token);
+        throw SyntaxErrorFactory.token_missing_one('{', token);
       else
         return false;
     }
@@ -119,7 +119,7 @@ export class IVProgParser {
     const token = this.getToken();
     if(this.lexerClass.CLOSE_CURLY !== token.type){
       if(!attempt)
-        throw SyntaxError.createError('}', token);
+        throw SyntaxErrorFactory.token_missing_one('}', token);
       else
         return false;
     }
@@ -138,7 +138,7 @@ export class IVProgParser {
     const token = this.getToken();
     if(this.lexerClass.OPEN_BRACE !== token.type){
       if (!attempt) {
-        throw SyntaxError.createError('[', token);
+        throw SyntaxErrorFactory.token_missing_one('[', token);
       } else {
         return false;
       }
@@ -150,7 +150,7 @@ export class IVProgParser {
     const token = this.getToken();
     if(this.lexerClass.CLOSE_BRACE !== token.type){
       if (!attempt) {
-        throw SyntaxError.createError(']', token);
+        throw SyntaxErrorFactory.token_missing_one(']', token);
       } else {
         return false;
       }
@@ -162,7 +162,7 @@ export class IVProgParser {
     const token = this.getToken();
     if(this.lexerClass.OPEN_PARENTHESIS !== token.type){
       if (!attempt) {
-        throw SyntaxError.createError('(', token);
+        throw SyntaxErrorFactory.token_missing_one('(', token);
       } else {
         return false;
       }
@@ -174,7 +174,7 @@ export class IVProgParser {
     const token = this.getToken();
     if(this.lexerClass.CLOSE_PARENTHESIS !== token.type){
       if (!attempt) {
-        throw SyntaxError.createError(')', token);
+        throw SyntaxErrorFactory.token_missing_one(')', token);
       } else {
         return false;
       }
@@ -186,7 +186,7 @@ export class IVProgParser {
     const eosToken = this.getToken();
     if (eosToken.type !== this.lexerClass.EOS) {
       if (!attempt)
-        throw SyntaxError.createError('new line or \';\'', eosToken);
+        throw SyntaxErrorFactory.eos_missing(eosToken);
       else
         return false;
     }
@@ -199,7 +199,7 @@ export class IVProgParser {
       this.pos++;
       return;  
     }
-    throw SyntaxError.createError(';', eosToken);
+    throw SyntaxErrorFactory.token_missing_one(';', eosToken);
   }
 
   parseGlobalVariables () {
@@ -225,7 +225,8 @@ export class IVProgParser {
       const typeString = this.parseType();
       return this.parseDeclaration(typeString);
     } else {
-      throw SyntaxError.createError(this.lexer.literalNames[this.lexerClass.RK_CONST] + ' or ' + this.getTypesAsString(), constToken);
+      throw SyntaxErrorFactory.token_missing_list(
+        [this.lexer.literalNames[this.lexerClass.RK_CONST]].concat(this.getTypeArray()), constToken);
     }
 
   }
@@ -272,7 +273,6 @@ export class IVProgParser {
     }
     const commaToken = this.getToken();
     if(commaToken.type === this.lexerClass.COMMA) {
-      console.log("comma found");
       this.pos++;
       this.consumeNewLines();
       return [declaration]
@@ -309,7 +309,7 @@ export class IVProgParser {
       this.pos++;
       return this.parseVariable(dimToken);
     } else {
-      throw SyntaxError.createError('int or ID', dimToken);
+      throw SyntaxErrorFactory.invalid_array_dimension(this.lexer.literalNames[this.lexerClass.RK_INTEGER], dimToken);
     }
   }
 
@@ -342,7 +342,7 @@ export class IVProgParser {
     const beginArray = this.getToken();
     if (this.parsingArrayDimension >= 2) {
       // TODO: better error message
-      throw new Error(`Array dimensions exceed maximum size of 2 at line ${beginArray.line}`);
+      throw SyntaxErrorFactory.token_missing_list(`Array dimensions exceed maximum size of 2 at line ${beginArray.line}`);
     }
     this.pos++;
     this.parsingArrayDimension++;
@@ -402,7 +402,9 @@ export class IVProgParser {
     const func = new Commands.Function(functionID, returnType, formalParams, commandsBlock);
     if (functionID === null && !func.isMain) {
       // TODO: better error message
-      throw new Error(`Function ${this.lexerClass.MAIN_FUNCTION_NAME} must return void (line ${token.line})`);
+      throw SyntaxErrorFactory.invalid_main_return(this.lexerClass.MAIN_FUNCTION_NAME,
+        this.lexer.literalNames[this.lexerClass.RK_VOID],
+        token.line);
     }
     this.popScope();
     return func;
@@ -443,7 +445,7 @@ export class IVProgParser {
   parseID () {
     const token = this.getToken();
     if(token.type !== this.lexerClass.ID) {
-      throw SyntaxError.createError('ID', token);
+      throw SyntaxErrorFactory.id_missing(token);
     } 
     this.pos++;
     if (this.insideScope(IVProgParser.FUNCTION)) {
@@ -477,7 +479,7 @@ export class IVProgParser {
       }
     }
     
-    throw SyntaxError.createError(this.getTypesAsString(), token);
+    throw SyntaxErrorFactory.invalid_type(this.getTypeArray(), token);
   }
 
   parseCommandBlock (optionalCurly = false) {
@@ -516,7 +518,7 @@ export class IVProgParser {
     if (this.isVariableType(token)) {
       if(!this.insideScope(IVProgParser.FUNCTION)) {
         // TODO better error message
-        throw new Error(`Cannot declare variable here (line ${token.line})`);
+        throw SyntaxErrorFactory.invalid_var_declaration(token.line);
       }
       this.pushScope(IVProgParser.BASE);
       const varType = this.parseType();
@@ -536,7 +538,10 @@ export class IVProgParser {
     } else if (token.type === this.lexerClass.RK_BREAK ) {
       if(!this.insideScope(IVProgParser.BREAKABLE)) {
         // TODO better error message
-        throw new Error("Break cannot be used outside of a loop.");
+        throw SyntaxErrorFactory.invalid_break_command(
+          this.lexer.literalNames[this.lexerClass.RK_BREAK],
+          token
+        );
       }
       return this.parseBreak();
     } else if (token.type === this.lexerClass.RK_SWITCH) {
@@ -585,7 +590,7 @@ export class IVProgParser {
     this.consumeNewLines(); //Maybe not...
     const whileToken = this.getToken();
     if (whileToken.type !== this.lexerClass.RK_WHILE) {
-      throw SyntaxError.createError(this.lexer.literalNames[this.lexerClass.RK_WHILE], whileToken);
+      throw SyntaxErrorFactory.token_missing_one(this.lexer.literalNames[this.lexerClass.RK_WHILE], whileToken);
     }
     this.pos++;
     this.checkOpenParenthesis();
@@ -629,7 +634,7 @@ export class IVProgParser {
         elseBlock = this.parseIfThenElse();
       } else {
         // TODO better error message
-        throw SyntaxError.createError(`${this.lexer.literalNames[this.lexerClass.RK_IF]} or {`, maybeIf);
+        throw SyntaxErrorFactory.token_missing_list([this.lexer.literalNames[this.lexerClass.RK_IF], '{'], maybeIf);
       }
       return new Commands.IfThenElse(logicalExpression, cmdBlocks, elseBlock);
     }
@@ -677,7 +682,7 @@ export class IVProgParser {
     this.pos++;
     this.checkEOS();
     this.pos++;
-    return (new Commands.Break());
+    return new Commands.Break();
   }
 
   parseReturn () {
@@ -706,7 +711,7 @@ export class IVProgParser {
       this.pos++;
       return funcCall;
     } else {
-      throw SyntaxError.createError("= or (", equalOrParenthesis);
+      throw SyntaxErrorFactory.token_missing_list(['=','('], equalOrParenthesis);
     }
   }
 
@@ -719,7 +724,7 @@ export class IVProgParser {
     const id = this.parseID();
     const equal = this.getToken();
     if (equal.type !== this.lexerClass.EQUAL) {
-      throw SyntaxError.createError('=', equal);
+      throw SyntaxErrorFactory.token_missing_one('=', equal);
     }
     this.pos++
     const exp = this.parseExpressionOR();
@@ -732,7 +737,7 @@ export class IVProgParser {
   parseCases () {
     const token = this.getToken();
     if(token.type !== this.lexerClass.RK_CASE) {
-      throw SyntaxError.createError(this.lexer.literalNames[this.lexerClass.RK_CASE], token);
+      throw SyntaxErrorFactory.token_missing_one(this.lexer.literalNames[this.lexerClass.RK_CASE], token);
     }
     this.pos++;
     const nextToken = this.getToken();
@@ -740,7 +745,7 @@ export class IVProgParser {
       this.pos++;
       const colonToken = this.getToken();
       if (colonToken.type !== this.lexerClass.COLON) {
-        throw SyntaxError.createError(':', colonToken);
+        throw SyntaxErrorFactory.token_missing_one(':', colonToken);
       }
       this.pos++;
       this.consumeNewLines();
@@ -752,7 +757,7 @@ export class IVProgParser {
       const exp = this.parseExpressionOR();
       const colonToken = this.getToken();
       if (colonToken.type !== this.lexerClass.COLON) {
-        throw SyntaxError.createError(':', colonToken);
+        throw SyntaxErrorFactory.token_missing_one(':', colonToken);
       }
       this.pos++;
       this.consumeNewLines();
@@ -888,7 +893,7 @@ export class IVProgParser {
       case this.lexerClass.OPEN_PARENTHESIS:
         return this.parseParenthesisExp();
       default:
-        throw SyntaxError.createError('Terminal', token);
+        throw SyntaxErrorFactory.invalid_terminal(token);
     }
   }
 
@@ -982,14 +987,8 @@ export class IVProgParser {
     return list;
   }
 
-  getTypesAsString () {
+  getTypeArray () {
     const types = this.insideScope(IVProgParser.FUNCTION) ? this.functionTypes : this.variableTypes;
-    return types.map( x => this.lexer.literalNames[x])
-      .reduce((o, n) => {
-        if (o.length <= 0)
-          return n;
-        else
-          return o + ", " + n;
-      }, '');
+    return types.map( x => this.lexer.literalNames[x]);
   }
 }

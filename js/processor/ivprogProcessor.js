@@ -7,13 +7,13 @@ import { Context } from './context';
 import { Types, toInt } from './../ast/types';
 import { Operators } from './../ast/operators';
 import { NAMES, LanguageDefinedFunction } from './definedFunctions';
-import { canApplyInfixOp, canApplyUnaryOp } from './compatibilityTable';
+import { resultTypeAfterInfixOp, resultTypeAfterUnaryOp } from './compatibilityTable';
 import * as Commands from './../ast/commands/';
 import * as Expressions from './../ast/expressions/';
 
 export class IVProgProcessor {
 
-  constructor(ast) {
+  constructor (ast) {
     this.ast = ast;
     this.globalStore = new Store();
     this.stores = [this.globalStore];
@@ -170,8 +170,6 @@ export class IVProgProcessor {
 
               if(formalParameter.byRef) {
                 const ref = new StoreObjectRef(stoObj.id, callerStore);
-                console.log('it\'s a ref...');
-                console.log(ref);
                 calleeStore.insertStore(formalParameter.id, ref);
               } else {
                 calleeStore.insertStore(formalParameter.id, stoObj);
@@ -186,23 +184,12 @@ export class IVProgProcessor {
   }
 
   executeCommands (store, cmds) {
-    const auxExecCmdFun = (promise, cmd) => promise.then( sto => this.executeCommand(sto, cmd));
-    let breakLoop = false;
-    let $result = Promise.resolve(store);
-    for (let index = 0; index < cmds.length && !breakLoop; index++) {
-      const cmd = cmds[index];
-      $result = auxExecCmdFun($result, cmd);
-      $result.then(sto => {
-        if(sto.mode === Modes.RETURN) {
-          breakLoop = true;
-        } else if (this.checkContext(Context.BREAKABLE && 
-          sto.mode === Modes.BREAK)) {
-            breakLoop = true;
-        }
-        return sto;
-      });
-    }
-    return $result;
+    // helper to partially apply a function, in this case executeCommand
+    const partial = (fun, cmd) => (sto) => fun(sto, cmd);
+    return cmds.reduce((lastCommand, next) => {
+      const nextCommand = partial(this.executeCommand.bind(this), next);
+      return lastCommand.then(nextCommand);
+    }, Promise.resolve(store));
   }
 
   executeCommand (store, cmd) {
@@ -682,17 +669,18 @@ export class IVProgProcessor {
   evaluateUnaryApp (store, unaryApp) {
     const $left = this.evaluateExpression(store, unaryApp.left);
     return $left.then( left => {
-      if (!canApplyUnaryOp(unaryApp.op, left)) {
+      const resultType = resultTypeAfterUnaryOp(unaryApp.op, left.type);
+      if (resultType === Types.UNDEFINED) {
         // TODO: better urgent error message
         return Promise.reject(new Error(`Cannot use this op to ${left.type}`));
       }
-      switch (unaryApp.op) {
-        case Operators.ADD:
-          return new StoreObject(left.type, +left.value);
-        case Operators.SUB:
-          return new StoreObject(left.type, -left.value);
-        case Operators.NOT:
-          return new StoreObject(left.type, !left.value);
+      switch (unaryApp.op.ord) {
+        case Operators.ADD.ord:
+          return new StoreObject(resultType, +left.value);
+        case Operators.SUB.ord:
+          return new StoreObject(resultType, -left.value);
+        case Operators.NOT.ord:
+          return new StoreObject(resultType, !left.value);
         default:
         return Promise.reject(new Error('!!!Critical Invalid UnaryApp '+ unaryApp.op));
       }
@@ -705,37 +693,47 @@ export class IVProgProcessor {
     return Promise.all([$left, $right]).then(values => {
       const left = values[0];
       const right = values[1];
-      if (!canApplyInfixOp(infixApp.op, left, right)) {
+      const resultType = resultTypeAfterInfixOp(infixApp.op, left.type, right.type);
+      if (resultType === Types.UNDEFINED) {
         // TODO: better urgent error message
         return Promise.reject(new Error(`Cannot use this op to ${left.type} and ${right.type}`));
       }
-      switch (infixApp.op) {
-        case Operators.ADD:
-          return new StoreObject(left.type, left.value + right.value);
-        case Operators.SUB:
-          return new StoreObject(left.type, left.value - right.value);
-        case Operators.MULT:
-          return new StoreObject(left.type, left.value * right.value);
-        case Operators.DIV:
-          return new StoreObject(left.type, left.value / right.value);
-        case Operators.MOD:
-          return new StoreObject(left.type, left.value % right.value);
-        case Operators.GT:
-          return new StoreObject(Types.BOOLEAN, left.value > right.value);
-        case Operators.GE:
-          return new StoreObject(Types.BOOLEAN, left.value >= right.value);
-        case Operators.LT:
-          return new StoreObject(Types.BOOLEAN, left.value < right.value);
-        case Operators.LE:
-          return new StoreObject(Types.BOOLEAN, left.value <= right.value);
-        case Operators.EQ:
-          return new StoreObject(Types.BOOLEAN, left.value === right.value);
-        case Operators.NEQ:
-          return new StoreObject(Types.BOOLEAN, left.value !== right.value);
-        case Operators.AND:
-          return new StoreObject(Types.BOOLEAN, left.value && right.value);
-        case Operators.OR:
-          return new StoreObject(Types.BOOLEAN, left.value || right.value);
+      let result = null;
+      switch (infixApp.op.ord) {
+        case Operators.ADD.ord:
+          return new StoreObject(resultType, left.value + right.value);
+        case Operators.SUB.ord:
+          return new StoreObject(resultType, left.value - right.value);
+        case Operators.MULT.ord: {
+          result = left.value * right.value;
+          if (resultType === Types.INTEGER)
+            result = Math.trunc(result);
+          return new StoreObject(resultType, result);
+        }
+        case Operators.DIV.ord: {
+          result = left.value / right.value;
+          if (resultType === Types.INTEGER)
+            result = Math.trunc(result);
+          return new StoreObject(resultType, result);
+        }
+        case Operators.MOD.ord:
+          return new StoreObject(resultType, left.value % right.value);
+        case Operators.GT.ord:
+          return new StoreObject(resultType, left.value > right.value);
+        case Operators.GE.ord:
+          return new StoreObject(resultType, left.value >= right.value);
+        case Operators.LT.ord:
+          return new StoreObject(resultType, left.value < right.value);
+        case Operators.LE.ord:
+          return new StoreObject(resultType, left.value <= right.value);
+        case Operators.EQ.ord:
+          return new StoreObject(resultType, left.value === right.value);
+        case Operators.NEQ.ord:
+          return new StoreObject(resultType, left.value !== right.value);
+        case Operators.AND.ord:
+          return new StoreObject(resultType, left.value && right.value);
+        case Operators.OR.ord:
+          return new StoreObject(resultType, left.value || right.value);
         default:
           return Promise.reject(new Error('!!!Critical Invalid InfixApp '+ infixApp.op));
       }

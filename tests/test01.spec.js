@@ -1,9 +1,5 @@
-import Lexers from './../grammar/';
-import {
-    IVProgParser
-} from './../js/ast/ivprogParser';
-import {
-    SyntaxError}from './../js/ast/SyntaxError';
+import { IVProgParser } from './../js/ast/ivprogParser';
+import { LanguageService } from './../js/services/languageService';
 
 describe('Illegal newline syntax', () => {
 
@@ -15,7 +11,7 @@ describe('Illegal newline syntax', () => {
       PI = 5.6, c;
   }
   `;
-  const lexer = Lexers['pt_br'];
+  const lexer = LanguageService.getCurrentLexer();
 
   it(`should result in SyntaxError`, () => {
       const as = new IVProgParser(input, lexer);

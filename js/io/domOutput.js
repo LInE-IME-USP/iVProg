@@ -9,7 +9,13 @@ export class DOMOutput extends Output {
   }
 
   sendOutput (text) {
-    const line = $(`<span class='ivprog-io-output> ${text} </span>`);
-    this.el.append(line);
+    text = text.replace("\n", '</br>');
+    text = text.replace(/\t/g,'&#9;');
+    const span = $('<span />').addClass('ivprog-io-output-text').html(text);
+    this.el.append(span);
+  }
+
+  clear () {
+    this.el.empty();
   }
 }

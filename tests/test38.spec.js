@@ -1,7 +1,7 @@
-import Lexers from './../grammar/';
 import { IVProgParser } from './../js/ast/ivprogParser';
 import { IVProgProcessor} from './../js/processor/ivprogProcessor'
 import { OutputTest } from './../js/util/outputTest';
+import { LanguageService } from '../js/services/languageService';
 
 describe('The write function', function () {
 
@@ -15,7 +15,7 @@ describe('The write function', function () {
 
   const output = new OutputTest();
 
-  const lexer = Lexers['pt_br'];
+  const lexer = LanguageService.getCurrentLexer();
 
   it(`should print the value passed to it, no matter it's type`, function (done) {
     const parser = new IVProgParser(code, lexer);

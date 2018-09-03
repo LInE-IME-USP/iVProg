@@ -1,12 +1,10 @@
-import Lexers from './../grammar/';
 import {
     IVProgParser
 } from './../js/ast/ivprogParser';
-import {
-    SyntaxError
-} from './../js/ast/SyntaxError';
+import { LanguageService } from '../js/services/languageService';
 
 describe('SwitchCase command', () => {
+
     let input = `funcao inteiro test(real i) {
       escolha (i) {
         caso 1:
@@ -15,7 +13,7 @@ describe('SwitchCase command', () => {
           retorne 4
       }
     }`;
-    const lexer = Lexers['pt_br'];
+    const lexer = LanguageService.getCurrentLexer();
 
     it(`should not result in SyntaxError`, () => {
         const as = new IVProgParser(input, lexer);

@@ -1,9 +1,10 @@
-import Lexers from './../grammar/';
 import {
     IVProgParser
 } from './../js/ast/ivprogParser';
+import { LanguageService } from '../js/services/languageService';
 
 describe('Variable initialization with a function call', () => {
+
     let input = `programa {
 
       funcao inicio() {
@@ -14,7 +15,7 @@ describe('Variable initialization with a function call', () => {
         retorne a * 2
       }
     }`;
-    const lexer = Lexers['pt_br'];
+    const lexer = LanguageService.getCurrentLexer();
 
     it(`should not throw an Error`, () => {
         const as = new IVProgParser(input, lexer);

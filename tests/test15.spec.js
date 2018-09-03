@@ -1,9 +1,10 @@
-import Lexers from './../grammar/';
 import {
     IVProgParser
 } from './../js/ast/ivprogParser';
+import { LanguageService } from '../js/services/languageService';
 
 describe('A start function with no return type', () => {
+
     let input = `programa {
       
       const real PI = 5.5
@@ -23,7 +24,7 @@ describe('A start function with no return type', () => {
         }
       }
     }`;
-    const lexer = Lexers['pt_br'];
+    const lexer = LanguageService.getCurrentLexer();
 
     it(`should not result in SyntaxError`, () => {
         const as = new IVProgParser(input, lexer);

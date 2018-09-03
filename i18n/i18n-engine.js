@@ -26,11 +26,7 @@ i18n.updateLocale = function(new_locale) {
   });
 }
 
-if (iLMparameters.lang) {
-  i18n.locale = iLMparameters.lang;
-} else {
-  i18n.locale = 'en';
-}
+i18n.locale = iLMparameters.lang;
 i18n.db = {};
 
 $.ajaxSetup({

@@ -1,4 +1,3 @@
-import Lexers from './../grammar/';
 import * as Expressions from './../js/ast/expressions/';
 import * as Commands from './../js/ast/commands/';
 import { Operators } from './../js/ast/operators';
@@ -6,8 +5,10 @@ import {Types} from './../js/ast/types';
 import {
     IVProgParser
 } from './../js/ast/ivprogParser';
+import { LanguageService } from '../js/services/languageService';
 
 describe('Variable declaration inside a function', () => {
+
     let input = `programa {
 
       funcao inicio() {
@@ -15,7 +16,7 @@ describe('Variable declaration inside a function', () => {
         a = a + 1
       }
     }`;
-    const lexer = Lexers['pt_br'];
+    const lexer = LanguageService.getCurrentLexer();
 
     const ast = {
       global: [ ],
