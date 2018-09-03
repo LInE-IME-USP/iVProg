@@ -20,19 +20,7 @@ function buildInfixAddTable () {
   return table;
 }
 
-function buildInfixMultiSubTable () {
-  const table = [[], [], [], []];
-
-  table[Types.INTEGER.ord][Types.INTEGER.ord] = Types.INTEGER;
-  table[Types.INTEGER.ord][Types.REAL.ord] = Types.REAL;
-
-  table[Types.REAL.ord][Types.INTEGER.ord] = Types.REAL;
-  table[Types.REAL.ord][Types.REAL.ord] = Types.REAL;
-
-  return table;
-}
-
-function buildInfixDivTable () {
+function buildInfixMultiDivSubTable () {
   const table = [[], [], [], []];
 
   table[Types.INTEGER.ord][Types.INTEGER.ord] = Types.INTEGER;
@@ -107,9 +95,9 @@ function buildUnaryNegList () {
 function buildInfixCompatibilityTable () {
   const compatibilityMap = new WeakMap();
   compatibilityMap.set(Operators.ADD, buildInfixAddTable());
-  compatibilityMap.set(Operators.SUB, buildInfixMultiSubTable());
-  compatibilityMap.set(Operators.MULT, buildInfixMultiSubTable());
-  compatibilityMap.set(Operators.DIV, buildInfixDivTable());
+  compatibilityMap.set(Operators.SUB, buildInfixMultiDivSubTable());
+  compatibilityMap.set(Operators.MULT, buildInfixMultiDivSubTable());
+  compatibilityMap.set(Operators.DIV, buildInfixMultiDivSubTable());
   compatibilityMap.set(Operators.EQ, buildInfixEqualityInequalityTable());
   compatibilityMap.set(Operators.NEQ, buildInfixEqualityInequalityTable());
   compatibilityMap.set(Operators.GE, buildInfixRelationalTable());
