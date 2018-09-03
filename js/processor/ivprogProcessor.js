@@ -707,15 +707,13 @@ export class IVProgProcessor {
         case Operators.MULT.ord: {
           result = left.value * right.value;
           if (resultType === Types.INTEGER)
-            result = Math.round(result);
-          console.log("R multi" + result);
+            result = Math.trunc(result);
           return new StoreObject(resultType, result);
         }
         case Operators.DIV.ord: {
           result = left.value / right.value;
           if (resultType === Types.INTEGER)
-            result = Math.round(result);
-          console.log("R div:" +result);
+            result = Math.trunc(result);
           return new StoreObject(resultType, result);
         }
         case Operators.MOD.ord:

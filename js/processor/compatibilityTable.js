@@ -35,7 +35,7 @@ function buildInfixMultiSubTable () {
 function buildInfixDivTable () {
   const table = [[], [], [], []];
 
-  table[Types.INTEGER.ord][Types.INTEGER.ord] = Types.REAL;
+  table[Types.INTEGER.ord][Types.INTEGER.ord] = Types.INTEGER;
   table[Types.INTEGER.ord][Types.REAL.ord] = Types.REAL;
 
   table[Types.REAL.ord][Types.INTEGER.ord] = Types.REAL;
