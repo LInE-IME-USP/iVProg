@@ -1230,6 +1230,100 @@ function addHandlers() {
 		});
 	}
 
+	//
+	$('.dropdown.change_column_reader_render').dropdown({
+		    onChange: function(value, text, $selectedItem) {
+		    	editing_element_index_value = this.parentNode.relatedObj;
+		    	if ($($selectedItem).data('value')) {
+		    		
+		    		$(this).find('.text').text(' ');
+		    		var el;
+		    		if (isNaN(editing_element_index_value.coluna)) {
+		    			el = $('<input type="text" style="z-index: 999;" size="2" value="0" onChange="editing_element_index_value.coluna = this.value; renderAlgorithm();" onblur="editing_element_index_value.coluna = this.value; renderAlgorithm();"  />');
+		    		} else {
+		    			el = $('<input type="text" style="z-index: 999;" size="2" value="'+editing_element_index_value.coluna+'" onChange="editing_element_index_value.coluna = this.value; renderAlgorithm();" onblur="editing_element_index_value.coluna = this.value; renderAlgorithm();"  />');
+		    		}
+		    		
+		    		//$(this).find('.text').text();
+		    		//$( el ).insertBefore($(this).find('.text'));
+		    		$(this).find('.text').append(el);
+		    		el.focus();
+		    		//editing_element_index_value = element.relatedObj;
+
+
+		    	} else {
+
+		    		classList = $selectedItem.attr('class').split(/\s+/);
+			    	var seq;
+			    	var func;
+					$.each(classList, function(index, item) {
+					    if (item.indexOf("seq_") > -1) {
+					        seq = item.split("seq_")[1];
+					    }
+					    if (item.indexOf("func_") > -1) {
+					        func = item.split("func_")[1];
+					    }
+					});
+
+					if ($($selectedItem).hasClass('local_vars')) {
+						this.parentNode.relatedObj.coluna = programa.funcoes[func].variaveis[seq];
+					}
+					if ($($selectedItem).hasClass('parameters_vars')) {
+					    this.parentNode.relatedObj.coluna = programa.funcoes[func].lista_parametros[seq];
+					}
+					if ($($selectedItem).hasClass('global_vars')) {
+					 	this.parentNode.relatedObj.coluna = programa.globais[seq];
+					}
+
+
+		    	}
+
+		    }
+		});
+
+
+	$('.ui.dropdown.variable_reader')
+    	.dropdown({
+		    onChange: function(value, text, $selectedItem) {
+
+		    	classList = $selectedItem.attr('class').split(/\s+/);
+		    	var seq;
+		    	var func;
+				$.each(classList, function(index, item) {
+				    if (item.indexOf("seq_") > -1) {
+				        seq = item.split("seq_")[1];
+				    }
+				    if (item.indexOf("func_") > -1) {
+				        func = item.split("func_")[1];
+				    }
+				});
+
+				if ($($selectedItem).hasClass('local_vars')) {
+					this.parentNode.relatedObj.variavel = programa.funcoes[func].variaveis[seq];
+				}
+				if ($($selectedItem).hasClass('parameters_vars')) {
+				    this.parentNode.relatedObj.variavel = programa.funcoes[func].lista_parametros[seq];
+				}
+				if ($($selectedItem).hasClass('global_vars')) {
+				 	this.parentNode.relatedObj.variavel = programa.globais[seq];
+				}
+
+				if (this.parentNode.relatedObj.variavel.dimensoes == 1) { // 
+					this.parentNode.relatedObj.linha = null;
+					this.parentNode.relatedObj.coluna = null;
+					
+					addOptionsReaderVector(this.parentNode, $(this.parentNode).data('fun'));
+
+				} else {
+					$(this.parentNode).find(".change_column_reader").remove();
+				}
+
+
+
+		    }
+		})
+  	;
+
 	$('.ui.buttons .dropdown').dropdown();
 
 	$('.ui.dropdown.function_return')
@@ -1339,6 +1433,94 @@ function addHandlers() {
 
 		    }
 		});
+
+}
+
+////$( "<span>oi</span>" ).insertBefore($(this).find('.close_parentheses'));
+var editing_element_index_value = null;
+function  addOptionsReaderVector(element, function_index) {
+
+
+	if (element.relatedObj.variavel.dimensoes == 1) {
+
+		var ret = ('<div class="ui dropdown change_column_reader"><span class="opened_index">[ </span> <div class="text"> </div> ]<i class="dropdown icon"></i><div class="menu"><div class="item" data-value="true">Valor</div><div class="item">Variável');
+		ret += '<i class="dropdown icon"></i>'
+	  		+ '<div class="menu func_'+function_index+'">';
+
+		if (programa.funcoes[function_index].variaveis) {
+			for (var i = 0; i < programa.funcoes[function_index].variaveis.length; i++) {
+				ret += '<div class="item local_vars seq_'+i+' func_'+function_index+'"> ' + programa.funcoes[function_index].variaveis[i].nome + ' </div>';
+	  		}
+		}
+	  	
+	  	if (programa.funcoes[function_index].lista_parametros) {
+	  		for (var i = 0; i < programa.funcoes[function_index].lista_parametros.length; i++) {
+	  			ret += '<div class="item parameters_vars seq_'+i+' func_'+function_index+'"> ' + programa.funcoes[function_index].lista_parametros[i].nome + ' </div>';
+	  		}
+	  	}
+
+	  	if (programa.globais) {
+	  		for (var ij = 0; ij < programa.globais.length; ij++) {
+	  			if (!programa.globais[ij].eh_constante) {
+	  				ret += '<div class="item global_vars seq_'+ij+' func_'+function_index+'"> ' + programa.globais[ij].nome + ' </div>';
+	  			}
+	  		}
+	  	}
+
+	  	ret += '</div></div></div>';
+
+		$( ret ).insertBefore($(element).find('.close_parentheses'));
+
+		$('.dropdown.change_column_reader').dropdown({
+		    onChange: function(value, text, $selectedItem) {
+		    	console.log('QQQ2');
+
+		    	if ($($selectedItem).data('value')) {
+		    		var el;
+		    		$(this).find('.text').text(' ');
+		    		if (!isNaN(element.relatedObj.coluna)) {
+		    			el = $('<input type="text" style="z-index: 999;" size="2" value="0" onChange="editing_element_index_value.coluna = this.value; renderAlgorithm();" onblur="editing_element_index_value.coluna = this.value; renderAlgorithm();"  />');
+		    		} else {
+		    			el = $('<input type="text" style="z-index: 999;" size="2" value="'+element.relatedObj.coluna+'" onChange="editing_element_index_value.coluna = this.value; renderAlgorithm();" onblur="editing_element_index_value.coluna = this.value; renderAlgorithm();"  />');
+		    		}
+		    		
+		    		//$(this).find('.text').text();
+		    		//$( el ).insertBefore($(this).find('.text'));
+		    		$(this).find('.text').append(el);
+		    		el.focus();
+		    		editing_element_index_value = element.relatedObj;
+
+
+		    	} else {
+
+		    		classList = $selectedItem.attr('class').split(/\s+/);
+			    	var seq;
+			    	var func;
+					$.each(classList, function(index, item) {
+					    if (item.indexOf("seq_") > -1) {
+					        seq = item.split("seq_")[1];
+					    }
+					    if (item.indexOf("func_") > -1) {
+					        func = item.split("func_")[1];
+					    }
+					});
+
+					if ($($selectedItem).hasClass('local_vars')) {
+						this.parentNode.relatedObj.coluna = programa.funcoes[func].variaveis[seq];
+					}
+					if ($($selectedItem).hasClass('parameters_vars')) {
+					    this.parentNode.relatedObj.coluna = programa.funcoes[func].lista_parametros[seq];
+					}
+					if ($($selectedItem).hasClass('global_vars')) {
+					 	this.parentNode.relatedObj.coluna = programa.globais[seq];
+					}
+
+
+		    	}
+
+		    }
+		});
+	}
 
 }
 
@@ -2938,8 +3120,8 @@ function renderIfTrue(writer_obj, function_index, iftrue_index, data_parent, ful
 	if ((writer_obj.commands_block == null)
 			|| (writer_obj.commands_block.length == 0)) {
 	} else {
-		for (i = 0; i < writer_obj.commands_block.length; i ++) {
-			ret += renderElementCommandGeneric(writer_obj.commands_block[i], function_index, i, iftrue_index, (fullpath + ',' + i));
+		for (ki = 0; ki < writer_obj.commands_block.length; ki ++) {
+			ret += renderElementCommandGeneric(writer_obj.commands_block[ki], function_index, ki, iftrue_index, (fullpath + ',' + ki));
 		}
 	}
 
@@ -2951,8 +3133,8 @@ function renderIfTrue(writer_obj, function_index, iftrue_index, data_parent, ful
 	if ((writer_obj.commands_else == null)
 			|| (writer_obj.commands_else.length == 0)) {
 	} else {
-		for (i = 0; i < writer_obj.commands_else.length; i ++) {
-			ret += renderElementCommandGeneric(writer_obj.commands_else[i], function_index, i, iftrue_index, (fullpath + ',' + i));
+		for (ki = 0; ki < writer_obj.commands_else.length; ki ++) {
+			ret += renderElementCommandGeneric(writer_obj.commands_else[ki], function_index, ki, iftrue_index, (fullpath + ',' + ki));
 		}
 	}
 
@@ -2982,12 +3164,92 @@ function renderWriter(writer_obj, function_index, reader_index, data_parent, ful
 
 function renderReader(reader_obj, function_index, reader_index, data_parent, fullpath) {
 	var ret = '';
-	ret += '<div class="ui reader" data-index="'+reader_index+'" data-command="'+reader_index+'" data-idcommand="'+reader_obj.id_command+'" data-parent="'+data_parent+'" data-fullpath="'+fullpath+'"> <i class="ui icon small download command_drag"></i> <span>'+i18n('read')+' </span>';
+	ret += '<div class="ui reader" data-fun="'+function_index+'" data-index="'+reader_index+'" data-command="'+reader_index+'" data-idcommand="'+reader_obj.id_command+'" data-parent="'+data_parent+'" data-fullpath="'+fullpath+'"> <i class="ui icon small download command_drag"></i> <span>'+i18n('read')+' ( </span>';
 
-	ret += '';
+	
+	ret += '<div class="ui dropdown variable_reader">';
 
-	ret += '</div>';
+	if (reader_obj.variavel) {
+		if (reader_obj.variavel.eh_constante) {
+			reader_obj.variavel = null;
+			ret += '<div class="text seq_ func_'+function_index+'">'+i18n('ui:text_select_var')+'</div>';
+		} else {
+			ret += '<div class="text seq_ func_'+function_index+'">'+reader_obj.variavel.nome+'</div>';
+		}
+	} else {
+		ret += '<div class="text seq_ func_'+function_index+'">'+i18n('ui:text_select_var')+'</div>';
+	}
+  	
+  	ret += '<i class="dropdown icon"></i>'
+	  	+ '<div class="menu func_'+function_index+'">';
 
+	if (programa.funcoes[function_index].variaveis) {
+		for (var i = 0; i < programa.funcoes[function_index].variaveis.length; i++) {
+			ret += '<div class="item local_vars seq_'+i+' func_'+function_index+'"> ' + programa.funcoes[function_index].variaveis[i].nome + ' </div>';
+  		}
+	}
+  	
+  	if (programa.funcoes[function_index].lista_parametros) {
+  		for (var i = 0; i < programa.funcoes[function_index].lista_parametros.length; i++) {
+  			ret += '<div class="item parameters_vars seq_'+i+' func_'+function_index+'"> ' + programa.funcoes[function_index].lista_parametros[i].nome + ' </div>';
+  		}
+  	}
+
+  	if (programa.globais) {
+  		for (var ij = 0; ij < programa.globais.length; ij++) {
+  			if (!programa.globais[ij].eh_constante) {
+  				ret += '<div class="item global_vars seq_'+ij+' func_'+function_index+'"> ' + programa.globais[ij].nome + ' </div>';
+  			}
+  		}
+  	}
+  	
+	ret += '</div></div> ';
+
+	if (reader_obj.variavel) {
+		if (reader_obj.variavel.dimensoes == 1) {
+
+
+			ret += '<div class="ui dropdown change_column_reader_render"><span class="opened_index">[ </span> <div class="text"> ';
+
+			if (reader_obj.coluna) {
+				if (reader_obj.coluna.nome) {
+					ret += reader_obj.coluna.nome;
+				} else {
+					ret += reader_obj.coluna;
+				}
+			}
+
+			ret += '</div> ]<i class="dropdown icon"></i><div class="menu"><div class="item" data-value="true">Valor</div><div class="item">Variável';
+			ret += '<i class="dropdown icon"></i>'
+		  		+ '<div class="menu func_'+function_index+'">';
+
+			if (programa.funcoes[function_index].variaveis) {
+				for (var i = 0; i < programa.funcoes[function_index].variaveis.length; i++) {
+					ret += '<div class="item local_vars seq_'+i+' func_'+function_index+'"> ' + programa.funcoes[function_index].variaveis[i].nome + ' </div>';
+		  		}
+			}
+		  	
+		  	if (programa.funcoes[function_index].lista_parametros) {
+		  		for (var i = 0; i < programa.funcoes[function_index].lista_parametros.length; i++) {
+		  			ret += '<div class="item parameters_vars seq_'+i+' func_'+function_index+'"> ' + programa.funcoes[function_index].lista_parametros[i].nome + ' </div>';
+		  		}
+		  	}
+
+		  	if (programa.globais) {
+		  		for (var ij = 0; ij < programa.globais.length; ij++) {
+		  			if (!programa.globais[ij].eh_constante) {
+		  				ret += '<div class="item global_vars seq_'+ij+' func_'+function_index+'"> ' + programa.globais[ij].nome + ' </div>';
+		  			}
+		  		}
+		  	}
+
+		  	ret += '</div></div></div></div>';
+
+		}
+	}
+
+			
+	ret += '<span class="close_parentheses">)</span> </div>';
 	return ret;
 }
 
@@ -3179,9 +3441,6 @@ function renderVariables(function_obj, sequence) {
 
     			
     		}
-
-
-
 
 			ret += ' <i class="red icon times remove_parameter" onclick="deleteVariable('+sequence+', '+j+')"></i></div>';
 

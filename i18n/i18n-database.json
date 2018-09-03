@@ -158,6 +158,11 @@
 		"en": "Function call",
 		"es": "Función chamada",
 		"pt": "Chamada de função"
+	},
+	"ui:text_select_var": {
+		"en": "Select a variable",
+		"es": "Seleccione una variable",
+		"pt": "Selecione uma variável"
 	}
 
 }

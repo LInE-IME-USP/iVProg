@@ -287,3 +287,8 @@ div.buttons_manage_columns {
 .block_commands {
 	min-height: 20px;
 }
+
+
+.ui.dropdown.variable_reader .icon, .ui.dropdown.change_column_reader .icon, .ui.dropdown.change_column_reader_render .icon {
+    margin-left: 2px;
+}

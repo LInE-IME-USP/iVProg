@@ -42,9 +42,11 @@ var Comentario = function(texto_comentario) {
 	allCommandsReference[this.id_command] = this;
 };
 
-var Leitura = function(variavel) {
+var Leitura = function(variavel = null, linha = null, coluna = 0) {
 	this.tipo = tiposComandos.reader;
 	this.variavel = variavel;
+	this.linha = linha;
+	this.coluna = coluna;
 	this.id_command = getIdCommandControl();
 	allCommandsReference[this.id_command] = this;
 };
