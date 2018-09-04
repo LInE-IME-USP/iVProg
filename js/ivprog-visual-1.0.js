@@ -147,6 +147,8 @@ var programa = new Programa();
 var funcaoPrincipal = new Funcao(i18n("start"), tiposDados.void, 0, [], true);
 funcaoPrincipal.comentario_funcao = new Comentario(i18n('text_comment_main'));
 
+/*funcaoPrincipal.comentario_funcao = new Comentario(i18n('text_comment_main'));
+
 funcaoPrincipal.comandos = [];
 funcaoPrincipal.comandos.push(new Leitura(null));
 funcaoPrincipal.comandos.push(new Escrita(null));
@@ -170,7 +172,7 @@ funcaoPrincipal.comandos.push(new SeVerdadeiro(null, teste, b_senao));
 
 funcaoPrincipal.comandos.push(new SeVerdadeiro(null, bloco, senao));
 
-
+*/
 //funcaoPrincipal.lista_parametros.push(new Variavel(tiposDados.text, "args"));
 
 

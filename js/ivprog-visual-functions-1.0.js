@@ -258,8 +258,7 @@ function manageCommand(event) {
 	// Agora é descobrir qual o escopo para adicionar o comando:
 
 	// Se o elemento clicado possuir o atributo "fun", então, é direto na div dos comandos:
-
-	if ($(el).data('fun')) {
+	if (typeof $(el).data('fun') !== 'undefined') {
 
 		// Se a lista de comandos estiver vazia, então é o primeiro.
 		// Portanto, ele deve soltar o elemento obrigatoriamente no objeto vazio
@@ -3063,6 +3062,7 @@ var opened_input_comment = null;
 var sequence_name_opened_comment;
 var sequence_function_opened_comment;
 function enableCommentUpdate(parent_node, function_index, is_function_comment, comment_index) {
+
 	if (opened_name_comment) {
 		$(opened_input_comment).focus();
 		return;
@@ -3078,7 +3078,7 @@ function enableCommentUpdate(parent_node, function_index, is_function_comment, c
 	if (is_function_comment) {
 		temp_value = programa.funcoes[function_index].comentario_funcao.texto_comentario;
 	} else {
-		temp_value = programa.funcoes[function_index].comandos[comment_index].texto_comentario;
+		temp_value = parent_node.relatedObj.texto_comentario;
 	}
 	$( "<input type='text' class='width-dynamic input_name_function' autocomplete='off' autocorrect='off' autocapitalize='off' spellcheck='false' value='"+temp_value+"' />" ).insertBefore($(parent_node).find('.span_comment_text'));
 
@@ -3104,7 +3104,7 @@ function enableCommentUpdate(parent_node, function_index, is_function_comment, c
 			if (is_function_comment) {
 				programa.funcoes[function_index].comentario_funcao.texto_comentario = n_value;
 			} else {
-				temp_value = programa.funcoes[function_index].comandos[comment_index].texto_comentario = n_value;
+				parent_node.relatedObj.texto_comentario = n_value;
 			}
 		}
 		$(this).remove();
@@ -3124,7 +3124,7 @@ function enableCommentUpdate(parent_node, function_index, is_function_comment, c
 				if (is_function_comment) {
 					programa.funcoes[function_index].comentario_funcao.texto_comentario = n_value;
 				} else {
-					temp_value = programa.funcoes[function_index].comandos[comment_index].texto_comentario = n_value;
+					parent_node.relatedObj.texto_comentario = n_value;
 				}
 			}
 			$(this).remove();
