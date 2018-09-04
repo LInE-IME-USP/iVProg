@@ -42,7 +42,7 @@ var Comentario = function(texto_comentario) {
 	allCommandsReference[this.id_command] = this;
 };
 
-var Leitura = function(variavel = null, linha = null, coluna = 0) {
+var Leitura = function(variavel = null, linha = 0, coluna = 0) {
 	this.tipo = tiposComandos.reader;
 	this.variavel = variavel;
 	this.linha = linha;

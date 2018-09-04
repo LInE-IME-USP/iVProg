@@ -69,6 +69,8 @@ function associateObjects() {
 }
 
 function deleteGlobal(which_global) {
+	updateReferencesToVarBeforeRemove(programa.globais[which_global]);
+
 	programa.globais.splice(which_global, 1);
 	renderAlgorithm();
 }
@@ -1230,7 +1232,6 @@ function addHandlers() {
 		});
 	}
 
-	//
 	$('.dropdown.change_column_reader_render').dropdown({
 		    onChange: function(value, text, $selectedItem) {
 		    	editing_element_index_value = this.parentNode.relatedObj;
@@ -1281,6 +1282,111 @@ function addHandlers() {
 		    }
 		});
 
+	$('.dropdown.change_column_reader_render_matrix_column').dropdown({
+		    onChange: function(value, text, $selectedItem) {
+		    	editing_element_index_value = this.parentNode.relatedObj;
+		    	if ($($selectedItem).data('value')) {
+		    		
+		    		$(this).find('.text').text(' ');
+		    		var el;
+		    		if (isNaN(editing_element_index_value.coluna)) {
+		    			el = $('<input type="text" style="z-index: 999;" size="2" value="0" onChange="editing_element_index_value.coluna = this.value; renderAlgorithm();" onblur="editing_element_index_value.coluna = this.value; renderAlgorithm();"  />');
+		    		} else if (editing_element_index_value.coluna == null) {
+		    			el = $('<input type="text" style="z-index: 999;" size="2" value="0" onChange="editing_element_index_value.coluna = this.value; renderAlgorithm();" onblur="editing_element_index_value.coluna = this.value; renderAlgorithm();"  />');
+		    		} else {
+		    			el = $('<input type="text" style="z-index: 999;" size="2" value="'+editing_element_index_value.coluna+'" onChange="editing_element_index_value.coluna = this.value; renderAlgorithm();" onblur="editing_element_index_value.coluna = this.value; renderAlgorithm();"  />');
+		    		}
+		    		
+		    		//$(this).find('.text').text();
+		    		//$( el ).insertBefore($(this).find('.text'));
+		    		$(this).find('.text').append(el);
+		    		el.focus();
+		    		//editing_element_index_value = element.relatedObj;
+
+
+		    	} else {
+
+		    		classList = $selectedItem.attr('class').split(/\s+/);
+			    	var seq;
+			    	var func;
+					$.each(classList, function(index, item) {
+					    if (item.indexOf("seq_") > -1) {
+					        seq = item.split("seq_")[1];
+					    }
+					    if (item.indexOf("func_") > -1) {
+					        func = item.split("func_")[1];
+					    }
+					});
+
+					if ($($selectedItem).hasClass('local_vars')) {
+						this.parentNode.relatedObj.coluna = programa.funcoes[func].variaveis[seq];
+					}
+					if ($($selectedItem).hasClass('parameters_vars')) {
+					    this.parentNode.relatedObj.coluna = programa.funcoes[func].lista_parametros[seq];
+					}
+					if ($($selectedItem).hasClass('global_vars')) {
+					 	this.parentNode.relatedObj.coluna = programa.globais[seq];
+					}
+
+
+		    	}
+
+		    }
+		});
+
+
+	$('.dropdown.change_column_reader_render_matrix_line').dropdown({
+		    onChange: function(value, text, $selectedItem) {
+		    	editing_element_index_value = this.parentNode.relatedObj;
+		    	if ($($selectedItem).data('value')) {
+		    		
+		    		$(this).find('.text').text(' ');
+		    		var el;
+		    		if (isNaN(editing_element_index_value.linha)) {
+		    			el = $('<input type="text" style="z-index: 999;" size="2" value="0" onChange="editing_element_index_value.linha = this.value; renderAlgorithm();" onblur="editing_element_index_value.linha = this.value; renderAlgorithm();"  />');
+		    		} else if (editing_element_index_value.linha == null) {
+		    			el = $('<input type="text" style="z-index: 999;" size="2" value="0" onChange="editing_element_index_value.linha = this.value; renderAlgorithm();" onblur="editing_element_index_value.linha = this.value; renderAlgorithm();"  />');
+		    		} else {
+		    			el = $('<input type="text" style="z-index: 999;" size="2" value="'+editing_element_index_value.linha+'" onChange="editing_element_index_value.linha = this.value; renderAlgorithm();" onblur="editing_element_index_value.linha = this.value; renderAlgorithm();"  />');
+		    		}
+		    		
+		    		//$(this).find('.text').text();
+		    		//$( el ).insertBefore($(this).find('.text'));
+		    		$(this).find('.text').append(el);
+		    		el.focus();
+		    		//editing_element_index_value = element.relatedObj;
+
+
+		    	} else {
+
+		    		classList = $selectedItem.attr('class').split(/\s+/);
+			    	var seq;
+			    	var func;
+					$.each(classList, function(index, item) {
+					    if (item.indexOf("seq_") > -1) {
+					        seq = item.split("seq_")[1];
+					    }
+					    if (item.indexOf("func_") > -1) {
+					        func = item.split("func_")[1];
+					    }
+					});
+
+					if ($($selectedItem).hasClass('local_vars')) {
+						this.parentNode.relatedObj.linha = programa.funcoes[func].variaveis[seq];
+					}
+					if ($($selectedItem).hasClass('parameters_vars')) {
+					    this.parentNode.relatedObj.linha = programa.funcoes[func].lista_parametros[seq];
+					}
+					if ($($selectedItem).hasClass('global_vars')) {
+					 	this.parentNode.relatedObj.linha = programa.globais[seq];
+					}
+
+
+		    	}
+
+		    }
+		});
+
 
 	$('.ui.dropdown.variable_reader')
     	.dropdown({
@@ -1308,16 +1414,30 @@ function addHandlers() {
 				 	this.parentNode.relatedObj.variavel = programa.globais[seq];
 				}
 
+				$(this.parentNode).find(".change_column_reader").remove();
+				$(this.parentNode).find(".change_column_reader_render").remove();
+				$(this.parentNode).find(".change_column_reader_render_matrix_line").remove();
+				$(this.parentNode).find(".change_column_reader_render_matrix_column").remove();
+				$(this.parentNode).find(".change_column_reader_render").remove();
+				$(this.parentNode).find(".change_column_reader_render_matrix_line").remove();
+				$(this.parentNode).find(".change_line_reader").remove();
+
+				
+
+
+
 				if (this.parentNode.relatedObj.variavel.dimensoes == 1) { // 
 					this.parentNode.relatedObj.linha = null;
 					this.parentNode.relatedObj.coluna = null;
 					
 					addOptionsReaderVector(this.parentNode, $(this.parentNode).data('fun'));
 
-				} else {
-					$(this.parentNode).find(".change_column_reader").remove();
+				} else if (this.parentNode.relatedObj.variavel.dimensoes == 2) { // 
+					this.parentNode.relatedObj.linha = null;
+					this.parentNode.relatedObj.coluna = null;
+					
+					addOptionsReaderMatrix(this.parentNode, $(this.parentNode).data('fun'));
 				}
-
 
 
 		    }
@@ -1435,6 +1555,179 @@ function addHandlers() {
 		});
 
 }
+
+
+var editing_element_index_value = null;
+function  addOptionsReaderMatrix(element, function_index) {
+
+	var ret;
+	if (element.relatedObj.variavel.dimensoes == 2) {
+
+		// LINHA: 
+		var ret = ('<div class="ui dropdown change_line_reader"><span class="opened_index">[ </span> <div class="text"> </div> ]<i class="dropdown icon"></i><div class="menu"><div class="item" data-value="true">Valor</div><div class="item">Variável');
+		ret += '<i class="dropdown icon"></i>'
+	  		+ '<div class="menu func_'+function_index+'">';
+
+		if (programa.funcoes[function_index].variaveis) {
+			for (var i = 0; i < programa.funcoes[function_index].variaveis.length; i++) {
+				ret += '<div class="item local_vars seq_'+i+' func_'+function_index+'"> ' + programa.funcoes[function_index].variaveis[i].nome + ' </div>';
+	  		}
+		}
+	  	
+	  	if (programa.funcoes[function_index].lista_parametros) {
+	  		for (var i = 0; i < programa.funcoes[function_index].lista_parametros.length; i++) {
+	  			ret += '<div class="item parameters_vars seq_'+i+' func_'+function_index+'"> ' + programa.funcoes[function_index].lista_parametros[i].nome + ' </div>';
+	  		}
+	  	}
+
+	  	if (programa.globais) {
+	  		for (var ij = 0; ij < programa.globais.length; ij++) {
+	  			if (!programa.globais[ij].eh_constante) {
+	  				ret += '<div class="item global_vars seq_'+ij+' func_'+function_index+'"> ' + programa.globais[ij].nome + ' </div>';
+	  			}
+	  		}
+	  	}
+
+	  	ret += '</div></div></div>';
+
+		$( ret ).insertBefore($(element).find('.close_parentheses'));
+
+		$('.dropdown.change_line_reader').dropdown({
+		    onChange: function(value, text, $selectedItem) {
+
+		    	if ($($selectedItem).data('value')) {
+		    		var el;
+		    		$(this).find('.text').text(' ');
+		    		if (!isNaN(element.relatedObj.linha)) {
+		    			el = $('<input type="text" style="z-index: 999;" size="2" value="0" onChange="editing_element_index_value.linha = this.value; renderAlgorithm();" onblur="editing_element_index_value.linha = this.value; renderAlgorithm();"  />');
+		    		} else if (element.relatedObj.linha == null) {
+		    			el = $('<input type="text" style="z-index: 999;" size="2" value="0" onChange="editing_element_index_value.linha = this.value; renderAlgorithm();" onblur="editing_element_index_value.linha = this.value; renderAlgorithm();"  />');
+		    		} else {
+		    			el = $('<input type="text" style="z-index: 999;" size="2" value="'+element.relatedObj.linha+'" onChange="editing_element_index_value.linha = this.value; renderAlgorithm();" onblur="editing_element_index_value.linha = this.value; renderAlgorithm();"  />');
+		    		}
+		    		
+		    		//$(this).find('.text').text();
+		    		//$( el ).insertBefore($(this).find('.text'));
+		    		$(this).find('.text').append(el);
+		    		el.focus();
+		    		editing_element_index_value = element.relatedObj;
+
+
+		    	} else {
+
+		    		classList = $selectedItem.attr('class').split(/\s+/);
+			    	var seq;
+			    	var func;
+					$.each(classList, function(index, item) {
+					    if (item.indexOf("seq_") > -1) {
+					        seq = item.split("seq_")[1];
+					    }
+					    if (item.indexOf("func_") > -1) {
+					        func = item.split("func_")[1];
+					    }
+					});
+
+					if ($($selectedItem).hasClass('local_vars')) {
+						this.parentNode.relatedObj.linha = programa.funcoes[func].variaveis[seq];
+					}
+					if ($($selectedItem).hasClass('parameters_vars')) {
+					    this.parentNode.relatedObj.linha = programa.funcoes[func].lista_parametros[seq];
+					}
+					if ($($selectedItem).hasClass('global_vars')) {
+					 	this.parentNode.relatedObj.linha = programa.globais[seq];
+					}
+
+
+		    	}
+
+		    }
+		});
+
+		// COLUNA: 
+		var ret = ('<div class="ui dropdown change_column_reader"><span class="opened_index">[ </span> <div class="text"> </div> ]<i class="dropdown icon"></i><div class="menu"><div class="item" data-value="true">Valor</div><div class="item">Variável');
+		ret += '<i class="dropdown icon"></i>'
+	  		+ '<div class="menu func_'+function_index+'">';
+
+		if (programa.funcoes[function_index].variaveis) {
+			for (var i = 0; i < programa.funcoes[function_index].variaveis.length; i++) {
+				ret += '<div class="item local_vars seq_'+i+' func_'+function_index+'"> ' + programa.funcoes[function_index].variaveis[i].nome + ' </div>';
+	  		}
+		}
+	  	
+	  	if (programa.funcoes[function_index].lista_parametros) {
+	  		for (var i = 0; i < programa.funcoes[function_index].lista_parametros.length; i++) {
+	  			ret += '<div class="item parameters_vars seq_'+i+' func_'+function_index+'"> ' + programa.funcoes[function_index].lista_parametros[i].nome + ' </div>';
+	  		}
+	  	}
+
+	  	if (programa.globais) {
+	  		for (var ij = 0; ij < programa.globais.length; ij++) {
+	  			if (!programa.globais[ij].eh_constante) {
+	  				ret += '<div class="item global_vars seq_'+ij+' func_'+function_index+'"> ' + programa.globais[ij].nome + ' </div>';
+	  			}
+	  		}
+	  	}
+
+	  	ret += '</div></div></div>';
+
+		$( ret ).insertBefore($(element).find('.close_parentheses'));
+
+		$('.dropdown.change_column_reader').dropdown({
+		    onChange: function(value, text, $selectedItem) {
+		    	console.log('QQQ2');
+
+		    	if ($($selectedItem).data('value')) {
+		    		var el;
+		    		$(this).find('.text').text(' ');
+
+		    		if (!isNaN(element.relatedObj.coluna)) {
+		    			el = $('<input type="text" style="z-index: 999;" size="2" value="0" onChange="editing_element_index_value.coluna = this.value; renderAlgorithm();" onblur="editing_element_index_value.coluna = this.value; renderAlgorithm();"  />');
+		    		} else if (element.relatedObj.coluna == null) {
+		    			el = $('<input type="text" style="z-index: 999;" size="2" value="0" onChange="editing_element_index_value.coluna = this.value; renderAlgorithm();" onblur="editing_element_index_value.coluna = this.value; renderAlgorithm();"  />');
+		    		} else {
+		    			el = $('<input type="text" style="z-index: 999;" size="2" value="'+element.relatedObj.coluna+'" onChange="editing_element_index_value.coluna = this.value; renderAlgorithm();" onblur="editing_element_index_value.coluna = this.value; renderAlgorithm();"  />');
+		    		}
+		    		
+		    		//$(this).find('.text').text();
+		    		//$( el ).insertBefore($(this).find('.text'));
+		    		$(this).find('.text').append(el);
+		    		el.focus();
+		    		editing_element_index_value = element.relatedObj;
+
+
+		    	} else {
+
+		    		classList = $selectedItem.attr('class').split(/\s+/);
+			    	var seq;
+			    	var func;
+					$.each(classList, function(index, item) {
+					    if (item.indexOf("seq_") > -1) {
+					        seq = item.split("seq_")[1];
+					    }
+					    if (item.indexOf("func_") > -1) {
+					        func = item.split("func_")[1];
+					    }
+					});
+
+					if ($($selectedItem).hasClass('local_vars')) {
+						this.parentNode.relatedObj.coluna = programa.funcoes[func].variaveis[seq];
+					}
+					if ($($selectedItem).hasClass('parameters_vars')) {
+					    this.parentNode.relatedObj.coluna = programa.funcoes[func].lista_parametros[seq];
+					}
+					if ($($selectedItem).hasClass('global_vars')) {
+					 	this.parentNode.relatedObj.coluna = programa.globais[seq];
+					}
+
+
+		    	}
+
+		    }
+		});
+	}
+
+}
+
 
 ////$( "<span>oi</span>" ).insertBefore($(this).find('.close_parentheses'));
 var editing_element_index_value = null;
@@ -1891,6 +2184,8 @@ function addVariable(sequence) {//tipo, nome, valor
 }
 
 function deleteVariable(which_function, which_variable) {
+	updateReferencesToVarBeforeRemove(programa.funcoes[which_function].variaveis[which_variable]);
+
 	programa.funcoes[which_function].variaveis.splice(which_variable, 1);
 	renderAlgorithm();
 }
@@ -2924,8 +3219,34 @@ function enableNameParameterUpdate(parent_node, which_function, which_parameter)
 }
 
 function removeParameter(parent_node, which_function, which_parameter) {
+	updateReferencesToVarBeforeRemove(programa.funcoes[which_function].lista_parametros[which_parameter]);
+
 	programa.funcoes[which_function].lista_parametros.splice(which_parameter, 1);
 	renderAlgorithm();
+}
+
+function updateReferencesToVarBeforeRemove(which_var) {
+	for (var i = 1; i < allCommandsReference.length; i++) {
+		if (allCommandsReference[i].tipo) {
+			if (allCommandsReference[i].tipo == tiposComandos.reader) {
+
+				if (allCommandsReference[i].variavel == which_var) {
+					allCommandsReference[i].variavel = null;
+					allCommandsReference[i].linha = 0;
+					allCommandsReference[i].coluna = 0;
+				}
+
+				if (allCommandsReference[i].coluna == which_var) {
+					allCommandsReference[i].coluna = 0;
+				}
+
+				if (allCommandsReference[i].linha == which_var) {
+					allCommandsReference[i].linha = 0;
+				}
+
+			}
+		}
+	}
 }
 
 
@@ -3210,6 +3531,85 @@ function renderReader(reader_obj, function_index, reader_index, data_parent, ful
 
 
 			ret += '<div class="ui dropdown change_column_reader_render"><span class="opened_index">[ </span> <div class="text"> ';
+
+			if (reader_obj.coluna) {
+				if (reader_obj.coluna.nome) {
+					ret += reader_obj.coluna.nome;
+				} else {
+					ret += reader_obj.coluna;
+				}
+			}
+
+			ret += '</div> ]<i class="dropdown icon"></i><div class="menu"><div class="item" data-value="true">Valor</div><div class="item">Variável';
+			ret += '<i class="dropdown icon"></i>'
+		  		+ '<div class="menu func_'+function_index+'">';
+
+			if (programa.funcoes[function_index].variaveis) {
+				for (var i = 0; i < programa.funcoes[function_index].variaveis.length; i++) {
+					ret += '<div class="item local_vars seq_'+i+' func_'+function_index+'"> ' + programa.funcoes[function_index].variaveis[i].nome + ' </div>';
+		  		}
+			}
+		  	
+		  	if (programa.funcoes[function_index].lista_parametros) {
+		  		for (var i = 0; i < programa.funcoes[function_index].lista_parametros.length; i++) {
+		  			ret += '<div class="item parameters_vars seq_'+i+' func_'+function_index+'"> ' + programa.funcoes[function_index].lista_parametros[i].nome + ' </div>';
+		  		}
+		  	}
+
+		  	if (programa.globais) {
+		  		for (var ij = 0; ij < programa.globais.length; ij++) {
+		  			if (!programa.globais[ij].eh_constante) {
+		  				ret += '<div class="item global_vars seq_'+ij+' func_'+function_index+'"> ' + programa.globais[ij].nome + ' </div>';
+		  			}
+		  		}
+		  	}
+
+		  	ret += '</div></div></div></div>';
+
+		} else if (reader_obj.variavel.dimensoes == 2) {
+
+
+		  	// Linha: 
+			ret += '<div class="ui dropdown change_column_reader_render_matrix_line"><span class="opened_index">[ </span> <div class="text"> ';
+
+			if (reader_obj.linha) {
+				if (reader_obj.linha.nome) {
+					ret += reader_obj.linha.nome;
+				} else {
+					ret += reader_obj.linha;
+				}
+			}
+
+			ret += '</div> ]<i class="dropdown icon"></i><div class="menu"><div class="item" data-value="true">Valor</div><div class="item">Variável';
+			ret += '<i class="dropdown icon"></i>'
+		  		+ '<div class="menu func_'+function_index+'">';
+
+			if (programa.funcoes[function_index].variaveis) {
+				for (var i = 0; i < programa.funcoes[function_index].variaveis.length; i++) {
+					ret += '<div class="item local_vars seq_'+i+' func_'+function_index+'"> ' + programa.funcoes[function_index].variaveis[i].nome + ' </div>';
+		  		}
+			}
+		  	
+		  	if (programa.funcoes[function_index].lista_parametros) {
+		  		for (var i = 0; i < programa.funcoes[function_index].lista_parametros.length; i++) {
+		  			ret += '<div class="item parameters_vars seq_'+i+' func_'+function_index+'"> ' + programa.funcoes[function_index].lista_parametros[i].nome + ' </div>';
+		  		}
+		  	}
+
+		  	if (programa.globais) {
+		  		for (var ij = 0; ij < programa.globais.length; ij++) {
+		  			if (!programa.globais[ij].eh_constante) {
+		  				ret += '<div class="item global_vars seq_'+ij+' func_'+function_index+'"> ' + programa.globais[ij].nome + ' </div>';
+		  			}
+		  		}
+		  	}
+
+		  	ret += '</div></div></div></div>';
+
+
+
+		  	// Coluna: 
+			ret += '<div class="ui dropdown change_column_reader_render_matrix_column"><span class="opened_index">[ </span> <div class="text"> ';
 
 			if (reader_obj.coluna) {
 				if (reader_obj.coluna.nome) {

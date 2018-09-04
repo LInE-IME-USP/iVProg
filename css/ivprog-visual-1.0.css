@@ -289,6 +289,8 @@ div.buttons_manage_columns {
 }
 
 
-.ui.dropdown.variable_reader .icon, .ui.dropdown.change_column_reader .icon, .ui.dropdown.change_column_reader_render .icon {
+.ui.dropdown.variable_reader .icon, .ui.dropdown.change_column_reader .icon, .ui.dropdown.change_column_reader_render .icon,
+.ui.dropdown.change_column_reader_render_matrix_column .icon, .ui.dropdown.change_column_reader_render_matrix_line .icon, 
+.ui.dropdown.change_line_reader .icon {
     margin-left: 2px;
 }
