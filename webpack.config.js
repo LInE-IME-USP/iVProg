@@ -3,7 +3,7 @@ var webpack = require('webpack');
 module.exports = {
     entry: './js/main.js',
     mode: 'development',
-    watch: true,
+    watch: false,
     output: {
         path: path.resolve(__dirname, 'build'),
         filename: 'ivprog.bundle.js',
@@ -27,5 +27,10 @@ module.exports = {
     stats: {
         colors: true
     },
+    /*optimization: {
+        splitChunks: {
+            chunks: 'all'
+        }
+    },*/
     devtool: 'source-map'
 };

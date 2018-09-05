@@ -1,6 +1,9 @@
-export class Case {
+import { Command } from './command';
+
+export class Case extends Command {
 
   constructor (expression) {
+    super();
     this.expression = expression;
     this.commands = [];
   }
