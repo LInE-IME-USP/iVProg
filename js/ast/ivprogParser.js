@@ -3,6 +3,7 @@ import * as Expressions from './expressions/';
 import * as Commands from './commands/';
 import { SourceInfo } from './sourceInfo';
 import { Types, toInt, toString, toBool } from './types';
+import { SourceInfo } from './sourceInfo';
 import { convertFromString } from './operators';
 import { SyntaxErrorFactory } from './error/syntaxErrorFactory';
 import { LanguageDefinedFunction } from './../processor/definedFunctions';
@@ -351,9 +352,8 @@ export class IVProgParser {
 
   getBoolLiteral (token) {
     const val = toBool(token.text);
-    const sourceInfo = SourceInfo.createSourceInfo(token);
     const exp = new Expressions.BoolLiteral(val);
-    exp.sourceInfo = sourceInfo;
+    exp.sourceInfo = SourceInfo.createSourceInfo(token);;
     return exp;
   }
 
