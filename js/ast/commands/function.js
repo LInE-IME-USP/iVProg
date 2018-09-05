@@ -7,6 +7,7 @@ export class Function {
     this.returnType = returnType;
     this.formalParameters = formalParameters;
     this.commandBlock = commandBlock;
+    this._sourceInfo = null;
   }
 
   get isMain () {
@@ -20,4 +21,12 @@ export class Function {
   get variablesDeclarations () {
     return this.commandBlock.variables;
   }
+
+  set sourceInfo (sourceInfo) {
+		this._sourceInfo = sourceInfo;
+	}
+
+	get sourceInfo () {
+		return this._sourceInfo;
+	}
 }
