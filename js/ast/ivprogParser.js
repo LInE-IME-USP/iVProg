@@ -2,6 +2,7 @@ import { CommonTokenStream, InputStream } from 'antlr4/index';
 import * as Expressions from './expressions/';
 import * as Commands from './commands/';
 import { Types, toInt, toString, toBool } from './types';
+import { SourceInfo } from './sourceInfo';
 import { convertFromString } from './operators';
 import { SyntaxErrorFactory } from './error/syntaxErrorFactory';
 import { LanguageDefinedFunction } from './../processor/definedFunctions';
@@ -240,7 +241,9 @@ export class IVProgParser {
     let initial = null;
     let dim1 = null;
     let dim2 = null;
+    const idToken = this.getToken();
     const idString = this.parseID();
+    
     // Check for array or vector
     // ID[int/IDi][int/IDj]
     if (this.checkOpenBrace(true)) {
@@ -261,6 +264,9 @@ export class IVProgParser {
     }
 
     const equalsToken = this.getToken();
+    if(isConst && equalsToken.type !== this.lexerClass.EQUAL ) {
+      throw SyntaxErrorFactory.const_not_init(idToken);
+    }
     if(equalsToken.type === this.lexerClass.EQUAL) {
       this.pos++;
       initial = this.parseExpressionOR();
@@ -272,6 +278,7 @@ export class IVProgParser {
     } else {
       declaration = new Commands.Declaration(idString, typeString, initial, isConst);
     }
+    declaration.sourceInfo = SourceInfo.createSourceInfo(idToken);
     const commaToken = this.getToken();
     if(commaToken.type === this.lexerClass.COMMA) {
       this.pos++;
@@ -321,21 +328,32 @@ export class IVProgParser {
   **/
   getIntLiteral (token) {
     const text = token.text;
-    return new Expressions.IntLiteral(toInt(text));
+    const sourceInfo = SourceInfo.createSourceInfo(token);
+    const exp = new Expressions.IntLiteral(toInt(text));
+    exp.sourceInfo = sourceInfo;
+    return exp;
   }
 
   getRealLiteral (token) {
-    return new Expressions.RealLiteral(parseFloat(token.text));
+    const sourceInfo = SourceInfo.createSourceInfo(token);
+    const exp = new Expressions.RealLiteral(parseFloat(token.text));
+    exp.sourceInfo = sourceInfo;
+    return exp;
   }
 
   getStringLiteral (token) {
     const text = token.text;
-    return new Expressions.StringLiteral(toString(text));
+    const sourceInfo = SourceInfo.createSourceInfo(token);
+    const exp = new Expressions.StringLiteral(toString(text));
+    exp.sourceInfo = sourceInfo;
+    return exp;
   }
 
   getBoolLiteral (token) {
     const val = toBool(token.text);
-    return new Expressions.BoolLiteral(val);
+    const exp = new Expressions.BoolLiteral(val);
+    exp.sourceInfo = SourceInfo.createSourceInfo(token);;
+    return exp;
   }
 
   parseArrayLiteral () {
@@ -351,6 +369,7 @@ export class IVProgParser {
     const data = this.parseExpressionList();
     this.consumeNewLines();
     this.checkCloseCurly()
+    const endArray = this.getToken();
     this.pos++;
     this.parsingArrayDimension--;
     if (this.parsingArrayDimension === 0) {
@@ -360,7 +379,10 @@ export class IVProgParser {
       //   throw new Error(`Invalid array at line ${beginArray.line}`);
       // }
     }
-    return new Expressions.ArrayLiteral(data);
+    const sourceInfo = SourceInfo.createSourceInfoFromList(beginArray, endArray);
+    const exp = new Expressions.ArrayLiteral(data);
+    exp.sourceInfo = sourceInfo;
+    return exp;
   }
 
   /*
@@ -368,7 +390,10 @@ export class IVProgParser {
   * @returns object with fields type and value
   **/
   parseVariable (token) {
-    return new Expressions.VariableLiteral(token.text);
+    const sourceInfo = SourceInfo.createSourceInfo(token);
+    const exp = new Expressions.VariableLiteral(token.text);
+    exp.sourceInfo = sourceInfo;
+    return exp;
   }
 
   /*
@@ -701,11 +726,14 @@ export class IVProgParser {
     const id = this.parseID();
     const equalOrParenthesis = this.getToken();
     if (equalOrParenthesis.type === this.lexerClass.EQUAL) {
+      const sourceInfo = SourceInfo.createSourceInfo(this.getToken());
       this.pos++
       const exp = this.parseExpressionOR();
       this.checkEOS();
       this.pos++;
-      return (new Commands.Assign(id, exp));
+      const cmd = new Commands.Assign(id, exp);
+      cmd.sourceInfo = sourceInfo;
+      return cmd;
     } else if (equalOrParenthesis.type === this.lexerClass.OPEN_PARENTHESIS) {
       const funcCall = this.parseFunctionCallCommand(id);
       this.checkEOS();
@@ -732,7 +760,10 @@ export class IVProgParser {
     if(!isLast) {
       this.consumeForSemiColon();
     }
-    return new Commands.Assign(id, exp);
+    const sourceInfo = SourceInfo.createSourceInfo(equal);
+    const cmd = new Commands.Assign(id, exp);
+    cmd.sourceInfo = sourceInfo;
+    return cmd;
   }
 
   parseCases () {
@@ -794,11 +825,13 @@ export class IVProgParser {
   parseExpressionOR () {
     let exp1 = this.parseExpressionAND();
     while (this.getToken().type === this.lexerClass.OR_OPERATOR) {
+      const opToken = this.getToken();
       this.pos++;
       const or = convertFromString('or');
       this.consumeNewLines();
       const exp2 = this.parseExpressionAND();
       const finalExp = new Expressions.InfixApp(or, exp1, exp2);
+      finalExp.sourceInfo = SourceInfo.createSourceInfo(opToken);
       exp1 = finalExp
     }
     return exp1;
@@ -807,11 +840,13 @@ export class IVProgParser {
   parseExpressionAND () {
     let exp1 = this.parseExpressionNot();
     while (this.getToken().type === this.lexerClass.AND_OPERATOR) {
+      const opToken = this.getToken();
       this.pos++;
       const and = convertFromString('and');
       this.consumeNewLines();
       const exp2 = this.parseExpressionNot();
       const finalExp = new Expressions.InfixApp(and, exp1, exp2);
+      finalExp.sourceInfo = SourceInfo.createSourceInfo(opToken);
       exp1 = finalExp;
     }
     return exp1;
@@ -820,10 +855,14 @@ export class IVProgParser {
   parseExpressionNot () {
     const maybeNotToken = this.getToken();
     if (maybeNotToken.type === this.lexerClass.NOT_OPERATOR) {
+      const opToken = this.getToken();
       this.pos++;
       const not = convertFromString('not');
       const exp1 = this.parseExpressionRel();
-      return new Expressions.UnaryApp(not, exp1);
+      finalExp = new Expressions.UnaryApp(not, exp1);
+      finalExp.sourceInfo = SourceInfo.createSourceInfo(opToken);
+      return finalExp;
+      
     } else {
       return this.parseExpressionRel();
     }
@@ -837,6 +876,7 @@ export class IVProgParser {
       const rel = convertFromString(relToken.text);
       const exp2 = this.parseExpression();
       const finalExp = new Expressions.InfixApp(rel, exp1, exp2);
+      finalExp.sourceInfo = SourceInfo.createSourceInfo(relToken);
       exp1 = finalExp;
     }
     return exp1;
@@ -850,6 +890,7 @@ export class IVProgParser {
       const op = convertFromString(sumOpToken.text);
       const factor2 = this.parseFactor();
       const finalExp = new Expressions.InfixApp(op, factor, factor2);
+      finalExp.sourceInfo = SourceInfo.createSourceInfo(sumOpToken);
       factor = finalExp;
     }
     return factor;
@@ -863,6 +904,7 @@ export class IVProgParser {
       const op = convertFromString(multOpToken.text);
       const term2 =this.parseTerm();
       const finalExp = new Expressions.InfixApp(op, term, term2);
+      finalExp.sourceInfo = SourceInfo.createSourceInfo(multOpToken);
       term = finalExp;
     }
     return term;
@@ -870,10 +912,14 @@ export class IVProgParser {
 
   parseTerm () {
     const token = this.getToken();
+    let sourceInfo = null;
     switch(token.type) {
       case this.lexerClass.SUM_OP:
         this.pos++;
-        return new Expressions.UnaryApp(convertFromString(token.text), this.parseTerm());
+        sourceInfo = SourceInfo.createSourceInfo(token);
+        const exp = new Expressions.UnaryApp(convertFromString(token.text), this.parseTerm());
+        exp.sourceInfo = sourceInfo;
+        return exp;
       case this.lexerClass.INTEGER:
         this.pos++;
         return this.getIntLiteral(token);
@@ -900,29 +946,36 @@ export class IVProgParser {
 
   parseIDTerm () {
     const id = this.parseID();
-    const last = this.pos;
+    const tokenA = this.getToken(this.pos - 1);
     if(this.checkOpenBrace(true)) {
+      let tokenB = null;
       this.pos++;
       const firstIndex = this.parseExpression();
       let secondIndex = null;
       this.consumeNewLines();
       this.checkCloseBrace();
+      tokenB = this.getToken();
       this.pos++;
       if(this.checkOpenBrace(true)){
         this.pos++;
         secondIndex = this.parseExpression();
         this.consumeNewLines();
         this.checkCloseBrace();
+        tokenB = this.getToken();
         this.pos++;
       }
-
-      return new Expressions.ArrayAccess(id, firstIndex, secondIndex);
+      const sourceInfo = SourceInfo.createSourceInfoFromList(tokenA, tokenB); 
+      const exp = new Expressions.ArrayAccess(id, firstIndex, secondIndex);
+      exp.sourceInfo = sourceInfo;
+      return exp;
 
     } else if (this.checkOpenParenthesis(true)) {
       return this.parseFunctionCallExpression(id);
     } else {
-      this.pos = last;
-      return new Expressions.VariableLiteral(id);
+      const sourceInfo = SourceInfo.createSourceInfo(tokenA);
+      const exp = new Expressions.VariableLiteral(id);
+      exp.sourceInfo = sourceInfo;
+      return exp;
     }
   }
 
@@ -936,9 +989,14 @@ export class IVProgParser {
   }
 
   parseFunctionCallExpression (id) {
+    const tokenA = this.getToken(this.pos - 1);
     const actualParameters = this.parseActualParameters();
+    const tokenB = this.getToken(this.pos - 1);
     const funcName = this.getFunctionName(id);
-    return new Expressions.FunctionCall(funcName, actualParameters);
+    const sourceInfo = SourceInfo.createSourceInfoFromList(tokenA, tokenB);
+    const cmd = new Expressions.FunctionCall(funcName, actualParameters);
+    cmd.sourceInfo = sourceInfo;
+    return cmd;
   }
 
   parseFunctionCallCommand (id) {
@@ -947,12 +1005,16 @@ export class IVProgParser {
 
   parseParenthesisExp () {
     this.checkOpenParenthesis();
+    const tokenA = this.getToken();
     this.pos++;
     this.consumeNewLines();
     const exp = this.parseExpressionOR();
     this.consumeNewLines();
     this.checkCloseParenthesis();
+    const tokenB = this.getToken();
+    const sourceInfo = SourceInfo.createSourceInfoFromList(tokenA, tokenB);
     this.pos++;
+    exp.sourceInfo = sourceInfo;
     return exp;
   }
 
