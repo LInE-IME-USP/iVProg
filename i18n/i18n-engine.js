@@ -1,15 +1,21 @@
 
+var LocalizedStrings = ivprogCore.LocalizedStrings;
+var StringTypes = ivprogCore.StringTypes;
+
 function i18n(identifier) {
-  if (!i18n.db[i18n.locale]) {
-    if (!i18n.db['en'][identifier]) {
-      return "{MISSING_I18N_IDENTIFIER}";
-    }
-    return i18n.db['en'][identifier];
+  var opts = identifier.split(':');
+  var type = opts[0].toLowerCase();
+  var id = opts[1];
+  if (StringTypes.ERROR === type) {
+    return LocalizedStrings.getError(id);
+  } else if (StringTypes.MESSAGE === type) {
+    return LocalizedStrings.getMessage(id); 
+  } else if (StringTypes.UI === type) {
+    return LocalizedStrings.getUI(id);
+  } else {
+    console.warn(" A string has been passed to the i18n helper function that was not in the form type:id -> " + identifier);
+    return LocalizedStrings.getString(id, type);
   }
-  if (!i18n.db[i18n.locale][identifier]) {
-    return "{MISSING_I18N_IDENTIFIER}";
-  }
-  return i18n.db[i18n.locale][identifier];
 }
 
 i18n.set = function(locale, identifier, translate) {
@@ -20,34 +26,14 @@ i18n.set = function(locale, identifier, translate) {
 }
 
 i18n.updateLocale = function(new_locale) {
-  i18n.locale = new_locale;
-  $( "data.i18n" ).each(function( index ) {
+  localStorage.setItem('ivprog.lang', new_locale);
+  $( "data.i18n" ).each(function() {
     $( this ).text(i18n($( this ).val()));
   });
 }
 
-i18n.locale = iLMparameters.lang;
-i18n.db = {};
-
-$.ajaxSetup({
-    async: false
-});
-
-$.getJSON('i18n/i18n-database.json', function(data) {
-    for (x in data) {
-      l = data[x];
-      i18n.set('en', x, l.en);
-      i18n.set('es', x, l.es);
-      i18n.set('pt', x, l.pt);
-    }
-});
-
-$.ajaxSetup({
-    async: true
-});
-
 $( document ).ready(function() {
-  $( "data.i18n" ).each(function( index ) {
+  $( "data.i18n" ).each(function() {
     $( this ).text(i18n($( this ).val()));
   });
 });

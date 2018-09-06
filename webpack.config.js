@@ -3,10 +3,11 @@ var webpack = require('webpack');
 module.exports = {
     entry: './js/main.js',
     mode: 'development',
-    watch: true,
+    watch: false,
     output: {
         path: path.resolve(__dirname, 'build'),
-        filename: 'ivprog.bundle.js'
+        filename: 'ivprog.bundle.js',
+        library: 'ivprogCore'
     },
     node: {
         fs: 'empty',

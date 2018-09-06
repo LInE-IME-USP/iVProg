@@ -36,11 +36,8 @@ var button_ready = function() {
 
   $('.program_signature_text').text(i18n('program'));
 
-
-  $('.add_function_button').on('click', addFunctionHandler);
-
   // Atualiza a tela do algoritmo
-  renderAlgorithm();
+  //renderAlgorithm();
 
   $('.ivprog_visual_panel').removeClass("loading");
 
@@ -62,9 +59,9 @@ var button_ready = function() {
     animation: 100,
     ghostClass: 'ghost',
     group: 'functions_divs_drag',
-    onEnd: function (evt) {
-      updateSequenceFunctionHandler(evt.oldIndex, evt.newIndex);
-    }
+    // onEnd: function (evt) {
+    //   updateSequenceFunctionHandler(evt.oldIndex, evt.newIndex);
+    // }
   });
 
 };
