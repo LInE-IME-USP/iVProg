@@ -7,6 +7,7 @@
   "real": "real",
   "program": "program",
   "text": "text",
+  "text_start": "text",
   "boolean": "boolean",
   "true": "true",
   "false": "false",
@@ -21,5 +22,14 @@
   "text_comment_main": "This is the main function...",
   "text_read_var": "Reading data",
   "text_write_var": "Writing data",
-  "text_comment": "Comment"
+  "text_command_read":"read",
+  "text_command_write":"write",
+  "text_comment": "Comment",
+  "text_attribution": "Attribution",
+  "text_iftrue": "If true then",
+  "text_repeatNtimes": "Repeat N times",
+  "text_whiletrue": "While true",
+  "text_dowhiletrue": "Do while true",
+  "text_switch": "Switch",
+  "text_functioncall": "Function call"
 }

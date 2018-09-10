@@ -111,11 +111,11 @@ body {
 	min-width: 50px;
 }
 
-.function_name_div, .function_return_div, .function_name_parameter {
+.function_name_div, .function_return_div, .function_name_parameter, .created_div_valor_var, .function_return {
 	display: inline;
 }
 
-.enable_edit_name_function, .enable_edit_name_parameter, .add_parameter, .remove_parameter {
+.enable_edit_name_function, .enable_edit_name_parameter, .add_parameter, .remove_parameter, .add_parameter_button, .remove_variable {
 	cursor: pointer;
 }
 
@@ -223,7 +223,7 @@ div.buttons_manage_columns {
 .ui.comment span {
 	font-style: italic;
 }
-.ui.comment {
+.ui.comment, .ui.reader, .ui.writer, .ui.attribution, .ui.iftrue, .ui.repeatNtimes, .ui.whiletrue, .ui.dowhiletrue, .ui.switch, .ui.functioncall {
 	border: 1px solid gray;
 	padding: 5px;
 	border-radius: 5px;

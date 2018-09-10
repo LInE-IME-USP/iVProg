@@ -7,6 +7,7 @@
   "real": "real",
   "program": "programa",
   "text": "cadeia",
+  "text_start": "texto",
   "boolean": "logico",
   "true": "verdadeiro",
   "false": "fals0",
@@ -21,6 +22,15 @@
   "text_comment_main": "Esta é a função principal...",
   "text_read_var": "Leitura de dados",
   "text_write_var": "Escrita de dados",
+  "text_command_read":"leia",
+  "text_command_write":"escreva",
   "text_comment": "Comentário",
-  "join_or": "ou"
+  "join_or": "ou",
+  "text_attribution": "Atribuição",
+  "text_iftrue": "Se verdadeiro então",
+  "text_repeatNtimes": "Repita N vezes",
+  "text_whiletrue": "Enquanto verdadeiro",
+  "text_dowhiletrue": "Faça enquanto verdadeiro",
+  "text_switch": "Escolha",
+  "text_functioncall": "Chamada de função"
 }
