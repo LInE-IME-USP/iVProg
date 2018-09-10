@@ -1,7 +1,7 @@
 import { ProcessorErrorFactory } from './../error/processorErrorFactory';
 import { LanguageDefinedFunction } from './../definedFunctions';
 import { LanguageService } from './../../services/languageService';
-import { ArrayDeclaration } from '../../ast/commands';
+import { ArrayDeclaration, While, For, Switch, Case, Declaration, Assign, Break, IfThenElse, Return } from '../../ast/commands';
 import { InfixApp, UnaryApp, FunctionCall, IntLiteral, RealLiteral, StringLiteral, BoolLiteral, VariableLiteral, ArrayLiteral } from '../../ast/expressions';
 import { Literal } from '../../ast/expressions/literal';
 import { resultTypeAfterInfixOp, resultTypeAfterUnaryOp } from '../compatibilityTable';
@@ -69,7 +69,14 @@ export class SemanticAnalyser {
     this.pushMap();
     this.assertDeclarations(globalVars);
     const functions = this.ast.functions;
+    const mainFunc = functions.filter((f) => f.name === null);
+    if (mainFunc.length <= 0) {
+      throw new Error("no main func...");
+    } else if (mainFunc.length > 1) {
+      throw new Error("only one main func...");
+    }
     for (let i = 0; i < functions.length; i++) {
+
       const fun = functions[i];
       this.assertFunction(fun);
     }
@@ -85,6 +92,16 @@ export class SemanticAnalyser {
   assertDeclaration (declaration) {
     if (declaration instanceof ArrayDeclaration) {
       if(declaration.initial === null) {
+        const lineType = this.evaluateExpressionType(declaration.lines);
+        if (lineType !== Types.INTEGER) {
+          throw new Error("dim must be int");
+        }
+        if (declaration.columns !== null) {
+          const columnType = this.evaluateExpressionType(declaration.columns);
+          if (columnType !== Types.INTEGER) {
+            throw new Error("dim must be int");
+          }
+        }
         this.insertSymbol(declaration.id, {id: declaration.id, lines: declaration.lines, columns: declaration.columns, type: declaration.type, subtype: declaration.subtype});
         return;
       }
@@ -152,7 +169,11 @@ export class SemanticAnalyser {
     if (literal instanceof ArrayLiteral) {
       if (columns === null) {
         // it's a vector...
-        if (lines !== literal.value.length) {
+        const dimType = this.evaluateExpressionType(lines);
+        if (dimType !== Types.INTEGER) {
+          throw new Error("dim must be int");
+        }
+        if ((lines instanceof IntLiteral) && lines.value !== literal.value.length) {
           throw new Error("invalid array size");
         }
         literal.value.reduce((last, next) => {
@@ -164,7 +185,11 @@ export class SemanticAnalyser {
         });
         return true;
       } else {
-        if (columns !== literal.value.length) {
+        const dimType = this.evaluateExpressionType(columns);
+        if (dimType !== Types.INTEGER) {
+          throw new Error("dim must be int");
+        }
+        if ((columns instanceof IntLiteral) && columns.value !== literal.value.length) {
           throw new Error("invalid array size");
         }
         for (let i = 0; i < columns; i++) {
@@ -194,16 +219,111 @@ export class SemanticAnalyser {
   assertFunction (fun) {
     this.pushMap();
     this.assertDeclarations(fun.variablesDeclarations);
-    if(fun.returnType === Types.VOID) {
-      this.assertOptionalReturn(fun);
-    } else {
-      this.assertReturn(fun);
+    const optional = fun.returnType === Types.VOID;
+    const valid = this.assertReturn(fun, optional);
+    if (!valid) {
+      throw new Error("function has no accessible return");
     }
     this.popMap();
   }
 
-  assertOptionalReturn (fun) {
+  assertReturn (fun, optional) {
+    return fun.commands.reduce(
+      (last, next) => this.checkCommand(fun.returnType, next, optional) || last, optional
+    );
+  }
 
+  checkCommand (type, cmd, optional) {
+    if (cmd instanceof While) {
+      const resultType = this.evaluateExpressionType(cmd.expression);
+      if (resultType !== Types.BOOLEAN) {
+        throw new Error("condition not boolean");
+      }
+      this.checkCommands(type, cmd.commands, optional);
+      return false;
+    } else if (cmd instanceof For) {
+      this.checkCommand(type, cmd.assignment, optional);
+      const resultType = this.evaluateExpressionType(cmd.condition);
+      if (resultType !== Types.BOOLEAN) {
+        throw new Error("condition not boolean");
+      }
+      this.checkCommand(type, cmd.increment, optional);
+      this.checkCommands(type, cmd.commands, optional);
+      return false;
+    } else if (cmd instanceof Switch) {
+      const sType = this.evaluateExpressionType(cmd.expression);
+      let result = optional;
+      let hasDefault = false;
+      for (let i = 0; i < cmd.cases.length; i++) {
+        const aCase = cmd.cases[i];
+        if (aCase.expression !== null) {
+          const caseType = this.evaluateExpressionType(aCase.expression);
+          if (sType !== caseType) {
+            throw new Error("invalid type in case");
+          }
+        } else {
+          hasDefault = true;
+        }
+        result = result && this.checkCommands(type, aCase.commands, result);        
+      }
+      return result && hasDefault;
+
+    } else if (cmd instanceof Assign) {
+      const typeInfo = this.findSymbol(cmd.id, this.symbolMap);
+      const exp = cmd.expression;
+      if(exp instanceof ArrayLiteral) {
+        if(!typeInfo.subtype) {
+          throw new Error("type not compatible");
+        }
+        this.evaluateArrayLiteral(typeInfo.lines, typeInfo.columns, typeInfo.subtype, exp);
+      } else {
+        if(typeInfo.subtype) {
+          throw new Error("type not compatible");
+        }
+        const resultType = this.evaluateExpressionType(exp);
+        if(resultType !== typeInfo.type) {
+          throw new Error("type not compatible");
+        }
+      }
+      return optional;
+    } else if (cmd instanceof Break) {
+      return optional;
+    } else if (cmd instanceof IfThenElse) {
+      const resultType = this.evaluateExpressionType(cmd.condition);
+      if (resultType !== Types.BOOLEAN) {
+        throw new Error("condition not boolean");
+      }
+      console.log(cmd);
+      if(cmd.ifFalse instanceof IfThenElse) {
+        return this.checkCommands(type, cmd.ifTrue.commands, optional) && this.checkCommand(type, cmd.ifFalse, optional);
+      } else {
+        return this.checkCommands(type, cmd.ifTrue.commands, optional) && this.checkCommands(type, cmd.ifFalse.commands,optional);
+      }
+
+    } else if (cmd instanceof FunctionCall) {
+      const fun = this.findFunction(cmd.id);
+      this.assertParameters(fun, cmd.actualParameters);
+      return optional;
+    } else if (cmd instanceof Return) {
+      if (cmd.expression === null && type !== Types.VOID) {
+        throw new Error('invalid return type');
+      } else if (cmd.expression !== null) {
+        const resultType = this.evaluateExpressionType(cmd.expression);
+        if (resultType !== type) {
+          throw new Error('invalid return type');
+        } else {
+          return true;
+        }
+      } else {
+        return true;
+      }
+    }
+  }
+
+  checkCommands (type, cmds, optional) {
+    return cmds.reduce(
+      (last, next) => this.checkCommand(type, next, optional) || last, optional
+    );
   }
 
   assertParameters (fun, actualParametersList) {
@@ -239,7 +359,10 @@ export class SemanticAnalyser {
           break;
         }
         default: {
-          if (resultType.subtype || resultType !== formalParam.type) {
+          if (resultType.subtype) {
+            throw new Error("invalid param type");
+          }
+          if (formalParam.type !== Types.ALL && resultType !== formalParam.type) {
             throw new Error("invalid param type");
           }
           break;
