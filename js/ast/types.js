@@ -1,3 +1,5 @@
+import { LanguageService } from "../services/languageService";
+
 export const Types = Object.freeze({
   INTEGER: {value: "int", ord: 0},
   REAL: {value: "real", ord: 1},
@@ -33,5 +35,15 @@ export function toString (str) {
 }
 
 export function toBool (str) {
-  return true;
+  const val = "'" + str + "'";
+  const lexer = LanguageService.getCurrentLexer();
+  const instance = new lexer(null);
+  if (instance.literalNames[lexer.RK_TRUE] === val) {
+    return true;
+  } else if (instance.literalNames[lexer.RK_FALSE] === val) {
+    return false;
+  } else {
+    // TODO: better error message
+    throw new Error(str + "not a valid boolean");
+  }
 }

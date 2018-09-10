@@ -8,8 +8,8 @@ describe('The sum of a real and a integer', function () {
   const code = `programa {
 
     funcao inicio() {
-      real a;
-      leia(a);
+      real a
+      leia(a)
       a = a + 0xff
     }
   }`;
