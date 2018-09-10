@@ -1,12 +1,5 @@
 lexer grammar ivprog;
 
-@lexer::members{
-  //Translate to fit your language
-  ivprog.MAIN_FUNCTION_NAME = "start";
-  ivprog.READ_FUNCTION_NAME = "read";
-  ivprog.WRITE_FUNCTION_NAME = "write";
-}
-
 // BEGIN i18n Lexical rules
 RK_PROGRAM
   : 'program'

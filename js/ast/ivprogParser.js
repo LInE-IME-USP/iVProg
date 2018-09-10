@@ -4,7 +4,8 @@ import * as Commands from './commands/';
 import { Types, toInt, toString } from './types';
 import { convertFromString } from './operators';
 import { SyntaxErrorFactory } from './error/syntaxErrorFactory';
-import { NAMES } from './../processor/definedFunctions';
+import { LanguageDefinedFunction } from './../processor/definedFunctions';
+import { LanguageService } from '../services/languageService';
 
 export class IVProgParser {
 
@@ -37,6 +38,7 @@ export class IVProgParser {
     this.functionTypes = this.variableTypes.concat(this.lexerClass.RK_VOID);
     this.parsingArrayDimension = 0;
     this.scope = [];
+    this.langFuncs = LanguageService.getCurrentLangFuncs();
   }
 
   parseTree () {
@@ -204,7 +206,6 @@ export class IVProgParser {
 
   parseGlobalVariables () {
     const decl = this.parseMaybeConst();
-    const eosToken = this.getToken();
     this.checkEOS();
     this.pos++;
     return decl;
@@ -402,7 +403,7 @@ export class IVProgParser {
     const func = new Commands.Function(functionID, returnType, formalParams, commandsBlock);
     if (functionID === null && !func.isMain) {
       // TODO: better error message
-      throw SyntaxErrorFactory.invalid_main_return(this.lexerClass.MAIN_FUNCTION_NAME,
+      throw SyntaxErrorFactory.invalid_main_return(LanguageDefinedFunction.getMainFunctionName(),
         this.lexer.literalNames[this.lexerClass.RK_VOID],
         token.line);
     }
@@ -449,7 +450,7 @@ export class IVProgParser {
     } 
     this.pos++;
     if (this.insideScope(IVProgParser.FUNCTION)) {
-      if (token.text === this.lexerClass.MAIN_FUNCTION_NAME){
+      if (token.text === LanguageDefinedFunction.getMainFunctionName()){
         return null;
       }
     }
@@ -926,12 +927,15 @@ export class IVProgParser {
   }
 
   getFunctionName (id) {
-    if (id === this.lexerClass.READ_FUNCTION_NAME) {
-      return NAMES.READ;
-    } else if (id === this.lexerClass.WRITE_FUNCTION_NAME) {
-      return NAMES.WRITE;
-    } else {
+    const name = LanguageDefinedFunction.getInternalName(id);
+    console.log('###');
+    console.log(id);
+    console.log(name);
+    console.log('###');
+    if (name === null) {
       return id;
+    } else {
+      return name;
     }
   }
 

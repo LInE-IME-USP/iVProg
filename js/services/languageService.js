@@ -18,11 +18,20 @@ export const LanguageService  = Object.freeze({
   },
 
   getCurrentLexer: () => {
-    const lexer = Lexers[LanguageService.getLang()];
-    if(lexer === null || lexer === undefined) {
-      return Lexers[DEFAULT_LANG];
+    const langInfo = Lexers[LanguageService.getLang()];
+    if(langInfo === null || langInfo === undefined) {
+      return Lexers[DEFAULT_LANG].lexer;
     } else {
-      return lexer;
+      return langInfo.lexer;
+    }
+  },
+
+  getCurrentLangFuncs: () => {
+    const langInfo = Lexers[LanguageService.getLang()];
+    if(langInfo === null || langInfo === undefined) {
+      return Lexers[DEFAULT_LANG].langFuncs;
+    } else {
+      return langInfo.langFuncs;
     }
   }
 
