@@ -1,7 +1,7 @@
 import { CommonTokenStream, InputStream } from 'antlr4/index';
 import * as Expressions from './expressions/';
 import * as Commands from './commands/';
-import { Types, toInt, toString } from './types';
+import { Types, toInt, toString, toBool } from './types';
 import { convertFromString } from './operators';
 import { SyntaxErrorFactory } from './error/syntaxErrorFactory';
 import { LanguageDefinedFunction } from './../processor/definedFunctions';
@@ -334,7 +334,7 @@ export class IVProgParser {
   }
 
   getBoolLiteral (token) {
-    const val = token.type === this.lexerClass.RK_TRUE ? true : false;
+    const val = toBool(token.text);
     return new Expressions.BoolLiteral(val);
   }
 
@@ -469,7 +469,7 @@ export class IVProgParser {
       switch(token.type) {
         case this.lexerClass.RK_INTEGER:
           return Types.INTEGER;
-        case this.lexerClass.RK_LOGIC:
+        case this.lexerClass.RK_BOOLEAN:
           return Types.BOOLEAN;
         case this.lexerClass.RK_REAL:
           return Types.REAL;
