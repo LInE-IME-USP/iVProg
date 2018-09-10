@@ -1,12 +1,5 @@
 lexer grammar ivprog;
 
-@lexer::members{
-  //Translate to fit your language
-  ivprog.MAIN_FUNCTION_NAME = "inicio";
-  ivprog.READ_FUNCTION_NAME = "leia";
-  ivprog.WRITE_FUNCTION_NAME = "escreva";
-}
-
 // BEGIN i18n Lexical rules
 RK_PROGRAM
   : 'programa'

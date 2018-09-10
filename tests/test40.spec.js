@@ -5,6 +5,10 @@ import { LanguageService } from '../js/services/languageService';
 
 describe('The LanguageService', function () {
 
+  beforeEach( () => {
+    localStorage.setItem('ivprog.lang', 'en');  
+  });
+
   const code = `program {
 
     function start() {

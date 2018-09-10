@@ -6,7 +6,7 @@ import { Modes } from './modes';
 import { Context } from './context';
 import { Types, toInt } from './../ast/types';
 import { Operators } from './../ast/operators';
-import { NAMES, LanguageDefinedFunction } from './definedFunctions';
+import { LanguageDefinedFunction } from './definedFunctions';
 import { resultTypeAfterInfixOp, resultTypeAfterUnaryOp } from './compatibilityTable';
 import * as Commands from './../ast/commands/';
 import * as Expressions from './../ast/expressions/';
@@ -69,7 +69,7 @@ export class IVProgProcessor {
 
   findFunction (name) {
     if(name.match(/^\$.+$/)) {
-      const fun = LanguageDefinedFunction[name];
+      const fun = LanguageDefinedFunction.getFunction(name);
       if(!!!fun) {
         throw new Error("!!!Internal Error. Language defined function not implemented -> " + name + "!!!");
       }
@@ -232,9 +232,9 @@ export class IVProgProcessor {
   }
 
   executeSysCall (store, cmd) {
-    if (cmd.id === NAMES.WRITE) {
+    if (cmd.id === "$write") {
       return this.runWriteFunction(store)
-    } else if (cmd.id === NAMES.READ) {
+    } else if (cmd.id === "$read") {
       return this.runReadFunction(store);
     }
   }
