@@ -6,7 +6,7 @@ import { Modes } from './modes';
 import { Context } from './context';
 import { Types, toInt } from './../ast/types';
 import { Operators } from './../ast/operators';
-import { NAMES, LanguageDefinedFunction } from './definedFunctions';
+import { LanguageDefinedFunction } from './definedFunctions';
 import { resultTypeAfterInfixOp, resultTypeAfterUnaryOp } from './compatibilityTable';
 import * as Commands from './../ast/commands/';
 import * as Expressions from './../ast/expressions/';
@@ -69,7 +69,7 @@ export class IVProgProcessor {
 
   findFunction (name) {
     if(name.match(/^\$.+$/)) {
-      const fun = LanguageDefinedFunction[name];
+      const fun = LanguageDefinedFunction.getFunction(name);
       if(!!!fun) {
         throw new Error("!!!Internal Error. Language defined function not implemented -> " + name + "!!!");
       }
@@ -232,39 +232,8 @@ export class IVProgProcessor {
   }
 
   executeSysCall (store, cmd) {
-    if (cmd.id === NAMES.WRITE) {
-      return this.runWriteFunction(store)
-    } else if (cmd.id === NAMES.READ) {
-      return this.runReadFunction(store);
-    }
-  }
-
-  runWriteFunction (store) {
-    const val = store.applyStore('p1');
-    this.output.sendOutput(''+val.value);
-    return Promise.resolve(store);
-  }
-
-  runReadFunction (store) {
-    const request = new Promise((resolve, _) => {
-      this.input.requestInput(resolve);
-    });
-    return request.then(text => {
-      const typeToConvert = store.applyStore('p1').type;
-      let stoObj = null;
-      if (typeToConvert === Types.INTEGER) {
-        const val = toInt(text);
-        stoObj = new StoreObject(Types.INTEGER, val);
-      } else if (typeToConvert === Types.REAL) {
-        stoObj = new StoreObject(Types.REAL, parseFloat(text));
-      } else if (typeToConvert === Types.BOOLEAN) {
-        stoObj = new StoreObject(Types.BOOLEAN, true);
-      } else if (typeToConvert === Types.STRING) {
-        stoObj = new StoreObject(Types.STRING, text);
-      }
-      store.updateStore('p1', stoObj);
-      return Promise.resolve(store);
-    });
+    const func = cmd.langFunc.bind(this);
+    return func(store, cmd);
   }
 
   executeFunctionCall (store, cmd) {
