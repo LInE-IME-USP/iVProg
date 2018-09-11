@@ -6,7 +6,7 @@
  */
 export class SysCall {
 
-  constructor (id) {
-    this.id = id;
+  constructor (langFunc) {
+    this.langFunc = langFunc;
   }
 }

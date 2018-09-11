@@ -232,11 +232,8 @@ export class IVProgProcessor {
   }
 
   executeSysCall (store, cmd) {
-    if (typeof cmd.id === 'function') {
-      return cmd.id.bind(this)(store, cmd);
-    } else {
-      throw new Error("invalid internal function impl.");
-    }
+    const func = cmd.langFunc.bind(this);
+    return func(store, cmd);
   }
 
   executeFunctionCall (store, cmd) {

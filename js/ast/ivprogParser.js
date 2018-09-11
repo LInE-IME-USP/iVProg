@@ -928,10 +928,6 @@ export class IVProgParser {
 
   getFunctionName (id) {
     const name = LanguageDefinedFunction.getInternalName(id);
-    console.log('###');
-    console.log(id);
-    console.log(name);
-    console.log('###');
     if (name === null) {
       return id;
     } else {
