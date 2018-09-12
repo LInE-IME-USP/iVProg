@@ -3,7 +3,7 @@ var webpack = require('webpack');
 module.exports = {
     entry: './js/main.js',
     mode: 'development',
-    watch: false,
+    watch: true,
     output: {
         path: path.resolve(__dirname, 'build'),
         filename: 'ivprog.bundle.js',

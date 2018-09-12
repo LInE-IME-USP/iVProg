@@ -42,11 +42,12 @@ export class Comment {
 
 export class Reader {
   
-  constructor (variable = null, row = null, column = null) {
+  constructor (variable = null, row = null, column = null, variable_value_menu = null) {
     this.type = COMMAND_TYPES.reader;
     this.variable = variable;
     this.row = row;
     this.column = column;
+    this.variable_value_menu = variable_value_menu;
   }
 }
 
@@ -122,6 +123,16 @@ export class FunctionCall {
     this.type = COMMAND_TYPES.functioncall;
     this.function_called = function_called;
     this.parameters_list = parameters_list;
+  }
+}
+
+export class VariableValueMenu {
+  
+  constructor (variable_and_value = 7, content = null, row = null, column = null) {
+    this.variable_and_value = variable_and_value;
+    this.content = content;
+    this.row = row;
+    this.column = column;
   }
 }
 

@@ -1,5 +1,6 @@
 {
   "function": "function",
+  "btn_clear": "Clear",
   "btn_function": "Function",
   "start": "start",
   "void": "void",
@@ -31,5 +32,6 @@
   "text_whiletrue": "While true",
   "text_dowhiletrue": "Do while true",
   "text_switch": "Switch",
-  "text_functioncall": "Function call"
+  "text_functioncall": "Function call",
+  "text_value": "Value"
 }

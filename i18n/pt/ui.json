@@ -1,5 +1,6 @@
 {
   "function": "funcao",
+  "btn_clear": "Limpar",
   "btn_function": "Função",
   "start": "inicio",
   "void": "vazio",
@@ -32,5 +33,6 @@
   "text_whiletrue": "Enquanto verdadeiro",
   "text_dowhiletrue": "Faça enquanto verdadeiro",
   "text_switch": "Escolha",
-  "text_functioncall": "Chamada de função"
+  "text_functioncall": "Chamada de função",
+  "text_value": "Valor"
 }

@@ -47,7 +47,7 @@ function removeFunction (function_obj) {
   var index = program.functions.indexOf(function_obj);
   if (index > -1) {
     program.functions.splice(index, 1);
-  }    
+  }
 }
 
 function minimizeFunction (function_obj) {
