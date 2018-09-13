@@ -16,7 +16,7 @@ export function renderCommand (command, function_obj) {
 	var el = $(ret);
 	$(el).data('command', command);
 
-	VariableValueMenu.renderMenu(command.variable_value_menu, $(el).find('.var_value_menu_div'), function_obj);
+	VariableValueMenu.renderMenu(command, command.variable_value_menu, $(el).find('.var_value_menu_div'), function_obj);
 
 	return el;
 }

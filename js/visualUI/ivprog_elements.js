@@ -3,6 +3,8 @@ import { Types } from './../ast/types';
 export const COMMAND_TYPES = Object.freeze({function:"function", comment:"comment", reader:"reader", writer:"writer", attribution:"attribution", iftrue:"iftrue",
  repeatNtimes:"repeatNtimes", whiletrue:"whiletrue", dowhiletrue:"dowhiletrue", switch:"switch", functioncall:"functioncall"});
 
+export const ARITHMETIC_TYPES = Object.freeze({plus:"plus", minus:"minus", multiplication:"multiplication", division:"division", module:"module"});
+
 export class Variable {
 
   constructor (type, name, value, dimensions = 0, is_constant = false, rows = 0, columns = 0) {
@@ -68,6 +70,15 @@ export class Attribution {
   }
 }
 
+export class Expression {
+
+  constructor (operand1, operand2, operator) {
+    this.operand1 = operand1;
+    this.operand2 = operand2;
+    this.operator = operator;
+  }
+}
+
 export class IfTrue {
 
   constructor (expression, commands_block, commands_else) {
@@ -128,11 +139,12 @@ export class FunctionCall {
 
 export class VariableValueMenu {
   
-  constructor (variable_and_value = 7, content = null, row = null, column = null) {
+  constructor (variable_and_value = 7, content = null, row = null, column = null, include_constant = true) {
     this.variable_and_value = variable_and_value;
     this.content = content;
     this.row = row;
     this.column = column;
+    this.include_constant = include_constant;
   }
 }
 

@@ -111,8 +111,24 @@ body {
 	min-width: 50px;
 }
 
-.function_name_div, .function_return_div, .function_name_parameter, .created_div_valor_var, .function_return, .var_value_menu_div, .variable_rendered, .variable_rendered div {
+.text_attr_receives {
+	margin-left: 20px;
+	margin-right: 20px;
+}
+
+.menu_operations {
+	margin-left: 10px;
+	margin-right: 10px;
+}
+
+.function_name_div, .function_return_div, .function_name_parameter, .created_div_valor_var, .function_return, .var_value_menu_div, .variable_rendered, .variable_rendered div, .var_attributed,
+.expression_operand_1, .expression_operand_2, .operator, .div_comment_text {
 	display: inline;
+}
+
+.div_comment_text {
+	min-width: 100px;
+	font-style: italic;
 }
 
 .enable_edit_name_function, .enable_edit_name_parameter, .add_parameter, .remove_parameter, .add_parameter_button, .remove_variable {
@@ -265,4 +281,8 @@ div.buttons_manage_columns {
 	z-index: 99999999;
 	opacity: .8;
 	cursor: move;
+}
+
+.width-dynamic {
+	min-width: 100px;
 }

@@ -83,7 +83,7 @@ function renderCommand (command, element_reference, before_after_inside, functio
 	var createdElement;
 	switch (command.type) {
 		case Models.COMMAND_TYPES.comment:
-			createdElement = CommentsManagement.renderCommand(command);
+			createdElement = CommentsManagement.renderCommand(command, function_obj);
 			break;
 
 		case Models.COMMAND_TYPES.reader:
@@ -91,11 +91,15 @@ function renderCommand (command, element_reference, before_after_inside, functio
 			break;
 
 		case Models.COMMAND_TYPES.writer:
-			createdElement = WritersManagement.renderCommand(command);
+			createdElement = WritersManagement.renderCommand(command, function_obj);
 			break;
 
 		case Models.COMMAND_TYPES.attribution:
-			createdElement = AttributionsManagement.renderCommand(command);
+			createdElement = AttributionsManagement.renderCommand(command, function_obj);
+			break;
+
+		case Models.COMMAND_TYPES.functioncall:
+			createdElement = FunctioncallsManagement.renderCommand(command, function_obj);
 			break;
 
 		case Models.COMMAND_TYPES.iftrue:
@@ -118,9 +122,6 @@ function renderCommand (command, element_reference, before_after_inside, functio
 			createdElement = SwitchesManagement.renderCommand(command);
 			break;
 
-		case Models.COMMAND_TYPES.functioncall:
-			createdElement = FunctioncallsManagement.renderCommand(command);
-			break;
 	}
 
 	switch (before_after_inside) {
@@ -143,16 +144,20 @@ function genericCreateCommand (command_type) {
 
 	switch (command_type) {
 		case Models.COMMAND_TYPES.comment:
-			return new Models.Comment(null);
+			return new Models.Comment(new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.only_value, LocalizedStrings.getUI('text_comment'), null, null, false));
 
 		case Models.COMMAND_TYPES.reader:
-			return new Models.Reader(null, null, null, new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.all));
+			return new Models.Reader(null, null, null, new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.only_variable, null, null, null, false));
 
 		case Models.COMMAND_TYPES.writer:
-			return new Models.Writer(null);
+			return new Models.Writer(new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.all, null, null, null, true));
 
 		case Models.COMMAND_TYPES.attribution:
-			return new Models.Attribution(null, null);
+			return new Models.Attribution(new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.only_variable, null, null, null, false), 
+				new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.all, null, null, null, true));
+
+		case Models.COMMAND_TYPES.functioncall:
+			return new Models.FunctionCall(new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.only_function, null, null, null, false), null);
 
 		case Models.COMMAND_TYPES.iftrue:
 			return new Models.IfTrue(null, null, null);
@@ -168,9 +173,6 @@ function genericCreateCommand (command_type) {
 
 		case Models.COMMAND_TYPES.switch:
 			return new Models.Switch(null, null, null);
-
-		case Models.COMMAND_TYPES.functioncall:
-			return new Models.FunctionCall(null, null);
 	}
 }
 
