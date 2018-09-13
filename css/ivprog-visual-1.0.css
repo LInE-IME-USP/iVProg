@@ -122,7 +122,7 @@ body {
 }
 
 .function_name_div, .function_return_div, .function_name_parameter, .created_div_valor_var, .function_return, .var_value_menu_div, .variable_rendered, .variable_rendered div, .var_attributed,
-.expression_operand_1, .expression_operand_2, .operator, .div_comment_text {
+.expression_operand_1, .expression_operand_2, .operator, .div_comment_text, .value_rendered {
 	display: inline;
 }
 

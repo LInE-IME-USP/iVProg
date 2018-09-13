@@ -34,7 +34,7 @@ function addHandlers (command, function_obj, comment_dom) {
 			$(this).remove();
 		});
 
-		$('.width-dynamic').on('keydown', function(e) {
+		$(comment_dom).find('.width-dynamic').on('keydown', function(e) {
 			var code = e.keyCode || e.which;
 			if(code == 13) {
 				if ($(this).val().trim()) {

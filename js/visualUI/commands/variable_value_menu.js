@@ -155,6 +155,9 @@ function addHandlers (command, ref_object, dom_object, menu_var_or_value, functi
 
 function openInputToVariable (command, ref_object, dom_object, menu_var_or_value, function_obj, variable_selected) {
 
+
+	ref_object.content = variable_selected;
+
 	$(menu_var_or_value).find('.text').text(' ');
 	$(dom_object).find('.menu_var_or_value_dom').remove();
 
@@ -177,15 +180,15 @@ function openInputToVariable (command, ref_object, dom_object, menu_var_or_value
 
 
 	if (variable_selected.dimensions == 1) {
-		var nova_var_menu = new Models.VariableValueMenu(VAR_OR_VALUE_TYPES.all, null, null, null, true);
-		renderMenu(command, nova_var_menu, $(variable_render).find('.column_container'), function_obj);
+		ref_object.column = new Models.VariableValueMenu(VAR_OR_VALUE_TYPES.all, null, null, null, true);
+		renderMenu(command, ref_object.column, $(variable_render).find('.column_container'), function_obj);
 	}
 	if (variable_selected.dimensions == 2) {
-		var nova_var_menu_row = new Models.VariableValueMenu(VAR_OR_VALUE_TYPES.all, null, null, null, true);
-		renderMenu(command, nova_var_menu_row, $(variable_render).find('.row_container'), function_obj);
+		ref_object.row = new Models.VariableValueMenu(VAR_OR_VALUE_TYPES.all, null, null, null, true);
+		renderMenu(command, ref_object.row, $(variable_render).find('.row_container'), function_obj);
 
-		var nova_var_menu_column = new Models.VariableValueMenu(VAR_OR_VALUE_TYPES.all, null, null, null, true);
-		renderMenu(command, nova_var_menu_column, $(variable_render).find('.column_container'), function_obj);
+		ref_object.column = new Models.VariableValueMenu(VAR_OR_VALUE_TYPES.all, null, null, null, true);
+		renderMenu(command, ref_object.column, $(variable_render).find('.column_container'), function_obj);
 	}
 
 	var context_menu = '<div class="ui dropdown context_menu_clear"><div class="text"></div><i class="dropdown icon"></i><div class="menu">';
@@ -200,6 +203,7 @@ function openInputToVariable (command, ref_object, dom_object, menu_var_or_value
 		onChange: function(value, text, $selectedItem) {
 	     if ($($selectedItem).data('clear')) {
 	     	$(dom_object).text('');
+	     	ref_object = new Models.VariableValueMenu(VAR_OR_VALUE_TYPES.all, null, null, null, true);
 	     	renderMenu(command, ref_object, dom_object, function_obj);
 	     }
       }
@@ -212,10 +216,19 @@ function openInputToVariable (command, ref_object, dom_object, menu_var_or_value
 
 
 function openInputToValue (command, ref_object, dom_object, menu_var_or_value, function_obj) {
+
+	if (ref_object.content == null) {
+		ref_object.content = "";
+	}
+
 	$(menu_var_or_value).find('.text').text(' ');
-	var field = $('<input type="text" size="2" />');
+	var field = $('<input type="text" size="2" class="width-dynamic-minus" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />');
 	$( field ).insertBefore($(dom_object).find('.menu_var_or_value_dom'));
+	var rendered = $('<div class="value_rendered"></div>');
+	$( rendered ).insertBefore(field);
+
 	field.focus();
+	$(field).val(ref_object.content);
 
 	$(dom_object).find('.menu_var_or_value_dom').remove();
 
@@ -231,11 +244,60 @@ function openInputToValue (command, ref_object, dom_object, menu_var_or_value, f
 		onChange: function(value, text, $selectedItem) {
 	     if ($($selectedItem).data('clear')) {
 	     	$(dom_object).text('');
+
+	     	ref_object = new Models.VariableValueMenu(VAR_OR_VALUE_TYPES.all, null, null, null, true);
+
+	     	$(dom_object).find('.value_rendered').remove();
+			$(dom_object).find('.context_menu_clear').remove();
+			$(dom_object).find('.width-dynamic-minus').remove();
+
 	     	renderMenu(command, ref_object, dom_object, function_obj);
 	     }
       }
 	});
 
+	$(dom_object).find('.width-dynamic-minus').focusout(function() {
+		if ($(this).val().trim()) {
+			ref_object.content = $(this).val().trim();
+		}
+
+		$(rendered).text(ref_object.content);
+		$(this).remove();
+
+	});
+
+	$(dom_object).find('.width-dynamic-minus').on('keydown', function(e) {
+		var code = e.keyCode || e.which;
+		if(code == 13) {
+			if ($(this).val().trim()) {
+				ref_object.content = $(this).val().trim();
+			}
+			$(rendered).text(ref_object.content);
+
+			$(this).remove();
+		}
+		if(code == 27) {
+			$(rendered).text(ref_object.content);
+
+			$(this).remove();
+		}
+	});
+
+	$(rendered).on('click', function(e) {
+		console.log('no clique, vou passar o seguinte: ');
+		console.log(dom_object);
+		rendered.remove();
+		rendered.empty();
+		$(rendered).remove();
+		$(dom_object).empty();
+		$(dom_object).append('<span class="menu_var_or_value_dom"> </span>');
+		//$('<span class="menu_var_or_value_dom"> </span>').insertBefore($(dom_object).find('.value_rendered'));
+		//$(dom_object).find('.value_rendered').remove();
+		//$(dom_object).find('.context_menu_clear').remove();
+		//$(dom_object).find('.width-dynamic-minus').remove();
+
+		openInputToValue(command, ref_object, dom_object, menu_var_or_value, function_obj)
+	});
 
 	if (command.type == Models.COMMAND_TYPES.attribution) {
 		AttribuitionsManagement.renderMenuOperations(command, ref_object, dom_object, menu_var_or_value, function_obj);

@@ -10,7 +10,7 @@ var counter_new_functions = 0;
 var counter_new_parameters = 0;
 
 const program = new Models.Program();
-const mainFunction = new Models.Function(LocalizedStrings.getUI("start"), Types.VOID, 0, [], true);
+const mainFunction = new Models.Function(LocalizedStrings.getUI("start"), Types.VOID, 0, [], true, false, []);
 mainFunction.function_comment = new Models.Comment(LocalizedStrings.getUI('text_comment_main'));
 program.addFunction(mainFunction);
 
@@ -18,7 +18,7 @@ window.program_obj = program;
 
 function addFunctionHandler () {
 
-	var new_function = new Models.Function(LocalizedStrings.getUI("new_function") + "_" + counter_new_functions, Types.VOID, 0, new Array(), false, false, null, new Models.Comment(LocalizedStrings.getUI('text_comment_start')));
+	var new_function = new Models.Function(LocalizedStrings.getUI("new_function") + "_" + counter_new_functions, Types.VOID, 0, [], false, false, [], new Models.Comment(LocalizedStrings.getUI('text_comment_start')));
 	program.addFunction(new_function);
 
 	counter_new_functions ++;

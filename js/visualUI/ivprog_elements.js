@@ -20,7 +20,7 @@ export class Variable {
 
 export class Function {
 
-  constructor (name, return_type = Types.VOID, return_dimensions = 0, parameters_list = null, is_main = false, is_hidden = false, variables_list = [], function_comment = null) {
+  constructor (name, return_type = Types.VOID, return_dimensions = 0, parameters_list = [], is_main = false, is_hidden = false, variables_list = [], function_comment = null) {
     this.type = COMMAND_TYPES.function;
     this.name = name;
     this.return_type = return_type;
