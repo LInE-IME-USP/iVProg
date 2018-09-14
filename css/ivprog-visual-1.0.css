@@ -286,3 +286,9 @@ div.buttons_manage_columns {
 .width-dynamic {
 	min-width: 100px;
 }
+
+.ui.icon.plus.square.outline.icon_add_item_to_writer {
+	margin-right: 10px;
+	margin-left: 10px;
+	cursor: pointer;
+}

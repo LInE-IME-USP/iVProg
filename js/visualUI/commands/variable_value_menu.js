@@ -5,6 +5,7 @@ import { LocalizedStrings } from '../../services/localizedStringsService';
 import * as GlobalsManagement from '../globals';
 import * as VariablesManagement from '../variables';
 import * as AttribuitionsManagement from './attribution';
+import * as WritersManagement from './writer';
 import WatchJS from 'melanke-watchjs';
 
 
@@ -203,7 +204,7 @@ function openInputToVariable (command, ref_object, dom_object, menu_var_or_value
 		onChange: function(value, text, $selectedItem) {
 	     if ($($selectedItem).data('clear')) {
 	     	$(dom_object).text('');
-	     	ref_object = new Models.VariableValueMenu(VAR_OR_VALUE_TYPES.all, null, null, null, true);
+	     	ref_object = new Models.VariableValueMenu(ref_object.variable_and_value, null, null, null, ref_object.include_constant);
 	     	renderMenu(command, ref_object, dom_object, function_obj);
 	     }
       }
@@ -212,6 +213,12 @@ function openInputToVariable (command, ref_object, dom_object, menu_var_or_value
 	if (command.type == Models.COMMAND_TYPES.attribution) {
 		AttribuitionsManagement.renderMenuOperations(command, ref_object, dom_object, menu_var_or_value, function_obj, variable_selected);
 	}
+
+	if (command.type == Models.COMMAND_TYPES.writer) {
+		WritersManagement.addContent(command, ref_object, dom_object, menu_var_or_value, function_obj, variable_selected);
+	}
+
+	
 }
 
 
@@ -245,7 +252,7 @@ function openInputToValue (command, ref_object, dom_object, menu_var_or_value, f
 	     if ($($selectedItem).data('clear')) {
 	     	$(dom_object).text('');
 
-	     	ref_object = new Models.VariableValueMenu(VAR_OR_VALUE_TYPES.all, null, null, null, true);
+	     	ref_object = new Models.VariableValueMenu(ref_object.variable_and_value, null, null, null, ref_object.include_constant);
 
 	     	$(dom_object).find('.value_rendered').remove();
 			$(dom_object).find('.context_menu_clear').remove();
@@ -301,6 +308,10 @@ function openInputToValue (command, ref_object, dom_object, menu_var_or_value, f
 
 	if (command.type == Models.COMMAND_TYPES.attribution) {
 		AttribuitionsManagement.renderMenuOperations(command, ref_object, dom_object, menu_var_or_value, function_obj);
+	}
+
+	if (command.type == Models.COMMAND_TYPES.writer) {
+		WritersManagement.addContent(command, ref_object, dom_object, menu_var_or_value, function_obj, ref_object.content);
 	}
 }
 
