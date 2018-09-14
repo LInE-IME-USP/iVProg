@@ -5,6 +5,7 @@ import { LocalizedStrings } from './../services/localizedStringsService';
 import * as GlobalsManagement from './globals';
 import * as VariablesManagement from './variables';
 import * as CommandsManagement from './commands';
+import * as CodeManagement from './code_generator';
 
 var counter_new_functions = 0;
 var counter_new_parameters = 0;
@@ -229,6 +230,32 @@ export function initVisualUI () {
   });
 
   renderFunction(mainFunction);
+
+  $('.run_button').on('click', () => {
+    CodeManagement.generate();
+  });
+
+  $('.visual_coding_button').on('click', () => {
+    toggleVisualCoding();
+  });
+
+  $('.textual_coding_button').on('click', () => {
+    toggleTextualCoding();
+  });
+}
+
+function toggleTextualCoding () {
+  var code = CodeManagement.generate();
+  $('.ivprog_visual_panel').css('display', 'none');
+  $('.ivprog_textual_panel').css('display', 'block');
+  $('.ivprog_textual_panel').removeClass('loading');
+  $('.ivprog_textual_code').text(code);
+}
+
+function toggleVisualCoding () {
+  $('.ivprog_textual_panel').addClass('loading');
+  $('.ivprog_textual_panel').css('display', 'none');
+  $('.ivprog_visual_panel').css('display', 'block');
 }
 
 function removeParameter (function_obj, parameter_obj, parameter_container) {

@@ -17,6 +17,13 @@ body {
 
 }
 
+.ivprog_textual_code {
+	width: 100%;
+	min-height: 500px;
+	resize: none;
+	background-color: white;
+}
+
 .main_title h2 {
 	margin: 0;
 }

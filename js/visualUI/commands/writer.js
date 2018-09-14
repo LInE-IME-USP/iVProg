@@ -18,7 +18,7 @@ export function renderCommand (command, function_obj) {
 	var el = $(ret);
 	$(el).data('command', command);
 
-	VariableValueMenu.renderMenu(command, command.content, $(el).find('.var_value_menu_div'), function_obj);
+	VariableValueMenu.renderMenu(command, command.content[0], $(el).find('.var_value_menu_div'), function_obj);
 
 	return el;
 }
@@ -33,7 +33,10 @@ export function addContent (command, ref_object, dom_object, menu_var_or_value, 
 			var new_div_item = $( '<div class="var_value_menu_div"></div>' );
 			$(new_div_item).insertAfter(icon_add_item);
 			var new_related_menu = new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.all, null, null, null, true);
+
 			VariableValueMenu.renderMenu(command, new_related_menu, new_div_item, function_obj);
+
+			command.content.push(new_related_menu);
 		});
 	}
 	

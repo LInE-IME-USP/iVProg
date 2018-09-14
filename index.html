@@ -29,9 +29,8 @@
         <div class="ui container content_margin">
           <div class="content_sub_margin">
               <div class="blue ui ivprog_format buttons">
-                <button class="ui button active">Visual</button>
-                <button class="ui button">Textual</button>
-                <button class="ui button">XML</button>
+                <button class="ui button active visual_coding_button">Visual</button>
+                <button class="ui button textual_coding_button">Textual</button>
               </div>
 
               <a class="ivprog_format_info">
@@ -73,7 +72,7 @@
         <a class="item">
           <i class="redo icon"></i>
         </a>
-        <a class="item">
+        <a class="item run_button">
           <i class="play icon"></i>
         </a>
         <a class="item">
@@ -106,6 +105,11 @@
         </div>
         <div class="program_final">}</div>
 
+      </div>
+
+
+      <div class="ui one column container segment ivprog_textual_panel loading" style="display: none;">
+        <textarea class="ivprog_textual_code" disabled></textarea>
       </div>
       
     </div>

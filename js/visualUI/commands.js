@@ -150,7 +150,7 @@ function genericCreateCommand (command_type) {
 			return new Models.Reader(null, null, null, new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.only_variable, null, null, null, false));
 
 		case Models.COMMAND_TYPES.writer:
-			return new Models.Writer(new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.all, null, null, null, true));
+			return new Models.Writer([new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.all, null, null, null, true)]);
 
 		case Models.COMMAND_TYPES.attribution:
 			return new Models.Attribution(new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.only_variable, null, null, null, false), 
