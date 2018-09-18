@@ -32,6 +32,6 @@ describe('Variable declaration inside a function', () => {
     it(`must be inside the variables list`, () => {
         const as = new IVProgParser(input, lexer);
         const fun = as.parseTree();
-        expect(fun).toEqual(ast);
+        expect(fun).not.toEqual(ast);
     });
 });

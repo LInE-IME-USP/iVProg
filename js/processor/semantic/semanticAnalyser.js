@@ -2,7 +2,7 @@ import { ProcessorErrorFactory } from './../error/processorErrorFactory';
 import { LanguageDefinedFunction } from './../definedFunctions';
 import { LanguageService } from './../../services/languageService';
 import { ArrayDeclaration, While, For, Switch, Case, Declaration, Assign, Break, IfThenElse, Return } from '../../ast/commands';
-import { InfixApp, UnaryApp, FunctionCall, IntLiteral, RealLiteral, StringLiteral, BoolLiteral, VariableLiteral, ArrayLiteral } from '../../ast/expressions';
+import { InfixApp, UnaryApp, FunctionCall, IntLiteral, RealLiteral, StringLiteral, BoolLiteral, VariableLiteral, ArrayLiteral, ArrayAccess } from '../../ast/expressions';
 import { Literal } from '../../ast/expressions/literal';
 import { resultTypeAfterInfixOp, resultTypeAfterUnaryOp } from '../compatibilityTable';
 import { Types } from '../../ast/types';
@@ -49,7 +49,7 @@ export class SemanticAnalyser {
 
   findFunction (name) {
     if(name.match(/^\$.+$/)) {
-      const fun = LanguageDefinedFunction[name];
+      const fun = LanguageDefinedFunction.getFunction(name);
       if(!!!fun) {
         throw new Error("!!!Internal Error. Language defined function not implemented -> " + name + "!!!");
       }
@@ -141,6 +141,25 @@ export class SemanticAnalyser {
       }
       this.assertParameters(fun, expression.actualParameters);
       return fun.returnType;
+    } else if (expression instanceof ArrayAccess) {
+      const arrayTypeInfo = this.findSymbol(expression.id, this.symbolMap);
+      if (arrayTypeInfo.type !== Types.ARRAY) {
+        throw new Error("it's not an array");
+      }
+      const lineType = this.evaluateExpressionType(expression.line);
+      if (lineType !== Types.INTEGER) {
+        throw new Error("line must be integer");
+      }
+      if (expression.column != null) {
+        if (arrayTypeInfo.columns === null) {
+          throw new Error("it's not a matrix");
+        }
+        const columnType = this.evaluateExpressionType(expression.column);
+        if(columnType !== Types.INTEGER) {
+          throw new Error("column must be integer");
+        }
+      }
+      return arrayTypeInfo.subtype;
     }
   }
 
@@ -178,11 +197,11 @@ export class SemanticAnalyser {
         }
         literal.value.reduce((last, next) => {
           const eType = this.evaluateExpressionType(next);
-          if (subtype !== eType || eType !== last) {
+          if (eType !== last) {
             throw new Error("invalid array type");
           }
           return eType;
-        });
+        }, subtype);
         return true;
       } else {
         const dimType = this.evaluateExpressionType(columns);
