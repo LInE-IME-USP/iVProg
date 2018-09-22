@@ -1,0 +1,31 @@
+.ivprog-term-div {
+  background-color: black;
+  width: 100%;
+  height: 12rem;
+  overflow-y: scroll;
+}
+
+.ivprog-term-userText {
+  color: white;
+}
+
+.ivprog-term-info {
+  color: green;
+}
+
+.ivprog-term-error {
+  color: red;
+}
+
+.ivprog-term-input {
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: 500;
+  background-color: inherit;
+  border: 0;
+  color: white;
+}
+
+.ivprog-term-div > .ivprog-term-input, .ivprog-term-div > .ivprog-term-userText,
+.ivprog-term-div > .ivprog-term-info, .ivprog-term-div, .ivprog-term-error {
+  padding-left: 20px;
+}

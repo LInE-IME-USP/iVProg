@@ -6,9 +6,15 @@ import * as GlobalsManagement from './globals';
 import * as VariablesManagement from './variables';
 import * as CommandsManagement from './commands';
 import * as CodeManagement from './code_generator';
+import { DOMConsole } from './../io/domConsole';
+import { IVProgParser } from './../ast/ivprogParser';
+import { IVProgProcessor } from './../processor/ivprogProcessor';
+import { LanguageService } from '../services/languageService';
 
 var counter_new_functions = 0;
 var counter_new_parameters = 0;
+
+let domConsole = null;
 
 const program = new Models.Program();
 const mainFunction = new Models.Function(LocalizedStrings.getUI("start"), Types.VOID, 0, [], true, false, []);
@@ -232,7 +238,7 @@ export function initVisualUI () {
   renderFunction(mainFunction);
 
   $('.run_button').on('click', () => {
-    CodeManagement.generate();
+    runCode();
   });
 
   $('.visual_coding_button').on('click', () => {
@@ -242,6 +248,29 @@ export function initVisualUI () {
   $('.textual_coding_button').on('click', () => {
     toggleTextualCoding();
   });
+}
+
+function runCode () {
+  const strCode = CodeManagement.generate();
+  domConsole = new DOMConsole("#ivprog-term");
+  $("#ivprog-term").slideDown(500);
+  const lexer = LanguageService.getCurrentLexer();
+  const ast = new IVProgParser(strCode, lexer).parseTree();
+  const proc = new IVProgProcessor(ast);
+  proc.registerInput(domConsole);
+  proc.registerOutput(domConsole);
+  proc.interpretAST().then( _ => {
+    domConsole.info("Programa executado com sucesso!");
+    domConsole.info("Aperte qualquer tecla para fechar...");
+    const p = new Promise((resolve, _) => {
+      domConsole.requestInput(resolve);
+    });
+    p.then( _ => {
+      domConsole.dispose();
+      domConsole = null;
+      $("#ivprog-term").hide();
+    })
+  })
 }
 
 function toggleTextualCoding () {

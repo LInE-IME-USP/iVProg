@@ -12,7 +12,7 @@ var iLMparameters = {
     iLM_PARAM_SendAnswer: getParameterByName("iLM_PARAM_SendAnswer"),
     iLM_PARAM_AssignmentURL: getParameterByName("iLM_PARAM_AssignmentURL"),
     iLM_PARAM_Assignment: getParameterByName("iLM_PARAM_Assignment"),
-    lang: getParameterByName("lang", "en")
+    lang: getParameterByName("lang", "pt")
 };
 
 // Set the lang parameter to the localStorage for easy access
