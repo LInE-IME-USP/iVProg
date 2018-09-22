@@ -123,7 +123,11 @@ const unaryMap = buildUnaryCompatibilityTable();
 
 export function resultTypeAfterInfixOp (operator, leftExpressionType, rightExpressionType) {
   try {
-    return infixMap.get(operator)[leftExpressionType.ord][rightExpressionType.ord];
+    const resultType = infixMap.get(operator)[leftExpressionType.ord][rightExpressionType.ord];
+    if (resultType === null || resultType === undefined) {
+      return Types.UNDEFINED
+    }
+    return resultType;
   } catch (e) {
     if (e instanceof TypeError) {
       return Types.UNDEFINED;
