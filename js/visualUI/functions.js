@@ -357,6 +357,29 @@ function runCode () {
   })
 }
 
+function runCode () {
+  const strCode = CodeManagement.generate();
+  domConsole = new DOMConsole("#ivprog-term");
+  $("#ivprog-term").slideDown(500);
+  const lexer = LanguageService.getCurrentLexer();
+  const ast = new IVProgParser(strCode, lexer).parseTree();
+  const proc = new IVProgProcessor(ast);
+  proc.registerInput(domConsole);
+  proc.registerOutput(domConsole);
+  proc.interpretAST().then( _ => {
+    domConsole.info("Programa executado com sucesso!");
+    domConsole.info("Aperte qualquer tecla para fechar...");
+    const p = new Promise((resolve, _) => {
+      domConsole.requestInput(resolve);
+    });
+    p.then( _ => {
+      domConsole.dispose();
+      domConsole = null;
+      $("#ivprog-term").hide();
+    })
+  })
+}
+
 function toggleTextualCoding () {
   var code = CodeManagement.generate();
   $('.ivprog_visual_panel').css('display', 'none');
