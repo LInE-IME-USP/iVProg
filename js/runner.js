@@ -1,13 +1,11 @@
 import { IVProgParser } from './ast/ivprogParser';
 import { IVProgProcessor } from './processor/ivprogProcessor';
-import {DOMInput} from './io/domInput';
-import {DOMOutput} from './io/domOutput';
+import {DOMConsole} from './io/domConsole';
 import { LanguageService } from './services/languageService';
-import { LocalizedStrings } from './services/localizedStringsService';
 
 export function runner () {
-  const ivprogLexer = LanguageService.getCurrentLexer();
-console.log(LocalizedStrings.getUI('start'));
+const ivprogLexer = LanguageService.getCurrentLexer();
+
 
 // const lexer = new ivprogLexer(new InputStream(input));
 // const stream = new CommonTokenStream(lexer);
@@ -21,8 +19,7 @@ console.log(LocalizedStrings.getUI('start'));
 // }
 // const anaSin = new IVProgParser(input, ivprogLexer);
 const editor = new JsonEditor('#json-renderer', {});
-const domIn = new DOMInput('#dom-in');
-const domOut = new DOMOutput('#dom-out');
+const domConsole = new DOMConsole("#console");
 // proc.interpretAST().then( sto => {
 //   console.log(sto.applyStore('a'));
 // }).catch(e => console.log(e));
@@ -33,9 +30,9 @@ try {
     try {
       const data = analiser.parseTree();
       const proc = new IVProgProcessor(data);
-      proc.registerInput(domIn);
-      domOut.clear();
-      proc.registerOutput(domOut);
+      proc.registerInput(domConsole);
+      domConsole.clear();
+      proc.registerOutput(domConsole);
       proc.interpretAST().then(sto => editor.load(sto.store))
         .catch( e => alert(e));
     } catch (error) {

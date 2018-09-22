@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <link rel="stylesheet" type="text/css" href="css/ivprog-term.css">
   <link rel="stylesheet" type="text/css" href="js/semantic/semantic.min.css">
   <style>
     .ivprog-io-output {
@@ -34,7 +35,7 @@
 
               const real C = 5.5
              
-              funcao inteiro inicio() {
+              funcao inicio() {
                inteiro a = 8
                se (a * C > 80) {
                 a = 0
@@ -50,10 +51,8 @@
       </div>
     </div>
     <div class="six wide column">
-      <div id="dom-out" class="ivprog-io-output">
-
+      <div id="console">
       </div>
-      <input id="dom-in" type="text" class="ivprog-io-input">
     </div>
     <div class="six wide column">
         <div style="overflow-y: scroll; height: 70%;">
@@ -64,6 +63,8 @@
   
   
 </body>
+
+<script src="js/jquery-3.3.1.min.js"></script>
 <script type="text/javascript" src="js/jquery.json-editor.min.js"></script>
 <script type="text/javascript" src="build/ivprog.bundle.js"></script>
 
