@@ -687,14 +687,38 @@ export class IVProgProcessor {
         }
         case Operators.MOD.ord:
           return new StoreObject(resultType, left.value % right.value);
-        case Operators.GT.ord:
-          return new StoreObject(resultType, left.value > right.value);
-        case Operators.GE.ord:
-          return new StoreObject(resultType, left.value >= right.value);
-        case Operators.LT.ord:
-          return new StoreObject(resultType, left.value < right.value);
-        case Operators.LE.ord:
-          return new StoreObject(resultType, left.value <= right.value);
+        case Operators.GT.ord: {
+          if (left.type === Types.STRING) {
+            result = left.value.length > right.value.length;
+          } else {
+            result = left.value > right.value;
+          }
+          return new StoreObject(resultType, result);
+        }
+        case Operators.GE.ord: {
+          if (left.type === Types.STRING) {
+            result = left.value.length >= right.value.length;
+          } else {
+            result = left.value >= right.value;
+          }
+          return new StoreObject(resultType, result);
+        }
+        case Operators.LT.ord: {
+          if (left.type === Types.STRING) {
+            result = left.value.length < right.value.length;
+          } else {
+            result = left.value < right.value;
+          }
+          return new StoreObject(resultType, result);
+        }
+        case Operators.LE.ord: {
+          if (left.type === Types.STRING) {
+            result = left.value.length <= right.value.length;
+          } else {
+            result = left.value <= right.value;
+          }
+          return new StoreObject(resultType, result);
+        }
         case Operators.EQ.ord:
           return new StoreObject(resultType, left.value === right.value);
         case Operators.NEQ.ord:
