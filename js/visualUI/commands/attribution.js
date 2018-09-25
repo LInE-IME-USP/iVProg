@@ -15,30 +15,97 @@ export function createFloatingCommand () {
 export function renderCommand (command, function_obj) {
 
 	var el = $('<div class="ui attribution command_container"> <i class="ui icon small arrow left command_drag"></i> <i class="ui icon times red button_remove_command"></i> <div class="var_attributed"></div> <span class="text_attr_receives">'+LocalizedStrings.getUI('text_receives')+'</span> '
-		 + '<div class="expression_operand_1"></div> </div>');
+		 + '<div class="expression_elements"></div> </div>');
 	el.data('command', command);
 
 	VariableValueMenu.renderMenu(command, command.variable, el.find('.var_attributed'), function_obj);
-	command.expression[0].content = new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.all, null, null, null, true);
-	VariableValueMenu.renderMenu(command, command.expression[0].content, el.find('.expression_operand_1'), function_obj);
+
+	command.expression.push("(");
+
+	command.expression.push(new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.all, "1", null, null, true));
+
+	command.expression.push(Models.ARITHMETIC_TYPES.plus);
+
+	command.expression.push(new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.all, window.program_obj.functions[0].variables_list[0], null, 
+		new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.all, new Models.Variable(Types.REAL, "variable_2", 1), true), null, null, true));
+
+
+	command.expression.push(")");
+
+	command.expression.push(Models.ARITHMETIC_TYPES.minus);
+
+	command.expression.push(new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.all, "2", null, null, true));
+
+	/*VariableValueMenu.renderMenu(command, command.expression[0].content, el.find('.expression_operand_1'), function_obj);*/
 
 	addHandlers(command, function_obj, el);
+
+	renderExpression(command, function_obj, el);
 
 	return el;
 
-	/*var el = $('<div class="ui attribution command_container"> <i class="ui icon small arrow left command_drag"></i> <i class="ui icon times red button_remove_command"></i> <div class="var_attributed"></div> <span class="text_attr_receives">'+LocalizedStrings.getUI('text_receives')+'</span> '
-		 + '<div class="expression_operand_1"></div> </div>');
-	$(el).data('command', command);
-
-
-	VariableValueMenu.renderMenu(command, command.variable, $(el).find('.var_attributed'), function_obj);
-
-	VariableValueMenu.renderMenu(command, command.expression, $(el).find('.expression_operand_1'), function_obj);
-
-	addHandlers(command, function_obj, el);
-
-	return el;*/
 }
+
+function renderExpression(command, function_obj, el) {
+
+	var expression_div = el.find('.expression_elements');
+	expression_div.text('');
+	
+	for (var i = 0; i < command.expression.length; i++) {
+
+		if (command.expression[i].type) {
+
+			var temp = $('<div class="expression_element"></div>');
+			temp.data('ref_element', command.expression[i]);
+			temp.data('ref_index', i);
+
+			expression_div.append(temp);
+
+			VariableValueMenu.renderMenu(command, command.expression[i], temp, function_obj);
+
+		} else if (command.expression[i] == "(" || command.expression[i] == ")") {
+
+			var temp = $('<div class="expression_element">'+command.expression[i]+'</div>');
+			temp.data('ref_element', command.expression[i]);
+			temp.data('ref_index', i);
+
+			expression_div.append(temp);
+
+		} else {
+
+			var temp = '<div class="expression_element">';
+
+			switch(command.expression[i]) {
+				case Models.ARITHMETIC_TYPES.plus:
+					temp += '+';
+					break;
+				case Models.ARITHMETIC_TYPES.minus:
+					temp += '-';
+					break;
+				case Models.ARITHMETIC_TYPES.multiplication:
+					temp += '*';
+					break;
+				case Models.ARITHMETIC_TYPES.division:
+					temp += '/';
+					break;
+				case Models.ARITHMETIC_TYPES.module:
+					temp += '%';
+					break;
+			}
+
+			temp += '</div>';
+			temp = $(temp);
+			temp.data('ref_element', command.expression[i]);
+			temp.data('ref_index', i);
+
+			expression_div.append(temp);
+
+		}
+
+	}
+}
+
+
 
 function addHandlers (command, function_obj, attribution_dom) {
 
@@ -51,7 +118,7 @@ function addHandlers (command, function_obj, attribution_dom) {
 
 export function renderMenuOperations (command, ref_object, dom_object, menu_var_or_value, function_obj, variable_selected) {
 
-	console.log("recebido o seguinte DOM: ");
+	/*console.log("recebido o seguinte DOM: ");
 	console.log(dom_object);
 
 	if (dom_object.hasClass('var_attributed')) {
@@ -97,7 +164,7 @@ export function renderMenuOperations (command, ref_object, dom_object, menu_var_
     				menu_operations.find('.text').text('');
     		}
         }
-    });
+    });*/
 }
 
 function createExpressionAround (command, ref_object, dom_object, function_obj) {

@@ -76,17 +76,16 @@ export class Expression {
     this.operator = operator;
   }
 }
-
+/*
 export class ExpressionNode {
 
-  constructor (parent_node, content, left_node, right_node) {
-    this.parent_node = parent_node;
+  constructor (content, left_node, right_node) {
     this.content = content;
     this.left_node = left_node;
     this.right_node = right_node;
     
   }
-}
+}*/
 
 export class IfTrue {
 

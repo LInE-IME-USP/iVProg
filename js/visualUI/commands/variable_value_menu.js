@@ -61,6 +61,129 @@ export function renderMenu (command, ref_object, dom_object, function_obj, size_
     addVariablesToMenu(function_obj, menu_var_or_value, ref_object);
 
     addFunctionsToMenu(function_obj, menu_var_or_value, ref_object);
+
+    if (ref_object.content) {
+    	renderPreviousContent(function_obj, menu_var_or_value, ref_object, dom_object, command);
+    }
+}
+
+function renderPreviousContent (function_obj, menu_var_or_value, ref_object, dom_object, command) {
+
+	
+	if (ref_object.function_called) {
+
+	} else if (ref_object.content.type) { 
+		var temp = $('<div class="variable_rendered"></div>');
+		temp.insertBefore(menu_var_or_value);
+		menu_var_or_value.remove();
+		temp.append(variableValueMenuCode(command, ref_object, dom_object, function_obj));
+
+		var context_menu = '<div class="ui dropdown context_menu_clear"><div class="text"></div><i class="dropdown icon"></i><div class="menu">';
+		context_menu += '<div class="item" data-clear="true">'+LocalizedStrings.getUI('btn_clear')+'</div>';
+		context_menu += '</div></div>';
+
+		context_menu = $(context_menu);
+
+		context_menu.insertAfter( dom_object.find('.variable_rendered') );
+
+		context_menu.dropdown({
+			onChange: function(value, text, $selectedItem) {
+		     if ($selectedItem.data('clear')) {
+		     	dom_object.text('');
+
+		     	ref_object.content = null;
+		     	ref_object.row = null;
+		     	ref_object.column = null;
+
+		     	renderMenu(command, ref_object, dom_object, function_obj);
+		     }
+	      }
+		});
+
+	} else {
+		var temp = $('<div class="value_rendered"></div>');
+		temp.insertBefore(menu_var_or_value);
+		menu_var_or_value.remove();
+		temp.append(variableValueMenuCode(command, ref_object, dom_object, function_obj));
+
+
+		var context_menu = '<div class="ui dropdown context_menu_clear"><div class="text"></div><i class="dropdown icon"></i><div class="menu">';
+		context_menu += '<div class="item" data-clear="true">'+LocalizedStrings.getUI('btn_clear')+'</div>';
+		context_menu += '</div></div>';
+
+		context_menu = $(context_menu);
+
+		context_menu.insertAfter( temp );
+
+		context_menu.dropdown({
+			onChange: function(value, text, $selectedItem) {
+		     if ($selectedItem.data('clear')) {
+		     	dom_object.text('');
+
+		     	ref_object = new Models.VariableValueMenu(ref_object.variable_and_value, null, null, null, ref_object.include_constant);
+
+		     	dom_object.find('.value_rendered').remove();
+				dom_object.find('.context_menu_clear').remove();
+				dom_object.find('.width-dynamic-minus').remove();
+
+		     	renderMenu(command, ref_object, dom_object, function_obj);
+		     }
+	      }
+		});
+
+		temp.on('click', function(e) {
+			temp.remove();
+			temp.empty();
+			temp.remove();
+			dom_object.empty();
+			dom_object.append('<span class="menu_var_or_value_dom"> </span>');
+			
+			openInputToValue(command, ref_object, dom_object, menu_var_or_value, function_obj);
+		});
+	}
+}
+
+function variableValueMenuCode (command, variable_obj, dom_object, function_obj) {
+
+	console.log("o que chegou: ");
+	console.log(variable_obj);
+
+	var ret = '';
+	if (variable_obj.function_called) {
+
+		ret += variable_obj.function_called.name + ' ( ';
+
+		if (variable_obj.parameters_list) {
+			for (var i = 0; i < variable_obj.parameters_list.length; i++) {
+				ret += variableValueMenuCode(command, variable_obj.parameters_list[i], dom_object, function_obj);
+				if ((i + 1) < variable_obj.parameters_list.length) {
+					ret += ', ';
+				}
+			}
+		}
+
+		ret += ' )';
+	} else if (variable_obj.content.type) {
+
+		ret += variable_obj.content.name;
+
+		if (variable_obj.content.dimensions == 1) {
+			ret += ' [ ' + variableValueMenuCode(command, variable_obj.column, dom_object, function_obj) + ' ] ';
+		}
+
+		if (variable_obj.content.dimensions == 2) {
+			ret += ' [ ' + variableValueMenuCode(command, variable_obj.row, dom_object, function_obj) + ' ] ';
+			ret += ' [ ' + variableValueMenuCode(command, variable_obj.column, dom_object, function_obj) + ' ] ';
+		}
+
+
+	} else {
+
+		ret += variable_obj.content;
+	}
+
+	return ret;
+
 }
 
 function addFunctionsToMenu (function_obj, menu_var_or_value, ref_object) {
@@ -96,8 +219,6 @@ function addVariablesToMenu (function_obj, menu_var_or_value, ref_object) {
 				}
 			}
 		}
-
-		
 	}
 
 	if (function_obj.parameters_list) {
@@ -363,7 +484,7 @@ function openInputToValue (command, ref_object, dom_object, menu_var_or_value, f
 		}
 	});
 
-	$(rendered).on('click', function(e) {
+	rendered.on('click', function(e) {
 		rendered.remove();
 		rendered.empty();
 		rendered.remove();

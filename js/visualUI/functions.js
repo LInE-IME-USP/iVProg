@@ -17,16 +17,15 @@ import WatchJS from 'melanke-watchjs';
 var counter_new_functions = 0;
 var counter_new_parameters = 0;
 
-let domConsole = null;
-
+let domConsole = null; 
 const program = new Models.Program();
-const mainFunction = new Models.Function(LocalizedStrings.getUI("start"), Types.VOID, 0, [], true, false, []);
+const variable1 = new Models.Variable(Types.REAL, "variable_1", 1, 1);
+const mainFunction = new Models.Function(LocalizedStrings.getUI("start"), Types.VOID, 0, [], true, false, [variable1]);
 mainFunction.function_comment = new Models.Comment(LocalizedStrings.getUI('text_comment_main'));
 const parameter1 = new Models.Variable(Types.INTEGER, "par_1", 1);
-const variable1 = new Models.Variable(Types.REAL, "variable_1", 1);
 const command1 = new Models.Comment(new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.only_value, "Testing rendering commands"));
 
-const sumFunction = new Models.Function("soma", Types.INTEGER, 0, [parameter1], false, false, [variable1], null, [command1]);
+const sumFunction = new Models.Function("soma", Types.INTEGER, 0, [parameter1], false, false, [], null, [command1]);
 
 program.addFunction(mainFunction);
 program.addFunction(sumFunction);
