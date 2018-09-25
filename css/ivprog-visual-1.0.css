@@ -129,7 +129,7 @@ body {
 }
 
 .function_name_div, .function_return_div, .function_name_parameter, .created_div_valor_var, .function_return, .var_value_menu_div, .variable_rendered, .variable_rendered div, .var_attributed,
-.expression_operand_1, .expression_operand_2, .operator, .div_comment_text, .value_rendered {
+.expression_operand_1, .expression_operand_2, .operator, .div_comment_text, .value_rendered, .parameters_function_called, .parameters_function_called div {
 	display: inline;
 }
 
@@ -194,6 +194,7 @@ body {
 	margin-left: 30px;
 	width: calc(100% - 30px);
 	background-color: #f9f9f9;
+	min-height: 30px;
 }
 
 .ui.segment.variables_list_div {
@@ -297,5 +298,10 @@ div.buttons_manage_columns {
 .ui.icon.plus.square.outline.icon_add_item_to_writer {
 	margin-right: 10px;
 	margin-left: 10px;
+	cursor: pointer;
+}
+
+.button_remove_command {
+	float: right;
 	cursor: pointer;
 }

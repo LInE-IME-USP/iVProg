@@ -6,10 +6,13 @@ import * as GlobalsManagement from './globals';
 import * as VariablesManagement from './variables';
 import * as CommandsManagement from './commands';
 import * as CodeManagement from './code_generator';
+import * as VariableValueMenu from './commands/variable_value_menu';
 import { DOMConsole } from './../io/domConsole';
 import { IVProgParser } from './../ast/ivprogParser';
 import { IVProgProcessor } from './../processor/ivprogProcessor';
 import { LanguageService } from '../services/languageService';
+import WatchJS from 'melanke-watchjs';
+
 
 var counter_new_functions = 0;
 var counter_new_parameters = 0;
@@ -19,9 +22,20 @@ let domConsole = null;
 const program = new Models.Program();
 const mainFunction = new Models.Function(LocalizedStrings.getUI("start"), Types.VOID, 0, [], true, false, []);
 mainFunction.function_comment = new Models.Comment(LocalizedStrings.getUI('text_comment_main'));
+const parameter1 = new Models.Variable(Types.INTEGER, "par_1", 1);
+const variable1 = new Models.Variable(Types.REAL, "variable_1", 1);
+const command1 = new Models.Comment(new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.only_value, "Testing rendering commands"));
+
+const sumFunction = new Models.Function("soma", Types.INTEGER, 0, [parameter1], false, false, [variable1], null, [command1]);
+
 program.addFunction(mainFunction);
+program.addFunction(sumFunction);
 
 window.program_obj = program;
+
+WatchJS.watch(program.globals, function(){
+      console.log("as globais foram alteradas!");
+  }, 1);
 
 function addFunctionHandler () {
 
@@ -63,42 +77,55 @@ function minimizeFunction (function_obj) {
 
 function addHandlers (function_obj, function_container) {
 
-  $( function_container ).find('.ui.dropdown.function_return').dropdown({
+  function_container.find('.ui.dropdown.function_return').dropdown({
       onChange: function(value, text, $selectedItem) {
-        if ($($selectedItem).data('dimensions')) {
-          updateReturnType(function_obj, Types[$($selectedItem).data('type')], $($selectedItem).data('dimensions'));
+        $selectedItem = $($selectedItem);
+        if ($selectedItem.data('dimensions')) {
+          updateReturnType(function_obj, Types[$selectedItem.data('type')], $selectedItem.data('dimensions'));
         } else {
-          updateReturnType(function_obj, Types[$($selectedItem).data('type')]);
+          updateReturnType(function_obj, Types[$selectedItem.data('type')]);
         }
       }
   });
 
-  $( function_container ).find( ".name_function_updated" ).on('click', function(e){
+  function_container.find( ".name_function_updated" ).on('click', function(e){
     enableNameFunctionUpdate(function_obj, function_container);
   });
 
-  $( function_container ).find( ".add_parameter_button" ).on('click', function(e){
+  function_container.find( ".add_parameter_button" ).on('click', function(e){
     addParameter(function_obj, function_container);
   });
 
-  $( function_container ).find('.menu_commands').dropdown();
+  function_container.find('.menu_commands').dropdown({
+      on: 'hover'
+    });
 
-  $( function_container ).find('.menu_commands a').on('click', function(evt){
-    CommandsManagement.createFloatingCommand(function_obj, function_container, $(this).data('command'), evt);
+  function_container.find('.menu_commands a').on('click', function(evt){
+    if (function_obj.commands == null || function_obj.commands.length == 0) {
+      function_obj.commands = [];
+      var new_cmd = CommandsManagement.genericCreateCommand($(this).data('command'));
+      function_obj.commands.push(new_cmd);
+
+      CommandsManagement.renderCommand(new_cmd, function_container.find('.commands_list_div'), 3, function_obj);
+    } else {
+      CommandsManagement.createFloatingCommand(function_obj, function_container, $(this).data('command'), evt);
+    }
+
   });
 
-  $( function_container ).find('.add_var_button_function').on('click', function(e){
+  function_container.find('.add_var_button_function').on('click', function(e){
     VariablesManagement.addVariable(function_obj, function_container);
   });
 
-  $( function_container ).find('.remove_function_button').on('click', function(e){
+  function_container.find('.remove_function_button').on('click', function(e){
     removeFunction(function_obj);
-    $(function_container).slideUp(400);
+    function_container.slideUp(400);
   });
 
-  $( function_container ).find('.minimize_function_button').on('click', function(e){
+  function_container.find('.minimize_function_button').on('click', function(e){
     minimizeFunction(function_obj);
-    $(function_container).find(".function_area").toggle();
+    function_container.find(".function_area").toggle();
+    function_container.find(".add_var_top_button").toggle();
   });
 
 
@@ -142,7 +169,7 @@ function renderFunctionReturn (function_obj, function_element) {
 
     ret = $(ret);
     
-    $(function_element).find('.function_return').append(ret);
+    function_element.find('.function_return').append(ret);
 }
 
 
@@ -159,7 +186,7 @@ function renderFunction (function_obj) {
   appender += (function_obj.is_main ? '<div class="div_start_minimize_v"> </div>' : '<button class="ui icon button large remove_function_button"><i class="red icon times"></i></button>')
     + '<button class="ui icon button tiny minimize_function_button"><i class="icon window minimize"></i></button>';
 
-  appender += '<div class="ui icon buttons add_var_top_button"><div class="ui icon button add_var_button_function"><i class="icon superscript"></i></div>';
+  appender += '<div class="ui small icon buttons add_var_top_button"><div class="ui icon button add_var_button_function"><i class="icon superscript"></i></div>';
   
   appender += '<div class="ui icon button dropdown menu_commands" ><i class="icon code"></i> <div class="menu"> ';
   appender += '<a class="item" data-command="'+Models.COMMAND_TYPES.reader+'"><i class="download icon"></i> ' +LocalizedStrings.getUI('text_read_var')+ '</a>'
@@ -185,8 +212,6 @@ function renderFunction (function_obj) {
       appender += '<div class="function_name_div"><span class="span_name_function name_function_updated">'+function_obj.name+'</span> <i class="icon small pencil alternate enable_edit_name_function name_function_updated"></i></div> ' 
         + '( <i class="ui icon plus square outline add_parameter_button"></i> <div class="ui large labels parameters_list container_parameters_list">';
   }
-
-  //appender += renderFunctionParameters(function_obj, sequence);
     
   appender += '</div> ) {</div>'
     + (function_obj.is_hidden ? ' <div class="function_area" style="display: none;"> ' : ' <div class="function_area"> ')
@@ -214,12 +239,29 @@ function renderFunction (function_obj) {
 
   $('.all_functions').append(appender);
 
-  $(appender).data('fun', function_obj);
-  $(appender).find('.commands_list_div').data('fun', function_obj);
+  appender.data('fun', function_obj);
+  appender.find('.commands_list_div').data('fun', function_obj);
 
   renderFunctionReturn(function_obj, appender);
 
   addHandlers(function_obj, appender);
+
+
+  // Rendering parameters: 
+  for (var j = 0; j < function_obj.parameters_list.length; j++) {
+    renderParameter(function_obj, function_obj.parameters_list[j], appender);
+  }
+
+  // Rendering variables:
+  for (var j = 0; j < function_obj.variables_list.length; j++) {
+    VariablesManagement.renderVariable(appender, function_obj.variables_list[j], function_obj);
+  }
+
+  // Rendering commands:
+  for (var j = 0; j < function_obj.commands.length; j++) {
+    CommandsManagement.renderCommand(function_obj.commands[j], $(appender.find('.commands_list_div')[0]), 3, function_obj);
+  }
+
 }
 
 
@@ -235,8 +277,6 @@ export function initVisualUI () {
     GlobalsManagement.addGlobal(program);
   });
 
-  renderFunction(mainFunction);
-
   $('.run_button').on('click', () => {
     runCode();
   });
@@ -249,6 +289,14 @@ export function initVisualUI () {
     toggleTextualCoding();
   });
 }
+
+$( document ).ready(function() {
+
+  for (var i = 0; i < program.functions.length; i++) {
+    renderFunction(program.functions[i]);
+  }
+
+});
 
 function runCode () {
   const strCode = CodeManagement.generate();
@@ -351,13 +399,13 @@ function renderParameter (function_obj, parameter_obj, function_container) {
 
   ret = $(ret);
   
-  $(function_container).find('.container_parameters_list').append(ret);
+  function_container.find('.container_parameters_list').append(ret);
 
-  $(ret).find('.remove_parameter').on('click', function(e){
+  ret.find('.remove_parameter').on('click', function(e){
     removeParameter(function_obj, parameter_obj, ret);
   });
   
-  $(ret).find('.ui.dropdown.parameter_type').dropdown({
+  ret.find('.ui.dropdown.parameter_type').dropdown({
     onChange: function(value, text, $selectedItem) {
       if ($($selectedItem).data('dimensions')) {
         updateParameterType(parameter_obj, Types[$($selectedItem).data('type')], $($selectedItem).data('dimensions'));
@@ -367,7 +415,7 @@ function renderParameter (function_obj, parameter_obj, function_container) {
     }
   });
 
-  $(ret).find('.label_enable_name_parameter').on('click', function(e){
+  ret.find('.label_enable_name_parameter').on('click', function(e){
     enableNameParameterUpdate(parameter_obj, ret);
   });
 

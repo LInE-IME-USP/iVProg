@@ -1,4 +1,5 @@
 import { Types } from './../ast/types';
+import WatchJS from 'melanke-watchjs';
 
 export const COMMAND_TYPES = Object.freeze({function:"function", comment:"comment", reader:"reader", writer:"writer", attribution:"attribution", iftrue:"iftrue",
  repeatNtimes:"repeatNtimes", whiletrue:"whiletrue", dowhiletrue:"dowhiletrue", switch:"switch", functioncall:"functioncall"});
@@ -20,7 +21,7 @@ export class Variable {
 
 export class Function {
 
-  constructor (name, return_type = Types.VOID, return_dimensions = 0, parameters_list = [], is_main = false, is_hidden = false, variables_list = [], function_comment = null) {
+  constructor (name, return_type = Types.VOID, return_dimensions = 0, parameters_list = [], is_main = false, is_hidden = false, variables_list = [], function_comment = null, commands = []) {
     this.type = COMMAND_TYPES.function;
     this.name = name;
     this.return_type = return_type;
@@ -30,7 +31,7 @@ export class Function {
     this.is_hidden = is_hidden;
     this.variables_list = variables_list;
     this.function_comment = function_comment;
-    this.commands = [];
+    this.commands = commands;
   }
 }
 
@@ -44,11 +45,8 @@ export class Comment {
 
 export class Reader {
   
-  constructor (variable = null, row = null, column = null, variable_value_menu = null) {
+  constructor (variable_value_menu = new VariableValueMenu()) {
     this.type = COMMAND_TYPES.reader;
-    this.variable = variable;
-    this.row = row;
-    this.column = column;
     this.variable_value_menu = variable_value_menu;
   }
 }
@@ -63,7 +61,7 @@ export class Writer {
 
 export class Attribution {
 
-  constructor (variable, expression) {
+  constructor (variable, expression = []) {
     this.type = COMMAND_TYPES.attribution;
     this.variable = variable;
     this.expression = expression;
@@ -76,6 +74,17 @@ export class Expression {
     this.operand1 = operand1;
     this.operand2 = operand2;
     this.operator = operator;
+  }
+}
+
+export class ExpressionNode {
+
+  constructor (parent_node, content, left_node, right_node) {
+    this.parent_node = parent_node;
+    this.content = content;
+    this.left_node = left_node;
+    this.right_node = right_node;
+    
   }
 }
 
@@ -140,11 +149,21 @@ export class FunctionCall {
 export class VariableValueMenu {
   
   constructor (variable_and_value = 7, content = null, row = null, column = null, include_constant = true) {
+    this.type = "var_value";
     this.variable_and_value = variable_and_value;
     this.content = content;
     this.row = row;
     this.column = column;
     this.include_constant = include_constant;
+  }
+}
+
+export class FunctionCallMenu {
+  
+  constructor (function_called = null, parameters_list = []) {
+    this.type = "function_call";
+    this.function_called = function_called;
+    this.parameters_list = parameters_list;
   }
 }
 
@@ -156,6 +175,17 @@ export class Program {
   }
 
   addFunction (function_to_add) {
+
+    WatchJS.watch(function_to_add.parameters_list, function(){
+      console.log("os parametros da função abaixo foram alterados:");
+      console.log(function_to_add);
+    }, 1);
+
+    WatchJS.watch(function_to_add.variables_list, function(){
+      console.log("as variáveis da função abaixo foram alteradas: ");
+      console.log(function_to_add);
+    }, 1);
+
     this.functions.push(function_to_add);
   }
 

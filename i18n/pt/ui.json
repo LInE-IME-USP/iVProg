@@ -16,7 +16,7 @@
   "text_start": "texto",
   "boolean": "logico",
   "true": "verdadeiro",
-  "false": "fals0",
+  "false": "falso",
   "variable": "Variável",
   "command": "Comando",
   "new_parameter": "novo_parametro",

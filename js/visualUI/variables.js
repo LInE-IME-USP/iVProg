@@ -77,7 +77,7 @@ function addHandlers (variable_obj, variable_container) {
 }
 
 
-function renderVariable(function_container, new_var, function_obj) {
+export function renderVariable(function_container, new_var, function_obj) {
 
 	var element = '<div class="ui label variable_container">';
 

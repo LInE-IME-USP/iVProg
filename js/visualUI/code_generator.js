@@ -8,7 +8,7 @@ import * as CommandsManagement from './commands';
 
 export function generate () {
 
-	var code = 'programa \n{ ';
+	var code = LocalizedStrings.getUI('program') + ' { ';
 
 	code += globalsCode();
 
@@ -27,25 +27,26 @@ export function generate () {
 }
 
 function functionsCode (function_obj) {
-	var ret = '\n\tfuncao ';
+	var ret = '\n\t' + LocalizedStrings.getUI('function') + ' ';
 
 	switch (function_obj.return_type) {
 		case Types.INTEGER:
-			ret += 'inteiro ';
+			ret += LocalizedStrings.getUI('integer');
 			break;
 		case Types.REAL:
-			ret += 'real ';
+			ret += LocalizedStrings.getUI('real');
 			break;
 		case Types.TEXT:
-			ret += 'texto ';
+			ret += LocalizedStrings.getUI('text');
 			break;
 		case Types.BOOLEAN:
-			ret += 'booleano ';
+			ret += LocalizedStrings.getUI('boolean');
 			break;
 		case Types.VOID:
-			ret += 'vazio ';
+			ret += LocalizedStrings.getUI('void');
 			break;
 	}
+	ret += ' ';
 
 	if (function_obj.return_dimensions == 1) {
 		ret += '[] '
@@ -62,8 +63,7 @@ function functionsCode (function_obj) {
 		}
 	}
 
-	ret += ' ) ';
-	ret += '\n\t{';
+	ret += ' )  {';
 
 	for (var j = 0; j < function_obj.variables_list.length; j++) {
 		ret += variablesCode(function_obj.variables_list[j]);
@@ -89,33 +89,77 @@ function commandsCode (command_obj) {
 
 		case Models.COMMAND_TYPES.writer:
 			return writersCode(command_obj);
+
+		case Models.COMMAND_TYPES.functioncall:
+			return functioncallsCode(command_obj);
 	}
 }
 
-function readersCode (command_obj) {
-	var ret = '\n\t\tleia ( ';
-	
-	ret += command_obj.variable_value_menu.content.name;
+function functioncallsCode (command_obj) {
 
-	if (command_obj.variable_value_menu.content.dimensions == 1) {
-		ret += ' [ ' + command_obj.column + ' ] ';
-	} else if (command_obj.variable_value_menu.content.dimensions == 2) {
-		ret += ' [ ' + command_obj.row + ' ] [ ' + command_obj.column + ' ]';
-	}
+	var ret = '\n\t\t';
+	
+	ret += variableValueMenuCode(command_obj.function_called);
+
+	return ret;
+}
+
+function readersCode (command_obj) {
+	var ret = '\n\t\t' + LocalizedStrings.getUI('text_command_read') + ' ( ';
+	
+	ret += variableValueMenuCode(command_obj.variable_value_menu);
 
 	ret += ' ) ';
 	return ret;
 }
 
-function writersCode (command_obj) {
-	var ret = '\n\t\tescreva ( ';
-	
-	ret += command_obj.content[0].content.name;
+function variableValueMenuCode (variable_obj) {
 
-	if (command_obj.content[0].content.dimensions == 1) {
-		ret += ' [ ' + command_obj.content[0].column + ' ] ';
-	} else if (command_obj.content[0].dimensions == 2) {
-		ret += ' [ ' + command_obj.content[0].row + ' ] [ ' + command_obj.content[0].column + ' ]';
+	var ret = '';
+	if (variable_obj.function_called) {
+		ret += variable_obj.function_called.name + ' ( ';
+
+		if (variable_obj.parameters_list) {
+			for (var i = 0; i < variable_obj.parameters_list.length; i++) {
+				ret += variableValueMenuCode(variable_obj.parameters_list[i]);
+				if ((i + 1) < variable_obj.parameters_list.length) {
+					ret += ', ';
+				}
+			}
+		}
+
+		ret += ' )';
+	} else if (variable_obj.content.type) {
+
+		ret += variable_obj.content.name;
+
+		if (variable_obj.content.dimensions == 1) {
+			ret += ' [ ' + variableValueMenuCode(variable_obj.column) + ' ] ';
+		}
+
+		if (variable_obj.content.dimensions == 2) {
+			ret += ' [ ' + variableValueMenuCode(variable_obj.row) + ' ] ';
+			ret += ' [ ' + variableValueMenuCode(variable_obj.column) + ' ] ';
+		}
+
+
+	} else {
+		ret += variable_obj.content;
+	}
+
+	return ret;
+
+}
+
+function writersCode (command_obj) {
+	var ret = '\n\t\t' + LocalizedStrings.getUI('text_command_write') + ' ( ';
+	
+	for (var i = 0; i < command_obj.content.length; i++) {
+		ret += variableValueMenuCode(command_obj.content[i]);
+
+		if ((i + 1) < command_obj.content.length) {
+			ret += ' + ';
+		}
 	}
 
 	ret += ' ) ';
@@ -132,16 +176,16 @@ function parametersCode (parameter_obj) {
 	var ret = '';
 	switch (parameter_obj.type) {
 		case Types.INTEGER:
-			ret += ' inteiro ';
+			ret += ' '+LocalizedStrings.getUI('integer')+' ';
 			break;
 		case Types.REAL:
-			ret += ' real ';
+			ret += ' '+LocalizedStrings.getUI('real')+' ';
 			break;
 		case Types.TEXT:
-			ret += ' texto ';
+			ret += ' '+LocalizedStrings.getUI('text')+' ';
 			break;
 		case Types.BOOLEAN:
-			ret += ' booleano ';
+			ret += ' '+LocalizedStrings.getUI('boolean')+' ';
 			break;
 	}
 	ret += parameter_obj.name + '';
@@ -166,16 +210,16 @@ function variablesCode (variable_obj) {
 	}
 	switch (temp.type) {
 		case Types.INTEGER:
-			ret += 'inteiro ';
+			ret += LocalizedStrings.getUI('integer')+' ';
 			break;
 		case Types.REAL:
-			ret += 'real ';
+			ret += LocalizedStrings.getUI('real')+' ';
 			break;
 		case Types.TEXT:
-			ret += 'texto ';
+			ret += LocalizedStrings.getUI('text')+' ';
 			break;
 		case Types.BOOLEAN:
-			ret += 'booleano ';
+			ret += LocalizedStrings.getUI('boolean')+' ';
 			break;
 	}
 	ret += temp.name + ' ';
@@ -202,9 +246,9 @@ function variablesCode (variable_obj) {
 				ret += '= {';
 				for (var j = 0; j < temp.value.length; j++) {
 					if (temp.value[j]) {
-						ret += "verdadeiro";
+						ret += LocalizedStrings.getUI("true");
 					} else {
-						ret += "falso";
+						ret += LocalizedStrings.getUI("false");
 					}
 					if ((j + 1) < temp.value.length) {
 						ret += ',';
@@ -261,9 +305,9 @@ function variablesCode (variable_obj) {
 					for (var k = 0; k < temp.columns; k++) {
 						
 						if (temp.value[j][k]) {
-							ret += "verdadeiro";
+							ret += LocalizedStrings.getUI("true");
 						} else {
-							ret += "falso";
+							ret += LocalizedStrings.getUI("false");
 						}
 
 						if ((k + 1) < temp.columns) {
@@ -292,9 +336,9 @@ function variablesCode (variable_obj) {
 			case Types.BOOLEAN:
 				ret += '= ';
 				if (temp.value) {
-					ret += "verdadeiro";
+					ret += LocalizedStrings.getUI("true");
 				} else {
-					ret += "falso";
+					ret += LocalizedStrings.getUI("false");
 				}
 				break;
 		}
@@ -319,19 +363,19 @@ function globalsCode () {
 			}
 			switch (temp.type) {
 				case Types.INTEGER:
-					ret += 'inteiro ';
+					ret += LocalizedStrings.getUI('integer');
 					break;
 				case Types.REAL:
-					ret += 'real ';
+					ret += LocalizedStrings.getUI('real');
 					break;
 				case Types.TEXT:
-					ret += 'texto ';
+					ret += LocalizedStrings.getUI('text');
 					break;
 				case Types.BOOLEAN:
-					ret += 'booleano ';
+					ret += LocalizedStrings.getUI('boolean');
 					break;
 			}
-			ret += temp.name + ' ';
+			ret += ' ' + temp.name + ' ';
 
 			if (temp.dimensions == 1) {
 				ret += '[' + temp.columns + '] ';
@@ -355,9 +399,9 @@ function globalsCode () {
 						ret += '= {';
 						for (var j = 0; j < temp.value.length; j++) {
 							if (temp.value[j]) {
-								ret += "verdadeiro";
+								ret += LocalizedStrings.getUI("true");
 							} else {
-								ret += "falso";
+								ret += LocalizedStrings.getUI("false");
 							}
 							if ((j + 1) < temp.value.length) {
 								ret += ',';
@@ -414,9 +458,9 @@ function globalsCode () {
 							for (var k = 0; k < temp.columns; k++) {
 								
 								if (temp.value[j][k]) {
-									ret += "verdadeiro";
+									ret += LocalizedStrings.getUI("true");
 								} else {
-									ret += "falso";
+									ret += LocalizedStrings.getUI("false");
 								}
 
 								if ((k + 1) < temp.columns) {
@@ -445,9 +489,9 @@ function globalsCode () {
 					case Types.BOOLEAN:
 						ret += '= ';
 						if (temp.value) {
-							ret += "verdadeiro";
+							ret += LocalizedStrings.getUI("true");;
 						} else {
-							ret += "falso";
+							ret += LocalizedStrings.getUI("false");;
 						}
 						break;
 				}

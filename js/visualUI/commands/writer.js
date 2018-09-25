@@ -6,6 +6,7 @@ import * as GlobalsManagement from '../globals';
 import * as VariablesManagement from '../variables';
 import * as VariableValueMenu from './variable_value_menu';
 import * as VariableValueMenuManagement from './variable_value_menu';
+import * as CommandsManagement from '../commands';
 
 export function createFloatingCommand () {
 	return $('<div class="ui writer created_element"> <i class="ui icon small upload"></i> <span> '+LocalizedStrings.getUI('text_command_write')+' var </span></div>');
@@ -13,14 +14,25 @@ export function createFloatingCommand () {
 
 export function renderCommand (command, function_obj) {
 	var ret = '';
-	ret += '<div class="ui writer"> <i class="ui icon small upload command_drag"></i> <span>'+LocalizedStrings.getUI('text_command_write')+' ( </span><div class="var_value_menu_div"></div> <span class="close_parentheses">)</span> </div>';
+	ret += '<div class="ui writer command_container"> <i class="ui icon small upload command_drag"></i> <i class="ui icon times red button_remove_command"></i> <span>'+LocalizedStrings.getUI('text_command_write')+' ( </span><div class="var_value_menu_div"></div> <span class="close_parentheses">)</span> </div>';
 
 	var el = $(ret);
 	$(el).data('command', command);
 
 	VariableValueMenu.renderMenu(command, command.content[0], $(el).find('.var_value_menu_div'), function_obj);
 
+	addHandlers(command, function_obj, el);
+
 	return el;
+}
+
+function addHandlers (command, function_obj, writer_dom) {
+
+	writer_dom.find('.button_remove_command').on('click', function() {
+		if (CommandsManagement.removeCommand(command, function_obj, writer_dom)) {
+			writer_dom.remove();
+		}
+	});
 }
 
 export function addContent (command, ref_object, dom_object, menu_var_or_value, function_obj, ref_object_content) {
