@@ -1,4 +1,5 @@
 import { LanguageService } from "../services/languageService";
+import { BigNumber } from 'bignumber.js'
 
 export const Types = Object.freeze({
   INTEGER: {value: "int", ord: 0},
@@ -12,13 +13,7 @@ export const Types = Object.freeze({
 });
 
 export function toInt (str) {
-  if(str.match('^0b|^0B')) {
-    return parseInt(str.substring(2), 2);
-  } else if (str.match('^0x|^0X')) {
-    return parseInt(str.substring(2), 16);
-  } else {
-    return parseInt(str);
-  }
+  return new BigNumber(str);
 }
 
 export function toString (str) {
@@ -32,6 +27,10 @@ export function toString (str) {
   value = value.replace(/\\\'/g, "\'");
   value = value.replace(/\\\\/g, "\\");
   return value;
+}
+
+export function toReal (value) {
+  return new BigNumber(value);
 }
 
 export function toBool (str) {

@@ -23,7 +23,7 @@ describe('A call to a function that returns a valid type', function () {
     const parser = new IVProgParser(input, lexer);
     const exec = new IVProgProcessor(parser.parseTree());
     exec.interpretAST().then(sto => {
-      expect(sto.applyStore('a').value).toEqual(result);
+      expect(sto.applyStore('a').number).toEqual(result);
       done();
     }).catch(err => done(err));
   });

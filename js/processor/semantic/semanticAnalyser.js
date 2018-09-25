@@ -192,7 +192,7 @@ export class SemanticAnalyser {
         if (dimType !== Types.INTEGER) {
           throw new Error("dim must be int");
         }
-        if ((lines instanceof IntLiteral) && lines.value !== literal.value.length) {
+        if ((lines instanceof IntLiteral) && !lines.value.eq(literal.value.length)) {
           throw new Error("invalid array size");
         }
         literal.value.reduce((last, next) => {
@@ -208,7 +208,7 @@ export class SemanticAnalyser {
         if (dimType !== Types.INTEGER) {
           throw new Error("dim must be int");
         }
-        if ((columns instanceof IntLiteral) && columns.value !== literal.value.length) {
+        if ((columns instanceof IntLiteral) && !columns.value.eq(literal.value.length)) {
           throw new Error("invalid array size");
         }
         for (let i = 0; i < columns; i++) {

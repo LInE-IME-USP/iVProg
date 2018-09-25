@@ -19,7 +19,9 @@ describe('An Array initialization with expressions', function () {
     const parser = new IVProgParser(input, lexer);
     const exec = new IVProgProcessor(parser.parseTree());
     exec.interpretAST().then(sto => {
-      expect([sto.applyStore('a').value[0].value,sto.applyStore('a').value[1].value]).toEqual(result);
+      expect([sto.applyStore('a').value[0].number,
+        sto.applyStore('a').value[1].number
+      ]).toEqual(result);
       done();
     });
   });
