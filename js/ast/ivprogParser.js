@@ -1,7 +1,7 @@
 import { CommonTokenStream, InputStream } from 'antlr4/index';
 import * as Expressions from './expressions/';
 import * as Commands from './commands/';
-import { Types, toInt, toString, toBool } from './types';
+import { Types, toInt, toString, toBool, toReal } from './types';
 import { SourceInfo } from './sourceInfo';
 import { convertFromString } from './operators';
 import { SyntaxErrorFactory } from './error/syntaxErrorFactory';
@@ -336,7 +336,7 @@ export class IVProgParser {
 
   getRealLiteral (token) {
     const sourceInfo = SourceInfo.createSourceInfo(token);
-    const exp = new Expressions.RealLiteral(parseFloat(token.text));
+    const exp = new Expressions.RealLiteral(toReal(token.text));
     exp.sourceInfo = sourceInfo;
     return exp;
   }

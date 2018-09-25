@@ -18,7 +18,7 @@ describe('Assigning an ID to another variable', function () {
     const parser = new IVProgParser(input, lexer);
     const exec = new IVProgProcessor(parser.parseTree());
     exec.interpretAST().then(sto => {
-      expect(sto.applyStore('b').value).toEqual(5);
+      expect(sto.applyStore('b').number).toEqual(5);
       done();
     }).catch( err => done(err));
   });
