@@ -62,7 +62,7 @@ export function renderMenu (command, ref_object, dom_object, function_obj, size_
 
     addFunctionsToMenu(function_obj, menu_var_or_value, ref_object);
 
-    if (ref_object.content) {
+    if (ref_object.content || ref_object.function_called) {
     	renderPreviousContent(function_obj, menu_var_or_value, ref_object, dom_object, command);
     }
 }
@@ -72,74 +72,111 @@ function renderPreviousContent (function_obj, menu_var_or_value, ref_object, dom
 	
 	if (ref_object.function_called) {
 
+		console.log("P1 chamando para: ");
+		console.log(ref_object);
+
+		menu_var_or_value.remove();
+		variableValueMenuCode(command, ref_object, dom_object, function_obj, menu_var_or_value);
+
 	} else if (ref_object.content.type) { 
 		
+		console.log("P2 chamando para: ");
+		console.log(ref_object);
+
 		menu_var_or_value.remove();
-		variableValueMenuCode(command, ref_object, dom_object, function_obj);
+		variableValueMenuCode(command, ref_object, dom_object, function_obj, menu_var_or_value);
 
 	} else {
-		var temp = $('<div class="value_rendered"></div>');
-		temp.insertBefore(menu_var_or_value);
+
+		console.log("P3 chamando para: ");
+		console.log(ref_object);
+
 		menu_var_or_value.remove();
-		variableValueMenuCode(command, ref_object, temp, function_obj);
+		variableValueMenuCode(command, ref_object, dom_object, function_obj, menu_var_or_value);
 
-
-		var context_menu = '<div class="ui dropdown context_menu_clear"><div class="text"></div><i class="dropdown icon"></i><div class="menu">';
-		context_menu += '<div class="item" data-clear="true">'+LocalizedStrings.getUI('btn_clear')+'</div>';
-		context_menu += '</div></div>';
-
-		context_menu = $(context_menu);
-
-		context_menu.insertAfter( temp );
-
-		context_menu.dropdown({
-			onChange: function(value, text, $selectedItem) {
-		     if ($selectedItem.data('clear')) {
-		     	dom_object.text('');
-
-		     	ref_object = new Models.VariableValueMenu(ref_object.variable_and_value, null, null, null, ref_object.include_constant);
-
-		     	dom_object.find('.value_rendered').remove();
-				dom_object.find('.context_menu_clear').remove();
-				dom_object.find('.width-dynamic-minus').remove();
-
-		     	renderMenu(command, ref_object, dom_object, function_obj);
-		     }
-	      }
-		});
-
-		temp.on('click', function(e) {
-			temp.remove();
-			temp.empty();
-			temp.remove();
-			dom_object.empty();
-			dom_object.append('<span class="menu_var_or_value_dom"> </span>');
-			
-			openInputToValue(command, ref_object, dom_object, menu_var_or_value, function_obj);
-		});
 	}
 }
 
-function variableValueMenuCode (command, variable_obj, dom_object, function_obj) {
+function variableValueMenuCode (command, variable_obj, dom_object, function_obj, menu_var_or_value) {
 
 
 	var ret = '';
 	if (variable_obj.function_called) {
 
-		ret += variable_obj.function_called.name + ' ( ';
+		if (variable_obj.function_called.parameters_list == null || variable_obj.function_called.length == 0) {
 
-		if (variable_obj.parameters_list) {
-			for (var i = 0; i < variable_obj.parameters_list.length; i++) {
-				variableValueMenuCode(command, variable_obj.parameters_list[i], dom_object, function_obj);
-				if ((i + 1) < variable_obj.parameters_list.length) {
-					ret += ', ';
-				}
-			}
+			menu_var_or_value.find('.text').text(' ');
+			dom_object.find('.menu_var_or_value_dom').remove();
+
+			var parameters_menu = '<div class="parameters_function_called"> '+variable_obj.function_called.name+' <span> ( </span>';
+			
+			parameters_menu += '<span> ) </span></div>';
+
+			parameters_menu = $(parameters_menu);
+
+			dom_object.append(parameters_menu);
+
+			var context_menu = '<div class="ui dropdown context_menu_clear"><div class="text"></div><i class="dropdown icon"></i><div class="menu">';
+			context_menu += '<div class="item" data-clear="true">'+LocalizedStrings.getUI('btn_clear')+'</div>';
+			context_menu += '</div></div>';
+
+			context_menu = $(context_menu);
+
+			context_menu.insertAfter( dom_object.find('.parameters_function_called') );
+
+			context_menu.dropdown({
+				onChange: function(value, text, $selectedItem) {
+			     if ($selectedItem.data('clear')) {
+			     	dom_object.text('');
+
+			     	variable_obj.content = null;
+			     	variable_obj.row = null;
+			     	variable_obj.column = null;
+			     	delete variable_obj.function_called;
+			     	delete variable_obj.parameters_list;
+
+			     	renderMenu(command, variable_obj, dom_object, function_obj);
+			     }
+		      }
+			});
+		} else {
+
+			console.log("sei que preciso colcoar parametros");
+			menu_var_or_value.find('.text').text(' ');
+			dom_object.find('.menu_var_or_value_dom').remove();
+
+			var parameters_menu = '<div class="parameters_function_called"> '+variable_obj.function_called.name+' <span> ( </span>';
+			
+			parameters_menu += '<span> ) </span></div>';
+
+			parameters_menu = $(parameters_menu);
+
+			dom_object.append(parameters_menu);
+
+			var context_menu = '<div class="ui dropdown context_menu_clear"><div class="text"></div><i class="dropdown icon"></i><div class="menu">';
+			context_menu += '<div class="item" data-clear="true">'+LocalizedStrings.getUI('btn_clear')+'</div>';
+			context_menu += '</div></div>';
+
+			context_menu = $(context_menu);
+
+			context_menu.insertAfter( dom_object.find('.parameters_function_called') );
+
+			context_menu.dropdown({
+				onChange: function(value, text, $selectedItem) {
+			     if ($selectedItem.data('clear')) {
+			     	dom_object.text('');
+
+			     	variable_obj.content = null;
+			     	variable_obj.row = null;
+			     	variable_obj.column = null;
+			     	delete variable_obj.function_called;
+			     	delete variable_obj.parameters_list;
+
+			     	renderMenu(command, variable_obj, dom_object, function_obj);
+			     }
+		      }
+			});
 		}
-
-		ret += ' )';
-
-		dom_object.append($(ret));
 
 
 	} else if (variable_obj.content.type) {
@@ -177,14 +214,15 @@ function variableValueMenuCode (command, variable_obj, dom_object, function_obj)
 			     	variable_obj.content = null;
 			     	variable_obj.row = null;
 			     	variable_obj.column = null;
+			     	delete variable_obj.function_called;
+		     		delete variable_obj.parameters_list;
 
 			     	renderMenu(command, variable_obj, dom_object, function_obj);
 			     }
 		      }
 			});
 
-
-			variableValueMenuCode(command, variable_obj.column, $(variable_render.find('.column_container')[0]), function_obj);
+			variableValueMenuCode(command, variable_obj.column, $(variable_render.find('.column_container')), function_obj, menu_var_or_value);
 
 		} else if (variable_obj.content.dimensions == 2) {
 			/*ret += ' [ ' + variableValueMenuCode(command, variable_obj.row, dom_object, function_obj) + ' ] ';
@@ -217,6 +255,9 @@ function variableValueMenuCode (command, variable_obj, dom_object, function_obj)
 			     	variable_obj.row = null;
 			     	variable_obj.column = null;
 
+			     	delete variable_obj.function_called;
+		     		delete variable_obj.parameters_list;
+
 			     	renderMenu(command, variable_obj, dom_object, function_obj);
 			     }
 		      }
@@ -224,20 +265,53 @@ function variableValueMenuCode (command, variable_obj, dom_object, function_obj)
 
 		}
 
-
-		
-
-
 	} else {
-
-		console.log("numeral?");
 
 		var variable_render = '<div class="variable_rendered"> <span class="var_name">'+variable_obj.content+'</span>';
 		variable_render += '</div>';
 
-		console.log(ret);
+		variable_render = $(variable_render);
 
-		dom_object.append($(variable_render));
+		dom_object.append(variable_render);
+
+		var context_menu = '<div class="ui dropdown context_menu_clear"><div class="text"></div><i class="dropdown icon"></i><div class="menu">';
+		context_menu += '<div class="item" data-clear="true">'+LocalizedStrings.getUI('btn_clear')+'</div>';
+		context_menu += '</div></div>';
+
+		context_menu = $(context_menu);
+
+		context_menu.insertAfter( variable_render );
+
+		context_menu.dropdown({
+			onChange: function(value, text, $selectedItem) {
+		     if ($selectedItem.data('clear')) {
+		     	dom_object.text('');
+
+   				variable_obj.content = null;
+			    variable_obj.row = null;
+			    variable_obj.column = null;
+
+		     	delete variable_obj.function_called;
+		     	delete variable_obj.parameters_list;
+
+		     	dom_object.find('.value_rendered').remove();
+				dom_object.find('.context_menu_clear').remove();
+				dom_object.find('.width-dynamic-minus').remove();
+
+		     	renderMenu(command, variable_obj, dom_object, function_obj);
+		     }
+	      }
+		});
+
+		variable_render.on('click', function(e) {
+			variable_render.remove();
+			variable_render.empty();
+			variable_render.remove();
+			dom_object.empty();
+			dom_object.append('<span class="menu_var_or_value_dom"> </span>');
+			
+			openInputToValue(command, variable_obj, dom_object, menu_var_or_value, function_obj);
+		});
 	}
 
 	
@@ -392,7 +466,40 @@ function openInputToFunction (command, ref_object, dom_object, menu_var_or_value
 		});
 
 	} else {
-		menu_var_or_value.find('.text').append('<span> (  ) </span>');
+		menu_var_or_value.find('.text').text(' ');
+		dom_object.find('.menu_var_or_value_dom').remove();
+
+		var parameters_menu = '<div class="parameters_function_called"> '+function_selected.name+' <span> ( </span>';
+		
+		parameters_menu += '<span> ) </span></div>';
+
+		parameters_menu = $(parameters_menu);
+
+		dom_object.append(parameters_menu);
+
+		var context_menu = '<div class="ui dropdown context_menu_clear"><div class="text"></div><i class="dropdown icon"></i><div class="menu">';
+		context_menu += '<div class="item" data-clear="true">'+LocalizedStrings.getUI('btn_clear')+'</div>';
+		context_menu += '</div></div>';
+
+		context_menu = $(context_menu);
+
+		context_menu.insertAfter( dom_object.find('.parameters_function_called') );
+
+		context_menu.dropdown({
+			onChange: function(value, text, $selectedItem) {
+		     if ($selectedItem.data('clear')) {
+		     	dom_object.text('');
+
+		     	ref_object.content = null;
+		     	ref_object.row = null;
+		     	ref_object.column = null;
+		     	delete ref_object.function_called;
+		     	delete ref_object.parameters_list;
+
+		     	renderMenu(command, ref_object, dom_object, function_obj);
+		     }
+	      }
+		});
 	}
 
 	if (command.type == Models.COMMAND_TYPES.attribution) {
@@ -457,6 +564,9 @@ function openInputToVariable (command, ref_object, dom_object, menu_var_or_value
 	     	ref_object.row = null;
 	     	ref_object.column = null;
 
+	     	delete ref_object.function_called;
+		    delete ref_object.parameters_list;
+
 	     	renderMenu(command, ref_object, dom_object, function_obj);
 	     }
       }
@@ -504,11 +614,16 @@ function openInputToValue (command, ref_object, dom_object, menu_var_or_value, f
 	     if ($selectedItem.data('clear')) {
 	     	dom_object.text('');
 
-	     	ref_object = new Models.VariableValueMenu(ref_object.variable_and_value, null, null, null, ref_object.include_constant);
-
 	     	dom_object.find('.value_rendered').remove();
 			dom_object.find('.context_menu_clear').remove();
 			dom_object.find('.width-dynamic-minus').remove();
+
+			ref_object.content = null;
+		    ref_object.row = null;
+		    ref_object.column = null;
+
+			delete ref_object.function_called;
+		    delete ref_object.parameters_list;
 
 	     	renderMenu(command, ref_object, dom_object, function_obj);
 	     }
