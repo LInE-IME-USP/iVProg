@@ -1,4 +1,5 @@
 import { BigNumber } from 'bignumber.js'
+
 export class StoreObject {
 
   constructor (type, value, readOnly = false) {

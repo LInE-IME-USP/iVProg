@@ -1,6 +1,6 @@
 import { StoreObject } from '../store/storeObject';
 import * as Commands from './../../ast/commands';
-import { Types } from './../../ast/types';
+import { Types, toInt } from './../../ast/types';
 
 
 /*
@@ -33,7 +33,7 @@ export function createSubstringFun () {
 export function createLengthFun () {
   const lengthFun = (sto, _) => {
     const str = sto.applyStore("str");
-    const temp = new StoreObject(Types.INTEGER, str.value.length);
+    const temp = new StoreObject(Types.INTEGER, toInt(value.length));
     return Promise.resolve(sto.updateStore("$", temp));
   }
   const block = new Commands.CommandBlock([],  [new Commands.SysCall(lengthFun)]);
