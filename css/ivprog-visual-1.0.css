@@ -302,7 +302,7 @@ div.buttons_manage_columns {
 	cursor: pointer;
 }
 
-.button_remove_command {
+.button_remove_command, .button_refresh_attribution {
 	float: right;
 	cursor: pointer;
 }

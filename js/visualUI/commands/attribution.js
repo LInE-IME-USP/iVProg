@@ -13,8 +13,8 @@ export function createFloatingCommand () {
 }
 
 export function renderCommand (command, function_obj) {
-
-	var el = $('<div class="ui attribution command_container"> <i class="ui icon small arrow left command_drag"></i> <i class="ui icon times red button_remove_command"></i> <div class="var_attributed"></div> <span class="text_attr_receives">'+LocalizedStrings.getUI('text_receives')+'</span> '
+	
+	var el = $('<div class="ui attribution command_container"> <i class="ui icon small arrow left command_drag"></i> <i class="ui icon times red button_remove_command"></i> <i class="ui icon redo alternate blue button_refresh_attribution"></i> <div class="var_attributed"></div> <span class="text_attr_receives">'+LocalizedStrings.getUI('text_receives')+'</span> '
 		 + '<div class="expression_elements"></div> </div>');
 	el.data('command', command);
 
@@ -27,7 +27,7 @@ export function renderCommand (command, function_obj) {
 	command.expression.push(Models.ARITHMETIC_TYPES.plus);
 
 	command.expression.push(new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.all, window.program_obj.functions[0].variables_list[0], null, 
-		new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.all, new Models.Variable(Types.REAL, "variable_2", 1), true), null, null, true));
+		new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.all, new Models.Variable(Types.REAL, "variable_2", 1)), null, null, true));
 
 
 	command.expression.push(")");
@@ -113,6 +113,10 @@ function addHandlers (command, function_obj, attribution_dom) {
 		if (CommandsManagement.removeCommand(command, function_obj, attribution_dom)) {
 			attribution_dom.remove();
 		}
+	});
+
+	attribution_dom.find('.button_refresh_attribution').on('click', function() {
+		renderExpression(command, function_obj, attribution_dom);
 	});
 }
 

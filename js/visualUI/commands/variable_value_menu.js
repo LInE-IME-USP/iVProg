@@ -73,38 +73,15 @@ function renderPreviousContent (function_obj, menu_var_or_value, ref_object, dom
 	if (ref_object.function_called) {
 
 	} else if (ref_object.content.type) { 
-		var temp = $('<div class="variable_rendered"></div>');
-		temp.insertBefore(menu_var_or_value);
+		
 		menu_var_or_value.remove();
-		temp.append(variableValueMenuCode(command, ref_object, dom_object, function_obj));
-
-		var context_menu = '<div class="ui dropdown context_menu_clear"><div class="text"></div><i class="dropdown icon"></i><div class="menu">';
-		context_menu += '<div class="item" data-clear="true">'+LocalizedStrings.getUI('btn_clear')+'</div>';
-		context_menu += '</div></div>';
-
-		context_menu = $(context_menu);
-
-		context_menu.insertAfter( dom_object.find('.variable_rendered') );
-
-		context_menu.dropdown({
-			onChange: function(value, text, $selectedItem) {
-		     if ($selectedItem.data('clear')) {
-		     	dom_object.text('');
-
-		     	ref_object.content = null;
-		     	ref_object.row = null;
-		     	ref_object.column = null;
-
-		     	renderMenu(command, ref_object, dom_object, function_obj);
-		     }
-	      }
-		});
+		variableValueMenuCode(command, ref_object, dom_object, function_obj);
 
 	} else {
 		var temp = $('<div class="value_rendered"></div>');
 		temp.insertBefore(menu_var_or_value);
 		menu_var_or_value.remove();
-		temp.append(variableValueMenuCode(command, ref_object, dom_object, function_obj));
+		variableValueMenuCode(command, ref_object, temp, function_obj);
 
 
 		var context_menu = '<div class="ui dropdown context_menu_clear"><div class="text"></div><i class="dropdown icon"></i><div class="menu">';
@@ -145,8 +122,6 @@ function renderPreviousContent (function_obj, menu_var_or_value, ref_object, dom
 
 function variableValueMenuCode (command, variable_obj, dom_object, function_obj) {
 
-	console.log("o que chegou: ");
-	console.log(variable_obj);
 
 	var ret = '';
 	if (variable_obj.function_called) {
@@ -155,7 +130,7 @@ function variableValueMenuCode (command, variable_obj, dom_object, function_obj)
 
 		if (variable_obj.parameters_list) {
 			for (var i = 0; i < variable_obj.parameters_list.length; i++) {
-				ret += variableValueMenuCode(command, variable_obj.parameters_list[i], dom_object, function_obj);
+				variableValueMenuCode(command, variable_obj.parameters_list[i], dom_object, function_obj);
 				if ((i + 1) < variable_obj.parameters_list.length) {
 					ret += ', ';
 				}
@@ -163,26 +138,109 @@ function variableValueMenuCode (command, variable_obj, dom_object, function_obj)
 		}
 
 		ret += ' )';
+
+		dom_object.append($(ret));
+
+
 	} else if (variable_obj.content.type) {
 
-		ret += variable_obj.content.name;
+		var variable_render = "";
 
 		if (variable_obj.content.dimensions == 1) {
-			ret += ' [ ' + variableValueMenuCode(command, variable_obj.column, dom_object, function_obj) + ' ] ';
+
+			variable_render = '<div class="variable_rendered"> <span class="var_name">'+variable_obj.content.name+'</span>';
+
+			variable_render += ' <span>[ </span> <div class="column_container"></div> <span> ]</span>';
+			
+			variable_render += '</div>';
+
+			variable_render = $(variable_render);
+
+			dom_object.append(variable_render);
+
+
+			var context_menu = '<div class="ui dropdown context_menu_clear"><div class="text"></div><i class="dropdown icon"></i><div class="menu">';
+			context_menu += '<div class="item" data-clear="true">'+LocalizedStrings.getUI('btn_clear')+'</div>';
+			context_menu += '</div></div>';
+
+			context_menu = $(context_menu);
+
+			//context_menu.insertAfter( dom_object.find('.variable_rendered') );
+
+			variable_render.append(context_menu);
+
+			context_menu.dropdown({
+				onChange: function(value, text, $selectedItem) {
+			     if ($selectedItem.data('clear')) {
+			     	dom_object.text('');
+
+			     	variable_obj.content = null;
+			     	variable_obj.row = null;
+			     	variable_obj.column = null;
+
+			     	renderMenu(command, variable_obj, dom_object, function_obj);
+			     }
+		      }
+			});
+
+
+			variableValueMenuCode(command, variable_obj.column, $(variable_render.find('.column_container')[0]), function_obj);
+
+		} else if (variable_obj.content.dimensions == 2) {
+			/*ret += ' [ ' + variableValueMenuCode(command, variable_obj.row, dom_object, function_obj) + ' ] ';
+			ret += ' [ ' + variableValueMenuCode(command, variable_obj.column, dom_object, function_obj) + ' ] ';*/
+		} else {
+
+			variable_render = '<div class="variable_rendered"> <span class="var_name">'+variable_obj.content.name+'</span>';
+
+			variable_render += '</div>';
+
+			variable_render = $(variable_render);
+
+			dom_object.append(variable_render);
+
+
+			var context_menu = '<div class="ui dropdown context_menu_clear"><div class="text"></div><i class="dropdown icon"></i><div class="menu">';
+			context_menu += '<div class="item" data-clear="true">'+LocalizedStrings.getUI('btn_clear')+'</div>';
+			context_menu += '</div></div>';
+
+			context_menu = $(context_menu);
+
+			context_menu.insertAfter( variable_render );
+
+			context_menu.dropdown({
+				onChange: function(value, text, $selectedItem) {
+			     if ($selectedItem.data('clear')) {
+			     	dom_object.text('');
+
+			     	variable_obj.content = null;
+			     	variable_obj.row = null;
+			     	variable_obj.column = null;
+
+			     	renderMenu(command, variable_obj, dom_object, function_obj);
+			     }
+		      }
+			});
+
 		}
 
-		if (variable_obj.content.dimensions == 2) {
-			ret += ' [ ' + variableValueMenuCode(command, variable_obj.row, dom_object, function_obj) + ' ] ';
-			ret += ' [ ' + variableValueMenuCode(command, variable_obj.column, dom_object, function_obj) + ' ] ';
-		}
+
+		
 
 
 	} else {
 
-		ret += variable_obj.content;
+		console.log("numeral?");
+
+		var variable_render = '<div class="variable_rendered"> <span class="var_name">'+variable_obj.content+'</span>';
+		variable_render += '</div>';
+
+		console.log(ret);
+
+		dom_object.append($(variable_render));
 	}
 
-	return ret;
+	
 
 }
 
