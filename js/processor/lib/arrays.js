@@ -1,6 +1,6 @@
 import { StoreObject } from '../store/storeObject';
 import * as Commands from './../../ast/commands';
-import { Types } from './../../ast/types';
+import { Types, toInt } from './../../ast/types';
 
 /**
  * num_elements
@@ -11,7 +11,7 @@ import { Types } from './../../ast/types';
 export function createNumElementsFun () {
   const numElementsFun = (sto, _) => {
     const vector  = sto.applyStore("vector");
-    const temp = new StoreObject(Types.INTEGER, vector.lines);
+    const temp = new StoreObject(Types.INTEGER, toInt(vector.lines));
     return Promise.resolve(sto.updateStore("$", temp));
   }
 
@@ -25,7 +25,7 @@ export function createNumElementsFun () {
 export function createMatrixLinesFun () {
   const matrixLinesFun = (sto, _) => {
     const matrix  = sto.applyStore("matrix");
-    const temp = new StoreObject(Types.INTEGER, matrix.lines);
+    const temp = new StoreObject(Types.INTEGER, toInt(matrix.lines));
     return Promise.resolve(sto.updateStore("$", temp));
   }
 
@@ -39,7 +39,7 @@ export function createMatrixLinesFun () {
 export function createMatrixColumnsFun () {
   const matrixColumnsFun = (sto, _) => {
     const matrix  = sto.applyStore("matrix");
-    const temp = new StoreObject(Types.INTEGER, matrix.columns);
+    const temp = new StoreObject(Types.INTEGER, toInt(matrix.columns));
     return Promise.resolve(sto.updateStore("$", temp));
   }
 

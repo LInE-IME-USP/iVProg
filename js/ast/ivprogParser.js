@@ -11,6 +11,11 @@ import { LanguageService } from '../services/languageService';
 
 export class IVProgParser {
 
+  static createParser (input) {
+    const lexerClass = LanguageService.getCurrentLexer();
+    return new IVProgParser(input, lexerClass);
+  }
+
   // <BEGIN scope consts>
   static get BASE () {
     return 0;

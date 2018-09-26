@@ -1,4 +1,5 @@
 import { Modes } from './../modes';
+
 export class Store {
 
   constructor() {
