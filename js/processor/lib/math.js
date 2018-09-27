@@ -158,18 +158,16 @@ export function createInvertFun () {
 }
 
 export function createMaxFun () {
-  const minFun = (sto, _) => {
+  const maxFun = (sto, _) => {
     const x = sto.applyStore('x');
-    const y = sto.applyStore('y');
-    const result = BigNumber.max(x.value, y.value);
-    const temp = new StoreObject(Types.REAL, result);
+    const result = BigNumber.max(x.value);
+    const temp = new StoreObject(x.subtype, result);
     return Promise.resolve(sto.updateStore('$', temp));
   };
 
  const block = new Commands.CommandBlock([],  [new Commands.SysCall(maxFun)]);
  const func = new Commands.Function('$max', Types.ALL,
-   [new Commands.FormalParameter(Types.ALL, 'x', 0, false),
-   new Commands.FormalParameter(Types.ALL, 'y', 0, false)],
+   [new Commands.FormalParameter(Types.ALL, 'x', 1, false)],
    block);
  return func;
 }
@@ -177,16 +175,14 @@ export function createMaxFun () {
 export function createMinFun () {
   const minFun = (sto, _) => {
     const x = sto.applyStore('x');
-    const y = sto.applyStore('y');
-    const result = BigNumber.max(x.value, y.value);
-    const temp = new StoreObject(Types.REAL, result);
+    const result = BigNumber.max(x.value);
+    const temp = new StoreObject(x.subtype, result);
     return Promise.resolve(sto.updateStore('$', temp));
   };
 
  const block = new Commands.CommandBlock([],  [new Commands.SysCall(minFun)]);
  const func = new Commands.Function('$min', Types.ALL,
-   [new Commands.FormalParameter(Types.ALL, 'x', 0, false),
-   new Commands.FormalParameter(Types.ALL, 'y', 0, false)],
+   [new Commands.FormalParameter(Types.ALL, 'x', 1, false)],
    block);
  return func;
 }
