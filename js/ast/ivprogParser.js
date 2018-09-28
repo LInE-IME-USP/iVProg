@@ -477,13 +477,22 @@ export class IVProgParser {
     const token = this.getToken();
     if(token.type !== this.lexerClass.ID) {
       throw SyntaxErrorFactory.id_missing(token);
-    } 
+    }
     this.pos++;
     if (this.insideScope(IVProgParser.FUNCTION)) {
       if (token.text === LanguageDefinedFunction.getMainFunctionName()){
         return null;
       }
     }
+    return token.text;
+  }
+
+  parseMaybeLibID () {
+    const token = this.getToken();
+    if(token.type !== this.lexerClass.ID && token.type !== this.lexerClass.LIB_ID) {
+      throw SyntaxErrorFactory.id_missing(token);
+    } 
+    this.pos++;
     return token.text;
   }
 
@@ -559,6 +568,8 @@ export class IVProgParser {
       this.pos++;
       return cmd;
     } else if (token.type === this.lexerClass.ID) {
+      return this.parseIDCommand();
+    } else if (token.type === this.lexerClass.LIB_ID) {
       return this.parseIDCommand();
     } else if (token.type === this.lexerClass.RK_RETURN) {
       return this.parseReturn();
@@ -728,9 +739,11 @@ export class IVProgParser {
   }
 
   parseIDCommand () {
-    const id = this.parseID();
+    const refToken = this.getToken();
+    const isID = refToken.type === this.lexerClass.ID;
+    const id = this.parseMaybeLibID();
     const equalOrParenthesis = this.getToken();
-    if (equalOrParenthesis.type === this.lexerClass.EQUAL) {
+    if (isID && equalOrParenthesis.type === this.lexerClass.EQUAL) {
       const sourceInfo = SourceInfo.createSourceInfo(this.getToken());
       this.pos++
       const exp = this.parseExpressionOR();
@@ -744,8 +757,10 @@ export class IVProgParser {
       this.checkEOS();
       this.pos++;
       return funcCall;
-    } else {
+    } else if (isID) {
       throw SyntaxErrorFactory.token_missing_list(['=','('], equalOrParenthesis);
+    } else {
+      throw SyntaxErrorFactory.invalid_id_format(refToken);
     }
   }
 
@@ -941,6 +956,7 @@ export class IVProgParser {
       case this.lexerClass.OPEN_CURLY:
         return this.parseArrayLiteral();
       case this.lexerClass.ID:
+      case this.lexerClass.LIB_ID:
         return this.parseIDTerm();
       case this.lexerClass.OPEN_PARENTHESIS:
         return this.parseParenthesisExp();
@@ -950,9 +966,10 @@ export class IVProgParser {
   }
 
   parseIDTerm () {
-    const id = this.parseID();
-    const tokenA = this.getToken(this.pos - 1);
-    if(this.checkOpenBrace(true)) {
+    const tokenA = this.getToken();
+    const id = this.parseMaybeLibID();
+    const isID = tokenA.type === this.lexerClass.ID;
+    if(isID && this.checkOpenBrace(true)) {
       let tokenB = null;
       this.pos++;
       const firstIndex = this.parseExpression();
@@ -976,11 +993,13 @@ export class IVProgParser {
 
     } else if (this.checkOpenParenthesis(true)) {
       return this.parseFunctionCallExpression(id);
-    } else {
+    } else if (isID) {
       const sourceInfo = SourceInfo.createSourceInfo(tokenA);
       const exp = new Expressions.VariableLiteral(id);
       exp.sourceInfo = sourceInfo;
       return exp;
+    } else {
+      throw SyntaxErrorFactory.invalid_id_format(tokenA);
     }
   }
 

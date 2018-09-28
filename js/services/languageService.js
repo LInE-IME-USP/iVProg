@@ -33,6 +33,14 @@ export const LanguageService  = Object.freeze({
     } else {
       return langInfo.langFuncs;
     }
+  },
+
+  getCurrentLangLibs: () => {
+    const langInfo = Lexers[LanguageService.getLang()];
+    if(langInfo === null || langInfo === undefined) {
+      return Lexers[DEFAULT_LANG].langLibs;
+    }
+    return langInfo.langLibs;
   }
 
 });

@@ -97,7 +97,7 @@ export function createPowFun () {
 export function createLogFun () {
   const logFun = (sto, _) => {
     const x = sto.applyStore('x');
-    if (x.isNegative()) {
+    if (x.value.isNegative()) {
       return Promise.reject("the value passed to log function cannot be negative");
     }
     const result = toReal(Math.log10(x.number));
