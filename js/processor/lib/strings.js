@@ -8,7 +8,7 @@ import { Types, toInt } from './../../ast/types';
 *  length
 *  uppercase
 *  lowercase
-*  letterAt
+*  charAt
 **/
 
 export function createSubstringFun () {

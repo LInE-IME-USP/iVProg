@@ -51,5 +51,9 @@ export const SyntaxErrorFactory = Object.freeze({
   const_not_init: (token) => {
     const context = [token.line, token.column];
     return new SyntaxError(LocalizedStrings.getError("const_not_init", context));
+  },
+  invalid_id_format: (token) => {
+    const context = [token.text, token.line, token.column];
+    return new SyntaxError(LocalizedStrings.getError("invalid_id_format", context));
   }
 });
