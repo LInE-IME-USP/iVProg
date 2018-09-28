@@ -164,7 +164,9 @@ ID
   : [a-zA-Z_] [a-zA-Z0-9_]*
   ;
 
-// ID_BIBLIOTECA     : ID '.' ID;
+LIB_ID
+  : ID '.' ID
+  ;
 
 INTEGER
   : [0-9]+

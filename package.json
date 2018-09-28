@@ -44,6 +44,7 @@
   },
   "dependencies": {
     "antlr4": "^4.7.1",
+    "bignumber.js": "^7.2.1",
     "jquery": "^3.3.1"
   }
 }

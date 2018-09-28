@@ -18,7 +18,7 @@ describe('Multi(*) operation', function () {
     const parser = new IVProgParser(input, lexer);
     const exec = new IVProgProcessor(parser.parseTree());
     exec.interpretAST().then(sto => {
-      expect(sto.applyStore('a').value).toEqual(8);
+      expect(sto.applyStore('a').number).toEqual(8);
       done();
     }).catch( err => done(err));
   });

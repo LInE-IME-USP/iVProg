@@ -12,6 +12,7 @@
   "invalid_terminal": "Não é possível utilizar $0 na expressão da linha: $1, coluna: $2. Tente um valor númerico, variável ou chamada de função.",
   "const_not_init": "Erro na linha: $0, coluna: $1. Uma variável declarada como const deve ser inicializada",
   "id_missing": "Esperava-se um identificador, mas encontrou-se $0 na linha: $1, coluna: $2",
+  "invalid_id_format": "$0 na linha: $1, coluna: $2 não é um identificador válido. O símbolo '.' não é permitido neste contexto.",
   "main_missing": "A função principal não foi encontrada",
   "invalid_global_var": "Erro crítico: Chamada inválida da função initGlobal fora do contexto BASE",
   "not_implemented": "Erro interno crítico: A função definida pelo sistema $0 não foi implementada.",

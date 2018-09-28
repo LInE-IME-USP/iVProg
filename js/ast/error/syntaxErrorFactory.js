@@ -9,7 +9,7 @@ export const SyntaxErrorFactory = Object.freeze({
   },
   token_missing_list: (expectedList, token) => {
     const line = expectedList.join(LocalizedStrings.getOR());
-    return SyntaxErrorCodes.token_missing_one(line, token);
+    return SyntaxErrorFactory.token_missing_one(line, token);
   },
   id_missing: (token) => {
     const context = [token.text, token.line, token.column];
@@ -51,5 +51,9 @@ export const SyntaxErrorFactory = Object.freeze({
   const_not_init: (token) => {
     const context = [token.line, token.column];
     return new SyntaxError(LocalizedStrings.getError("const_not_init", context));
+  },
+  invalid_id_format: (token) => {
+    const context = [token.text, token.line, token.column];
+    return new SyntaxError(LocalizedStrings.getError("invalid_id_format", context));
   }
 });

@@ -24,7 +24,7 @@ describe('The sum of a real and a integer', function () {
     const exec = new IVProgProcessor(parser.parseTree());
     exec.registerInput(input);
     exec.interpretAST().then(sto => {
-      expect(sto.applyStore('a').value).toEqual(5.8 + 0xff);
+      expect(sto.applyStore('a').number).toEqual(5.8 + 0xff);
       localStorage.removeItem('ivprog.lang');
       done();
     }).catch( err => done(err));

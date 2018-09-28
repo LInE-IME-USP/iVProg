@@ -4,7 +4,7 @@ import { StoreObjectArray } from './store/storeObjectArray';
 import { StoreObjectRef } from './store/storeObjectRef';
 import { Modes } from './modes';
 import { Context } from './context';
-import { Types, toInt } from './../ast/types';
+import { Types } from './../ast/types';
 import { Operators } from './../ast/operators';
 import { LanguageDefinedFunction } from './definedFunctions';
 import { resultTypeAfterInfixOp, resultTypeAfterUnaryOp } from './compatibilityTable';
@@ -460,7 +460,7 @@ export class IVProgProcessor {
             //SHOULD NOT BE HERE. IT MUST HAVE A SEMANTIC ANALYSIS
             return Promise.reject(new Error("Array dimension must be of type int"));
           }
-          const line = lineSO.value;
+          const line = lineSO.number;
           const columnSO = values[1];
           let column = null
           if (columnSO !== null) {
@@ -469,7 +469,7 @@ export class IVProgProcessor {
               //SHOULD NOT BE HERE. IT MUST HAVE A SEMANTIC ANALYSIS
               return Promise.reject(new Error("Array dimension must be of type int"));
             }
-            column = columnSO.value;
+            column = columnSO.number;
           }
           const value = values[2];
           const temp = new StoreObjectArray(cmd.subtype, line, column, null, cmd.isConst);
@@ -603,7 +603,7 @@ export class IVProgProcessor {
         //SHOULD NOT BE HERE. IT MUST HAVE A SEMANTIC ANALYSIS
         return Promise.reject(new Error("Array dimension must be of type int"));
       }
-      const line = lineSO.value;
+      const line = lineSO.number;
       let column = null;
       if(columnSO !== null) {
         if(columnSO.type !== Types.INTEGER) {
@@ -611,7 +611,7 @@ export class IVProgProcessor {
           //SHOULD NOT BE HERE. IT MUST HAVE A SEMANTIC ANALYSIS
           return Promise.reject(new Error("Array dimension must be of type int"));
         }
-        column = columnSO.value;
+        column = columnSO.number;
       }
 
       if (line >= mustBeArray.lines) {
@@ -645,9 +645,9 @@ export class IVProgProcessor {
       }
       switch (unaryApp.op.ord) {
         case Operators.ADD.ord:
-          return new StoreObject(resultType, +left.value);
+          return new StoreObject(resultType, left.value);
         case Operators.SUB.ord:
-          return new StoreObject(resultType, -left.value);
+          return new StoreObject(resultType, left.value.negated());
         case Operators.NOT.ord:
           return new StoreObject(resultType, !left.value);
         default:
@@ -665,33 +665,31 @@ export class IVProgProcessor {
       const resultType = resultTypeAfterInfixOp(infixApp.op, left.type, right.type);
       if (resultType === Types.UNDEFINED) {
         // TODO: better urgent error message
-        return Promise.reject(new Error(`Cannot use this op to ${left.type} and ${right.type}`));
+        return Promise.reject(new Error(`Cannot use this ${infixApp.op.value} to ${left.type.value} and ${right.type.value}`));
       }
       let result = null;
       switch (infixApp.op.ord) {
         case Operators.ADD.ord:
-          return new StoreObject(resultType, left.value + right.value);
+          return new StoreObject(resultType, left.value.plus(right.value));
         case Operators.SUB.ord:
-          return new StoreObject(resultType, left.value - right.value);
-        case Operators.MULT.ord: {
-          result = left.value * right.value;
-          if (resultType === Types.INTEGER)
-            result = Math.trunc(result);
-          return new StoreObject(resultType, result);
-        }
+          return new StoreObject(resultType, left.value.minus(right.value));
+        case Operators.MULT.ord:
+          return new StoreObject(resultType, left.value.times(right.value));
         case Operators.DIV.ord: {
           result = left.value / right.value;
           if (resultType === Types.INTEGER)
-            result = Math.trunc(result);
+            result = left.value.idiv(right.value);
+          else
+            result = left.value.div(right.value);
           return new StoreObject(resultType, result);
         }
         case Operators.MOD.ord:
-          return new StoreObject(resultType, left.value % right.value);
+          return new StoreObject(resultType, left.value.modulo(right.value));
         case Operators.GT.ord: {
           if (left.type === Types.STRING) {
             result = left.value.length > right.value.length;
           } else {
-            result = left.value > right.value;
+            result = left.value.gt(right.value);
           }
           return new StoreObject(resultType, result);
         }
@@ -699,7 +697,7 @@ export class IVProgProcessor {
           if (left.type === Types.STRING) {
             result = left.value.length >= right.value.length;
           } else {
-            result = left.value >= right.value;
+            result = left.value.gte(right.value);
           }
           return new StoreObject(resultType, result);
         }
@@ -707,7 +705,7 @@ export class IVProgProcessor {
           if (left.type === Types.STRING) {
             result = left.value.length < right.value.length;
           } else {
-            result = left.value < right.value;
+            result = left.value.lt(right.value);
           }
           return new StoreObject(resultType, result);
         }
@@ -715,14 +713,26 @@ export class IVProgProcessor {
           if (left.type === Types.STRING) {
             result = left.value.length <= right.value.length;
           } else {
-            result = left.value <= right.value;
+            result = left.value.lte(right.value);
           }
           return new StoreObject(resultType, result);
         }
-        case Operators.EQ.ord:
-          return new StoreObject(resultType, left.value === right.value);
-        case Operators.NEQ.ord:
-          return new StoreObject(resultType, left.value !== right.value);
+        case Operators.EQ.ord: {
+          if (left.type === Types.INTEGER || left.type === Types.REAL) {
+            result = left.value.eq(right.value);
+          } else {
+            result = left.value === right.value;
+          }
+          return new StoreObject(resultType, result);
+        }
+        case Operators.NEQ.ord: {
+          if (left.type === Types.INTEGER || left.type === Types.REAL) {
+            result = !left.value.eq(right.value);
+          } else {
+            result = left.value !== right.value;
+          }
+          return new StoreObject(resultType, result);
+        }
         case Operators.AND.ord:
           return new StoreObject(resultType, left.value && right.value);
         case Operators.OR.ord:
