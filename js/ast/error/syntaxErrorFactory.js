@@ -9,7 +9,7 @@ export const SyntaxErrorFactory = Object.freeze({
   },
   token_missing_list: (expectedList, token) => {
     const line = expectedList.join(LocalizedStrings.getOR());
-    return SyntaxErrorCodes.token_missing_one(line, token);
+    return SyntaxErrorFactory.token_missing_one(line, token);
   },
   id_missing: (token) => {
     const context = [token.text, token.line, token.column];
