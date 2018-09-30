@@ -10,6 +10,8 @@ import { LanguageDefinedFunction } from './definedFunctions';
 import { resultTypeAfterInfixOp, resultTypeAfterUnaryOp } from './compatibilityTable';
 import * as Commands from './../ast/commands/';
 import * as Expressions from './../ast/expressions/';
+import { StoreObjectArrayAddress } from './store/storeObjectArrayAddress';
+import { StoreObjectArrayAddressRef } from './store/storeObjectArrayAddressRef';
 
 export class IVProgProcessor {
 
@@ -125,7 +127,7 @@ export class IVProgProcessor {
               }
 
               if(formalParameter.byRef) {
-                const ref = new StoreObjectRef(stoObj.id, callerStore);
+                const ref = new StoreObjectArrayAddressRef(stoObj);
                 calleeStore.insertStore(formalParameter.id, ref);
               } else {
                 calleeStore.insertStore(formalParameter.id, stoObj);
@@ -146,7 +148,7 @@ export class IVProgProcessor {
               }
 
               if(formalParameter.byRef) {
-                const ref = new StoreObjectRef(stoObj.id, callerStore);
+                const ref = new StoreObjectArrayAddressRef(stoObj);
                 calleeStore.insertStore(formalParameter.id, ref);
               } else {
                 calleeStore.insertStore(formalParameter.id, stoObj);
@@ -169,7 +171,12 @@ export class IVProgProcessor {
             } else {
 
               if(formalParameter.byRef) {
-                const ref = new StoreObjectRef(stoObj.id, callerStore);
+                let ref = null;
+                if (stoObj instanceof StoreObjectArrayAddress) {
+                  ref = new StoreObjectArrayAddressRef(stoObj);
+                } else {
+                  ref = new StoreObjectRef(stoObj.id, callerStore);
+                }
                 calleeStore.insertStore(formalParameter.id, ref);
               } else {
                 calleeStore.insertStore(formalParameter.id, stoObj);
@@ -506,13 +513,12 @@ export class IVProgProcessor {
           reject(new Error("Invalid operation. This must be a vector: line "+cmd.sourceInfo.line));
           return;
          }
+         newArray.value[line] = value;
          store.updateStore(cmd.id, newArray);
         }
         resolve(store);
       }).catch(err => reject(err));
     });
-    const $value = this.evaluateExpression(store, cmd.expression);
-    return $value.then( vl => store.updateStore(cmd.id, vl));
   }
 
   executeDeclaration (store, cmd) {
@@ -694,12 +700,7 @@ export class IVProgProcessor {
         // TODO: better error message
         return Promise.reject(new Error(`${exp.id}: index out of bounds: ${column}`));
       }
-  
-      if (column !== null) {
-        return Promise.resolve(mustBeArray.value[line].value[column]);
-      } else {
-        return Promise.resolve(mustBeArray.value[line]);
-      }
+      return Promise.resolve(new StoreObjectArrayAddress(mustBeArray.id, line, column, store));
     });
   }
 
