@@ -206,6 +206,8 @@ export class IVProgProcessor {
 
     if (cmd instanceof Commands.Declaration) {
       return this.executeDeclaration(store, cmd);
+    } else if (cmd instanceof Commands.ArrayIndexAssign) {
+      return this.executeArrayIndexAssign(store, cmd);
     } else if (cmd instanceof Commands.Assign) {
       return this.executeAssign(store, cmd);
     } else if (cmd instanceof Commands.Break) {
@@ -445,6 +447,72 @@ export class IVProgProcessor {
     } catch (error) {
       return Promise.reject(error);
     }
+  }
+
+  executeArrayIndexAssign (store, cmd) {
+    return new Promise((resolve, reject) => {
+      const mustBeArray = store.applyStore(cmd.id);
+      if(mustBeArray.type !== Types.ARRAY) {
+        reject(new Error(cmd.id + " is not a vector/matrix"));
+        return;
+      }
+      const line$ = this.evaluateExpression(store, cmd.line);
+      const column$ = this.evaluateExpression(store, cmd.column);
+      const value$ =  this.evaluateExpression(store, cmd.expression);
+      Promise.all([line$, column$, value$]).then(results => {
+        const lineSO = results[0];
+        if(lineSO.type !== Types.INTEGER) {
+          // TODO: better error message
+          //SHOULD NOT BE HERE. IT MUST HAVE A SEMANTIC ANALYSIS
+          reject(new Error("Array dimension must be of type int"));
+          return;
+        }
+        const line = lineSO.number;
+        const columnSO = results[1];
+        let column = null
+        if (columnSO !== null) {
+          if(columnSO.type !== Types.INTEGER) {
+            // TODO: better error message
+            //SHOULD NOT BE HERE. IT MUST HAVE A SEMANTIC ANALYSIS
+            reject(new Error("Array dimension must be of type int"));
+            return;
+          }
+          column = columnSO.number;
+        }
+        const value = results[2];
+        if (line >= mustBeArray.lines) {
+          // TODO: better error message
+          return Promise.reject(new Error(`${exp.id}: index out of bounds: ${lines}`));
+        }
+        if (column !== null && mustBeArray.columns === null ){
+          // TODO: better error message
+          return Promise.reject(new Error(`${exp.id}: index out of bounds: ${column}`));
+        }
+        if(column !== null && column >= mustBeArray.columns) {
+          // TODO: better error message
+          return Promise.reject(new Error(`${exp.id}: index out of bounds: ${column}`));
+        }
+
+        const newArray = Object.assign(new StoreObjectArray(null,null,null), mustBeArray);
+        if (column !== null) {
+         if (value.type === Types.ARRAY) {
+           reject(new Error("Invalid operation. This must be a value: line "+cmd.sourceInfo.line));
+           return;
+         }
+         newArray.value[line].value[column] = value;
+         store.updateStore(cmd.id, newArray);
+        } else {
+         if(mustBeArray.columns !== null && value.type !== Types.ARRAY) {
+          reject(new Error("Invalid operation. This must be a vector: line "+cmd.sourceInfo.line));
+          return;
+         }
+         store.updateStore(cmd.id, newArray);
+        }
+        resolve(store);
+      }).catch(err => reject(err));
+    });
+    const $value = this.evaluateExpression(store, cmd.expression);
+    return $value.then( vl => store.updateStore(cmd.id, vl));
   }
 
   executeDeclaration (store, cmd) {

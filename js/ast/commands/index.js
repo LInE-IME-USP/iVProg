@@ -1,6 +1,7 @@
 import { Break } from './break';
 import { Return } from './return';
 import { Assign } from './assign';
+import { ArrayIndexAssign } from './arrayAssign';
 import { Declaration } from './declaration';
 import { ArrayDeclaration } from './arrayDeclaration';
 import { While } from './while';
@@ -19,6 +20,7 @@ export {
   Break,
   Return,
   Assign,
+  ArrayIndexAssign,
   Declaration,
   ArrayDeclaration,
   While,
