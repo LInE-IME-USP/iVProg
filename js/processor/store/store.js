@@ -43,11 +43,10 @@ export class Store {
         // TODO: better error message
         throw new Error("Cannot change value of a read only variable: " + id);
       }
-      if(oldObj.isCompatible(stoObj)) {
-        if(oldObj.isRef) {
-          oldObj.updateRef(stoObj);
-          return this;
-        }
+      if(oldObj.isRef) {
+        oldObj.updateRef(stoObj);
+        return this;
+      } else if(oldObj.isCompatible(stoObj)) {
         stoObj.setID(id);
         this.store[id] = Object.freeze(stoObj);
         return this;
