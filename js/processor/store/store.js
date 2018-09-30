@@ -52,8 +52,10 @@ export class Store {
         this.store[id] = Object.freeze(stoObj);
         return this;
       } else {
+        const oldType = oldObj.subtype ? oldObj.subtype.value : oldObj.type.value;
+        const stoType = stoObj.subtype ? stoObj.subtype.value : stoObj.type.value;
         // TODO: better error message
-        throw new Error(`${oldObj.type} is not compatible with the value given`);
+        throw new Error(`${oldType} is not compatible with type ${stoType} given`);
       }
     }
   }

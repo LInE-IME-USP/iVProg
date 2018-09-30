@@ -1,7 +1,7 @@
 import { ProcessorErrorFactory } from './../error/processorErrorFactory';
 import { LanguageDefinedFunction } from './../definedFunctions';
 import { LanguageService } from './../../services/languageService';
-import { ArrayDeclaration, While, For, Switch, Case, Declaration, Assign, Break, IfThenElse, Return } from '../../ast/commands';
+import { ArrayDeclaration, While, For, Switch, Case, Declaration, Assign, Break, IfThenElse, Return, ArrayIndexAssign } from '../../ast/commands';
 import { InfixApp, UnaryApp, FunctionCall, IntLiteral, RealLiteral, StringLiteral, BoolLiteral, VariableLiteral, ArrayLiteral, ArrayAccess } from '../../ast/expressions';
 import { Literal } from '../../ast/expressions/literal';
 import { resultTypeAfterInfixOp, resultTypeAfterUnaryOp } from '../compatibilityTable';
@@ -287,6 +287,33 @@ export class SemanticAnalyser {
       }
       return result && hasDefault;
 
+    } else if (cmd instanceof ArrayIndexAssign) {
+      const typeInfo = this.findSymbol(cmd.id, this.symbolMap);
+      if(!typeInfo.subtype) {
+        throw new Error(cmd.id + " is not an array.");
+      }
+      const exp = cmd.expression;
+      const lineExp = cmd.line;
+      const lineType = this.evaluateExpressionType(lineExp);
+      if (lineType !== Types.INTEGER) {
+        throw new Error("array dimension must be of type int");
+      }
+      const columnExp = cmd.column;
+      if (typeInfo.columns === null && columnExp !== null) {
+        throw new Error(cmd.id + " is not a matrix");
+      } else if (columnExp !== null) {
+        const columnType = this.evaluateExpressionType(columnExp);
+        if (columnType !== Types.INTEGER) {
+          throw new Error("array dimension must be of type int");
+        }
+      }
+      // exp can be a arrayLiteral, a single value exp or an array access
+      if(exp instanceof ArrayLiteral) {
+        this.evaluateArrayLiteral(typeInfo.lines, (columnExp ? typeInfo.columns : null), typeInfo.subtype, exp);
+      } else {
+        // cannot properly evaluate since type system is poorly constructed
+      }
+      return optional;
     } else if (cmd instanceof Assign) {
       const typeInfo = this.findSymbol(cmd.id, this.symbolMap);
       const exp = cmd.expression;
