@@ -742,15 +742,43 @@ export class IVProgParser {
     const refToken = this.getToken();
     const isID = refToken.type === this.lexerClass.ID;
     const id = this.parseMaybeLibID();
+    if(this.checkOpenBrace(true)) {
+      this.pos++;
+      let lineExpression = null;
+      let columnExpression = null;
+      this.consumeNewLines();
+      lineExpression = this.parseExpression()
+      this.consumeNewLines();
+      this.checkCloseBrace();
+      this.pos++;
+      if (this.checkOpenBrace(true)) {
+        this.pos++
+        this.consumeNewLines();
+        columnExpression = this.parseExpression();
+        this.consumeNewLines();
+        this.checkCloseBrace();
+        this.pos++;
+      }
+      const equalToken = this.getToken();
+      if (equalToken.type !== this.lexerClass.EQUAL) {
+        throw SyntaxErrorFactory.token_missing_one('=', equalToken);
+      }
+      this.pos++;
+      const exp = this.parseExpressionOR();
+      this.checkEOS();
+      this.pos++;
+      const cmd = new Commands.ArrayIndexAssign(id, lineExpression, columnExpression, exp);
+      cmd.sourceInfo = SourceInfo.createSourceInfo(equalToken);
+      return cmd;
+    }
     const equalOrParenthesis = this.getToken();
     if (isID && equalOrParenthesis.type === this.lexerClass.EQUAL) {
-      const sourceInfo = SourceInfo.createSourceInfo(this.getToken());
       this.pos++
       const exp = this.parseExpressionOR();
       this.checkEOS();
       this.pos++;
       const cmd = new Commands.Assign(id, exp);
-      cmd.sourceInfo = sourceInfo;
+      cmd.sourceInfo = SourceInfo.createSourceInfo(equalOrParenthesis);
       return cmd;
     } else if (equalOrParenthesis.type === this.lexerClass.OPEN_PARENTHESIS) {
       const funcCall = this.parseFunctionCallCommand(id);

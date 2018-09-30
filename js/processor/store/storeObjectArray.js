@@ -3,7 +3,7 @@ import { StoreObject } from './storeObject';
 
 export class StoreObjectArray extends StoreObject {
 
-  constructor (subtype, lines, columns, value, readOnly) {
+  constructor (subtype, lines, columns, value = null, readOnly = false) {
     super(Types.ARRAY, value, readOnly);
     this._lines = lines;
     this._columns = columns;
