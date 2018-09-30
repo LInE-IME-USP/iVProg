@@ -20,6 +20,14 @@ export class StoreObjectRef extends StoreObject {
     return this.store.applyStore(this.refID).value;
   }
 
+  get number () {
+    if (this.value instanceof BigNumber) {
+      return this.value.toNumber();
+    } else {
+      return null;
+    }
+  }
+
   getRefObj () {
     return this.store.applyStore(this.refID);
   }

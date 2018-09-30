@@ -379,8 +379,10 @@ export class SemanticAnalyser {
     for (let i = 0; i < actualParametersList.length; i++) {
       const param = actualParametersList[i];
       const formalParam = fun.formalParameters[i];
-      if(formalParam.byRef && !(param instanceof VariableLiteral)) {
-        throw new Error("Invalid param type");
+      if(formalParam.byRef) {
+        if (!(param instanceof VariableLiteral || param instanceof ArrayAccess)) {
+          throw new Error("Invalid param type");
+        }
       }
       const resultType = this.evaluateExpressionType(param);
       switch (formalParam.dimensions) {

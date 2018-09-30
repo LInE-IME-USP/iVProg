@@ -23,7 +23,7 @@ export class StoreObjectArray extends StoreObject {
   }
 
   isCompatible (another) {
-    if(another instanceof StoreObjectArray) {
+    if(another instanceof StoreObject) {
       if(this.lines === another.lines &&
         this.columns === another.columns &&
         this.subtype === another.subtype) {
