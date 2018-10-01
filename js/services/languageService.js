@@ -1,46 +1,39 @@
 import Lexers from './../../grammar/';
+import line_i18n from 'line-i18n';
 
 const DEFAULT_LANG = "pt";
 
-export const LanguageService  = Object.freeze({
+class LanguageServiceExtended extends line_i18n.LanguageService {
 
-  getLang: () => {
-    const lang = localStorage.getItem('ivprog.lang');
-    if (lang === null || lang === undefined) {
-      console.warn("Internal Error. User language information has not been set. Returning default...");
-      return LanguageService.getDefaultLang();
-    }
-    return lang;
-  },
+  constructor () {
+    super("ivprog.lang", DEFAULT_LANG);
+  }
 
-  getDefaultLang: () => {
-    return DEFAULT_LANG;
-  },
-
-  getCurrentLexer: () => {
-    const langInfo = Lexers[LanguageService.getLang()];
+  getCurrentLexer () {
+    const langInfo = Lexers[this.getLang()];
     if(langInfo === null || langInfo === undefined) {
-      return Lexers[DEFAULT_LANG].lexer;
+      return Lexers[this.getDefaultLang()].lexer;
     } else {
       return langInfo.lexer;
     }
-  },
+  }
 
-  getCurrentLangFuncs: () => {
-    const langInfo = Lexers[LanguageService.getLang()];
+  getCurrentLangFuncs () {
+    const langInfo = Lexers[this.getLang()];
     if(langInfo === null || langInfo === undefined) {
-      return Lexers[DEFAULT_LANG].langFuncs;
+      return Lexers[this.getDefaultLang()].langFuncs;
     } else {
       return langInfo.langFuncs;
     }
-  },
+  }
 
-  getCurrentLangLibs: () => {
-    const langInfo = Lexers[LanguageService.getLang()];
+  getCurrentLangLibs () {
+    const langInfo = Lexers[this.getLang()];
     if(langInfo === null || langInfo === undefined) {
-      return Lexers[DEFAULT_LANG].langLibs;
+      return Lexers[this.getDefaultLang()].langLibs;
     }
     return langInfo.langLibs;
   }
+}
 
-});
+export const LanguageService  = Object.freeze(new LanguageServiceExtended());
