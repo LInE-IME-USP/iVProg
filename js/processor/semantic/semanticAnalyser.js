@@ -196,7 +196,25 @@ export class SemanticAnalyser {
       return typeInfo.type;
     } else {
       console.warn("Evaluating type only for an array literal...");
-      return Types.UNDEFINED;
+      let last = null;
+      if(literal.value.length === 1) {
+        last = this.evaluateExpressionType(literal.value[0]);
+      } else {
+        for (let i = 0; i < literal.value.length; i++) {
+          const e = this.evaluateExpressionType(literal.value[i]);
+          if(last === null) {
+            last = e;
+          } else if(!last.isCompatible(e)) {
+            throw new Error("invalid value type for array");
+          } else {
+            last = e;
+          }
+        }
+      }
+      if(last instanceof CompoundType) {
+        return new CompoundType(last.innerType, last.dimensions + 1);
+      }
+      return new CompoundType(last, 1);
     }
   }
 
@@ -236,10 +254,10 @@ export class SemanticAnalyser {
     } else {
 
       const resultType = this.evaluateExpressionType(literal);
-      if (!(resultType.type instanceof CompoundType)) {
+      if (!(resultType instanceof CompoundType)) {
         throw new Error("initial must be of type array");
       }
-      if (!type.isCompatible(resultType.type)) {
+      if (!type.isCompatible(resultType)) {
         throw new Error("invalid array type");
       }
       return true;
@@ -363,7 +381,8 @@ export class SemanticAnalyser {
         throw new Error('invalid return type');
       } else if (cmd.expression !== null) {
         const resultType = this.evaluateExpressionType(cmd.expression);
-        if (!resultType.isCompatible(type)) {
+        if (!type.isCompatible(resultType)) {
+          console.log(resultType);
           throw new Error('invalid return type');
         } else {
           return true;
