@@ -4,7 +4,7 @@ import {
 import * as Expressions from './../js/ast/expressions/';
 import * as Commands from './../js/ast/commands/';
 import { LanguageService } from './../js/services/languageService';
-import { Types } from './../js/ast/types';
+import { Types } from './../js/typeSystem/types';
 
 describe("Testing Syntax Analysis for default", () => {
 

@@ -1,13 +1,14 @@
 import { StoreObject } from './../store/storeObject';
 import * as Commands from './../../ast/commands';
-import {Types, toInt, toString, toBool, toReal} from './../../ast/types';
+import {toInt, toString, toBool, toReal} from './../../typeSystem/parsers';
+import { Types } from './../../typeSystem/types';
 
 export function createOutputFun () {
   const writeFunction = function (store, _) {
     const val = store.applyStore('p1');
-    if(val.type === Types.INTEGER) {
+    if(val.type.isCompatible(Types.INTEGER)) {
       this.output.sendOutput(val.value.toString());
-    } else if (val.type === Types.REAL) {
+    } else if (val.type.isCompatible(Types.REAL)) {
       if (val.value.dp() <= 0) {
         this.output.sendOutput(val.value.toFixed(1));  
       } else {
@@ -20,7 +21,7 @@ export function createOutputFun () {
   }
   const block = new Commands.CommandBlock([], [new Commands.SysCall(writeFunction)]);
   const func = new Commands.Function('$write', Types.VOID,
-    [new Commands.FormalParameter(Types.ALL, 'p1', 0, false)],
+    [new Commands.FormalParameter(Types.ALL, 'p1', false)],
     block);
   return func;
 }
@@ -33,14 +34,14 @@ export function createInputFun () {
     return request.then(text => {
       const typeToConvert = store.applyStore('p1').type;
       let stoObj = null;
-      if (typeToConvert === Types.INTEGER) {
+      if (typeToConvert.isCompatible(Types.INTEGER)) {
         const val = toInt(text);
         stoObj = new StoreObject(Types.INTEGER, val);
-      } else if (typeToConvert === Types.REAL) {
+      } else if (typeToConvert.isCompatible(Types.REAL)) {
         stoObj = new StoreObject(Types.REAL, toReal(text));
-      } else if (typeToConvert === Types.BOOLEAN) {
+      } else if (typeToConvert.isCompatible(Types.BOOLEAN)) {
         stoObj = new StoreObject(Types.BOOLEAN, toBool(text));
-      } else if (typeToConvert === Types.STRING) {
+      } else if (typeToConvert.isCompatible(Types.STRING)) {
         stoObj = new StoreObject(Types.STRING, toString(text));
       }
       store.updateStore('p1', stoObj);
@@ -49,7 +50,7 @@ export function createInputFun () {
   }
   const block = new Commands.CommandBlock([],  [new Commands.SysCall(readFunction)]);
   const func = new Commands.Function('$read', Types.VOID,
-    [new Commands.FormalParameter(Types.ALL, 'p1', 0, true)],
+    [new Commands.FormalParameter(Types.ALL, 'p1', true)],
     block);
   return func;
 }

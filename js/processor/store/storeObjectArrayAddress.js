@@ -1,6 +1,7 @@
 import { StoreObject } from './storeObject';
 import { StoreObjectArray } from './storeObjectArray';
-import { Types } from '../../ast/types';
+import { Types } from '../../typeSystem/types';
+import { CompoundType } from '../../typeSystem/compoundType';
 
 export class StoreObjectArrayAddress extends StoreObject {
 
@@ -44,18 +45,12 @@ export class StoreObjectArrayAddress extends StoreObject {
   }
 
   get columns () {
-    if(this.lines <= 0) {
-      return null;
-    } else if (this.refValue.value[0].type !== Types.ARRAY) {
-      return null;
+    switch (this.type.dimensions) {
+      case 2:
+        return this.refValue.value[0].value.length;
+      default:
+        return null;
     }
-    // this.refValue is StoreObject
-    //this.refValue.value[0] is another StoreObject
-    return this.refValue.value[0].value.length;
-  }
-
-  get subtype () {
-    return this.refValue.subtype;
   }
 
   getArrayObject () {
@@ -65,31 +60,27 @@ export class StoreObjectArrayAddress extends StoreObject {
   updateArrayObject (stoObj) {
     const anArray =  this.getArrayObject();
     const newArray = Object.assign(new StoreObjectArray(null,null,null), anArray);
+    if(!stoObj.type.isCompatible(this.type)) {
+      throw new Error(`Invalid operation: cannot assign the value given to ${this.refID}`);
+    } else if (this.type instanceof CompoundType && this.type.canAccept(stoObj.type)) {
+      throw new Error(`Invalid operation: cannot assign the value given to ${this.refID}`);
+    }
     if (this.column !== null) {
-     if (stoObj.type === Types.ARRAY) {
-       throw new Error(`Invalid operation: cannot assign the value given to ${this.refID}`);
-     }
      newArray.value[this.line].value[this.column] = stoObj;
      return newArray;
     } else {
-     if(anArray.columns !== null && stoObj.type !== Types.ARRAY) {
-      throw new Error(`Invalid operation: cannot assign the value given to ${this.refID}`);
-     }
      newArray.value[this.line] = stoObj;
      return newArray;
     }
   }
 
   isCompatible (another) {
-    if(this.type === Types.ARRAY) {
-      if(another.type !== Types.ARRAY) {
-        return false;
+    if(this.type.isCompatible(another.type)) {
+      if(another.type instanceof CompoundType) {
+        return this.lines === another.lines && this.columns === another.columns;
+      } else {
+        this.refValue.isCompatible(another);
       }
-      if(another.subtype !== this.subtype) {
-        return false;
-      }
-      return this.lines === another.lines && this.columns === another.columns;
     }
-    return this.refValue.isCompatible(another);
   }
 }

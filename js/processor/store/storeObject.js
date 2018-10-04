@@ -43,7 +43,7 @@ export class StoreObject {
 
   isCompatible (another) {
     if( another instanceof StoreObject) {
-      return this.type === another.type;
+      return this.type.isCompatible(another.type);
     }
     return false;
   }

@@ -1,17 +1,6 @@
 import { LanguageService } from "../services/languageService";
 import { BigNumber } from 'bignumber.js'
 
-export const Types = Object.freeze({
-  INTEGER: {value: "int", ord: 0},
-  REAL: {value: "real", ord: 1},
-  STRING: {value: "string", ord: 2},
-  BOOLEAN: {value: "bool", ord: 3},
-  VOID: {value: "void", ord: 4},
-  ARRAY: {value: 'array', ord: 5},
-  UNDEFINED: {value: 'undefined', ord: 6},
-  ALL: {value: 'all', ord: 7}
-});
-
 export function toInt (str) {
   return new BigNumber(str);
 }
@@ -44,5 +33,15 @@ export function toBool (str) {
   } else {
     // TODO: better error message
     throw new Error(str + "not a valid boolean");
+  }
+}
+
+export function convertBoolToString (bool) {
+  const lexer = LanguageService.getCurrentLexer();
+  const instance = new lexer(null);
+  if (bool) {
+    return instance.literalNames[lexer.RK_TRUE];
+  } else {
+    return instance.literalNames[lexer.RK_FALSE];
   }
 }

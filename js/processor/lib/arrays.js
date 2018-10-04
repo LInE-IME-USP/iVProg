@@ -1,6 +1,8 @@
 import { StoreObject } from '../store/storeObject';
 import * as Commands from './../../ast/commands';
-import { Types, toInt } from './../../ast/types';
+import { Types } from './../../typeSystem/types';
+import { toInt } from "./../../typeSystem/parsers";
+import { CompoundType } from '../../typeSystem/compoundType';
 
 /**
  * num_elements
@@ -17,7 +19,7 @@ export function createNumElementsFun () {
 
   const block = new Commands.CommandBlock([],  [new Commands.SysCall(numElementsFun)]);
   const func = new Commands.Function('$numElements', Types.INTEGER,
-    [new Commands.FormalParameter(Types.ALL, 'vector', 1, false)],
+    [new Commands.FormalParameter(new CompoundType(Types.ALL, 1), 'vector', false)],
     block);
   return func;
  }
@@ -31,7 +33,7 @@ export function createMatrixLinesFun () {
 
   const block = new Commands.CommandBlock([],  [new Commands.SysCall(matrixLinesFun)]);
   const func = new Commands.Function('$matrixLines', Types.INTEGER,
-    [new Commands.FormalParameter(Types.ALL, 'matrix', 2, false)],
+    [new Commands.FormalParameter(new CompoundType(Types.ALL, 2), 'matrix', false)],
     block);
   return func;
  }
@@ -45,7 +47,7 @@ export function createMatrixColumnsFun () {
 
   const block = new Commands.CommandBlock([],  [new Commands.SysCall(matrixColumnsFun)]);
   const func = new Commands.Function('$matrixColumns', Types.INTEGER,
-    [new Commands.FormalParameter(Types.ALL, 'matrix', 2, false)],
+    [new Commands.FormalParameter(new CompoundType(Types.ALL, 2), 'matrix', false)],
     block);
   return func;
  }
