@@ -214,8 +214,6 @@ export class SemanticAnalyser {
         literal.value.reduce((last, next) => {
           const eType = this.evaluateExpressionType(next);
           if (!last.canAccept(eType)) {
-            console.log(last);
-            console.log(eType);
             throw new Error("invalid value type for array");
           }
           return last;

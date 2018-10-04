@@ -20,8 +20,7 @@ export class CompoundType extends Type {
 
   canAccept (another) {
     if(another instanceof CompoundType) {
-      console.log("canAccept: another is compound");
-      return this.dimensions >= another.dimensions && this.innerType.isCompatible(another.innerType);
+      return this.dimensions > another.dimensions && this.innerType.isCompatible(another.innerType);
     } else {
       return this.innerType.isCompatible(another);
     }

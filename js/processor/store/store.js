@@ -54,8 +54,6 @@ export class Store {
         const oldType = oldObj.type;
         const stoType = stoObj.type;
         // TODO: better error message
-        console.log(oldObj);
-        console.log(stoObj);
         throw new Error(`${oldType} is not compatible with type ${stoType} given`);
       }
     }
