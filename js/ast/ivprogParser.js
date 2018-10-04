@@ -427,7 +427,20 @@ export class IVProgParser {
       return null;
     }
     this.pos++;
-    const returnType = this.parseType();
+    const funType = this.parseType();
+    let dimensions = 0;
+    if(this.checkOpenBrace(true)) {
+      this.pos++;
+      this.checkCloseBrace();
+      this.pos++;
+      dimensions++;
+      if(this.checkOpenBrace(true)) {
+        this.pos++;
+        this.checkCloseBrace();
+        this.pos++;
+        dimensions++;
+      }
+    }
     const functionID = this.parseID();
     this.checkOpenParenthesis();
     this.pos++;
@@ -442,6 +455,10 @@ export class IVProgParser {
     }
     this.consumeNewLines();
     const commandsBlock = this.parseCommandBlock();
+    let returnType = funType;
+    if(dimensions > 0) {
+      returnType = new CompoundType(funType, dimensions);
+    }
     const func = new Commands.Function(functionID, returnType, formalParams, commandsBlock);
     if (functionID === null && !func.isMain) {
       // TODO: better error message
