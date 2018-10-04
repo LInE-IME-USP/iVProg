@@ -4,7 +4,7 @@ import { StoreObjectArray } from './store/storeObjectArray';
 import { StoreObjectRef } from './store/storeObjectRef';
 import { Modes } from './modes';
 import { Context } from './context';
-import { Types } from './../ast/types';
+import { Types } from './../typeSystem/types';
 import { Operators } from './../ast/operators';
 import { LanguageDefinedFunction } from './definedFunctions';
 import { resultTypeAfterInfixOp, resultTypeAfterUnaryOp } from './compatibilityTable';
@@ -12,6 +12,7 @@ import * as Commands from './../ast/commands/';
 import * as Expressions from './../ast/expressions/';
 import { StoreObjectArrayAddress } from './store/storeObjectArrayAddress';
 import { StoreObjectArrayAddressRef } from './store/storeObjectArrayAddressRef';
+import { CompoundType } from './../typeSystem/compoundType';
 
 export class IVProgProcessor {
 
@@ -117,73 +118,24 @@ export class IVProgProcessor {
       for (let i = 0; i < values.length; i++) {
         const stoObj = values[i];
         const formalParameter = formalList[i];
-        switch (formalParameter.dimensions) {
-          case 1: {
-            if (stoObj.lines > 0 && stoObj.columns === null
-              && stoObj.subtype === formalParameter.type) {
-
-              if(formalParameter.byRef && !stoObj.inStore) {
-                throw new Error('You must inform a variable as parameter');
-              }
-
-              if(formalParameter.byRef) {
-                const ref = new StoreObjectArrayAddressRef(stoObj);
-                calleeStore.insertStore(formalParameter.id, ref);
-              } else {
-                calleeStore.insertStore(formalParameter.id, stoObj);
-              }
-
-            } else {
-              // TODO: Better error message
-              throw new Error(`Parameter ${formalParameter.id} is not compatible with the value given.`);
-            }
-            break;
+        if(formalParameter.type.isCompatible(stoObj.type)) {
+          if(formalParameter.byRef && !stoObj.inStore) {
+            throw new Error('You must inform a variable as parameter');
           }
-          case 2: {
-            if (stoObj.lines > 0 && stoObj.columns > 0
-              && stoObj.subtype === formalParameter.type) {
 
-              if(formalParameter.byRef && !stoObj.inStore) {
-                throw new Error('You must inform a variable as parameter');
-              }
-
-              if(formalParameter.byRef) {
-                const ref = new StoreObjectArrayAddressRef(stoObj);
-                calleeStore.insertStore(formalParameter.id, ref);
-              } else {
-                calleeStore.insertStore(formalParameter.id, stoObj);
-              }
-
+          if(formalParameter.byRef) {
+            let ref = null;
+            if (stoObj instanceof StoreObjectArrayAddress) {
+              ref = new StoreObjectArrayAddressRef(stoObj);
             } else {
-              // TODO: Better error message
-              throw new Error(`Parameter ${formalParameter.id} is not compatible with the value given.`);
+              ref = new StoreObjectRef(stoObj.id, callerStore);
             }
-            break;
+            calleeStore.insertStore(formalParameter.id, ref);
+          } else {
+            calleeStore.insertStore(formalParameter.id, stoObj);
           }
-          case 0: {
-            if(formalParameter.byRef && !stoObj.inStore) {
-
-              throw new Error('You must inform a variable as parameter');
-            } else if (formalParameter.type !== Types.ALL && stoObj.type !== formalParameter.type) {
-
-              // TODO: Better error message
-              throw new Error(`Parameter ${formalParameter.id} is not compatible with ${stoObj.type}.`);
-            } else {
-
-              if(formalParameter.byRef) {
-                let ref = null;
-                if (stoObj instanceof StoreObjectArrayAddress) {
-                  ref = new StoreObjectArrayAddressRef(stoObj);
-                } else {
-                  ref = new StoreObjectRef(stoObj.id, callerStore);
-                }
-                calleeStore.insertStore(formalParameter.id, ref);
-              } else {
-                calleeStore.insertStore(formalParameter.id, stoObj);
-              }
-
-            }
-          }
+        } else {
+          throw new Error(`Parameter ${formalParameter.id} is not compatible with the value given.`);
         }
       }
       return calleeStore;
@@ -332,7 +284,7 @@ export class IVProgProcessor {
         }
         const $value = this.evaluateExpression(sto, cmd.expression);
         return $value.then(vl => {
-          if (vl.type !== Types.BOOLEAN) {
+          if (!vl.type.isCompatible(Types.BOOLEAN)) {
             // TODO: Better error message -- Inform line and column from token!!!!
             // THIS IF SHOULD BE IN A SEMANTIC ANALYSER
             return Promise.reject(new Error(`DoWhile expression must be of type boolean`));
@@ -356,7 +308,7 @@ export class IVProgProcessor {
       this.context.push(Context.BREAKABLE);
       const $value = this.evaluateExpression(store, cmd.expression);
       return $value.then(vl => {
-        if(vl.type === Types.BOOLEAN) {
+        if(vl.type.isCompatible(Types.BOOLEAN)) {
           if(vl.value) {
             const $newStore = this.executeCommands(store, cmd.commands);
             return $newStore.then(sto => {
@@ -386,7 +338,7 @@ export class IVProgProcessor {
     try {
       const $value = this.evaluateExpression(store, cmd.condition);
       return $value.then(vl => {
-        if(vl.type === Types.BOOLEAN) {
+        if(vl.type.isCompatible(Types.BOOLEAN)) {
           if(vl.value) {
             return this.executeCommands(store, cmd.ifTrue.commands);
           } else if( cmd.ifFalse !== null){
@@ -416,11 +368,11 @@ export class IVProgProcessor {
       const funcName = store.applyStore('$name');
       return $value.then(vl => {
 
-        if(vl === null && funcType === Types.VOID) {
+        if(vl === null && funcType.isCompatible(Types.VOID)) {
           return Promise.resolve(store);
         }
 
-        if (vl === null || funcType.type !== vl.type) {
+        if (vl === null || !funcType.type.isCompatible(vl.type)) {
           // TODO: Better error message -- Inform line and column from token!!!!
           // THIS IF SHOULD BE IN A SEMANTIC ANALYSER
           return Promise.reject(new Error(`Function ${funcName.value} must return ${funcType.type} instead of ${vl.type}.`));
@@ -459,7 +411,7 @@ export class IVProgProcessor {
   executeArrayIndexAssign (store, cmd) {
     return new Promise((resolve, reject) => {
       const mustBeArray = store.applyStore(cmd.id);
-      if(mustBeArray.type !== Types.ARRAY) {
+      if(!(mustBeArray.type instanceof CompoundType)) {
         reject(new Error(cmd.id + " is not a vector/matrix"));
         return;
       }
@@ -468,7 +420,7 @@ export class IVProgProcessor {
       const value$ =  this.evaluateExpression(store, cmd.expression);
       Promise.all([line$, column$, value$]).then(results => {
         const lineSO = results[0];
-        if(lineSO.type !== Types.INTEGER) {
+        if(!Types.INTEGER.isCompatible(lineSO.type)) {
           // TODO: better error message
           //SHOULD NOT BE HERE. IT MUST HAVE A SEMANTIC ANALYSIS
           reject(new Error("Array dimension must be of type int"));
@@ -478,7 +430,7 @@ export class IVProgProcessor {
         const columnSO = results[1];
         let column = null
         if (columnSO !== null) {
-          if(columnSO.type !== Types.INTEGER) {
+          if(!Types.INTEGER.isCompatible(columnSO.type)) {
             // TODO: better error message
             //SHOULD NOT BE HERE. IT MUST HAVE A SEMANTIC ANALYSIS
             reject(new Error("Array dimension must be of type int"));
@@ -502,14 +454,14 @@ export class IVProgProcessor {
 
         const newArray = Object.assign(new StoreObjectArray(null,null,null), mustBeArray);
         if (column !== null) {
-         if (value.type === Types.ARRAY) {
+         if (value.type instanceof CompoundType) {
            reject(new Error("Invalid operation. This must be a value: line "+cmd.sourceInfo.line));
            return;
          }
          newArray.value[line].value[column] = value;
          store.updateStore(cmd.id, newArray);
         } else {
-         if(mustBeArray.columns !== null && value.type !== Types.ARRAY) {
+         if(mustBeArray.columns !== null && value.type instanceof CompoundType) {
           reject(new Error("Invalid operation. This must be a vector: line "+cmd.sourceInfo.line));
           return;
          }
@@ -529,7 +481,7 @@ export class IVProgProcessor {
         const $columns = cmd.columns === null ? null: this.evaluateExpression(store, cmd.columns);
         return Promise.all([$lines, $columns, $value]).then(values => {
           const lineSO = values[0];
-          if(lineSO.type !== Types.INTEGER) {
+          if(!Types.INTEGER.isCompatible(lineSO.type)) {
             // TODO: better error message
             //SHOULD NOT BE HERE. IT MUST HAVE A SEMANTIC ANALYSIS
             return Promise.reject(new Error("Array dimension must be of type int"));
@@ -538,7 +490,7 @@ export class IVProgProcessor {
           const columnSO = values[1];
           let column = null
           if (columnSO !== null) {
-            if(columnSO.type !== Types.INTEGER) {
+            if(!Types.INTEGER.isCompatible(columnSO.type)) {
               // TODO: better error message
               //SHOULD NOT BE HERE. IT MUST HAVE A SEMANTIC ANALYSIS
               return Promise.reject(new Error("Array dimension must be of type int"));
@@ -546,10 +498,18 @@ export class IVProgProcessor {
             column = columnSO.number;
           }
           const value = values[2];
-          const temp = new StoreObjectArray(cmd.subtype, line, column, null, cmd.isConst);
+          const temp = new StoreObjectArray(cmd.type, line, column, null, cmd.isConst);
           store.insertStore(cmd.id, temp);
-          if(value !== null) {
-            store.updateStore(cmd.id, value);
+          if (value !== null) {
+            let realValue = value;
+            if(value instanceof StoreObjectArrayAddress) {
+              if(value.type instanceof CompoundType) {
+                realValue = Object.assign(new StoreObjectArray(null,null,null), value.refValue);
+              } else {
+                realValue = Object.assign(new StoreObject(null,null), value.refValue);
+              }
+            }
+            store.updateStore(cmd.id, realValue)
           }
           return store;
         });
@@ -558,8 +518,17 @@ export class IVProgProcessor {
         const temp = new StoreObject(cmd.type, null, cmd.isConst);
         store.insertStore(cmd.id, temp);
         return $value.then(vl => {
-          if (vl !== null)
-            store.updateStore(cmd.id, vl)
+          if (vl !== null) {
+            let realValue = vl;
+            if(vl instanceof StoreObjectArrayAddress) {
+              if(vl.type instanceof CompoundType) {
+                realValue = Object.assign(new StoreObjectArray(null,null,null), vl.refValue);
+              } else {
+                realValue = Object.assign(new StoreObject(null,null), vl.refValue);
+              }
+            }
+            store.updateStore(cmd.id, realValue)
+          }
           return store;
         });
       }
@@ -597,14 +566,14 @@ export class IVProgProcessor {
 
   evaluateFunctionCall (store, exp) {
     const func = this.findFunction(exp.id);
-    if(func.returnType === Types.VOID) {
+    if(Types.VOID.isCompatible(func.returnType)) {
       // TODO: better error message
       return Promise.reject(new Error(`Function ${exp.id} cannot be used inside an expression`));
     }
     const $newStore = this.runFunction(func, exp.actualParameters, store);
     return $newStore.then( sto => {
       const val = sto.applyStore('$');
-      if (val.type === Types.ARRAY) {
+      if (val instanceof StoreObjectArray) {
         return Promise.resolve(Object.assign(new StoreObjectArray(null,null,null,null,null), val));
       } else {
         return Promise.resolve(Object.assign(new StoreObject(null,null), val));
@@ -616,7 +585,8 @@ export class IVProgProcessor {
     if(!exp.isVector) {
       const $matrix = this.evaluateMatrix(store, exp.value);
       return $matrix.then(list => {
-        const arr = new StoreObjectArray(list[0].subtype, list.length, list[0].lines, list);
+        const type = new CompoundType(list[0].type.innerType, 2);
+        const arr = new StoreObjectArray(type, list.length, list[0].lines, list);
         if(arr.isValid)
           return Promise.resolve(arr);
         else
@@ -624,7 +594,8 @@ export class IVProgProcessor {
       });
     } else {
       return this.evaluateVector(store, exp.value).then(list => {
-        const stoArray = new StoreObjectArray(list[0].type, list.length, null, list);
+        const type = new CompoundType(list[0].type, 1);
+        const stoArray = new StoreObjectArray(type, list.length, null, list);
         if(stoArray.isValid)
           return Promise.resolve(stoArray);
         else
@@ -640,7 +611,10 @@ export class IVProgProcessor {
   evaluateMatrix (store, exps) {
     return Promise.all(exps.map( vector => {
       const $vector = this.evaluateVector(store, vector.value)
-      return $vector.then(list => new StoreObjectArray(list[0].type, list.length, null, list))
+      return $vector.then(list => {
+        const type = new CompoundType(list[0].type, 1);
+        return new StoreObjectArray(type, list.length, null, list)
+      });
     } ));
   }
 
@@ -651,7 +625,7 @@ export class IVProgProcessor {
   evaluateVariableLiteral (store, exp) {
     try {
       const val = store.applyStore(exp.id);
-      if (val.type === Types.ARRAY) {
+      if (val instanceof StoreObjectArray) {
         return Promise.resolve(Object.assign(new StoreObjectArray(null,null,null,null), val));
       } else {
         return Promise.resolve(Object.assign(new StoreObject(null,null), val));
@@ -663,8 +637,9 @@ export class IVProgProcessor {
 
   evaluateArrayAccess (store, exp) {
     const mustBeArray = store.applyStore(exp.id);
-    if (mustBeArray.type !== Types.ARRAY) {
+    if (!(mustBeArray.type instanceof CompoundType)) {
       // TODO: better error message
+      console.log(mustBeArray.type);
       return Promise.reject(new Error(`${exp.id} is not of type array`));
     }
     const $line = this.evaluateExpression(store, exp.line);
@@ -672,7 +647,7 @@ export class IVProgProcessor {
     return Promise.all([$line, $column]).then(values => {
       const lineSO = values[0];
       const columnSO = values[1];
-      if(lineSO.type !== Types.INTEGER) {
+      if(!Types.INTEGER.isCompatible(lineSO.type)) {
         // TODO: better error message
         //SHOULD NOT BE HERE. IT MUST HAVE A SEMANTIC ANALYSIS
         return Promise.reject(new Error("Array dimension must be of type int"));
@@ -680,7 +655,7 @@ export class IVProgProcessor {
       const line = lineSO.number;
       let column = null;
       if(columnSO !== null) {
-        if(columnSO.type !== Types.INTEGER) {
+        if(!Types.INTEGER.isCompatible(columnSO.type)) {
           // TODO: better error message
           //SHOULD NOT BE HERE. IT MUST HAVE A SEMANTIC ANALYSIS
           return Promise.reject(new Error("Array dimension must be of type int"));
@@ -708,7 +683,7 @@ export class IVProgProcessor {
     const $left = this.evaluateExpression(store, unaryApp.left);
     return $left.then( left => {
       const resultType = resultTypeAfterUnaryOp(unaryApp.op, left.type);
-      if (resultType === Types.UNDEFINED) {
+      if (Types.UNDEFINED.isCompatible(resultType)) {
         // TODO: better urgent error message
         return Promise.reject(new Error(`Cannot use this op to ${left.type}`));
       }
@@ -732,9 +707,9 @@ export class IVProgProcessor {
       const left = values[0];
       const right = values[1];
       const resultType = resultTypeAfterInfixOp(infixApp.op, left.type, right.type);
-      if (resultType === Types.UNDEFINED) {
+      if (Types.UNDEFINED.isCompatible(resultType)) {
         // TODO: better urgent error message
-        return Promise.reject(new Error(`Cannot use this ${infixApp.op.value} to ${left.type.value} and ${right.type.value}`));
+        return Promise.reject(new Error(`Cannot use this ${infixApp.op} to ${left.type} and ${right.type}`));
       }
       let result = null;
       switch (infixApp.op.ord) {
@@ -746,7 +721,7 @@ export class IVProgProcessor {
           return new StoreObject(resultType, left.value.times(right.value));
         case Operators.DIV.ord: {
           result = left.value / right.value;
-          if (resultType === Types.INTEGER)
+          if (Types.INTEGER.isCompatible(resultType))
             result = left.value.idiv(right.value);
           else
             result = left.value.div(right.value);
@@ -755,7 +730,7 @@ export class IVProgProcessor {
         case Operators.MOD.ord:
           return new StoreObject(resultType, left.value.modulo(right.value));
         case Operators.GT.ord: {
-          if (left.type === Types.STRING) {
+          if (Types.STRING.isCompatible(left.type)) {
             result = left.value.length > right.value.length;
           } else {
             result = left.value.gt(right.value);
@@ -763,7 +738,7 @@ export class IVProgProcessor {
           return new StoreObject(resultType, result);
         }
         case Operators.GE.ord: {
-          if (left.type === Types.STRING) {
+          if (Types.STRING.isCompatible(left.type)) {
             result = left.value.length >= right.value.length;
           } else {
             result = left.value.gte(right.value);
@@ -771,7 +746,7 @@ export class IVProgProcessor {
           return new StoreObject(resultType, result);
         }
         case Operators.LT.ord: {
-          if (left.type === Types.STRING) {
+          if (Types.STRING.isCompatible(left.type)) {
             result = left.value.length < right.value.length;
           } else {
             result = left.value.lt(right.value);
@@ -779,7 +754,7 @@ export class IVProgProcessor {
           return new StoreObject(resultType, result);
         }
         case Operators.LE.ord: {
-          if (left.type === Types.STRING) {
+          if (Types.STRING.isCompatible(left.type)) {
             result = left.value.length <= right.value.length;
           } else {
             result = left.value.lte(right.value);
@@ -787,7 +762,7 @@ export class IVProgProcessor {
           return new StoreObject(resultType, result);
         }
         case Operators.EQ.ord: {
-          if (left.type === Types.INTEGER || left.type === Types.REAL) {
+          if (Types.INTEGER.isCompatible(left.type) || Types.REAL.isCompatible(left.type)) {
             result = left.value.eq(right.value);
           } else {
             result = left.value === right.value;
@@ -795,7 +770,7 @@ export class IVProgProcessor {
           return new StoreObject(resultType, result);
         }
         case Operators.NEQ.ord: {
-          if (left.type === Types.INTEGER || left.type === Types.REAL) {
+          if (Types.INTEGER.isCompatible(left.type) || Types.REAL.isCompatible(left.type)) {
             result = !left.value.eq(right.value);
           } else {
             result = left.value !== right.value;

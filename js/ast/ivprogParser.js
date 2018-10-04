@@ -1,8 +1,14 @@
 import { CommonTokenStream, InputStream } from 'antlr4/index';
 import * as Expressions from './expressions/';
 import * as Commands from './commands/';
+<<<<<<< HEAD
 import { SourceInfo } from './sourceInfo';
 import { Types, toInt, toString, toBool, toReal } from './types';
+=======
+import { toInt, toString, toBool, toReal } from './../typeSystem/parsers';
+import { Types } from "./../typeSystem/types";
+import { CompoundType } from "./../typeSystem/compoundType";
+>>>>>>> Refactor type system
 import { SourceInfo } from './sourceInfo';
 import { convertFromString } from './operators';
 import { SyntaxErrorFactory } from './error/syntaxErrorFactory';
@@ -278,9 +284,14 @@ export class IVProgParser {
       initial = this.parseExpressionOR();
     }
     let declaration = null;
+    let dimensions = 0;
     if (dim1 !== null) {
+      dimensions++;
+      if(dim2 !== null) {
+        dimensions++;
+      }
       declaration = new Commands.ArrayDeclaration(idString,
-        typeString, dim1, dim2, initial, isConst);
+        new CompoundType(typeString, dimensions), dim1, dim2, initial, isConst);
     } else {
       declaration = new Commands.Declaration(idString, typeString, initial, isConst);
     }
@@ -386,7 +397,12 @@ export class IVProgParser {
       // }
     }
     const sourceInfo = SourceInfo.createSourceInfoFromList(beginArray, endArray);
-    const exp = new Expressions.ArrayLiteral(data);
+    let dataDim = 1;
+    if(data[0] instanceof Expressions.ArrayLiteral) {
+      dataDim++;
+    }
+    const type = new CompoundType(Types.UNDEFINED, dataDim);
+    const exp = new Expressions.ArrayLiteral(type, data);
     exp.sourceInfo = sourceInfo;
     return exp;
   }
@@ -464,7 +480,13 @@ export class IVProgParser {
           this.pos++;
         }
       }
-      list.push(new Commands.FormalParameter(typeString, idString, dimensions));
+      let type = null;
+      if(dimensions > 0) {
+        type = new CompoundType(typeString, dimensions);
+      } else {
+        type = typeString;
+      }
+      list.push(new Commands.FormalParameter(type, idString));
       const commaToken = this.getToken();
       if (commaToken.type !== this.lexerClass.COMMA)
         break;

@@ -1,13 +1,11 @@
-import { Types } from './../../ast/types';
 import { StoreObject } from './storeObject';
 
 export class StoreObjectArray extends StoreObject {
 
-  constructor (subtype, lines, columns, value = null, readOnly = false) {
-    super(Types.ARRAY, value, readOnly);
+  constructor (type, lines, columns, value = null, readOnly = false) {
+    super(type, value, readOnly);
     this._lines = lines;
     this._columns = columns;
-    this._subtype = subtype;
   }
 
   get lines () {
@@ -18,15 +16,10 @@ export class StoreObjectArray extends StoreObject {
     return this._columns;
   }
 
-  get subtype () {
-    return this._subtype;
-  }
-
   isCompatible (another) {
     if(another instanceof StoreObject) {
       if(this.lines === another.lines &&
-        this.columns === another.columns &&
-        this.subtype === another.subtype) {
+        this.columns === another.columns) {
           return super.isCompatible(another);
         }
     }
@@ -34,7 +27,7 @@ export class StoreObjectArray extends StoreObject {
   }
 
   get isVector () {
-    return this.columns === null;
+    return this.type.dimensions === 1;
   }
 
   get isValid () {
@@ -43,7 +36,7 @@ export class StoreObjectArray extends StoreObject {
         if(this.value.length !== this.lines) {
           return false;
         }
-        const mustBeNull = this.value.find(v => v.type !== this.subtype);
+        const mustBeNull = this.value.find(v => !this.type.canAccept(v.type) );
         if(!!mustBeNull) {
           return false;
         }
@@ -59,7 +52,7 @@ export class StoreObjectArray extends StoreObject {
         if(arr.length !== this.columns) {
           return false;
         }
-        const mustBeNull = arr.find(v => v.type !== this.subtype);
+        const mustBeNull = arr.find(v => !this.type.canAccept(v.type) );
         if(!!mustBeNull) {
           return false;
         }            

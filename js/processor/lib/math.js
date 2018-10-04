@@ -1,7 +1,10 @@
 import { StoreObject } from '../store/storeObject';
 import * as Commands from './../../ast/commands';
-import { Types, toReal } from './../../ast/types';
+import { Types } from './../../typeSystem/types';
+import { toReal } from "./../../typeSystem/parsers";
 import { BigNumber } from 'bignumber.js';
+import { MultiType } from '../../typeSystem/multiType';
+import { CompoundType } from '../../typeSystem/compoundType';
 
 /**
  * sin
@@ -27,7 +30,7 @@ export function createSinFun () {
 
   const block = new Commands.CommandBlock([],  [new Commands.SysCall(sinFun)]);
   const func = new Commands.Function('$sin', Types.REAL,
-    [new Commands.FormalParameter(Types.REAL, 'x', 0, false)],
+    [new Commands.FormalParameter(new MultiType([[Types.INTEGER, Types.REAL]]), 'x', false)],
     block);
   return func;
 }
@@ -42,7 +45,7 @@ export function createCosFun () {
 
  const block = new Commands.CommandBlock([],  [new Commands.SysCall(cosFun)]);
  const func = new Commands.Function('$cos', Types.REAL,
-   [new Commands.FormalParameter(Types.REAL, 'x', 0, false)],
+   [new Commands.FormalParameter(new MultiType([Types.INTEGER, Types.REAL]), 'x', false)],
    block);
  return func;
 }
@@ -57,7 +60,7 @@ export function createTanFun () {
 
  const block = new Commands.CommandBlock([],  [new Commands.SysCall(tanFun)]);
  const func = new Commands.Function('$tan', Types.REAL,
-   [new Commands.FormalParameter(Types.REAL, 'x', 0, false)],
+   [new Commands.FormalParameter(new MultiType([Types.INTEGER, Types.REAL]), 'x', false)],
    block);
  return func;
 }
@@ -72,14 +75,14 @@ export function createSqrtFun () {
 
  const block = new Commands.CommandBlock([],  [new Commands.SysCall(sqrtFun)]);
  const func = new Commands.Function('$sqrt', Types.REAL,
-   [new Commands.FormalParameter(Types.REAL, 'x', 0, false)],
+   [new Commands.FormalParameter(new MultiType([Types.INTEGER, Types.REAL]), 'x', false)],
    block);
  return func;
 }
 
 export function createPowFun () {
   const powFun = (sto, _) => {
-    const x = sto.applyStore('x');
+    const x = sto.applyStore('x');f
     const y = sto.applyStore('y');
     const result = toReal(Math.pow(x.number, y.number));
     const temp = new StoreObject(Types.REAL, result);
@@ -88,8 +91,8 @@ export function createPowFun () {
 
  const block = new Commands.CommandBlock([],  [new Commands.SysCall(powFun)]);
  const func = new Commands.Function('$pow', Types.REAL,
-   [new Commands.FormalParameter(Types.REAL, 'x', 0, false),
-    new Commands.FormalParameter(Types.REAL, 'y', 0, false)],
+   [new Commands.FormalParameter(new MultiType([Types.INTEGER, Types.REAL]), 'x', false),
+    new Commands.FormalParameter(new MultiType([Types.INTEGER, Types.REAL]), 'y', false)],
    block);
  return func;
 }
@@ -107,7 +110,7 @@ export function createLogFun () {
 
  const block = new Commands.CommandBlock([],  [new Commands.SysCall(logFun)]);
  const func = new Commands.Function('$log', Types.REAL,
-   [new Commands.FormalParameter(Types.REAL, 'x', 0, false)],
+   [new Commands.FormalParameter(new MultiType([Types.INTEGER, Types.REAL]), 'x', false)],
    block);
  return func;
 }
@@ -116,13 +119,13 @@ export function createAbsFun () {
   const absFun = (sto, _) => {
     const x = sto.applyStore('x');
     const result = x.value.abs();
-    const temp = new StoreObject(Types.REAL, result);
+    const temp = new StoreObject(x.type, result);
     return Promise.resolve(sto.updateStore('$', temp));
   };
 
  const block = new Commands.CommandBlock([],  [new Commands.SysCall(absFun)]);
- const func = new Commands.Function('$abs', Types.REAL,
-   [new Commands.FormalParameter(Types.REAL, 'x', 0, false)],
+ const func = new Commands.Function('$abs', new MultiType([Types.INTEGER, Types.REAL]),
+   [new Commands.FormalParameter(new MultiType([Types.INTEGER, Types.REAL]), 'x', false)],
    block);
  return func;
 }
@@ -131,13 +134,13 @@ export function createNegateFun () {
   const negateFun = (sto, _) => {
     const x = sto.applyStore('x');
     const result = x.value.negated();
-    const temp = new StoreObject(Types.REAL, result);
+    const temp = new StoreObject(x.type, result);
     return Promise.resolve(sto.updateStore('$', temp));
   };
 
  const block = new Commands.CommandBlock([],  [new Commands.SysCall(negateFun)]);
- const func = new Commands.Function('$negate', Types.REAL,
-   [new Commands.FormalParameter(Types.REAL, 'x', 0, false)],
+ const func = new Commands.Function('$negate', new MultiType([Types.INTEGER, Types.REAL]),
+   [new Commands.FormalParameter(new MultiType([Types.INTEGER, Types.REAL]), 'x', false)],
    block);
  return func;
 }
@@ -152,7 +155,7 @@ export function createInvertFun () {
 
  const block = new Commands.CommandBlock([],  [new Commands.SysCall(invertFun)]);
  const func = new Commands.Function('$invert', Types.REAL,
-   [new Commands.FormalParameter(Types.REAL, 'x', 0, false)],
+   [new Commands.FormalParameter(new MultiType([Types.INTEGER, Types.REAL]), 'x', false)],
    block);
  return func;
 }
@@ -160,14 +163,15 @@ export function createInvertFun () {
 export function createMaxFun () {
   const maxFun = (sto, _) => {
     const x = sto.applyStore('x');
-    const result = BigNumber.max(x.value);
-    const temp = new StoreObject(x.subtype, result);
+    const numbers = x.value.map(stoObj => stoObj.number);
+    const result = BigNumber.max(numbers);
+    const temp = new StoreObject(x.type.innerType, result);
     return Promise.resolve(sto.updateStore('$', temp));
   };
-
+ const paramType = new CompoundType(new MultiType([Types.INTEGER, Types.REAL]), 1);
  const block = new Commands.CommandBlock([],  [new Commands.SysCall(maxFun)]);
- const func = new Commands.Function('$max', Types.ALL,
-   [new Commands.FormalParameter(Types.ALL, 'x', 1, false)],
+ const func = new Commands.Function('$max', new MultiType([Types.INTEGER, Types.REAL]),
+   [new Commands.FormalParameter(paramType, 'x', false)],
    block);
  return func;
 }
@@ -175,14 +179,15 @@ export function createMaxFun () {
 export function createMinFun () {
   const minFun = (sto, _) => {
     const x = sto.applyStore('x');
-    const result = BigNumber.max(x.value);
-    const temp = new StoreObject(x.subtype, result);
+    const numbers = x.value.map(stoObj => stoObj.number);
+    const result = BigNumber.min(numbers);
+    const temp = new StoreObject(x.type.innerType, result);
     return Promise.resolve(sto.updateStore('$', temp));
   };
-
+ const paramType = new CompoundType(new MultiType([Types.INTEGER, Types.REAL]), 1);
  const block = new Commands.CommandBlock([],  [new Commands.SysCall(minFun)]);
- const func = new Commands.Function('$min', Types.ALL,
-   [new Commands.FormalParameter(Types.ALL, 'x', 1, false)],
+ const func = new Commands.Function('$min', new MultiType([Types.INTEGER, Types.REAL]),
+   [new Commands.FormalParameter(paramType, 'x', false)],
    block);
  return func;
 }

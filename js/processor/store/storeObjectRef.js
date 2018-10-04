@@ -1,4 +1,5 @@
 import { StoreObject } from './storeObject';
+import { BigNumber } from "bignumber.js";
 
 export class StoreObjectRef extends StoreObject {
 

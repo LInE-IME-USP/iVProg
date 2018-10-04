@@ -5,7 +5,9 @@ import { ArrayDeclaration, While, For, Switch, Case, Declaration, Assign, Break,
 import { InfixApp, UnaryApp, FunctionCall, IntLiteral, RealLiteral, StringLiteral, BoolLiteral, VariableLiteral, ArrayLiteral, ArrayAccess } from '../../ast/expressions';
 import { Literal } from '../../ast/expressions/literal';
 import { resultTypeAfterInfixOp, resultTypeAfterUnaryOp } from '../compatibilityTable';
-import { Types } from '../../ast/types';
+import { Types } from '../../typeSystem/types';
+import { CompoundType } from '../../typeSystem/compoundType';
+import { MultiType } from '../../typeSystem/multiType';
 
 export class SemanticAnalyser {
 
@@ -93,20 +95,20 @@ export class SemanticAnalyser {
     if (declaration instanceof ArrayDeclaration) {
       if(declaration.initial === null) {
         const lineType = this.evaluateExpressionType(declaration.lines);
-        if (lineType !== Types.INTEGER) {
+        if (!lineType.isCompatible(Types.INTEGER)) {
           throw new Error("dim must be int");
         }
         if (declaration.columns !== null) {
           const columnType = this.evaluateExpressionType(declaration.columns);
-          if (columnType !== Types.INTEGER) {
+          if (!columnType.isCompatible(Types.INTEGER)) {
             throw new Error("dim must be int");
           }
         }
-        this.insertSymbol(declaration.id, {id: declaration.id, lines: declaration.lines, columns: declaration.columns, type: declaration.type, subtype: declaration.subtype});
+        this.insertSymbol(declaration.id, {id: declaration.id, lines: declaration.lines, columns: declaration.columns, type: declaration.type});
         return;
       }
-      this.evaluateArrayLiteral(declaration.lines, declaration.columns, declaration.subtype, declaration.initial);
-      this.insertSymbol(declaration.id, {id: declaration.id, lines: declaration.lines, columns: declaration.columns, type: declaration.type, subtype: declaration.subtype});
+      this.evaluateArrayLiteral(declaration.lines, declaration.columns, declaration.type, declaration.initial);
+      this.insertSymbol(declaration.id, {id: declaration.id, lines: declaration.lines, columns: declaration.columns, type: declaration.type});
 
     } else {
       if(declaration.initial === null) {
@@ -114,7 +116,12 @@ export class SemanticAnalyser {
         return;
       }
       const resultType = this.evaluateExpressionType(declaration.initial);
-      if(declaration.type !== resultType) {
+      if(resultType instanceof MultiType) {
+        if(!resultType.isCompatible(declaration.type)) {
+          throw new Error('Invalid type');  
+        }
+        this.insertSymbol(declaration.id, {id: declaration.id, type: declaration.type})
+      } else if(!declaration.type.isCompatible(resultType)) {
         throw new Error('Invalid type');
       } else {
         this.insertSymbol(declaration.id, {id: declaration.id, type: declaration.type})
@@ -136,30 +143,39 @@ export class SemanticAnalyser {
       return this.evaluateLiteralType(expression);
     } else if (expression instanceof FunctionCall) {
       const fun = this.findFunction(expression.id);
-      if (fun.returnType === Types.VOID) {
+      if (fun.returnType.isCompatible(Types.VOID)) {
         throw new Error("void return");
       }
       this.assertParameters(fun, expression.actualParameters);
       return fun.returnType;
     } else if (expression instanceof ArrayAccess) {
       const arrayTypeInfo = this.findSymbol(expression.id, this.symbolMap);
-      if (arrayTypeInfo.type !== Types.ARRAY) {
+      if (!(arrayTypeInfo.type instanceof CompoundType)) {
         throw new Error("it's not an array");
       }
       const lineType = this.evaluateExpressionType(expression.line);
-      if (lineType !== Types.INTEGER) {
+      if (!lineType.isCompatible(Types.INTEGER)) {
         throw new Error("line must be integer");
       }
-      if (expression.column != null) {
+      if (expression.column !== null) {
         if (arrayTypeInfo.columns === null) {
           throw new Error("it's not a matrix");
         }
         const columnType = this.evaluateExpressionType(expression.column);
-        if(columnType !== Types.INTEGER) {
+        if(!columnType.isCompatible(Types.INTEGER)) {
           throw new Error("column must be integer");
         }
       }
-      return arrayTypeInfo.subtype;
+      const arrType = arrayTypeInfo.type;
+      if(expression.column !== null) {
+        // indexing matrix
+        return arrType.innerType;
+      } else {
+        if(arrayTypeInfo.columns === null) {
+          return arrType.innerType;
+        }
+        return new CompoundType(arrType.innerType, 1);
+      }
     }
   }
 
@@ -174,8 +190,8 @@ export class SemanticAnalyser {
       return literal.type;
     } else if (literal instanceof VariableLiteral) {
       const typeInfo = this.findSymbol(literal.id, this.symbolMap);
-      if (typeInfo.type === Types.ARRAY) {
-        return typeInfo;
+      if (typeInfo.type instanceof CompoundType) {
+        return typeInfo.type;
       }
       return typeInfo.type;
     } else {
@@ -184,12 +200,12 @@ export class SemanticAnalyser {
     }
   }
 
-  evaluateArrayLiteral (lines, columns, subtype, literal) {
+  evaluateArrayLiteral (lines, columns, type, literal) {
     if (literal instanceof ArrayLiteral) {
       if (columns === null) {
         // it's a vector...
         const dimType = this.evaluateExpressionType(lines);
-        if (dimType !== Types.INTEGER) {
+        if (!dimType.isCompatible(Types.INTEGER)) {
           throw new Error("dim must be int");
         }
         if ((lines instanceof IntLiteral) && !lines.value.eq(literal.value.length)) {
@@ -197,15 +213,17 @@ export class SemanticAnalyser {
         }
         literal.value.reduce((last, next) => {
           const eType = this.evaluateExpressionType(next);
-          if (eType !== last) {
-            throw new Error("invalid array type");
+          if (!last.canAccept(eType)) {
+            console.log(last);
+            console.log(eType);
+            throw new Error("invalid value type for array");
           }
-          return eType;
-        }, subtype);
+          return last;
+        }, type);
         return true;
       } else {
         const dimType = this.evaluateExpressionType(columns);
-        if (dimType !== Types.INTEGER) {
+        if (!dimType.isCompatible(Types.INTEGER)) {
           throw new Error("dim must be int");
         }
         if ((columns instanceof IntLiteral) && !columns.value.eq(literal.value.length)) {
@@ -213,22 +231,18 @@ export class SemanticAnalyser {
         }
         for (let i = 0; i < columns; i++) {
           const anotherArray = literal.value[i];
-          this.evaluateArrayLiteral(lines, null, subtype, anotherArray)
+          this.evaluateArrayLiteral(lines, null, type, anotherArray)
         }
       }
 
     } else {
 
       const resultType = this.evaluateExpressionType(literal);
-      if (!resultType.subtype) {
+      if (!(resultType.type instanceof CompoundType)) {
         throw new Error("initial must be of type array");
       }
-      if (resultType.subtype !== subtype) {
+      if (!type.isCompatible(resultType.type)) {
         throw new Error("invalid array type");
-      } else if (resultType.lines !== lines) {
-        throw new Error("invalid array size");
-      } else if (resultType.columns !== columns) {
-        throw new Error("invalid array size");
       }
       return true;
 
@@ -238,7 +252,7 @@ export class SemanticAnalyser {
   assertFunction (fun) {
     this.pushMap();
     this.assertDeclarations(fun.variablesDeclarations);
-    const optional = fun.returnType === Types.VOID;
+    const optional = fun.returnType.isCompatible(Types.VOID);
     const valid = this.assertReturn(fun, optional);
     if (!valid) {
       throw new Error("function has no accessible return");
@@ -255,7 +269,7 @@ export class SemanticAnalyser {
   checkCommand (type, cmd, optional) {
     if (cmd instanceof While) {
       const resultType = this.evaluateExpressionType(cmd.expression);
-      if (resultType !== Types.BOOLEAN) {
+      if (!resultType.isCompatible(Types.BOOLEAN)) {
         throw new Error("condition not boolean");
       }
       this.checkCommands(type, cmd.commands, optional);
@@ -263,7 +277,7 @@ export class SemanticAnalyser {
     } else if (cmd instanceof For) {
       this.checkCommand(type, cmd.assignment, optional);
       const resultType = this.evaluateExpressionType(cmd.condition);
-      if (resultType !== Types.BOOLEAN) {
+      if (!resultType.isCompatible(Types.BOOLEAN)) {
         throw new Error("condition not boolean");
       }
       this.checkCommand(type, cmd.increment, optional);
@@ -277,7 +291,7 @@ export class SemanticAnalyser {
         const aCase = cmd.cases[i];
         if (aCase.expression !== null) {
           const caseType = this.evaluateExpressionType(aCase.expression);
-          if (sType !== caseType) {
+          if (!sType.isCompatible(caseType)) {
             throw new Error("invalid type in case");
           }
         } else {
@@ -289,13 +303,13 @@ export class SemanticAnalyser {
 
     } else if (cmd instanceof ArrayIndexAssign) {
       const typeInfo = this.findSymbol(cmd.id, this.symbolMap);
-      if(!typeInfo.subtype) {
+      if(!(typeInfo.type instanceof CompoundType)) {
         throw new Error(cmd.id + " is not an array.");
       }
       const exp = cmd.expression;
       const lineExp = cmd.line;
       const lineType = this.evaluateExpressionType(lineExp);
-      if (lineType !== Types.INTEGER) {
+      if (!lineType.isCompatible(Types.INTEGER)) {
         throw new Error("array dimension must be of type int");
       }
       const columnExp = cmd.column;
@@ -303,13 +317,13 @@ export class SemanticAnalyser {
         throw new Error(cmd.id + " is not a matrix");
       } else if (columnExp !== null) {
         const columnType = this.evaluateExpressionType(columnExp);
-        if (columnType !== Types.INTEGER) {
+        if (!columnType.isCompatible(Types.INTEGER)) {
           throw new Error("array dimension must be of type int");
         }
       }
       // exp can be a arrayLiteral, a single value exp or an array access
       if(exp instanceof ArrayLiteral) {
-        this.evaluateArrayLiteral(typeInfo.lines, (columnExp ? typeInfo.columns : null), typeInfo.subtype, exp);
+        this.evaluateArrayLiteral(typeInfo.lines, (columnExp ? typeInfo.columns : null), typeInfo.type, exp);
       } else {
         // cannot properly evaluate since type system is poorly constructed
       }
@@ -318,16 +332,13 @@ export class SemanticAnalyser {
       const typeInfo = this.findSymbol(cmd.id, this.symbolMap);
       const exp = cmd.expression;
       if(exp instanceof ArrayLiteral) {
-        if(!typeInfo.subtype) {
+        if(!(typeInfo.type instanceof CompoundType)) {
           throw new Error("type not compatible");
         }
-        this.evaluateArrayLiteral(typeInfo.lines, typeInfo.columns, typeInfo.subtype, exp);
+        this.evaluateArrayLiteral(typeInfo.lines, typeInfo.columns, typeInfo.type, exp);
       } else {
-        if(typeInfo.subtype) {
-          throw new Error("type not compatible");
-        }
         const resultType = this.evaluateExpressionType(exp);
-        if(resultType !== typeInfo.type) {
+        if(!resultType.isCompatible(typeInfo.type)) {
           throw new Error("type not compatible");
         }
       }
@@ -336,10 +347,9 @@ export class SemanticAnalyser {
       return optional;
     } else if (cmd instanceof IfThenElse) {
       const resultType = this.evaluateExpressionType(cmd.condition);
-      if (resultType !== Types.BOOLEAN) {
+      if (!resultType.isCompatible(Types.BOOLEAN)) {
         throw new Error("condition not boolean");
       }
-      console.log(cmd);
       if(cmd.ifFalse instanceof IfThenElse) {
         return this.checkCommands(type, cmd.ifTrue.commands, optional) && this.checkCommand(type, cmd.ifFalse, optional);
       } else {
@@ -351,11 +361,11 @@ export class SemanticAnalyser {
       this.assertParameters(fun, cmd.actualParameters);
       return optional;
     } else if (cmd instanceof Return) {
-      if (cmd.expression === null && type !== Types.VOID) {
+      if (cmd.expression === null && !type.isCompatible(Types.VOID)) {
         throw new Error('invalid return type');
       } else if (cmd.expression !== null) {
         const resultType = this.evaluateExpressionType(cmd.expression);
-        if (resultType !== type) {
+        if (!resultType.isCompatible(type)) {
           throw new Error('invalid return type');
         } else {
           return true;
@@ -381,40 +391,31 @@ export class SemanticAnalyser {
       const formalParam = fun.formalParameters[i];
       if(formalParam.byRef) {
         if (!(param instanceof VariableLiteral || param instanceof ArrayAccess)) {
-          throw new Error("Invalid param type");
+          throw new Error("Invalid param type for ref");
         }
       }
       const resultType = this.evaluateExpressionType(param);
-      switch (formalParam.dimensions) {
-        case 1: {
-          if (!resultType.subtype) {
-            throw new Error("invalid param type");   
-          } else if (resultType.subtype !== formalParam.type) {
-            throw new Error("invalid param type");   
-          } else if (resultType.lines === null || resultType.columns !== null) {
-            throw new Error("invalid param type");
+      if(resultType instanceof MultiType && formalParam.type instanceof MultiType) {
+        let shared = 0
+        for (let j = 0; j < resultType.types.length; j++) {
+          const element = resultType.types[j];
+          if(formalParam.type.types.indexOf(element) !== -1) {
+            shared++;
           }
-          break;
         }
-        case 2: {
-          if (!resultType.subtype) {
-            throw new Error("invalid param type");   
-          } else if (resultType.subtype !== formalParam.type) {
-            throw new Error("invalid param type");   
-          } else if (resultType.lines === null || resultType.columns === null) {
-            throw new Error("invalid param type");
-          }
-          break;
+        if(shared <= 0) {
+          throw new Error(`Parameter ${formalParam.id} is not compatible with the value given.`);
         }
-        default: {
-          if (resultType.subtype) {
-            throw new Error("invalid param type");
-          }
-          if (formalParam.type !== Types.ALL && resultType !== formalParam.type) {
-            throw new Error("invalid param type");
-          }
-          break;
+      } else if (resultType instanceof MultiType) {
+        if(!resultType.isCompatible(formalParam.type)) {
+          throw new Error(`Parameter ${formalParam.id} is not compatible with the value given.`);
         }
+      } else if(!formalParam.type.isCompatible(resultType)) {
+        console.log("####");
+        console.log(resultType);
+        console.log("####");
+        console.log(formalParam.type);
+        throw new Error(`Parameter ${formalParam.id} is not compatible with the value given.`);
       }
     }
   }

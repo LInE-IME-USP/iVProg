@@ -35,3 +35,13 @@ export function toBool (str) {
     throw new Error(str + "not a valid boolean");
   }
 }
+
+export function convertBoolToString (bool) {
+  const lexer = LanguageService.getCurrentLexer();
+  const instance = new lexer(null);
+  if (bool) {
+    return instance.literalNames[lexer.RK_TRUE];
+  } else {
+    return instance.literalNames[lexer.RK_FALSE];
+  }
+}

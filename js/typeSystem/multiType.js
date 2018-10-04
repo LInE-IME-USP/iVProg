@@ -1,8 +1,8 @@
-import { Type } from "./types";
+import { Type } from "./type";
 
 export class MultiType extends Type {
 
-  constructor (...types) {
+  constructor (types) {
     super(null);
     this.types = types;
   }
@@ -23,7 +23,6 @@ export class MultiType extends Type {
           return true;
         }
       }
-      return false;
     }
     return false;
   }

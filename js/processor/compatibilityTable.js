@@ -1,5 +1,6 @@
-import { Types } from './../ast/types';
+import { Types } from './../typeSystem/types';
 import { Operators } from './../ast/operators';
+import { MultiType } from '../typeSystem/multiType';
 
 function buildInfixAddTable () {
   const table = [[], [], [], []];
@@ -123,6 +124,32 @@ const unaryMap = buildUnaryCompatibilityTable();
 
 export function resultTypeAfterInfixOp (operator, leftExpressionType, rightExpressionType) {
   try {
+    if(leftExpressionType instanceof MultiType && rightExpressionType instanceof MultiType) {
+      let newMulti = [];
+      for (let i = 0; i < leftExpressionType.types.length; i++) {
+        const element = leftExpressionType.types[i];
+        if(rightExpressionType.types.indexOf(element) !== -1) {
+          newMulti.push(element);
+        }
+      }
+      if(newMulti.length <= 0) {
+        return Types.UNDEFINED;
+      } else {
+        return new MultiType(newMulti)
+      }
+    } else if(leftExpressionType instanceof MultiType) {
+      if(leftExpressionType.isCompatible(rightExpressionType)) {
+        return rightExpressionType;
+      } else {
+        return Types.UNDEFINED;
+      }
+    } else if(rightExpressionType instanceof MultiType) {
+      if(rightExpressionType.isCompatible(leftExpressionType)) {
+        return leftExpressionType;
+      } else {
+        return Types.UNDEFINED;
+      }
+    }
     const resultType = infixMap.get(operator)[leftExpressionType.ord][rightExpressionType.ord];
     if (resultType === null || resultType === undefined) {
       return Types.UNDEFINED
@@ -139,6 +166,9 @@ export function resultTypeAfterInfixOp (operator, leftExpressionType, rightExpre
 
 export function resultTypeAfterUnaryOp (operator, leftExpressionType) {
   try {
+    if(leftExpressionType instanceof MultiType){
+      return leftExpressionType;
+    }
     return unaryMap.get(operator)[leftExpressionType.ord];
   } catch (e) {
     if (e instanceof TypeError) {

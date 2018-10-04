@@ -1,4 +1,4 @@
-import { Types } from './../types';
+import { Types } from './../../typeSystem/types';
 
 export class Function {
 
@@ -11,7 +11,7 @@ export class Function {
   }
 
   get isMain () {
-    return this.name === null && this.returnType === Types.VOID;
+    return this.name === null && this.returnType.isCompatible(Types.VOID);
   }
 
   get commands () {
