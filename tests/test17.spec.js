@@ -1,7 +1,7 @@
 import * as Expressions from './../js/ast/expressions/';
 import * as Commands from './../js/ast/commands/';
 import { Operators } from './../js/ast/operators';
-import {Types} from './../js/ast/types';
+import {Types} from './../js/typeSystem/types';
 import {
     IVProgParser
 } from './../js/ast/ivprogParser';

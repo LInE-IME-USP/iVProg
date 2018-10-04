@@ -1,4 +1,4 @@
-import { Type } from "./types";
+import { Type } from "./type";
 
 export class CompoundType extends Type {
 
@@ -16,5 +16,14 @@ export class CompoundType extends Type {
       return this.innerType.isCompatible(another.innerType);
     }
     return false;
+  }
+
+  canAccept (another) {
+    if(another instanceof CompoundType) {
+      console.log("canAccept: another is compound");
+      return this.dimensions >= another.dimensions && this.innerType.isCompatible(another.innerType);
+    } else {
+      return this.innerType.isCompatible(another);
+    }
   }
 }

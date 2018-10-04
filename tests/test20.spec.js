@@ -23,6 +23,6 @@ describe('An Array initialization with expressions', function () {
         sto.applyStore('a').value[1].number
       ]).toEqual(result);
       done();
-    });
+    }).catch(err => done(err));
   });
 });

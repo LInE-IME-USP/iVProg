@@ -1,6 +1,7 @@
 import { StoreObject } from '../store/storeObject';
 import * as Commands from './../../ast/commands';
-import { Types, toInt } from './../../ast/types';
+import { Types } from './../../typeSystem/types';
+import { toInt } from "./../../typeSystem/parsers";
 
 
 /*
@@ -23,9 +24,9 @@ export function createSubstringFun () {
 
   const block = new Commands.CommandBlock([],  [new Commands.SysCall(substringFun)]);
   const func = new Commands.Function('$substring', Types.STRING,
-    [new Commands.FormalParameter(Types.STRING, 'str', 0, false),
-    new Commands.FormalParameter(Types.INTEGER, 'start', 0, false),
-    new Commands.FormalParameter(Types.INTEGER, 'end', 0, false)],
+    [new Commands.FormalParameter(Types.STRING, 'str', false),
+    new Commands.FormalParameter(Types.INTEGER, 'start', false),
+    new Commands.FormalParameter(Types.INTEGER, 'end', false)],
     block);
   return func;
 }
@@ -38,7 +39,7 @@ export function createLengthFun () {
   }
   const block = new Commands.CommandBlock([],  [new Commands.SysCall(lengthFun)]);
   const func = new Commands.Function('$length', Types.INTEGER,
-    [new Commands.FormalParameter(Types.STRING, 'str', 0, false)],
+    [new Commands.FormalParameter(Types.STRING, 'str', false)],
     block);
   return func;
 }
@@ -51,7 +52,7 @@ export function createUppercaseFun () {
   }
   const block = new Commands.CommandBlock([],  [new Commands.SysCall(uppercaseFun)]);
   const func = new Commands.Function('$uppercase', Types.STRING,
-    [new Commands.FormalParameter(Types.STRING, 'str', 0, false)],
+    [new Commands.FormalParameter(Types.STRING, 'str', false)],
     block);
   return func;
 }
@@ -64,7 +65,7 @@ export function createLowercaseFun () {
   }
   const block = new Commands.CommandBlock([],  [new Commands.SysCall(lowercaseFun)]);
   const func = new Commands.Function('$lowercase', Types.STRING,
-    [new Commands.FormalParameter(Types.STRING, 'str', 0, false)],
+    [new Commands.FormalParameter(Types.STRING, 'str', false)],
     block);
   return func;
 }
@@ -81,8 +82,8 @@ export function createrCharAtFun () {
   }
   const block = new Commands.CommandBlock([],  [new Commands.SysCall(charAtFun)]);
   const func = new Commands.Function('$charAt', Types.STRING,
-    [new Commands.FormalParameter(Types.STRING, 'str', 0, false),
-    new Commands.FormalParameter(Types.INTEGER, 'index', 0, false)],
+    [new Commands.FormalParameter(Types.STRING, 'str', false),
+    new Commands.FormalParameter(Types.INTEGER, 'index', false)],
     block);
   return func;
 }

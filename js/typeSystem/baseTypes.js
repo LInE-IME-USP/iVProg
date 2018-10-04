@@ -22,5 +22,5 @@ export const BaseTypes = Object.freeze({
   STRING: new BaseType("string", 2),
   BOOLEAN: new BaseType("bool", 3),
   VOID: new BaseType("void", 4),
-  UNDEFINED: new BaseType('undefined', 5)
+  UNDEFINED: new BaseType("undefined", 5)
 })

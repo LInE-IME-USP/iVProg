@@ -1,6 +1,7 @@
 import { StoreObject } from '../store/storeObject';
 import * as Commands from './../../ast/commands';
-import { Types, toReal } from './../../ast/types';
+import { Types } from './../../typeSystem/types';
+import { toReal, convertBoolToString } from "./../../typeSystem/parsers";
 import { IVProgParser } from '../../ast/ivprogParser';
 import { RealLiteral, IntLiteral, BoolLiteral } from '../../ast/expressions';
 
@@ -32,7 +33,7 @@ export function createIsRealFun () {
 
   const block = new Commands.CommandBlock([],  [new Commands.SysCall(isRealFun)]);
   const func = new Commands.Function('$isReal', Types.BOOLEAN,
-    [new Commands.FormalParameter(Types.STRING, 'str', 0, false)],
+    [new Commands.FormalParameter(Types.STRING, 'str', false)],
     block);
   return func;
 }
@@ -54,7 +55,7 @@ export function createIsIntFun () {
 
   const block = new Commands.CommandBlock([],  [new Commands.SysCall(isIntFun)]);
   const func = new Commands.Function('$isInt', Types.BOOLEAN,
-    [new Commands.FormalParameter(Types.STRING, 'str', 0, false)],
+    [new Commands.FormalParameter(Types.STRING, 'str', false)],
     block);
   return func;
 }
@@ -76,7 +77,7 @@ export function createIsBoolFun () {
 
   const block = new Commands.CommandBlock([],  [new Commands.SysCall(isBoolFun)]);
   const func = new Commands.Function('$isBool', Types.BOOLEAN,
-    [new Commands.FormalParameter(Types.STRING, 'str', 0, false)],
+    [new Commands.FormalParameter(Types.STRING, 'str', false)],
     block);
   return func;
 }
@@ -106,7 +107,7 @@ export function createCastRealFun () {
 
   const block = new Commands.CommandBlock([],  [new Commands.SysCall(castRealFun)]);
   const func = new Commands.Function('$castReal', Types.REAL,
-    [new Commands.FormalParameter(Types.ALL, 'val', 0, false)],
+    [new Commands.FormalParameter(Types.ALL, 'val', false)],
     block);
   return func;
 }
@@ -136,7 +137,7 @@ export function createCastIntFun () {
 
   const block = new Commands.CommandBlock([],  [new Commands.SysCall(castIntFun)]);
   const func = new Commands.Function('$castInt', Types.INTEGER,
-    [new Commands.FormalParameter(Types.ALL, 'val', 0, false)],
+    [new Commands.FormalParameter(Types.ALL, 'val', false)],
     block);
   return func;
 }
@@ -157,7 +158,7 @@ export function createCastBoolFun () {
 
   const block = new Commands.CommandBlock([],  [new Commands.SysCall(castBoolFun)]);
   const func = new Commands.Function('$castBool', Types.BOOLEAN,
-    [new Commands.FormalParameter(Types.STRING, 'str', 0, false)],
+    [new Commands.FormalParameter(Types.STRING, 'str', false)],
     block);
   return func;
 }
@@ -165,27 +166,43 @@ export function createCastBoolFun () {
 export function createCastStringFun () {
   const castStringFun = function (store, _) {
     const val = store.applyStore('str');
+    if(val.type.isCompatible(Types.INTEGER)) {
+      this.output.sendOutput(val.value.toString());
+    } else if (val.type.isCompatible(Types.REAL)) {
+      if (val.value.dp() <= 0) {
+        this.output.sendOutput(val.value.toFixed(1));  
+      } else {
+        this.output.sendOutput(val.value.toString());
+      }
+    } else {
+      this.output.sendOutput(val.value);
+    }
+    let result = null;
     switch (val.type.ord) {
       case Types.INTEGER.ord:
-        this.output.sendOutput(val.number);  
+        result = val.value.toString();  
         break;
       case Types.REAL.ord: {
         if (val.value.dp() <= 0) {
-          this.output.sendOutput(val.value.toFixed(1));  
+          result = val.value.toFixed(1);  
         } else {
-          this.output.sendOutput(val.number);
+          result = val.number;
         }
         break;
       }
+      case Types.BOOLEAN.ord:
+        result = convertBoolToString(val.value);
+        break;
       default:
-        this.output.sendOutput(val.value);
+        result = val.value;
         break;
     }
-    return Promise.resolve(store);
+    const temp = new StoreObject(Types.STRING, result);
+    return Promise.resolve(sto.updateStore("$", temp));
   }
   const block = new Commands.CommandBlock([], [new Commands.SysCall(castStringFun)]);
   const func = new Commands.Function('$castString', Types.STRING,
-    [new Commands.FormalParameter(Types.ALL, 'str', 0, false)],
+    [new Commands.FormalParameter(Types.ALL, 'str', false)],
     block);
   return func;
 }
