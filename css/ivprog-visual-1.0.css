@@ -130,7 +130,7 @@ body {
 
 .function_name_div, .function_return_div, .function_name_parameter, .created_div_valor_var, .function_return, .var_value_menu_div, .variable_rendered, .variable_rendered div, .var_attributed,
 .expression_operand_1, .expression_operand_2, .operator, .div_comment_text, .value_rendered, .parameters_function_called, .parameters_function_called div, .expression_elements,
-.expression_element, .var_rendered {
+.expression_element, .var_rendered, .menu_add_item, .component_element, .component_element {
 	display: inline;
 }
 
@@ -305,4 +305,16 @@ div.buttons_manage_columns {
 .button_remove_command, .button_refresh_attribution {
 	float: right;
 	cursor: pointer;
+}
+
+.expression_drag {
+	cursor: col-resize;
+	border: 2px gray solid;
+	display: inline;
+	width: 5px;
+}
+
+.ui.icon.red.exclamation.triangle.error_icon {
+	float: left;
+    margin-left: -30px;
 }

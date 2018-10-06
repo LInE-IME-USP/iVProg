@@ -299,6 +299,9 @@ $( document ).ready(function() {
 
 function runCode () {
   const strCode = CodeManagement.generate();
+  if (strCode == null) {
+    return;
+  }
   domConsole = new DOMConsole("#ivprog-term");
   $("#ivprog-term").slideDown(500);
   const lexer = LanguageService.getCurrentLexer();

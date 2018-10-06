@@ -4,7 +4,9 @@ import WatchJS from 'melanke-watchjs';
 export const COMMAND_TYPES = Object.freeze({function:"function", comment:"comment", reader:"reader", writer:"writer", attribution:"attribution", iftrue:"iftrue",
  repeatNtimes:"repeatNtimes", whiletrue:"whiletrue", dowhiletrue:"dowhiletrue", switch:"switch", functioncall:"functioncall"});
 
-export const ARITHMETIC_TYPES = Object.freeze({plus:"plus", minus:"minus", multiplication:"multiplication", division:"division", module:"module"});
+export const ARITHMETIC_TYPES = Object.freeze({plus:"plus", minus:"minus", multiplication:"multiplication", division:"division", module:"module", none:"none"});
+
+export const EXPRESSION_ELEMENTS = Object.freeze({exp_op_exp:"exp_op_exp", op_exp:"op_exp", par_exp_par:"par_exp_par", start_point:"start_point"});
 
 export class Variable {
 
@@ -68,6 +70,16 @@ export class Attribution {
   }
 }
 
+export class ExpressionElement {
+
+  constructor (type_exp, itens = []) {
+    this.type_exp = type_exp;
+    this.itens = itens;
+  }
+}
+
+/*
+
 export class Expression {
 
   constructor (operand1, operand2, operator) {
@@ -76,16 +88,7 @@ export class Expression {
     this.operator = operator;
   }
 }
-/*
-export class ExpressionNode {
-
-  constructor (content, left_node, right_node) {
-    this.content = content;
-    this.left_node = left_node;
-    this.right_node = right_node;
-    
-  }
-}*/
+*/
 
 export class IfTrue {
 

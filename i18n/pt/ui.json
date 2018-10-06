@@ -40,5 +40,8 @@
   "text_dowhiletrue": "Faça enquanto verdadeiro",
   "text_switch": "Escolha",
   "text_functioncall": "Chamada de função",
-  "text_value": "Valor"
+  "text_value": "Valor",
+  "text_operator": "Operador",
+  "text_parentheses": "Parênteses",
+  "text_change": "Alterar"
 }

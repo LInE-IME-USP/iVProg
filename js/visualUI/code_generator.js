@@ -8,26 +8,40 @@ import * as CommandsManagement from './commands';
 
 export function generate () {
 
+	$('.ivprog_visual_panel').find('.error_icon').remove();
+
 	var code = LocalizedStrings.getUI('program') + ' { ';
 
 	code += globalsCode();
 
 	code += '\n';
 
+	var has_error = false;
+
 	for (var i = 0; i < window.program_obj.functions.length; i ++) {
-		code += functionsCode(window.program_obj.functions[i]);
+		var n_code = functionsCode(window.program_obj.functions[i]);
+		if (n_code == null) {
+			has_error = true;
+		}
+		code += n_code;
 		code += '\n';
 
 	}
 
 	code += '\n}';
 
-	return code;
+	if (has_error) {
+		return null;
+	} else {
+		return code;
+	}
 
 }
 
 function functionsCode (function_obj) {
 	var ret = '\n\t' + LocalizedStrings.getUI('function') + ' ';
+
+	var has_error = false;
 
 	switch (function_obj.return_type) {
 		case Types.INTEGER:
@@ -70,13 +84,34 @@ function functionsCode (function_obj) {
 	}
 
 	for (var j = 0; j < function_obj.commands.length; j++) {
-		ret += commandsCode(function_obj.commands[j]);
+		try {
+			ret += commandsCode(function_obj.commands[j]);
+		} catch (err) {
+
+			has_error = true;
+
+			console.error(err.message);
+
+			var todos = $('body').find('.command_container');
+			for (var i = 0; i < todos.length; i++) {
+
+				if ($(todos[i]).data('command') == function_obj.commands[j]) {
+					$( todos[i] ).prepend( ' <i class="ui icon red exclamation triangle error_icon"></i> ' );
+					break;
+				}
+			}
+			
+		}
+		
 	}
 
 	ret += '\n\t}';
 
-
-	return ret;
+	if (has_error) {
+		return null;
+	} else {
+		return ret;
+	}
 }
 
 function commandsCode (command_obj) {
@@ -92,7 +127,73 @@ function commandsCode (command_obj) {
 
 		case Models.COMMAND_TYPES.functioncall:
 			return functioncallsCode(command_obj);
+
+		case Models.COMMAND_TYPES.attribution:
+			return attributionsCode(command_obj);
 	}
+}
+
+function attributionsCode (command_obj) {
+	var ret = '\n\t\t';
+
+	ret += variableValueMenuCode(command_obj.variable) + ' = ';
+
+	for (var i = 0; i < command_obj.expression.length; i++) {
+		ret += elementExpressionCode(command_obj.expression[i]);
+	}
+
+	return ret;
+}
+
+function elementExpressionCode (expression_obj) {
+
+	var ret = ''; 
+
+	for (var i = 0; i < expression_obj.itens.length; i++) {
+
+
+		if (expression_obj.itens[i].type) {
+
+			ret += variableValueMenuCode(expression_obj.itens[i]);
+
+		} else if (expression_obj.itens[i].type_exp) {
+
+			if (expression_obj.itens[i].type_exp == Models.EXPRESSION_ELEMENTS.par_exp_par) {
+				ret += ' ( ';
+			}
+
+			ret += elementExpressionCode(expression_obj.itens[i]);
+
+			if (expression_obj.itens[i].type_exp == Models.EXPRESSION_ELEMENTS.par_exp_par) {
+				ret += ' ) ';
+			}
+
+		} else {
+
+			switch (expression_obj.itens[i]) {
+				case Models.ARITHMETIC_TYPES.plus:
+					ret += ' + ';
+					break;
+				case Models.ARITHMETIC_TYPES.minus:
+					ret += ' - ';
+					break;
+				case Models.ARITHMETIC_TYPES.multiplication:
+					ret += ' * ';
+					break;
+				case Models.ARITHMETIC_TYPES.division:
+					ret += ' / ';
+					break;
+				case Models.ARITHMETIC_TYPES.module:
+					ret += ' % ';
+					break;
+			}
+			
+		}
+
+	}
+
+	return ret;
+
 }
 
 function functioncallsCode (command_obj) {
@@ -144,7 +245,11 @@ function variableValueMenuCode (variable_obj) {
 
 
 	} else {
-		ret += variable_obj.content;
+		if (isNaN(variable_obj.content)) {
+			ret += '"' + variable_obj.content + '"';
+		} else {
+			ret += variable_obj.content;
+		}
 	}
 
 	return ret;

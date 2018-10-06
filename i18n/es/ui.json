@@ -39,5 +39,8 @@
   "text_dowhiletrue": "Do while true",
   "text_switch": "Switch",
   "text_functioncall": "Function call",
-  "text_value": "Value"
+  "text_value": "Value",
+  "text_operator": "Operator",
+  "text_parentheses": "Parentheses",
+  "text_change": "Change"
 }
