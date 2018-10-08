@@ -5,13 +5,14 @@ import { LocalizedStrings } from '../../services/localizedStringsService';
 import * as GlobalsManagement from '../globals';
 import * as VariablesManagement from '../variables';
 import * as CommandsManagement from '../commands';
+import * as ConditionalExpressionManagement from './conditional_expression';
 
 export function createFloatingCommand () {
 	return $('<div class="ui repeatNtimes created_element"> <i class="ui icon small sync"></i> <span> para (x = 0; x < 10; x ++) { } </span></div>');
 }
 
 export function renderCommand (command, function_obj) {
-	var ret = '<div class="ui repeatNtimes command_container"> <i class="ui icon small random command_drag"></i> <i class="ui icon times red button_remove_command"></i> <span> para (x = 0; x < 10; x ++) { </span>';
+	var ret = '<div class="ui repeatNtimes command_container"> <i class="ui icon small random command_drag"></i> <i class="ui icon times red button_remove_command"></i> <span> para  ( </span> ??? ; <div class="conditional_expression"></div> ;  ??? ) { </span>';
 	ret += '<div class="ui block_commands">';
 
 	ret += '</div>';
@@ -22,6 +23,8 @@ export function renderCommand (command, function_obj) {
 	el.data('command', command);
 
 	addHandlers(command, function_obj, el);
+
+	ConditionalExpressionManagement.renderExpression(command, command.expression2, function_obj, el.find('.conditional_expression'));
 
 	return el;
 }

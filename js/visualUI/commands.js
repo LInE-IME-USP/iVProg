@@ -175,16 +175,16 @@ export function genericCreateCommand (command_type) {
 			return new Models.FunctionCall(new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.only_function, null, null, null, false), null);
 
 		case Models.COMMAND_TYPES.iftrue:
-			return new Models.IfTrue(null, null, null);
+			return new Models.IfTrue(new Models.ConditionalExpression(null), null, null);
 
 		case Models.COMMAND_TYPES.repeatNtimes:
-			return new Models.RepeatNTimes(null, null, null, null);
+			return new Models.RepeatNTimes(null, new Models.ConditionalExpression(null), null, null);
 
 		case Models.COMMAND_TYPES.whiletrue:
-			return new Models.WhileTrue(null, null);
+			return new Models.WhileTrue(new Models.ConditionalExpression(null), null);
 
 		case Models.COMMAND_TYPES.dowhiletrue:
-			return new Models.DoWhileTrue(null, null);
+			return new Models.DoWhileTrue(new Models.ConditionalExpression(null), null);
 
 		case Models.COMMAND_TYPES.switch:
 			return new Models.Switch(null, null, null);

@@ -8,6 +8,12 @@ export const ARITHMETIC_TYPES = Object.freeze({plus:"plus", minus:"minus", multi
 
 export const EXPRESSION_ELEMENTS = Object.freeze({exp_op_exp:"exp_op_exp", op_exp:"op_exp", par_exp_par:"par_exp_par", start_point:"start_point"});
 
+export const EXPRESSION_TYPES = Object.freeze({exp_conditional:"exp_conditional", exp_logic:"exp_logic", exp_arithmetic:"exp_arithmetic"});
+
+export const ARITHMETIC_COMPARISON = Object.freeze({greater_than:"greater_than", less_than:"less_than", equals_to:"equals_to", not_equals_to:"not_equals_to", greater_than_or_equals_to:"greater_than_or_equals_to", less_than_or_equals_to:"less_than_or_equals_to"});
+
+export const LOGIC_COMPARISON = Object.freeze({equals_to:"equals_to", not_equals_to:"not_equals_to", and:"and", or:"or"});
+
 export class Variable {
 
   constructor (type, name, value, dimensions = 0, is_constant = false, rows = 0, columns = 0) {
@@ -78,17 +84,34 @@ export class ExpressionElement {
   }
 }
 
-/*
+export class ConditionalExpression {
 
-export class Expression {
+  constructor (expression) {
+    this.type = EXPRESSION_TYPES.exp_conditional;
+    this.expression = expression;
+  }
+}
 
-  constructor (operand1, operand2, operator) {
-    this.operand1 = operand1;
-    this.operand2 = operand2;
+export class LogicExpression {
+
+  constructor (has_neg, first_operand, second_operand, operator) {
+    this.type = EXPRESSION_TYPES.exp_logic;
+    this.has_neg = has_neg;
+    this.first_operand = first_operand;
+    this.second_operand = second_operand;
     this.operator = operator;
   }
 }
-*/
+
+export class ArithmeticExpression {
+
+  constructor (first_operand, second_operand, operator) {
+    this.type = EXPRESSION_TYPES.exp_arithmetic;
+    this.first_operand = first_operand;
+    this.second_operand = second_operand;
+    this.operator = operator;
+  }
+}
 
 export class IfTrue {
 

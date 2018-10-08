@@ -5,6 +5,7 @@ import { LocalizedStrings } from '../../services/localizedStringsService';
 import * as GlobalsManagement from '../globals';
 import * as VariablesManagement from '../variables';
 import * as CommandsManagement from '../commands';
+import * as ConditionalExpressionManagement from './conditional_expression';
 
 export function createFloatingCommand () {
 	return $('<div class="ui iftrue created_element"> <i class="ui icon small random"></i> <span> if (x < 1) { } </span></div>');
@@ -12,7 +13,10 @@ export function createFloatingCommand () {
 
 export function renderCommand (command, function_obj) {
 	var ret = '';
-	ret += '<div class="ui iftrue command_container"> <i class="ui icon small random command_drag"></i> <i class="ui icon times red button_remove_command"></i> <span> if (x < 1) { </span>';
+	ret += '<div class="ui iftrue command_container"> <i class="ui icon small random command_drag"></i> <i class="ui icon times red button_remove_command"></i> <i class="ui icon redo alternate blue button_refresh_attribution"></i>';
+	ret += ' <span> ' + LocalizedStrings.getUI('text_if') + '</span>';
+	ret += ' <div class="conditional_expression"></div>';
+	ret += '<span> { </span> ';
 	ret += '<div class="ui block_commands" data-if="true">';
 
 	/*if ((writer_obj.commands_block == null)
@@ -24,7 +28,7 @@ export function renderCommand (command, function_obj) {
 	}*/
 
 	ret += '</div>';
-	ret += '<span> } else { </span>';
+	ret += '<span> } ' + LocalizedStrings.getUI('text_else') + ' { </span>';
 
 	ret += '<div class="ui block_commands" data-else="true">';
 
@@ -45,6 +49,13 @@ export function renderCommand (command, function_obj) {
 	el.data('command', command);
 
 	addHandlers(command, function_obj, el);
+
+	ConditionalExpressionManagement.renderExpression(command, command.expression, function_obj, el.find('.conditional_expression'));
+
+	el.find('.button_refresh_attribution').on('click', function() {
+		el.find('.conditional_expression').text('');
+		ConditionalExpressionManagement.renderExpression(command, command.expression, function_obj, el.find('.conditional_expression'));		
+	});
 
 	return el;
 }
