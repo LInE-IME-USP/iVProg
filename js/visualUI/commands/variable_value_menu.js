@@ -6,6 +6,7 @@ import * as GlobalsManagement from '../globals';
 import * as VariablesManagement from '../variables';
 import * as AttribuitionsManagement from './attribution';
 import * as WritersManagement from './writer';
+import * as RepeatNTimesManagement from './repeatNtimes';
 
 export const VAR_OR_VALUE_TYPES = Object.freeze({only_variable: 1, only_value: 2, only_function: 3, variable_and_function: 4, variable_and_value_opt: 5,
 	value_and_function: 6, all: 7});
@@ -518,7 +519,6 @@ function addHandlers (command, ref_object, dom_object, menu_var_or_value, functi
 		menu_var_or_value.dropdown({
 		  onChange: function(value, text, $selectedItem) {
 		  	dom_object.find('.var_name').remove();
-
 		     switch ($selectedItem.data('option')) {
 		     	case VAR_OR_VALUE_TYPES.only_function:
 		     		openInputToFunction(command, ref_object, dom_object, menu_var_or_value, function_obj, $($selectedItem).data('function_reference'), expression_element);
@@ -535,6 +535,10 @@ function addHandlers (command, ref_object, dom_object, menu_var_or_value, functi
 
 		     if ($selectedItem.data('exp')) {
 		     	AttribuitionsManagement.manageExpressionElements(command, ref_object, dom_object, menu_var_or_value, function_obj, $selectedItem, expression_element);
+		     }
+
+		     if (command.type == Models.COMMAND_TYPES.repeatNtimes) {
+		     	RepeatNTimesManagement.manageExpressionElements(command, ref_object, dom_object, menu_var_or_value, function_obj, $selectedItem, expression_element);
 		     }
 	      }
 	    });

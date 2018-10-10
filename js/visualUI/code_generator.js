@@ -114,27 +114,248 @@ function functionsCode (function_obj) {
 	}
 }
 
-function commandsCode (command_obj) {
+function commandsCode (command_obj, indentation = 2) {
 	switch (command_obj.type) {
 		case Models.COMMAND_TYPES.comment:
-			return commentsCode(command_obj);
+			return commentsCode(command_obj, indentation);
 
 		case Models.COMMAND_TYPES.reader:
-			return readersCode(command_obj);
+			return readersCode(command_obj, indentation);
 
 		case Models.COMMAND_TYPES.writer:
-			return writersCode(command_obj);
+			return writersCode(command_obj, indentation);
 
 		case Models.COMMAND_TYPES.functioncall:
-			return functioncallsCode(command_obj);
+			return functioncallsCode(command_obj, indentation);
 
 		case Models.COMMAND_TYPES.attribution:
-			return attributionsCode(command_obj);
+			return attributionsCode(command_obj, indentation);
+
+		case Models.COMMAND_TYPES.whiletrue:
+			return whiletruesCode(command_obj, indentation);
+
+		case Models.COMMAND_TYPES.dowhiletrue:
+			return doWhilesCode(command_obj, indentation);
+
+		case Models.COMMAND_TYPES.iftrue:
+			return iftruesCode(command_obj, indentation);
 	}
 }
 
-function attributionsCode (command_obj) {
-	var ret = '\n\t\t';
+function iftruesCode (command_obj, indentation) {
+	var ret = '\n';
+
+	for (var i = 0; i < indentation; i++) {
+		ret += '\t';
+	}
+
+	ret += LocalizedStrings.getUI('text_if');
+
+	switch (command_obj.expression.expression.type) {
+		case Models.EXPRESSION_TYPES.exp_logic:
+			ret += logicExpressionCode(command_obj.expression.expression);
+			break;
+		case Models.EXPRESSION_TYPES.exp_arithmetic:
+			ret += arithmeticExpressionCode(command_obj.expression.expression);
+			break;
+	}
+
+	ret += ' { ';
+
+	if (command_obj.commands_block) {
+		for (var i = 0; i < command_obj.commands_block.length; i++) {
+			ret += commandsCode(command_obj.commands_block[i], (indentation + 1));
+		}
+	}
+
+	ret += '\n';
+	for (var i = 0; i < indentation; i++) {
+		ret += '\t';
+	}
+
+	ret += '} ' + LocalizedStrings.getUI('text_else') + ' {';
+
+	if (command_obj.commands_else) {
+		for (var i = 0; i < command_obj.commands_else.length; i++) {
+			ret += commandsCode(command_obj.commands_else[i], (indentation + 1));
+		}
+	}
+
+	ret += '\n';
+	for (var i = 0; i < indentation; i++) {
+		ret += '\t';
+	}
+
+	ret += '}';
+
+	return ret;
+}
+
+
+function doWhilesCode (command_obj, indentation) {
+	var ret = '\n';
+
+	for (var i = 0; i < indentation; i++) {
+		ret += '\t';
+	}
+
+	ret += LocalizedStrings.getUI('text_code_do') + ' { ';
+
+	if (command_obj.commands_block) {
+		for (var i = 0; i < command_obj.commands_block.length; i++) {
+			ret += commandsCode(command_obj.commands_block[i], (indentation + 1));
+		}
+	}
+
+	ret += '\n';
+	for (var i = 0; i < indentation; i++) {
+		ret += '\t';
+	}
+
+	ret += '} ' + LocalizedStrings.getUI('text_code_while');
+
+	switch (command_obj.expression.expression.type) {
+		case Models.EXPRESSION_TYPES.exp_logic:
+			ret += logicExpressionCode(command_obj.expression.expression);
+			break;
+		case Models.EXPRESSION_TYPES.exp_arithmetic:
+			ret += arithmeticExpressionCode(command_obj.expression.expression);
+			break;
+	}
+
+	return ret;
+}
+
+
+function whiletruesCode (command_obj, indentation) {
+	var ret = '\n';
+
+	for (var i = 0; i < indentation; i++) {
+		ret += '\t';
+	}
+
+	ret += LocalizedStrings.getUI('text_code_while');
+
+	switch (command_obj.expression.expression.type) {
+		case Models.EXPRESSION_TYPES.exp_logic:
+			ret += logicExpressionCode(command_obj.expression.expression);
+			break;
+		case Models.EXPRESSION_TYPES.exp_arithmetic:
+			ret += arithmeticExpressionCode(command_obj.expression.expression);
+			break;
+	}
+
+	ret += ' { ';
+
+	if (command_obj.commands_block) {
+		for (var i = 0; i < command_obj.commands_block.length; i++) {
+			ret += commandsCode(command_obj.commands_block[i], (indentation + 1));
+		}
+	}
+
+	ret += '\n';
+	for (var i = 0; i < indentation; i++) {
+		ret += '\t';
+	}
+
+	ret += '}';
+
+	return ret;
+}
+
+function logicExpressionCode (expression) {
+	var ret = ' ( ';
+
+	if (expression.first_operand.type == Models.EXPRESSION_TYPES.exp_logic) {
+		ret += logicExpressionCode(expression.first_operand);
+	} else if (expression.first_operand.type == Models.EXPRESSION_TYPES.exp_arithmetic) {
+		ret += arithmeticExpressionCode(expression.first_operand);
+	} else {
+		ret += variableValueMenuCode(expression.first_operand);
+	}
+
+	if (expression.operator) {
+		switch (expression.operator) {
+	        case Models.LOGIC_COMPARISON.equals_to:
+	        	ret += ' == ';
+	        	break;
+	        case Models.LOGIC_COMPARISON.not_equals_to:
+	        	ret += ' != ';
+	        	break;
+	        case Models.LOGIC_COMPARISON.and:
+	        	ret += ' && ';
+	        	break;
+	        case Models.LOGIC_COMPARISON.or:
+	        	ret += ' || ';
+	        	break;
+		}
+
+		if (expression.second_operand.type == Models.EXPRESSION_TYPES.exp_logic) {
+			ret += logicExpressionCode(expression.second_operand);
+		} else if (expression.second_operand.type == Models.EXPRESSION_TYPES.exp_arithmetic) {
+			ret += arithmeticExpressionCode(expression.second_operand);
+		} else {
+			ret += variableValueMenuCode(expression.second_operand);
+		}
+
+	}
+
+	ret += ' ) ';
+
+	return ret;
+}
+
+function arithmeticExpressionCode (expression) {
+	var ret = ' ( ';
+
+	if (expression.first_operand.type == Models.EXPRESSION_TYPES.exp_logic) {
+		ret += logicExpressionCode(expression.first_operand);
+	} else if (expression.first_operand.type == Models.EXPRESSION_TYPES.exp_arithmetic) {
+		ret += arithmeticExpressionCode(expression.first_operand);
+	} else {
+		ret += variableValueMenuCode(expression.first_operand);
+	}
+
+	switch (expression.operator) {
+        case Models.ARITHMETIC_COMPARISON.greater_than:
+        	ret += ' > ';
+        	break;
+        case Models.ARITHMETIC_COMPARISON.less_than:
+        	ret += ' < ';
+        	break;
+        case Models.ARITHMETIC_COMPARISON.equals_to:
+        	ret += ' == ';
+        	break;
+        case Models.ARITHMETIC_COMPARISON.not_equals_to:
+        	ret += ' != ';
+        	break;
+        case Models.ARITHMETIC_COMPARISON.greater_than_or_equals_to:
+        	ret += ' >= ';
+        	break;
+        case Models.ARITHMETIC_COMPARISON.less_than_or_equals_to:
+        	ret += ' <= ';
+        	break;
+	}
+
+	if (expression.second_operand.type == Models.EXPRESSION_TYPES.exp_logic) {
+		ret += logicExpressionCode(expression.second_operand);
+	} else if (expression.second_operand.type == Models.EXPRESSION_TYPES.exp_arithmetic) {
+		ret += arithmeticExpressionCode(expression.second_operand);
+	} else {
+		ret += variableValueMenuCode(expression.second_operand);
+	}
+
+	ret += ' ) ';
+
+	return ret;
+}
+
+function attributionsCode (command_obj, indentation) {
+	var ret = '\n';
+
+	for (var i = 0; i < indentation; i++) {
+		ret += '\t';
+	}
 
 	ret += variableValueMenuCode(command_obj.variable) + ' = ';
 
@@ -196,18 +417,28 @@ function elementExpressionCode (expression_obj) {
 
 }
 
-function functioncallsCode (command_obj) {
+function functioncallsCode (command_obj, indentation) {
 
-	var ret = '\n\t\t';
+	var ret = '\n';
+
+	for (var i = 0; i < indentation; i++) {
+		ret += '\t';
+	}
 	
 	ret += variableValueMenuCode(command_obj.function_called);
 
 	return ret;
 }
 
-function readersCode (command_obj) {
-	var ret = '\n\t\t' + LocalizedStrings.getUI('text_command_read') + ' ( ';
+function readersCode (command_obj, indentation) {
+	var ret = '\n';
 	
+	for (var i = 0; i < indentation; i++) {
+		ret += '\t';
+	}
+
+	ret += LocalizedStrings.getUI('text_command_read') + ' ( ';
+
 	ret += variableValueMenuCode(command_obj.variable_value_menu);
 
 	ret += ' ) ';
@@ -256,9 +487,15 @@ function variableValueMenuCode (variable_obj) {
 
 }
 
-function writersCode (command_obj) {
-	var ret = '\n\t\t' + LocalizedStrings.getUI('text_command_write') + ' ( ';
+function writersCode (command_obj, indentation) {
+	var ret = '\n';
+
+	for (var i = 0; i < indentation; i++) {
+		ret += '\t';
+	}
 	
+	ret += LocalizedStrings.getUI('text_command_write') + ' ( ';
+
 	for (var i = 0; i < command_obj.content.length; i++) {
 		ret += variableValueMenuCode(command_obj.content[i]);
 
@@ -271,8 +508,15 @@ function writersCode (command_obj) {
 	return ret;
 }
 
-function commentsCode (command_obj) {
-	var ret = '\n\t\t// ';
+function commentsCode (command_obj, indentation) {
+	var ret = '\n';
+
+	for (var i = 0; i < indentation; i++) {
+		ret += '\t';
+	}
+
+	ret += '// ';
+
 	ret += command_obj.comment_text.content;
 	return ret;
 }

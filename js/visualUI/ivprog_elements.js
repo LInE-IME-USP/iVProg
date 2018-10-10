@@ -125,8 +125,9 @@ export class IfTrue {
 
 export class RepeatNTimes {
 
-  constructor (expression1, expression2, expression3, commands_block) {
+  constructor (var_attribution, expression1, expression2, expression3, commands_block) {
     this.type = COMMAND_TYPES.repeatNtimes;
+    this.var_attribution = var_attribution;
     this.expression1 = expression1;
     this.expression2 = expression2;
     this.expression3 = expression3;

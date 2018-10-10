@@ -178,7 +178,8 @@ export function genericCreateCommand (command_type) {
 			return new Models.IfTrue(new Models.ConditionalExpression(null), null, null);
 
 		case Models.COMMAND_TYPES.repeatNtimes:
-			return new Models.RepeatNTimes(null, new Models.ConditionalExpression(null), null, null);
+			return new Models.RepeatNTimes(new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.only_variable, null, null, null, false), 
+												null, new Models.ConditionalExpression(null), null, null);
 
 		case Models.COMMAND_TYPES.whiletrue:
 			return new Models.WhileTrue(new Models.ConditionalExpression(null), null);
@@ -275,26 +276,33 @@ function manageCommand (function_obj, function_container, event, command_type) {
 
 		// se a hierarquia possuir apenas um elemento, então está na raiz dos comandos: 
 		if (hierarquia_bottom_up.length == 1) {
+			console.log('QQ1');
 			var sub_elemento = false;
 			for (var i = 0; i < hier_find.length; i++) {
 				if (typeof $(hier_find[i]).data('command') !== 'undefined') {
+					console.log('QQ2');
 					findBeforeOrAfterCommandToAdd(hier_find[i], event, function_obj, command_type);
 					sub_elemento = true;
 					break;
 				}
 			}
 			if (!sub_elemento) {
+				console.log('QQ3');
 				findBeforeOrAfterCommandToAdd(el[0], event, function_obj, command_type);
 			}
 		} else {
+			console.log('QQ4');
 			// caso exista mais de um elemento na hierarquia:
 			if (typeof $(el).data('command') !== 'undefined') {
+				console.log('QQ5');
 				console.log("PPP1");
 				insertCommandInBlockHierar(el[0], event, function_obj, command_type, hier_find, hierarquia_bottom_up);
 			} else {
+				console.log('QQ6');
 				var sub_elemento = false;
 				for (var i = 0; i < hier_find.length; i++) {
 					if (typeof $(hier_find[i]).data('command') !== 'undefined') {
+						console.log('QQ7');
 						insertCommandInBlockHierar(hier_find[i], event, function_obj, command_type, hier_find, hierarquia_bottom_up);
 						sub_elemento = true;
 						break;
@@ -316,12 +324,15 @@ function insertCommandInBlockHierar (el, event, function_obj, command_type, hier
 	if ((el_jq.data('command').type == Models.COMMAND_TYPES.repeatNtimes) ||
 		(el_jq.data('command').type == Models.COMMAND_TYPES.whiletrue)  ||
 		(el_jq.data('command').type == Models.COMMAND_TYPES.dowhiletrue) ||
-		(el_jq.data('command').type == Models.COMMAND_TYPES.iftrue) ||
 		(el_jq.data('command').type == Models.COMMAND_TYPES.switch) ) {
+
+		console.log('QQ17');
 
 		if ((el_jq.data('command').type == Models.COMMAND_TYPES.repeatNtimes) ||
 			(el_jq.data('command').type == Models.COMMAND_TYPES.whiletrue)  ||
 			(el_jq.data('command').type == Models.COMMAND_TYPES.dowhiletrue) ) {
+
+			console.log('QQ18');
 
 			// Se não tiver outro comando ainda no bloco, só adiciona: 
 			if (command_parent.commands_block == null || command_parent.commands_block.length == 0) {
@@ -337,9 +348,12 @@ function insertCommandInBlockHierar (el, event, function_obj, command_type, hier
 
 		} else {
 			// QUANDO FOR BLOCO DO TIPO IF OU SWITCH/CASE:
+			console.log("que situação foi essa? quando o if no qual ele soltou, já está em outro bloco de comandos");
+
 		}
 
 	} else {
+		console.log('QQ19');
 		// entra neste bloco, se soltou o comando sobre outro comando dentro de um subbloco:
 		findBeforeOrAfterCommandToAddInsertBlock(el, event, function_obj, command_type);
 	}
@@ -402,6 +416,42 @@ function findBeforeOrAfterCommandToAddInsertBlock (el, event, function_obj, comm
 	var command_parent = $(el.parentNode.parentNode).data('command');
 	var command_target = el_jq.data('command');
 
+	var is_in_else = false;
+
+	if (!command_parent) {
+		var hier = el_jq.parentsUntil(".command_container");
+
+		for (var i = 0; i < hier.length; i++) {
+			var temp = $(hier[i]);
+			if (typeof temp.data('else') !== 'undefined') {
+				is_in_else = true;
+			}
+			if (typeof temp.data('command') !== 'undefined') {
+				command_parent = temp.data('command');
+			}
+		}
+	}
+
+	if (command_parent == command_target) {
+		var hier = el_jq.parentsUntil(".command_container");
+
+		for (var i = 0; i < hier.length; i++) {
+			var temp = $(hier[i]);
+			if (typeof temp.data('else') !== 'undefined') {
+				is_in_else = true;
+				break;
+			}
+		}
+	}
+
+	console.log('debugging:');
+	console.log('el_jq');
+	console.log(el_jq);
+	console.log('command_parent');
+	console.log(command_parent);
+	console.log('command_target');
+	console.log(command_target);
+
 	var menor_distancia = 999999999;
 	var antes = true;
 
@@ -420,24 +470,128 @@ function findBeforeOrAfterCommandToAddInsertBlock (el, event, function_obj, comm
 		
 		var recentComand = genericCreateCommand(command_type);
 
-		var index = command_parent.commands_block.indexOf(command_target);
+		console.log('MMM1');
 
-		if (index > -1) {
-		    command_parent.commands_block.splice(index, 0, recentComand);
+		if (is_in_else) {
+
+			console.log('MMM2');
+
+			if (command_parent == command_target) {
+				console.log('MMM3');
+				if (command_parent.commands_else == null || command_parent.commands_else.length == 0) {
+					command_parent.commands_else = [];
+
+					var recentComand = genericCreateCommand(command_type);
+					command_parent.commands_else.push(recentComand);
+
+					renderCommand(recentComand, el_jq.find('.commands_else'), 3, function_obj);
+				} else { // Se já tem algum comando no bloco:
+					findInBlockCorrectPlace(el_jq.find('.commands_else'), event, function_obj, command_type, true);
+				}
+				return;
+			}
+			console.log('MMM7');
+			var index = command_parent.commands_else.indexOf(command_target);
+
+			if (index > -1) {
+			    command_parent.commands_else.splice(index, 0, recentComand);
+			}
+
+			renderCommand(recentComand, el, 1, function_obj);
+		} else {
+			console.log('MMM4');
+			if (command_parent == command_target) {
+				console.log('Nxxxx5');
+				if (command_parent.commands_block == null || command_parent.commands_block.length == 0) {
+					command_parent.commands_block = [];
+					console.log('SSS4');
+					var recentComand = genericCreateCommand(command_type);
+					command_parent.commands_block.push(recentComand);
+
+					renderCommand(recentComand, el_jq, 3, function_obj);
+				} else {
+					console.log('SSS5');
+					findInBlockCorrectPlace(el_jq, event, function_obj, command_type);
+				}
+				
+				
+				return;
+			}
+			console.log('MMM6');
+
+			var index = command_parent.commands_block.indexOf(command_target);
+
+			if (index > -1) {
+			    command_parent.commands_block.splice(index, 0, recentComand);
+			}
+
+			renderCommand(recentComand, el, 1, function_obj);
 		}
 
-		renderCommand(recentComand, el, 1, function_obj);
+		
 
 	} else {
+		console.log('XXX1');
 		var recentComand = genericCreateCommand(command_type);
 
-		var index = command_parent.commands_block.indexOf(command_target);
+		if (is_in_else) {
 
-		if (index > -1) {
-		    command_parent.commands_block.splice((index + 1), 0, recentComand);
+			if (command_parent == command_target) {
+				console.log('MMM3');
+				if (command_parent.commands_else == null || command_parent.commands_else.length == 0) {
+					command_parent.commands_else = [];
+					console.log('SSS1');
+					var recentComand = genericCreateCommand(command_type);
+					command_parent.commands_else.push(recentComand);
+
+					renderCommand(recentComand, el_jq, 3, function_obj);
+				} else { // Se já tem algum comando no bloco:
+					console.log('SSS2');
+					findInBlockCorrectPlace(el_jq, event, function_obj, command_type, true);
+				}
+				return;
+			}
+
+			console.log('XXX2');
+			var index = command_parent.commands_else.indexOf(command_target);
+
+			if (index > -1) {
+			    command_parent.commands_else.splice((index + 1), 0, recentComand);
+			}
+
+			renderCommand(recentComand, el, 2, function_obj);
+
+		} else {
+
+			if (command_parent == command_target) {
+				console.log('Nxxxx78');
+				if (command_parent.commands_block == null || command_parent.commands_block.length == 0) {
+					command_parent.commands_block = [];
+
+					var recentComand = genericCreateCommand(command_type);
+					command_parent.commands_block.push(recentComand);
+					console.log('SSS6');
+					renderCommand(recentComand, el_jq, 3, function_obj);
+				} else {
+					console.log('SSS7');
+					findInBlockCorrectPlace(el_jq, event, function_obj, command_type);
+				}
+				
+				
+				return;
+			}
+
+			console.log('XXX3');
+			var index = command_parent.commands_block.indexOf(command_target);
+
+			if (index > -1) {
+			    command_parent.commands_block.splice((index + 1), 0, recentComand);
+			}
+
+			renderCommand(recentComand, el, 2, function_obj);
 		}
 
-		renderCommand(recentComand, el, 2, function_obj);
+		
 	}
 }
 
@@ -461,12 +615,64 @@ function insertCommandInBlock (el, event, function_obj, command_type) {
 			findInBlockCorrectPlace(el, event, function_obj, command_type);
 		}
 
-	} else {
-		console.log("PPP2");
+	} else if (el_jq.data('command').type == Models.COMMAND_TYPES.iftrue) {
+
+		console.log('QQ9');
+		
+		// no if ou no else?
+		var correct_div = $(document.elementFromPoint(event.pageX, event.pageY));
+		var is_in_if = true;
+		if (correct_div.data('if')) {
+			is_in_if = true;
+		} else if (correct_div.data('else')) {
+			is_in_if = false;
+		} else {
+			var hier = correct_div.parentsUntil(".command_container");
+			for (var i = 0; i < hier.length; i++) {
+				var temp = $(hier[i]);
+				if (typeof temp.data('if') !== 'undefined') {
+					is_in_if = true;
+					break;
+				}
+				if (typeof temp.data('else') !== 'undefined') {
+					is_in_if = false;
+					break;
+				}
+			}
+		}
+
+		if (is_in_if) {
+			if (command_parent.commands_block == null || command_parent.commands_block.length == 0) {
+				command_parent.commands_block = [];
+
+				var recentComand = genericCreateCommand(command_type);
+				command_parent.commands_block.push(recentComand);
+
+				renderCommand(recentComand, el_jq.find('.commands_if'), 3, function_obj);
+			} else { // Se já tem algum comando no bloco:
+				findInBlockCorrectPlace(el_jq.find('.commands_if'), event, function_obj, command_type);
+			}
+
+		} else {
+			if (command_parent.commands_else == null || command_parent.commands_else.length == 0) {
+				command_parent.commands_else = [];
+
+				var recentComand = genericCreateCommand(command_type);
+				command_parent.commands_else.push(recentComand);
+
+				renderCommand(recentComand, el_jq.find('.commands_else'), 3, function_obj);
+			} else { // Se já tem algum comando no bloco:
+				findInBlockCorrectPlace(el_jq.find('.commands_else'), event, function_obj, command_type, true);
+			}
+
+		}
+
+	} else { // é do tipo switch
+
 	}
 }
 
-function findInBlockCorrectPlace (el, event, function_obj, command_type) {
+function findInBlockCorrectPlace (el, event, function_obj, command_type, is_in_else = false) {
 	var el_jq = $(el);
 	var all_sub = el_jq.find('div.command_container');
 
@@ -490,30 +696,63 @@ function findInBlockCorrectPlace (el, event, function_obj, command_type) {
 	}
 
 	var borda_inferior = elemento_menor_distancia.parentNode.getBoundingClientRect().top + elemento_menor_distancia.parentNode.getBoundingClientRect().height;
+
+	console.log("menor_distancia: ");
+	console.log(elemento_menor_distancia);
 	
 	// Está mais próximo da borda de baixo, ou seja.. inserir por último:
 	if ((borda_inferior - event.clientY) < menor_distancia) {
+
+		console.log('QQ11');
 		
 		var recentComand = genericCreateCommand(command_type);
 
 		var command_parent = el_jq.data('command');
-		
-		command_parent.commands_block.push(recentComand);
 
-		renderCommand(recentComand, $(el_jq.find('.block_commands')[0]), 3, function_obj);
+		if (is_in_else) {
+			console.log('QQ15');
+			command_parent.commands_else.push(recentComand);
+			console.log('el_jq');
+			console.log(el_jq);
+			console.log("$(el_jq.find('.commands_else')[0]):: ");
+			console.log($(el_jq.find('.commands_else')[0]));
+
+			renderCommand(recentComand, el_jq, 3, function_obj);
+
+		} else {
+			console.log('QQ16');
+			command_parent.commands_block.push(recentComand);
+
+			renderCommand(recentComand, $(el_jq.find('.block_commands')[0]), 3, function_obj);
+		}
 
 	} else {
 
+		console.log('QQ12');
+
 		var recentComand = genericCreateCommand(command_type);
 
 		var command_parent = el_jq.data('command');
-		
-		var index = command_parent.commands_block.indexOf($(elemento_menor_distancia).data('command'));
 
-		if (index > -1) {
-		    command_parent.commands_block.splice(index, 0, recentComand);
-		    renderCommand(recentComand, elemento_menor_distancia, 1, function_obj);
+		if (is_in_else) {
+
+			var index = command_parent.commands_else.indexOf($(elemento_menor_distancia).data('command'));
+
+			if (index > -1) {
+			    command_parent.commands_else.splice(index, 0, recentComand);
+			    renderCommand(recentComand, elemento_menor_distancia, 1, function_obj);
+			}
+
+		} else {
+			var index = command_parent.commands_block.indexOf($(elemento_menor_distancia).data('command'));
+
+			if (index > -1) {
+			    command_parent.commands_block.splice(index, 0, recentComand);
+			    renderCommand(recentComand, elemento_menor_distancia, 1, function_obj);
+			}
+
 		}
+		
 	}
 }
 

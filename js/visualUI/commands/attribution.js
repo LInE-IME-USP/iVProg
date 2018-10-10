@@ -75,11 +75,15 @@ function renderExpressionElements (command, function_obj, el) {
 	var command_container;
 
 	if (el.hasClass("command_container") == false) {
-		var hier = el.parentsUntil(".commands_list_div");
-
+		var hier = el.parentsUntil(".command_container");
 		for (var i = 0; i < hier.length; i++) {
 			if ($(hier[i]).hasClass("command_container")) {
 				command_container = $(hier[i]);
+				break;
+			}
+			if ($(hier[i]).hasClass("expression_elements")) {
+				expression_div = $(hier[i]);
+				break;
 			}
 		}
 	}
@@ -100,12 +104,6 @@ function renderExpressionElements (command, function_obj, el) {
 
 		renderElement(command, function_obj, temp, command.expression[i]);
 	}
-
-	/*if (command_container) {
-		renderMenuAddExpression(command, function_obj, command_container, expression_div, command.expression);
-	} else {
-		renderMenuAddExpression(command, function_obj, el, expression_div, command.expression);
-	}*/
 }
 
 function renderOperator (command, function_obj, temp_op, expression_element, index_op) {

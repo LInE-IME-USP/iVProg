@@ -9,9 +9,6 @@ import * as VariableValueMenuManagement from './variable_value_menu';
 
 export function renderExpression (command, expression, function_obj, initial_el_to_render) {
 
-	console.log("Rendered! :)");
-
-
 	if (expression.expression == null || expression.expression.length < 1) {
 
 		renderStartMenu(command, expression, function_obj, initial_el_to_render);
@@ -22,7 +19,7 @@ export function renderExpression (command, expression, function_obj, initial_el_
 
 		switch (expression.expression.type) {
 			case Models.EXPRESSION_TYPES.exp_logic:
-				renderLogicExpression(command, expression, expression.expression, function_obj, main_div);
+				renderLogicExpression(command, expression, expression.expression, function_obj, main_div, initial_el_to_render);
 				break;
 			case Models.EXPRESSION_TYPES.exp_arithmetic:
 				renderArithmeticExpression(command, expression, expression.expression, function_obj, main_div);
@@ -33,13 +30,52 @@ export function renderExpression (command, expression, function_obj, initial_el_
 	}
 }
 
-function renderArithmeticOperator () {
+function renderArithmeticOperator (command, all_expression, expression_arithmetic, arithmetic_operator, function_obj, element_to_append) {
 
+	var menu_operator = $('<div class="ui dropdown"><div class="text"></div><i class="dropdown icon"></i></div>');
+	menu_operator.dropdown({
+	    values: [
+	      {
+	        name     : '>',
+	        value    : Models.ARITHMETIC_COMPARISON.greater_than,
+	        selected : (arithmetic_operator == Models.ARITHMETIC_COMPARISON.greater_than)
+	      },
+	      {
+	        name     : '<',
+	        value    : Models.ARITHMETIC_COMPARISON.less_than,
+	        selected : (arithmetic_operator == Models.ARITHMETIC_COMPARISON.less_than)
+	      },
+	      {
+	        name     : '==',
+	        value    : Models.ARITHMETIC_COMPARISON.equals_to,
+	        selected : (arithmetic_operator == Models.ARITHMETIC_COMPARISON.equals_to)
+	      },
+	      {
+	        name     : '!=',
+	        value    : Models.ARITHMETIC_COMPARISON.not_equals_to,
+	        selected : (arithmetic_operator == Models.ARITHMETIC_COMPARISON.not_equals_to)
+	      },
+	      {
+	        name     : '>=',
+	        value    : Models.ARITHMETIC_COMPARISON.greater_than_or_equals_to,
+	        selected : (arithmetic_operator == Models.ARITHMETIC_COMPARISON.greater_than_or_equals_to)
+	      },
+	      {
+	        name     : '<=',
+	        value    : Models.ARITHMETIC_COMPARISON.less_than_or_equals_to,
+	        selected : (arithmetic_operator == Models.ARITHMETIC_COMPARISON.less_than_or_equals_to)
+	      }
+	    ],
+	    onChange: function(value, text, $selectedItem) {
+	    	expression_arithmetic.operator = value;
+	    }
+	  })
+	;
+
+	element_to_append.append(menu_operator);
 }
 
-function renderLogicOperator (command, all_expression, expression_logic, logic_operator, function_obj, element_to_append) {
-
-//export const ARITHMETIC_COMPARISON = Object.freeze({greater_than:"greater_than", less_than:"less_than", equals_to:"equals_to", not_equals_to:"not_equals_to", greater_than_or_equals_to:"greater_than_or_equals_to", less_than_or_equals_to:"less_than_or_equals_to"});
+function renderLogicOperator (command, all_expression, expression_logic, logic_operator, function_obj, element_to_append, initial_el_to_render) {
 
 	var menu_operator = $('<div class="ui dropdown"><div class="text"></div><i class="dropdown icon"></i></div>');
 	menu_operator.dropdown({
@@ -66,16 +102,23 @@ function renderLogicOperator (command, all_expression, expression_logic, logic_o
 	      }
 	    ],
 	    onChange: function(value, text, $selectedItem) {
-	    	expression_logic.operator = value;
+	    	if ($selectedItem) {
+		    	expression_logic.operator = value;
+		    	if (expression_logic.second_operand == null) {
+		    		expression_logic.second_operand = new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.all, null, null, null, true);
+		    		initial_el_to_render.empty();
+		    		renderExpression(command, all_expression, function_obj, initial_el_to_render);
+		    	}
+	    	}
 	    }
-	  })
-	;
+	  });
 
 	element_to_append.append(menu_operator);
 
 }
 
-function renderLogicExpression (command, all_expression, expression_logic, function_obj, element_to_append) {
+
+function renderLogicExpression (command, all_expression, expression_logic, function_obj, element_to_append, initial_el_to_render) {
 
 	var exp_el_par_1 = $('<div class="expression_element"> ( </div>');
 	var exp_el_expr_el_1 = $('<div class="expression_element"></div>');
@@ -87,29 +130,66 @@ function renderLogicExpression (command, all_expression, expression_logic, funct
 		renderLogicExpression(command, all_expression, expression_logic.first_operand, function_obj, exp_el_expr_el_1);
 	} else if (expression_logic.first_operand.type == Models.EXPRESSION_TYPES.exp_arithmetic) {
 		renderArithmeticExpression(command, all_expression, expression_logic.first_operand, function_obj, exp_el_expr_el_1);
-	} else { // var_value:
+	} else {
 		VariableValueMenuManagement.renderMenu(command, expression_logic.first_operand, exp_el_expr_el_1, function_obj);
 	}
 
-	if (expression_logic.second_operand.type == Models.EXPRESSION_TYPES.exp_logic) {
-		renderLogicExpression(command, all_expression, expression_logic.second_operand, function_obj, exp_el_expr_el_2);
-	} else if (expression_logic.second_operand.type == Models.EXPRESSION_TYPES.exp_arithmetic) {
-		renderArithmeticExpression(command, all_expression, expression_logic.second_operand, function_obj, exp_el_expr_el_2);
-	} else { // var_value: 
-		VariableValueMenuManagement.renderMenu(command, expression_logic.second_operand, exp_el_expr_el_2, function_obj);
+	element_to_append.append(exp_el_par_1);
+	element_to_append.append(exp_el_expr_el_1);
+
+	renderLogicOperator(command, all_expression, expression_logic, expression_logic.operator, function_obj, exp_el_expr_operand, initial_el_to_render);
+
+	element_to_append.append(exp_el_expr_operand);
+
+	if (expression_logic.second_operand) {
+		if (expression_logic.second_operand.type == Models.EXPRESSION_TYPES.exp_logic) {
+			renderLogicExpression(command, all_expression, expression_logic.second_operand, function_obj, exp_el_expr_el_2);
+		} else if (expression_logic.second_operand.type == Models.EXPRESSION_TYPES.exp_arithmetic) {
+			renderArithmeticExpression(command, all_expression, expression_logic.second_operand, function_obj, exp_el_expr_el_2);
+		} else {
+			VariableValueMenuManagement.renderMenu(command, expression_logic.second_operand, exp_el_expr_el_2, function_obj);
+		}
+
+		element_to_append.append(exp_el_expr_el_2);
 	}
 
-	renderLogicOperator(command, all_expression, expression_logic, expression_logic.operator, function_obj, exp_el_expr_operand);
+	element_to_append.append(exp_el_par_2);
+
+}
+
+function renderArithmeticExpression (command, all_expression, expression_arithmetic, function_obj, element_to_append) {
+
+	var exp_el_par_1 = $('<div class="expression_element"> ( </div>');
+	var exp_el_expr_el_1 = $('<div class="expression_element"></div>');
+	var exp_el_expr_operand = $('<div class="expression_element"></div>');
+	var exp_el_expr_el_2 = $('<div class="expression_element"></div>');
+	var exp_el_par_2 = $('<div class="expression_element"> ) </div>');
+
+
+	if (expression_arithmetic.first_operand.type == Models.EXPRESSION_TYPES.exp_logic) {
+		renderLogicExpression(command, all_expression, expression_arithmetic.first_operand, function_obj, exp_el_expr_el_1);
+	} else if (expression_arithmetic.first_operand.type == Models.EXPRESSION_TYPES.exp_arithmetic) {
+		renderArithmeticExpression(command, all_expression, expression_arithmetic.first_operand, function_obj, exp_el_expr_el_1);
+	} else {
+		VariableValueMenuManagement.renderMenu(command, expression_arithmetic.first_operand, exp_el_expr_el_1, function_obj);
+	}
+
+	if (expression_arithmetic.second_operand.type == Models.EXPRESSION_TYPES.exp_logic) {
+		renderLogicExpression(command, all_expression, expression_arithmetic.second_operand, function_obj, exp_el_expr_el_2);
+	} else if (expression_arithmetic.second_operand.type == Models.EXPRESSION_TYPES.exp_arithmetic) {
+		renderArithmeticExpression(command, all_expression, expression_arithmetic.second_operand, function_obj, exp_el_expr_el_2);
+	} else {
+		VariableValueMenuManagement.renderMenu(command, expression_arithmetic.second_operand, exp_el_expr_el_2, function_obj);
+	}
+
+	renderArithmeticOperator(command, all_expression, expression_arithmetic, expression_arithmetic.operator, function_obj, exp_el_expr_operand);
 
 	element_to_append.append(exp_el_par_1);
 	element_to_append.append(exp_el_expr_el_1);
 	element_to_append.append(exp_el_expr_operand);
 	element_to_append.append(exp_el_expr_el_2);
 	element_to_append.append(exp_el_par_2);
-
 }
-
-function renderArithmeticExpression (command, all_expression, expression_arithmetic, function_obj, element_to_append) {}
 
 function renderStartMenu (command, expression, function_obj, initial_el_to_render) {
 	var start_menu = '';
@@ -125,9 +205,7 @@ function renderStartMenu (command, expression, function_obj, initial_el_to_rende
 				case Models.EXPRESSION_TYPES.exp_logic:
 					expression.expression = 
 						new Models.LogicExpression(false, 
-							new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.all, null, null, null, true), 
-							new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.all, null, null, null, true), 
-							Models.LOGIC_COMPARISON.equals_to);
+							new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.all, null, null, null, true));
 					break;
 				case Models.EXPRESSION_TYPES.exp_arithmetic:
 					expression.expression = 
@@ -145,5 +223,9 @@ function renderStartMenu (command, expression, function_obj, initial_el_to_rende
     	}
 	});
 
+	initial_el_to_render.append('<div class="expression_element"> ( </div>');
+	
 	initial_el_to_render.append(start_menu);
+
+	initial_el_to_render.append('<div class="expression_element"> ) </div>');
 }
