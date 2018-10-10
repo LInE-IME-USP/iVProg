@@ -54,6 +54,8 @@ export function manageExpressionElements(command, ref_object, dom_object, menu_v
 
 		command.expression1 = new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true);
 
+		$(dom_object).parent().find('.var_value_expression').empty();
+		
 		VariableValueMenu.renderMenu(command, command.expression1, $(dom_object).parent().find('.var_value_expression'), function_obj);
 	}
 
