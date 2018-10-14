@@ -19,7 +19,7 @@ var counter_new_parameters = 0;
 
 let domConsole = null; 
 const program = new Models.Program();
-const variable1 = new Models.Variable(Types.REAL, "variable_1", 1, 1);
+const variable1 = new Models.Variable(Types.INTEGER, "a", 1);
 const mainFunction = new Models.Function(LocalizedStrings.getUI("start"), Types.VOID, 0, [], true, false, [variable1]);
 mainFunction.function_comment = new Models.Comment(LocalizedStrings.getUI('text_comment_main'));
 const parameter1 = new Models.Variable(Types.INTEGER, "par_1", 1);

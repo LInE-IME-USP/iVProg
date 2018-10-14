@@ -763,6 +763,10 @@ function openInputToVariable (command, ref_object, dom_object, menu_var_or_value
 	     if ($selectedItem.data('exp')) {
 	     	AttribuitionsManagement.manageExpressionElements(command, ref_object, dom_object, menu_var_or_value, function_obj, $selectedItem, expression_element);
 	     }
+
+	     if (command.type == Models.COMMAND_TYPES.repeatNtimes) {
+	     	RepeatNTimesManagement.manageClearExpressionElements(command, ref_object, dom_object, menu_var_or_value, function_obj, $selectedItem, expression_element);
+	     }
       }
 	});
 

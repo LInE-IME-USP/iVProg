@@ -13,7 +13,7 @@ export function createFloatingCommand () {
 
 export function renderCommand (command, function_obj) {
 	var ret = '';
-	ret += '<div class="ui iftrue command_container"><div class="ui" data-if="true">  <i class="ui icon small random command_drag"></i> <i class="ui icon times red button_remove_command"></i> <i class="ui icon redo alternate blue button_refresh_attribution"></i>';
+	ret += '<div class="ui iftrue command_container"><div class="ui data_block_if" data-if="true">  <i class="ui icon small random command_drag"></i> <i class="ui icon times red button_remove_command"></i> <i class="ui icon redo alternate blue button_refresh_attribution"></i>';
 	ret += '<span> ' + LocalizedStrings.getUI('text_if') + '</span>';
 	ret += ' <div class="conditional_expression"></div>';
 	ret += '<span> { </span> ';
@@ -28,7 +28,7 @@ export function renderCommand (command, function_obj) {
 	}*/
 
 	ret += '</div></div>';
-	ret += '<div class="ui" data-else="true"> <span> } ' + LocalizedStrings.getUI('text_else') + ' { </span>';
+	ret += '<div class="ui data_block_else" data-else="true"> <span> } ' + LocalizedStrings.getUI('text_else') + ' { </span>';
 
 	ret += '<div class="ui block_commands commands_else conditional_comands_block" data-else="true">';
 
@@ -48,6 +48,10 @@ export function renderCommand (command, function_obj) {
 	var el = $(ret);
 	el.data('command', command);
 	el.find('.block_commands').data('command', command);
+	el.find('.data_block_if').data('command', command);
+	el.find('.data_block_else').data('command', command);
+
+	//data_block_if
 
 	addHandlers(command, function_obj, el);
 

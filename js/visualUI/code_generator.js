@@ -84,9 +84,9 @@ function functionsCode (function_obj) {
 	}
 
 	for (var j = 0; j < function_obj.commands.length; j++) {
-		try {
+		//try {
 			ret += commandsCode(function_obj.commands[j]);
-		} catch (err) {
+		/*} catch (err) {
 
 			has_error = true;
 
@@ -101,7 +101,7 @@ function functionsCode (function_obj) {
 				}
 			}
 			
-		}
+		}*/
 		
 	}
 
@@ -116,6 +116,9 @@ function functionsCode (function_obj) {
 
 function commandsCode (command_obj, indentation = 2) {
 	switch (command_obj.type) {
+		case Models.COMMAND_TYPES.break:
+			return breaksCode(command_obj, indentation);
+
 		case Models.COMMAND_TYPES.comment:
 			return commentsCode(command_obj, indentation);
 
@@ -139,7 +142,147 @@ function commandsCode (command_obj, indentation = 2) {
 
 		case Models.COMMAND_TYPES.iftrue:
 			return iftruesCode(command_obj, indentation);
+
+		case Models.COMMAND_TYPES.repeatNtimes:
+			return repeatNtimesCode(command_obj, indentation);
+
+		case Models.COMMAND_TYPES.switch:
+			return switchsCode(command_obj, indentation);
 	}
+}
+
+function breaksCode(command_obj, indentation) {
+	var ret = '\n';
+
+	for (var i = 0; i < indentation; i++) {
+		ret += '\t';
+	}
+
+	ret += LocalizedStrings.getUI('text_break');
+
+	return ret;
+}
+
+function switchsCode(command_obj, indentation) {
+	var ret = '\n';
+
+	for (var i = 0; i < indentation; i++) {
+		ret += '\t';
+	}
+
+	ret += LocalizedStrings.getUI('text_code_switch') + ' ( ';
+
+	ret += variableValueMenuCode(command_obj.variable);
+
+	ret += ' ) { ';
+
+	if (command_obj.cases) {
+		for (var i = 0; i < command_obj.cases.length; i++) {
+			ret += switchcasesCode(command_obj.cases[i], (indentation + 1));
+		}
+	}
+
+	ret += '\n';
+	for (var i = 0; i < indentation; i++) {
+		ret += '\t';
+	}
+	ret += '} ';
+
+	return ret;
+}
+
+function switchcasesCode(switchcase, indentation) {
+	var ret = '\n';
+
+	for (var i = 0; i < indentation; i++) {
+		ret += '\t';
+	}
+
+	ret += LocalizedStrings.getUI('text_code_case') + ' ';
+	ret += variableValueMenuCode(switchcase.variable_value_menu);
+	ret += ' :';
+
+	if (switchcase.commands_block) {
+		for (var i = 0; i < switchcase.commands_block.length; i++) {
+			ret += commandsCode(switchcase.commands_block[i], (indentation + 1));
+		}
+	}
+
+	return ret;
+
+}
+
+function repeatNtimesCode(command_obj, indentation) {
+	var ret = '\n';
+
+	for (var i = 0; i < indentation; i++) {
+		ret += '\t';
+	}
+
+	ret += LocalizedStrings.getUI('text_for') + ' ( ';
+
+	if (command_obj.var_attribution) {
+		ret += variableValueMenuCode(command_obj.var_attribution);
+		ret += ' = ';
+		ret += variableValueMenuCode(command_obj.expression1);
+	}
+	ret += ' ; ';
+
+
+	if (command_obj.expression2) {
+		switch (command_obj.expression2.expression.type) {
+			case Models.EXPRESSION_TYPES.exp_logic:
+				ret += logicExpressionCode(command_obj.expression2.expression);
+				break;
+			case Models.EXPRESSION_TYPES.exp_arithmetic:
+				ret += arithmeticExpressionCode(command_obj.expression2.expression);
+				break;
+		}
+	}
+
+	ret += ' ; ';
+
+	if (command_obj.var_incrementation) {
+		ret += variableValueMenuCode(command_obj.var_incrementation);
+		ret += ' = ';
+		ret += variableValueMenuCode(command_obj.expression3.itens[0]);
+
+		switch (command_obj.expression3.itens[1]) {
+			case Models.ARITHMETIC_TYPES.plus:
+				ret += ' + ';
+				break;
+			case Models.ARITHMETIC_TYPES.minus:
+				ret += ' - ';
+				break;
+			case Models.ARITHMETIC_TYPES.multiplication:
+				ret += ' * ';
+				break;
+			case Models.ARITHMETIC_TYPES.division:
+				ret += ' / ';
+				break;
+			case Models.ARITHMETIC_TYPES.module:
+				ret += ' % ';
+				break;
+		}
+
+		ret += variableValueMenuCode(command_obj.expression3.itens[2]);		
+	}
+
+	ret += ' )  { ';
+
+	if (command_obj.commands_block) {
+		for (var i = 0; i < command_obj.commands_block.length; i++) {
+			ret += commandsCode(command_obj.commands_block[i], (indentation + 1));
+		}
+	}
+
+	ret += '\n';
+	for (var i = 0; i < indentation; i++) {
+		ret += '\t';
+	}
+
+	ret += '}';
+	return ret;
 }
 
 function iftruesCode (command_obj, indentation) {

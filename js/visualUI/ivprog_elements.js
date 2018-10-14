@@ -2,7 +2,7 @@ import { Types } from './../ast/types';
 import WatchJS from 'melanke-watchjs';
 
 export const COMMAND_TYPES = Object.freeze({function:"function", comment:"comment", reader:"reader", writer:"writer", attribution:"attribution", iftrue:"iftrue",
- repeatNtimes:"repeatNtimes", whiletrue:"whiletrue", dowhiletrue:"dowhiletrue", switch:"switch", functioncall:"functioncall"});
+ repeatNtimes:"repeatNtimes", whiletrue:"whiletrue", dowhiletrue:"dowhiletrue", switch:"switch", switchcase:"switchcase", functioncall:"functioncall", break:"break"});
 
 export const ARITHMETIC_TYPES = Object.freeze({plus:"plus", minus:"minus", multiplication:"multiplication", division:"division", module:"module", none:"none"});
 
@@ -48,6 +48,13 @@ export class Comment {
   constructor (comment_text) {
     this.type = COMMAND_TYPES.comment;
     this.comment_text = comment_text;
+  }
+}
+
+export class Break {
+  
+  constructor () {
+    this.type = COMMAND_TYPES.break;
   }
 }
 
@@ -125,9 +132,10 @@ export class IfTrue {
 
 export class RepeatNTimes {
 
-  constructor (var_attribution, expression1, expression2, expression3, commands_block) {
+  constructor (var_attribution, var_incrementation, expression1, expression2, expression3, commands_block) {
     this.type = COMMAND_TYPES.repeatNtimes;
     this.var_attribution = var_attribution;
+    this.var_incrementation = var_incrementation;
     this.expression1 = expression1;
     this.expression2 = expression2;
     this.expression3 = expression3;
@@ -155,12 +163,20 @@ export class DoWhileTrue {
 
 export class Switch {
 
-  constructor (variable, cases, commands_blocks) {
+  constructor (variable, cases = []) {
     this.type = COMMAND_TYPES.switch;
     this.variable = variable;
     this.cases = cases;
-    this.commands_blocks = commands_blocks;
   }
+}
+
+export class SwitchCase {
+
+ constructor (variable_value_menu, commands_block = []) {
+    this.type = COMMAND_TYPES.switchcase;
+    this.variable_value_menu = variable_value_menu;
+    this.commands_block = commands_block;
+  } 
 }
 
 export class FunctionCall {
