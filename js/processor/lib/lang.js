@@ -1,7 +1,7 @@
 import { StoreObject } from '../store/storeObject';
 import * as Commands from './../../ast/commands';
 import { Types } from './../../typeSystem/types';
-import { toReal, convertBoolToString } from "./../../typeSystem/parsers";
+import { toReal, convertToString } from "./../../typeSystem/parsers";
 import { IVProgParser } from '../../ast/ivprogParser';
 import { RealLiteral, IntLiteral, BoolLiteral } from '../../ast/expressions';
 
@@ -166,37 +166,7 @@ export function createCastBoolFun () {
 export function createCastStringFun () {
   const castStringFun = function (store, _) {
     const val = store.applyStore('str');
-    if(val.type.isCompatible(Types.INTEGER)) {
-      this.output.sendOutput(val.value.toString());
-    } else if (val.type.isCompatible(Types.REAL)) {
-      if (val.value.dp() <= 0) {
-        this.output.sendOutput(val.value.toFixed(1));  
-      } else {
-        this.output.sendOutput(val.value.toString());
-      }
-    } else {
-      this.output.sendOutput(val.value);
-    }
-    let result = null;
-    switch (val.type.ord) {
-      case Types.INTEGER.ord:
-        result = val.value.toString();  
-        break;
-      case Types.REAL.ord: {
-        if (val.value.dp() <= 0) {
-          result = val.value.toFixed(1);  
-        } else {
-          result = val.number;
-        }
-        break;
-      }
-      case Types.BOOLEAN.ord:
-        result = convertBoolToString(val.value);
-        break;
-      default:
-        result = val.value;
-        break;
-    }
+    let result = convertToString(val)
     const temp = new StoreObject(Types.STRING, result);
     return Promise.resolve(sto.updateStore("$", temp));
   }
