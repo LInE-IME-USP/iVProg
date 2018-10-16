@@ -1,14 +1,9 @@
 import { CommonTokenStream, InputStream } from 'antlr4/index';
 import * as Expressions from './expressions/';
 import * as Commands from './commands/';
-<<<<<<< HEAD
-import { SourceInfo } from './sourceInfo';
-import { Types, toInt, toString, toBool, toReal } from './types';
-=======
 import { toInt, toString, toBool, toReal } from './../typeSystem/parsers';
 import { Types } from "./../typeSystem/types";
 import { CompoundType } from "./../typeSystem/compoundType";
->>>>>>> Refactor type system
 import { SourceInfo } from './sourceInfo';
 import { convertFromString } from './operators';
 import { SyntaxErrorFactory } from './error/syntaxErrorFactory';

@@ -18,9 +18,12 @@ export class StoreObjectArray extends StoreObject {
 
   isCompatible (another) {
     if(another instanceof StoreObject) {
-      if(this.lines === another.lines &&
-        this.columns === another.columns) {
-          return super.isCompatible(another);
+      if(((this.lines === -1 && another.lines > 0) ||
+        (this.lines === another.lines))) {
+          if ((this.columns === -1 && another.columns > 0) ||
+            (this.columns === another.columns)) {
+              return super.isCompatible(another);
+          }
         }
     }
     return false;

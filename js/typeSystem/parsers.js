@@ -1,4 +1,5 @@
 import { LanguageService } from "../services/languageService";
+import { Types } from "./types";
 import { BigNumber } from 'bignumber.js'
 
 export function toInt (str) {
@@ -36,12 +37,30 @@ export function toBool (str) {
   }
 }
 
-export function convertBoolToString (bool) {
+function convertBoolToString (bool) {
   const lexer = LanguageService.getCurrentLexer();
   const instance = new lexer(null);
   if (bool) {
     return instance.literalNames[lexer.RK_TRUE];
   } else {
     return instance.literalNames[lexer.RK_FALSE];
+  }
+}
+
+export function convertToString(stoObj, type) {
+  switch (type.ord) {
+    case Types.INTEGER.ord:
+      return stoObj.toString();
+    case Types.REAL.ord: {
+      if (stoObj.dp() <= 0) {
+        return stoObj.toFixed(1);  
+      } else {
+        return stoObj.toNumber();
+      }
+    }
+    case Types.BOOLEAN.ord:
+      return convertBoolToString(stoObj);
+    default:
+      return stoObj;
   }
 }

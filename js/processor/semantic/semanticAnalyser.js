@@ -43,7 +43,7 @@ export class SemanticAnalyser {
       if(symMap.next) {
         return this.findSymbol(id, symMap.next);
       }
-      throw new Error("variable not defined");
+      throw new Error("variable not defined "+id);
     } else {
       return symMap.map[id];
     }
@@ -267,6 +267,17 @@ export class SemanticAnalyser {
 
   assertFunction (fun) {
     this.pushMap();
+    fun.formalParameters.forEach(formalParam => {
+      if(formalParam.type instanceof CompoundType) {
+        if(formalParam.type.dimensions > 1) {
+          this.insertSymbol(formalParam.id, {id: formalParam.id, lines: -1, columns: -1, type: formalParam.type});
+        } else {
+          this.insertSymbol(formalParam.id, {id: formalParam.id, lines: -1, columns: null, type: formalParam.type});
+        }
+      } else {
+        this.insertSymbol(formalParam.id, {id: formalParam.id, type: formalParam.type});
+      }
+    })
     this.assertDeclarations(fun.variablesDeclarations);
     const optional = fun.returnType.isCompatible(Types.VOID);
     const valid = this.assertReturn(fun, optional);
@@ -434,6 +445,7 @@ export class SemanticAnalyser {
         console.log(formalParam.type);
         throw new Error(`Parameter ${formalParam.id} is not compatible with the value given.`);
       }
+
     }
   }
 }
