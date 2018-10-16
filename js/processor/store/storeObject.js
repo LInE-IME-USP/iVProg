@@ -41,6 +41,10 @@ export class StoreObject {
     return this._readOnly;
   }
 
+  set readOnly (value) {
+    this._readOnly = value;
+  }
+
   isCompatible (another) {
     if( another instanceof StoreObject) {
       return this.type.isCompatible(another.type);

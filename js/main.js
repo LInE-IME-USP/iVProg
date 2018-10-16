@@ -35,10 +35,11 @@ try {
       proc.registerInput(domIn);
       domOut.clear();
       proc.registerOutput(domOut);
-      proc.interpretAST().then(sto => editor.load(sto.store))
-        .catch( e => alert(e));
+      proc.interpretAST().then(_ => editor.load({}))
+        .catch( e => {alert(e);console.log(e);});
     } catch (error) {
       alert(error);
+      console.log(error);
     }
     
   });

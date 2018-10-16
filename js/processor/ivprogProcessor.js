@@ -13,6 +13,7 @@ import * as Expressions from './../ast/expressions/';
 import { StoreObjectArrayAddress } from './store/storeObjectArrayAddress';
 import { StoreObjectArrayAddressRef } from './store/storeObjectArrayAddressRef';
 import { CompoundType } from './../typeSystem/compoundType';
+import { convertToString } from '../typeSystem/parsers';
 
 export class IVProgProcessor {
 
@@ -90,7 +91,16 @@ export class IVProgProcessor {
   runFunction (func, actualParameters, store) {
     let funcStore = new Store();
     funcStore.extendStore(this.globalStore);
-    const returnStoreObject = new StoreObject(func.returnType, null);
+    let returnStoreObject = null;
+    if(func.returnType instanceof CompoundType) {
+      if(func.returnType.dimensions > 1) {
+        returnStoreObject = new StoreObjectArray(func.returnType,-1,-1,[[]]);
+      } else {
+        returnStoreObject = new StoreObjectArray(func.returnType,-1,null,[]);
+      }
+    } else {
+      returnStoreObject = new StoreObject(func.returnType, null);
+    }
     const funcName = func.isMain ? 'main' : func.name;
     const funcNameStoreObject = new StoreObject(Types.STRING, funcName, true);
     funcStore.insertStore('$', returnStoreObject);
@@ -498,10 +508,10 @@ export class IVProgProcessor {
             column = columnSO.number;
           }
           const value = values[2];
-          const temp = new StoreObjectArray(cmd.type, line, column, null, cmd.isConst);
+          const temp = new StoreObjectArray(cmd.type, line, column, null);
           store.insertStore(cmd.id, temp);
+          let realValue = value;
           if (value !== null) {
-            let realValue = value;
             if(value instanceof StoreObjectArrayAddress) {
               if(value.type instanceof CompoundType) {
                 realValue = Object.assign(new StoreObjectArray(null,null,null), value.refValue);
@@ -509,17 +519,25 @@ export class IVProgProcessor {
                 realValue = Object.assign(new StoreObject(null,null), value.refValue);
               }
             }
-            store.updateStore(cmd.id, realValue)
+          } else {
+            realValue = new StoreObjectArray(cmd.type, line, column, [])
+            if(column !== null) {
+              for (let i = 0; i < column; i++) {
+                realValue.value.push([]);
+              }
+            }
           }
+          realValue.readOnly = cmd.isConst;
+          store.updateStore(cmd.id, realValue);
           return store;
         });
         
       } else {
-        const temp = new StoreObject(cmd.type, null, cmd.isConst);
+        const temp = new StoreObject(cmd.type, null);
         store.insertStore(cmd.id, temp);
         return $value.then(vl => {
+          let realValue = vl;
           if (vl !== null) {
-            let realValue = vl;
             if(vl instanceof StoreObjectArrayAddress) {
               if(vl.type instanceof CompoundType) {
                 realValue = Object.assign(new StoreObjectArray(null,null,null), vl.refValue);
@@ -527,8 +545,11 @@ export class IVProgProcessor {
                 realValue = Object.assign(new StoreObject(null,null), vl.refValue);
               }
             }
-            store.updateStore(cmd.id, realValue)
+          } else {
+            realValue = new StoreObject(cmd.type,0);
           }
+          realValue.readOnly = cmd.isConst;
+          store.updateStore(cmd.id, realValue);
           return store;
         });
       }
@@ -560,7 +581,6 @@ export class IVProgProcessor {
     } else if (exp instanceof Expressions.FunctionCall) {
       return this.evaluateFunctionCall(store, exp);
     }
-    console.log('null exp');
     return Promise.resolve(null);
   }
 
@@ -713,8 +733,17 @@ export class IVProgProcessor {
       }
       let result = null;
       switch (infixApp.op.ord) {
-        case Operators.ADD.ord:
-          return new StoreObject(resultType, left.value.plus(right.value));
+        case Operators.ADD.ord: {
+          if(Types.STRING.isCompatible(left.type)) {
+            const rightStr = convertToString(right.value, right.type);
+            return new StoreObject(resultType, left.value + rightStr);
+          } else if (Types.STRING.isCompatible(right.type)) {
+            const leftStr = convertToString(left.value, left.type);
+            return new StoreObject(resultType, leftStr + right.value);
+          } else {
+            return new StoreObject(resultType, left.value.plus(right.value));
+          }
+        }
         case Operators.SUB.ord:
           return new StoreObject(resultType, left.value.minus(right.value));
         case Operators.MULT.ord:
