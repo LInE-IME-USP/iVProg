@@ -34,7 +34,7 @@ export function createSubstringFun () {
 export function createLengthFun () {
   const lengthFun = (sto, _) => {
     const str = sto.applyStore("str");
-    const temp = new StoreObject(Types.INTEGER, toInt(value.length));
+    const temp = new StoreObject(Types.INTEGER, toInt(str.value.length));
     return Promise.resolve(sto.updateStore("$", temp));
   }
   const block = new Commands.CommandBlock([],  [new Commands.SysCall(lengthFun)]);
@@ -74,10 +74,10 @@ export function createrCharAtFun () {
   const charAtFun = (sto, _) => {
     const str = sto.applyStore("str");
     const idx = sto.applyStore("index");
-    if (idx.value < 0 || idx.value >= str.value.length) {
+    if (idx.value.toNumber() < 0 || idx.value.toNumber() >= str.value.length) {
       return Promise.reject(new Error("invalid string position"));
     }
-    const temp = new StoreObject(Types.STRING, str.value.charAt(idx.value));
+    const temp = new StoreObject(Types.STRING, str.value.charAt(idx.value.toNumber()));
     return Promise.resolve(sto.updateStore("$", temp));
   }
   const block = new Commands.CommandBlock([],  [new Commands.SysCall(charAtFun)]);
