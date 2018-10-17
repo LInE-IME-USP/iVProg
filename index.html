@@ -17,6 +17,15 @@
     
   </head>
   <body>
+
+    <div class="ui accordion height_100">
+
+      <div class="title default_visual_title">
+        <i class="dropdown icon"></i>
+        
+      </div>
+
+    <div class="content height_100">
    
     <div class="ui one column doubling stackable grid container">
       <div class="column">
@@ -24,8 +33,6 @@
           <h2>iVProg</h2>
           <span>interactive coding</span>
         </div>
-
-        
 
         <div class="ui container content_margin">
           <div class="content_sub_margin">
@@ -43,14 +50,9 @@
             </div>
           </div>
 
-
       </div>
       
     </div>
-
-    
-
-    
 
     <div class="ui raised container segment div_to_body">
 
@@ -117,15 +119,21 @@
       
     </div>
 
+    </div>
+
+  </div>
+
     <script>
       $(document).ready(() => {
         ivprogCore.initVisualUI();
+        prepareEnvironment();
       });
     </script>
 
 
     <script src="js/semantic/semantic.min.js"></script>
     <script src="js/semantic/semantic-buttons.js"></script>
+
 
   </body>
 </html>

@@ -341,3 +341,11 @@ div.buttons_manage_columns {
 	float: left;
     margin-left: -30px;
 }
+
+.height_100 {
+  height: 100%;
+}
+
+.default_visual_title {
+  display: none;
+}
