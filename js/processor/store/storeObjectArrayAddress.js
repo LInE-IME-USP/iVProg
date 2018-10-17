@@ -1,6 +1,5 @@
 import { StoreObject } from './storeObject';
 import { StoreObjectArray } from './storeObjectArray';
-import { Types } from '../../typeSystem/types';
 import { CompoundType } from '../../typeSystem/compoundType';
 
 export class StoreObjectArrayAddress extends StoreObject {
@@ -24,7 +23,8 @@ export class StoreObjectArrayAddress extends StoreObject {
   get refValue () {
     const refLine = this.store.applyStore(this.refID).value[this.line];
     if (this.column !== null) {
-      return refLine.value[this.column];
+      const refColumn = refLine.value[this.column];
+      return refColumn;
     }
     return refLine;
   }
@@ -38,7 +38,7 @@ export class StoreObjectArrayAddress extends StoreObject {
   }
 
   get lines () {
-    if(this.type !== Types.ARRAY) {
+    if(!(this.type instanceof CompoundType)) {
       return null;
     }
     return this.refValue.value.length;

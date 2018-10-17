@@ -142,9 +142,15 @@ export class IVProgProcessor {
             }
             calleeStore.insertStore(formalParameter.id, ref);
           } else {
-            calleeStore.insertStore(formalParameter.id, stoObj);
+            let realValue = this.parseStoreObjectValue(stoObj);
+            calleeStore.insertStore(formalParameter.id, realValue);
           }
         } else {
+          console.log("######");
+          console.log(stoObj);
+          console.log(stoObj.value);
+          console.log(stoObj.type);
+          console.log(stoObj.refValue);
           throw new Error(`Parameter ${formalParameter.id} is not compatible with the value given.`);
         }
       }
@@ -387,7 +393,8 @@ export class IVProgProcessor {
           // THIS IF SHOULD BE IN A SEMANTIC ANALYSER
           return Promise.reject(new Error(`Function ${funcName.value} must return ${funcType.type} instead of ${vl.type}.`));
         } else {
-          store.updateStore('$', vl);
+          let realValue = this.parseStoreObjectValue(vl);
+          store.updateStore('$', realValue);
           store.mode = Modes.RETURN;
           return Promise.resolve(store);
         }
@@ -410,7 +417,8 @@ export class IVProgProcessor {
     try {
       const $value = this.evaluateExpression(store, cmd.expression);
       return $value.then( vl => {
-        store.updateStore(cmd.id, vl) 
+        let realValue = this.parseStoreObjectValue(vl);
+        store.updateStore(cmd.id, realValue) 
         return store;
       });
     } catch (error) {
@@ -448,7 +456,7 @@ export class IVProgProcessor {
           }
           column = columnSO.number;
         }
-        const value = results[2];
+        const value = this.parseStoreObjectValue(results[2]);
         if (line >= mustBeArray.lines) {
           // TODO: better error message
           return Promise.reject(new Error(`${exp.id}: index out of bounds: ${lines}`));
@@ -522,8 +530,8 @@ export class IVProgProcessor {
           } else {
             realValue = new StoreObjectArray(cmd.type, line, column, [])
             if(column !== null) {
-              for (let i = 0; i < column; i++) {
-                realValue.value.push([]);
+              for (let i = 0; i < line; i++) {
+                realValue.value.push(new StoreObjectArray(new CompoundType(cmd.type.innerType, 1), column, null, []));
               }
             }
           }
@@ -814,6 +822,26 @@ export class IVProgProcessor {
           return Promise.reject(new Error('!!!Critical Invalid InfixApp '+ infixApp.op));
       }
     });
+  }
+
+  parseStoreObjectValue (vl) {
+    let realValue = vl;
+    if(vl instanceof StoreObjectArrayAddress) {      
+      if(vl.type instanceof CompoundType) {
+        switch(vl.type.dimensions) {
+          case 1: {
+            realValue = new StoreObjectArray(vl.type, vl.value);
+            break;
+          }
+          default: {
+            throw new Error("Three dimensional array address...");
+          }
+        }
+      } else {
+        realValue = new StoreObject(vl.type, vl.value);
+      }
+    }
+    return realValue;
   }
 
 }
