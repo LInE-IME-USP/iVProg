@@ -2,9 +2,17 @@ import { Types } from './../ast/types';
 import WatchJS from 'melanke-watchjs';
 
 export const COMMAND_TYPES = Object.freeze({function:"function", comment:"comment", reader:"reader", writer:"writer", attribution:"attribution", iftrue:"iftrue",
- repeatNtimes:"repeatNtimes", whiletrue:"whiletrue", dowhiletrue:"dowhiletrue", switch:"switch", functioncall:"functioncall"});
+ repeatNtimes:"repeatNtimes", whiletrue:"whiletrue", dowhiletrue:"dowhiletrue", switch:"switch", switchcase:"switchcase", functioncall:"functioncall", break:"break"});
 
-export const ARITHMETIC_TYPES = Object.freeze({plus:"plus", minus:"minus", multiplication:"multiplication", division:"division", module:"module"});
+export const ARITHMETIC_TYPES = Object.freeze({plus:"plus", minus:"minus", multiplication:"multiplication", division:"division", module:"module", none:"none"});
+
+export const EXPRESSION_ELEMENTS = Object.freeze({exp_op_exp:"exp_op_exp", op_exp:"op_exp", par_exp_par:"par_exp_par", start_point:"start_point"});
+
+export const EXPRESSION_TYPES = Object.freeze({exp_conditional:"exp_conditional", exp_logic:"exp_logic", exp_arithmetic:"exp_arithmetic"});
+
+export const ARITHMETIC_COMPARISON = Object.freeze({greater_than:"greater_than", less_than:"less_than", equals_to:"equals_to", not_equals_to:"not_equals_to", greater_than_or_equals_to:"greater_than_or_equals_to", less_than_or_equals_to:"less_than_or_equals_to"});
+
+export const LOGIC_COMPARISON = Object.freeze({equals_to:"equals_to", not_equals_to:"not_equals_to", and:"and", or:"or"});
 
 export class Variable {
 
@@ -43,6 +51,13 @@ export class Comment {
   }
 }
 
+export class Break {
+  
+  constructor () {
+    this.type = COMMAND_TYPES.break;
+  }
+}
+
 export class Reader {
   
   constructor (variable_value_menu = new VariableValueMenu()) {
@@ -68,24 +83,42 @@ export class Attribution {
   }
 }
 
-export class Expression {
+export class ExpressionElement {
 
-  constructor (operand1, operand2, operator) {
-    this.operand1 = operand1;
-    this.operand2 = operand2;
+  constructor (type_exp, itens = []) {
+    this.type_exp = type_exp;
+    this.itens = itens;
+  }
+}
+
+export class ConditionalExpression {
+
+  constructor (expression) {
+    this.type = EXPRESSION_TYPES.exp_conditional;
+    this.expression = expression;
+  }
+}
+
+export class LogicExpression {
+
+  constructor (has_neg, first_operand, second_operand, operator) {
+    this.type = EXPRESSION_TYPES.exp_logic;
+    this.has_neg = has_neg;
+    this.first_operand = first_operand;
+    this.second_operand = second_operand;
     this.operator = operator;
   }
 }
-/*
-export class ExpressionNode {
 
-  constructor (content, left_node, right_node) {
-    this.content = content;
-    this.left_node = left_node;
-    this.right_node = right_node;
-    
+export class ArithmeticExpression {
+
+  constructor (first_operand, second_operand, operator) {
+    this.type = EXPRESSION_TYPES.exp_arithmetic;
+    this.first_operand = first_operand;
+    this.second_operand = second_operand;
+    this.operator = operator;
   }
-}*/
+}
 
 export class IfTrue {
 
@@ -99,8 +132,10 @@ export class IfTrue {
 
 export class RepeatNTimes {
 
-  constructor (expression1, expression2, expression3, commands_block) {
+  constructor (var_attribution, var_incrementation, expression1, expression2, expression3, commands_block) {
     this.type = COMMAND_TYPES.repeatNtimes;
+    this.var_attribution = var_attribution;
+    this.var_incrementation = var_incrementation;
     this.expression1 = expression1;
     this.expression2 = expression2;
     this.expression3 = expression3;
@@ -128,12 +163,20 @@ export class DoWhileTrue {
 
 export class Switch {
 
-  constructor (variable, cases, commands_blocks) {
+  constructor (variable, cases = []) {
     this.type = COMMAND_TYPES.switch;
     this.variable = variable;
     this.cases = cases;
-    this.commands_blocks = commands_blocks;
   }
+}
+
+export class SwitchCase {
+
+ constructor (variable_value_menu, commands_block = []) {
+    this.type = COMMAND_TYPES.switchcase;
+    this.variable_value_menu = variable_value_menu;
+    this.commands_block = commands_block;
+  } 
 }
 
 export class FunctionCall {
