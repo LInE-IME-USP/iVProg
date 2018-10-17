@@ -2,9 +2,9 @@ import $ from 'jquery';
 import { Types } from './types';
 import * as Models from './ivprog_elements';
 import { LocalizedStrings } from './../services/localizedStringsService';
-import * as GlobalsManagement from './globals';
+import * as GlobalsManagement from './globals_sidebar';
 import * as VariablesManagement from './variables';
-import * as CommandsManagement from './commands';
+import * as CommandsManagement from './commands_sidebar';
 import * as CodeManagement from './code_generator';
 import * as VariableValueMenu from './commands/variable_value_menu';
 import { DOMConsole } from './../io/domConsole';
@@ -527,6 +527,302 @@ function enableNameFunctionUpdate(function_obj, parent_node) {
   $('.width-dynamic').on('keydown', function(e) {
     var code = e.keyCode || e.which;
     if(code == 13) {
+      if ($(this).val().trim()) {
+        function_obj.name = $(this).val().trim();
+      }
+      $(this).remove();
+
+      $(parent_node).find('.span_name_function').text(function_obj.name);
+
+      /// update elements:
+      opened_name_function = false;
+      opened_input = false;
+    }
+    if(code == 27) {
+
+      $(this).remove();
+
+      $(parent_node).find('.span_name_function').text(function_obj.name);
+
+      /// update elements:
+      opened_name_function = false;
+      opened_input = false;
+    }
+  });
+
+}
+
+
+/****************************************************
+//DOUGLAS
+*******************************************************/
+
+removeFunction = function(function_obj) {
+  var index = program.functions.indexOf(function_obj);
+  if (index > -1) {
+    program.functions.splice(index, 1);
+  }
+
+  $('.functions_labels > [data-function=' + function_obj.name + ']').remove();
+}
+
+renderFunction = function(function_obj) {
+
+  var appender = '<div class="ui secondary segment function_div list-group-item">';
+
+  if (function_obj.function_comment) {
+    //appender += renderComment(function_obj.function_comment, sequence, true, -1);
+  }
+
+  appender += '<span class="glyphicon glyphicon-move move_function" aria-hidden="true"><i class="icon sort alternate vertical"></i></span>';
+
+  appender += (function_obj.is_main ? '<div class="div_start_minimize_v"> </div>' : '<button class="ui icon button large remove_function_button"><i class="red icon times"></i></button>')
+    + '<button class="ui icon button tiny minimize_function_button"><i class="icon window minimize"></i></button>';
+
+  appender += '<div class="ui small icon buttons add_var_top_button"><div class="ui icon button add_var_button_function"><i class="icon superscript"></i></div>';
+
+
+  appender += '<div class="ui icon button dropdown menu_commands" ><i class="icon code"></i> <div class="menu"> ';
+  appender += '<a class="item" data-command="'+Models.COMMAND_TYPES.reader+'"><i class="download icon"></i> ' +LocalizedStrings.getUI('text_read_var')+ '</a>'
+        + '<a class="item" data-command="'+Models.COMMAND_TYPES.writer+'"><i class="upload icon"></i> '+LocalizedStrings.getUI('text_write_var')+'</a>'
+        + '<a class="item" data-command="'+Models.COMMAND_TYPES.comment+'"><i class="quote left icon"></i> '+LocalizedStrings.getUI('text_comment')+'</a>'
+        + '<a class="item" data-command="'+Models.COMMAND_TYPES.attribution+'"><i class="arrow left icon"></i> '+LocalizedStrings.getUI('text_attribution')+'</a>'
+        + '<a class="item" data-command="'+Models.COMMAND_TYPES.functioncall+'"><i class="hand point right icon"></i> '+LocalizedStrings.getUI('text_functioncall')+'</a>'
+        + '<a class="item" data-command="'+Models.COMMAND_TYPES.iftrue+'" ><i class="random icon"></i> '+LocalizedStrings.getUI('text_iftrue')+'</a>'
+        + '<a class="item" data-command="'+Models.COMMAND_TYPES.repeatNtimes+'"><i class="sync icon"></i> '+LocalizedStrings.getUI('text_repeatNtimes')+'</a>'
+        + '<a class="item" data-command="'+Models.COMMAND_TYPES.whiletrue+'"><i class="sync icon"></i> '+LocalizedStrings.getUI('text_whiletrue')+'</a>'
+        + '<a class="item" data-command="'+Models.COMMAND_TYPES.dowhiletrue+'"><i class="sync icon"></i> '+LocalizedStrings.getUI('text_dowhiletrue')+'</a>'
+        + '<a class="item" data-command="'+Models.COMMAND_TYPES.switch+'"><i class="list icon"></i> '+LocalizedStrings.getUI('text_switch')+'</a>'
+        + '</div></div></div>';
+
+  appender += '<div class="function_signature_div">'+LocalizedStrings.getUI("function")+' ';
+
+  if (function_obj.is_main) {
+      appender += '<div class="function_name_div">  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ' + LocalizedStrings.getUI('void') + ' &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="span_name_function" >'+function_obj.name+'</span> </div> '
+        + '( <div class="ui large labels parameters_list">';
+  } else {
+      appender += '<div class="ui function_return"></div>';
+
+      appender += '<div class="function_name_div"><span class="span_name_function name_function_updated">'+function_obj.name+'</span> <i class="icon small pencil alternate enable_edit_name_function name_function_updated"></i></div> '
+        + '( <i class="ui icon plus square outline add_parameter_button"></i> <div class="ui large labels parameters_list container_parameters_list">';
+
+			var menu_button = '<button class="fluid ui container segment labeled icon button list-group-item menu-item" draggable="true" data-function="' + function_obj.name + '"><i class="list icon"></i> ' + function_obj.name + '</button>';
+			menu_button = $(menu_button);
+      menu_button.data('fun',function_obj);
+
+			$('.functions_labels').append(menu_button);
+			console.log("aqui")
+  }
+
+  appender += '</div> ) {</div>'
+    + (function_obj.is_hidden ? ' <div class="function_area" style="display: none;"> ' : ' <div class="function_area"> ')
+
+    + '<div class="ui top attached segment variables_list_div">'
+    /*+ renderVariables(function_obj, sequence)*/
+    + '</div>'
+    + '<div class="ui bottom attached segment commands_list_div" id="function_drag_cmd_">';
+
+
+  if (function_obj.commands) {
+    for (var l = 0; l < function_obj.commands.length; l++) {
+      //appender += renderElementCommandGeneric(programa.funcoes[sequence].comandos[l], sequence, l, -1, l);
+
+    }
+  }
+
+  appender += '</div>';
+
+  appender += '<div class="function_close_div">}</div>'
+    + '</div>'
+    + '</div>';
+
+  appender = $(appender);
+
+  $('.all_functions').append(appender);
+
+  appender.data('fun', function_obj);
+  appender.find('.commands_list_div').data('fun', function_obj);
+
+  renderFunctionReturn(function_obj, appender);
+
+  addHandlers(function_obj, appender);
+
+
+  // Rendering parameters:
+  for (var j = 0; j < function_obj.parameters_list.length; j++) {
+    renderParameter(function_obj, function_obj.parameters_list[j], appender);
+  }
+
+  // Rendering variables:
+  for (var j = 0; j < function_obj.variables_list.length; j++) {
+    VariablesManagement.renderVariable(appender, function_obj.variables_list[j], function_obj);
+  }
+
+  // Rendering commands:
+  for (var j = 0; j < function_obj.commands.length; j++) {
+    CommandsManagement.renderCommand(function_obj.commands[j], $(appender.find('.commands_list_div')[0]), 3, function_obj);
+  }
+
+}
+
+initVisualUI = function() {
+  // MUST USE CONST, LET, OR VAR !!!!!!
+  const mainDiv = $('#visual-main-div');
+  // fill mainDiv with functions and globals...
+  // renderAlgorithm()...
+  $('.add_function_button').on('click', () => {
+    addFunctionHandler();
+  });
+  $('.add_global_button').on('click', () => {
+    GlobalsManagement.addGlobal(program);
+  });
+
+  $('.run_button').on('click', () => {
+    runCode();
+  });
+
+  $('.visual_coding_button').on('click', () => {
+    toggleVisualCoding();
+  });
+
+  $('.textual_coding_button').on('click', () => {
+    toggleTextualCoding();
+  });
+
+  var commands = [
+        {type: Models.COMMAND_TYPES.reader, icon: "download", text: LocalizedStrings.getUI('text_read_var')},
+        {type: Models.COMMAND_TYPES.writer, icon: "upload", text: LocalizedStrings.getUI('text_write_var')},
+        {type: Models.COMMAND_TYPES.comment, icon: "quote left", text: LocalizedStrings.getUI('text_comment')},
+        {type: Models.COMMAND_TYPES.attribution, icon: "arrow left", text: LocalizedStrings.getUI('text_attribution')},
+        {type: Models.COMMAND_TYPES.functioncall, icon: "hand point right", text: LocalizedStrings.getUI('text_functioncall')},
+        {type: Models.COMMAND_TYPES.iftrue, icon: "random", text: LocalizedStrings.getUI('text_iftrue')},
+        {type: Models.COMMAND_TYPES.repeatNtimes, icon: "sync", text: LocalizedStrings.getUI('text_repeatNtimes')},
+        {type: Models.COMMAND_TYPES.whiletrue, icon: "sync", text: LocalizedStrings.getUI('text_whiletrue')},
+        {type: Models.COMMAND_TYPES.dowhiletrue, icon: "sync", text: LocalizedStrings.getUI('text_dowhiletrue')},
+        {type: Models.COMMAND_TYPES.switch, icon: "list", text: LocalizedStrings.getUI('text_switch')}
+  ];
+
+  for (var i = 0; i < commands.length; i++) {
+    var command = '<button class="fluid ui container segment labeled icon button list-group-item menu-item" draggable="true"  data-command="' + commands[i].type + '"><i class="' + commands[i].icon + ' icon"></i> ' + commands[i].text + '</button>';
+    command = $(command);
+    command.on('click', function(evt){
+      CommandsManagement.createFloatingCommand(null, null, $(this).data('command'), evt);
+    });
+    $('.list-commands').prepend(command);
+  }
+
+}
+
+renderParameter = function(function_obj, parameter_obj, function_container) {
+  var ret = "";
+
+  ret += '<div class="ui label function_name_parameter"><span class="span_name_parameter label_enable_name_parameter">'+parameter_obj.name+'</span> <i class="icon small pencil alternate enable_edit_name_parameter label_enable_name_parameter"></i>';
+
+  ret += '<div class="ui dropdown parameter_type">';
+
+  if (parameter_obj.dimensions > 0) {
+    ret += '<div class="text">'+ LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI(parameter_obj.type);
+    ret += '</div>';
+  } else {
+    ret += '<div class="text">'+LocalizedStrings.getUI(parameter_obj.type)+'</div>';
+  }
+
+  ret += '<i class="dropdown icon"></i>'
+    + '<div class="menu">';
+
+
+  for (var tm in Types) {
+      if (tm == Types.VOID.toUpperCase()) {
+        continue;
+      }
+      ret += '<div class="item ' + (parameter_obj.type == tm.toLowerCase() ? ' selected ' : '') + '" data-type="'+tm+'" >'+LocalizedStrings.getUI(tm.toLowerCase())+'</div>';
+  }
+
+  for (var tm in Types) {
+    if (tm == Types.VOID.toUpperCase()) {
+      continue;
+    }
+    ret += '<div class="item">'
+      + '<i class="dropdown icon"></i>'
+      +  LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI(tm.toLowerCase())
+        +  '<div class="menu">'
+          + '<div class="item" data-text="'+ LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI(tm.toLowerCase())+' [ ] " data-type="'+tm+'" data-dimensions="1">[ ]</div>'
+          + '<div class="item" data-text="'+ LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI(tm.toLowerCase())+' [ ] [ ] " data-type="'+tm+'" data-dimensions="2">[ ] [ ] </div>'
+        +  '</div>'
+      + '</div>';
+  }
+
+  ret += '</div></div>';
+
+  ret += ' <i class="red icon times remove_parameter"></i></div>';
+
+  ret = $(ret);
+
+  function_container.find('.container_parameters_list').append(ret);
+
+  ret.find('.remove_parameter').on('click', function(e){
+    removeParameter(function_obj, parameter_obj, ret);
+  });
+
+  ret.find('.ui.dropdown.parameter_type').dropdown({
+    onChange: function(value, text, $selectedItem) {
+      if ($($selectedItem).data('dimensions')) {
+        updateParameterType(parameter_obj, Types[$($selectedItem).data('type')], $($selectedItem).data('dimensions'));
+      } else {
+        updateParameterType(parameter_obj, Types[$($selectedItem).data('type')]);
+      }
+    }
+  });
+
+  ret.find('.label_enable_name_parameter').on('click', function(e){
+    enableNameParameterUpdate(parameter_obj, ret);
+  });
+
+}
+
+enableNameFunctionUpdate = function(function_obj, parent_node) {
+  if (opened_name_function) {
+    $(opened_input).focus();
+    return;
+  }
+
+  $(parent_node).find('.span_name_function').text('');
+  $( "<input type='text' class='width-dynamic input_name_function' autocomplete='off' autocorrect='off' autocapitalize='off' spellcheck='false' value='"+function_obj.name+"' />" ).insertBefore($(parent_node).find('.span_name_function'));
+
+  $('.width-dynamic').on('input', function() {
+    var inputWidth = $(this).textWidth()+10;
+    opened_input = this;
+    $(this).focus();
+
+    var tmpStr = $(this).val();
+    $(this).val('');
+    $(this).val(tmpStr);
+
+    $(this).css({
+        width: inputWidth
+    })
+  }).trigger('input');
+
+  $('.width-dynamic').focusout(function() {
+    /// update array:
+    if ($(this).val().trim()) {
+      function_obj.name = $(this).val().trim();
+    }
+    $(this).remove();
+    $(parent_node).find('.span_name_function').text(function_obj.name);
+
+    /// update elements:
+    opened_name_function = false;
+    opened_input = false;
+  });
+
+  $('.width-dynamic').on('keydown', function(e) {
+    var code = e.keyCode || e.which;
+    if(code == 13) {
+      $('.functions_labels > [data-function=' + function_obj.name + ']')
+				.attr('data-function', $(this).val().trim())
+				.html('<i class="list icon"></i> ' + $(this).val().trim());
+
       if ($(this).val().trim()) {
         function_obj.name = $(this).val().trim();
       }

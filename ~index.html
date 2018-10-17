@@ -14,10 +14,10 @@
 
     <script src="js/jquery-ui.js"></script>
     <script src="js/Sortable.js"></script>
-
+    
   </head>
   <body>
-
+   
     <div class="ui one column doubling stackable grid container">
       <div class="column">
         <div class="ui container main_title">
@@ -25,7 +25,7 @@
           <span>interactive coding</span>
         </div>
 
-
+        
 
         <div class="ui container content_margin">
           <div class="content_sub_margin">
@@ -45,45 +45,14 @@
 
 
       </div>
-
+      
     </div>
 
-    <div class="ui equal height stretched  centered grid">
-      <div class="five wide column">
-        <div class="ui raised container segment div_to_menu">
+    
 
-          <div class="ui top attached tabular menu">
-            <a class="item" data-tab="variaveis">Vari&aacute;veis</a>
-            <a class="item active" data-tab="funcoes">Fun&ccedil;&otilde;es</a>
-          </div>
-          <div class="ui bottom attached tab segment" data-tab="variaveis">
-            <div class="ui one column container segment ivprog_visual_panel loading">
-              <div class="global_var">
-                <div class="ui icon button add-globalVar-button add_global_button"><i class="icon superscript"></i></div>
-              </div>
-              <div class="ui container list_globals list-group"></div>
-            </div>
-          </div>
-          <div class="ui bottom attached tab segment active" data-tab="funcoes">
-            <div class="ui one column container segment ivprog_visual_panel loading">
-                <!--mudar-->
-                <!-- <div class="ui teal small labeled icon button add_function_button" draggable="true">
-                  <data class="i18n" value="Function">Function</data>
-                  <i class="add icon"></i>
-                  </div> -->
+    
 
-              <div class="ui container list-group list-commands">
-                <div class="ui divider"></div>
-                <div class="functions_labels"></div>
-              </div>
-
-            </div>
-          </div>
-
-        </div>
-      </div>
-      <div class="ten wide column">
-        <div class="ui raised container segment div_to_body">
+    <div class="ui raised container segment div_to_body">
 
       <div class="ui icon menu center aligned container" style="width: 438px; margin-top: -10px;">
         <a class="item">
@@ -118,7 +87,13 @@
       <div class="ui one column container segment ivprog_visual_panel loading">
         <div class="program_signature"><data class="i18n" value="ui:program">program</data> { </div>
 
+        <div class="global_var">
+          
+          <div class="ui icon button add-globalVar-button add_global_button"><i class="icon superscript"></i></div>
 
+          <div class="list_globals"></div>
+
+        </div>
 
         <div class="all_functions list-group" id="listWithHandle">
 
@@ -139,27 +114,12 @@
       </div>
       <div id='ivprog-term' class="six column wide" style="display: none">
       </div>
-
+      
     </div>
-      </div>
-    </div>
-
-
-
 
     <script>
       $(document).ready(() => {
         ivprogCore.initVisualUI();
-
-        $('.menu .item')
-          .tab();    ;
-
-        document.querySelectorAll('.button.menu-item').forEach(function(element, index, array) {
-          element.addEventListener('dragstart', function(e) {
-              console.log(this);
-
-          }, false);
-        });
       });
     </script>
 

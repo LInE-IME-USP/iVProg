@@ -1,7 +1,8 @@
 var path = require('path');
 var webpack = require('webpack');
 module.exports = {
-    entry: './js/main.js',
+    //entry: './js/main.js',
+    entry: './js/main-sidebar.js',
     mode: 'development',
     watch: true,
     output: {
