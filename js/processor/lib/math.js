@@ -179,7 +179,7 @@ export function createMaxFun () {
 export function createMinFun () {
   const minFun = (sto, _) => {
     const x = sto.applyStore('x');
-    const numbers = x.value.map(stoObj => stoObj.number);
+    const numbers = x.value.map(stoObj => stoObj.value.toNumber());
     const result = BigNumber.min(numbers);
     const temp = new StoreObject(x.type.innerType, result);
     return Promise.resolve(sto.updateStore('$', temp));
