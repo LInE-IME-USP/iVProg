@@ -349,3 +349,13 @@ div.buttons_manage_columns {
 .default_visual_title {
   display: none;
 }
+
+.expandingArea textarea {
+	min-height: 30px;
+	resize: none;
+	padding: 5px;
+}
+
+.ui table .btn_actions {
+	text-align: center;
+}
