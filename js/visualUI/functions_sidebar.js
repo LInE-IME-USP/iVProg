@@ -680,9 +680,9 @@ renderFunction = function(function_obj) {
       $(e.target).removeClass('div-over')
       var data = JSON.parse(e.originalEvent.dataTransfer.getData("text"));
       if (data.type == 'command')
-        CommandsManagement.prepareManageCommand(function_obj, $(e.target).closest('.function_div'), e, e.originalEvent.dataTransfer.getData("text"));
+        CommandsManagement.prepareManageCommand(function_obj, $(e.target).closest('.function_div'), e, data.content);
       else {
-        CommandsManagement.prepareManageCommand(function_obj, $(e.target).closest('.function_div'), e, e.originalEvent.dataTransfer.getData("text"));
+        CommandsManagement.prepareManageCommand(function_obj, $(e.target).closest('.function_div'), e, "functioncall", data.content);
       }
     });
 

@@ -240,7 +240,7 @@ export function genericCreateCommand (command_type) {
 	}
 }
 
-function manageCommand (function_obj, function_container, event, command_type) {
+function manageCommand (function_obj, function_container, event, command_type, function_called) {
 
 	$( ".created_element" ).each(function( index ) { 
 		$(this).remove();
@@ -292,7 +292,12 @@ function manageCommand (function_obj, function_container, event, command_type) {
 				// pode adicionar 
 				el.data('fun').commands = [];
 
-				var new_cmd = genericCreateCommand(command_type);
+				var new_cmd = null;
+				
+				if (function_called == null) 
+					new_cmd = genericCreateCommand(command_type);
+				else if (command_type == 'functioncall')
+					new_cmd = new Models.FunctionCall(new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.only_function, function_called, null, null, false), null);
 
 				el.data('fun').commands.push(new_cmd);
 
@@ -300,7 +305,7 @@ function manageCommand (function_obj, function_container, event, command_type) {
 			
 		} else { // Entra nesse else, caso já existam outros comandos no bloco:
 
-			findNearbyCommandToAddInFunctionScope(el, event, $(function_container).find('.commands_list_div'), function_obj, command_type);
+			findNearbyCommandToAddInFunctionScope(el, event, $(function_container).find('.commands_list_div'), function_obj, command_type, function_called);
 		}
 
 	} else {
@@ -390,7 +395,7 @@ function manageCommand (function_obj, function_container, event, command_type) {
 	which_element_is_draged = null;
 }
 
-function insertCommandInBlockHierar (el, event, function_obj, command_type, hier_dom, hier_obj) {
+function insertCommandInBlockHierar (el, event, function_obj, command_type, hier_dom, hier_obj, function_called = null) {
 	var el_jq = $(el);
 	var command_parent = el_jq.data('command');
 	
@@ -411,7 +416,11 @@ function insertCommandInBlockHierar (el, event, function_obj, command_type, hier
 			if (command_parent.commands_block == null || command_parent.commands_block.length == 0) {
 				command_parent.commands_block = [];
 
-				var recentComand = genericCreateCommand(command_type);
+				var recentComand = null;
+				if(function_called == null)
+					recentComand = genericCreateCommand(command_type);
+				else if (command_type == "functioncall")
+					recentComand = new Models.FunctionCall(new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.only_function, function_called, null, null, false), null);
 				command_parent.commands_block.push(recentComand);
 
 				renderCommand(recentComand, el_jq.find('.block_commands'), 3, function_obj);
@@ -433,7 +442,7 @@ function insertCommandInBlockHierar (el, event, function_obj, command_type, hier
 
 
 
-function findNearbyCommandToAddInBlockScope (el, event, node_list_commands, function_obj, command_type, command_parent) {
+function findNearbyCommandToAddInBlockScope (el, event, node_list_commands, function_obj, command_type, command_parent, function_called = null) {
 
 	var all_sub = $(node_list_commands).find('div.command_container');
 
@@ -457,18 +466,21 @@ function findNearbyCommandToAddInBlockScope (el, event, node_list_commands, func
 	}
 
 	var borda_inferior = elemento_menor_distancia.parentNode.getBoundingClientRect().top + elemento_menor_distancia.parentNode.getBoundingClientRect().height;
-	
+
+	var recentComand = null;
+	if (function_called == null)
+		recentComand = genericCreateCommand(command_type);
+	else if (command_type == 'functioncall')
+		recentComand = new Models.FunctionCall(new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.only_function, function_called, null, null, false), null);
+		
 	// Está mais próximo da borda de baixo, ou seja.. inserir por último:
 	if ((borda_inferior - event.clientY) < menor_distancia) {
-		
-		var recentComand = genericCreateCommand(command_type);
+
 		command_parent.commands_block.push(recentComand);
 		//
 		renderCommand(recentComand, node_list_commands, 3, function_obj);
 
 	} else {
-
-		var recentComand = genericCreateCommand(command_type);
 
 		var index = command_parent.commands_block.indexOf($(elemento_menor_distancia).data('command'));
 
@@ -985,7 +997,7 @@ function findBeforeOrAfterCommandToAdd (el, event, function_obj, command_type) {
 	}
 }
 
-function findNearbyCommandToAddInFunctionScope (el, event, node_list_commands, function_obj, command_type) {
+function findNearbyCommandToAddInFunctionScope (el, event, node_list_commands, function_obj, command_type, function_called = null) {
 
 	var all_sub = $(node_list_commands).find('div.command_container');
 
@@ -1010,17 +1022,20 @@ function findNearbyCommandToAddInFunctionScope (el, event, node_list_commands, f
 
 	var borda_inferior = elemento_menor_distancia.parentNode.getBoundingClientRect().top + elemento_menor_distancia.parentNode.getBoundingClientRect().height;
 	
+	var recentComand = null;
+	if (function_called == null) 
+		recentComand = genericCreateCommand(command_type);
+	else if (command_type == 'functioncall')
+		recentComand = new Models.FunctionCall(new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.only_function, function_called, null, null, false), null);
+
 	// Está mais próximo da borda de baixo, ou seja.. inserir por último:
 	if ((borda_inferior - event.clientY) < menor_distancia) {
 		
-		var recentComand = genericCreateCommand(command_type);
 		function_obj.commands.push(recentComand);
 		//
 		renderCommand(recentComand, node_list_commands, 3, function_obj);
 
 	} else {
-
-		var recentComand = genericCreateCommand(command_type);
 
 		var index = function_obj.commands.indexOf($(elemento_menor_distancia).data('command'));
 
@@ -1223,6 +1238,6 @@ manageCommand = function(function_obj, function_container, event, command_type) 
 	which_element_is_draged = null;
 }
 */
-export function prepareManageCommand (function_obj, function_container, evt, command_type) {
-	manageCommand(function_obj, function_container, evt, command_type);
+export function prepareManageCommand (function_obj, function_container, evt, command_type, function_called = null) {
+	manageCommand(function_obj, function_container, evt, command_type, function_called);
 }
