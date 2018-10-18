@@ -4,6 +4,7 @@ import { Types } from './../../typeSystem/types';
 import { toReal, convertToString } from "./../../typeSystem/parsers";
 import { IVProgParser } from '../../ast/ivprogParser';
 import { RealLiteral, IntLiteral, BoolLiteral } from '../../ast/expressions';
+import { Modes } from '../modes';
 
 /**
  * 
@@ -28,6 +29,7 @@ export function createIsRealFun () {
       }
     } catch (error) { }
     const temp = new StoreObject(Types.BOOLEAN, result);
+    sto.mode = Modes.RETURN;
     return Promise.resolve(sto.updateStore("$", temp));
   }
 
@@ -50,6 +52,7 @@ export function createIsIntFun () {
       }
     } catch (error) { }
     const temp = new StoreObject(Types.BOOLEAN, result);
+    sto.mode = Modes.RETURN;
     return Promise.resolve(sto.updateStore("$", temp));
   }
 
@@ -72,6 +75,7 @@ export function createIsBoolFun () {
       }
     } catch (error) { }
     const temp = new StoreObject(Types.BOOLEAN, result);
+    sto.mode = Modes.RETURN;
     return Promise.resolve(sto.updateStore("$", temp));
   }
 
@@ -88,6 +92,7 @@ export function createCastRealFun () {
     switch (val.type.ord) {
       case Types.INTEGER.ord: {
         const temp = new StoreObject(Types.REAL, toReal(val.number));
+        sto.mode = Modes.RETURN;
         return Promise.resolve(sto.updateStore("$", temp));
       }
       case Types.STRING.ord: {
@@ -96,6 +101,7 @@ export function createCastRealFun () {
           const result = parser.parseTerm();
           if (result instanceof RealLiteral) {
             const temp = new StoreObject(Types.REAL, result.value);
+            sto.mode = Modes.RETURN;
             return Promise.resolve(sto.updateStore("$", temp));
           }
         } catch (error) { 
@@ -118,6 +124,7 @@ export function createCastIntFun () {
     switch (val.type.ord) {
       case Types.REAL.ord: {
         const temp = new StoreObject(Types.INTEGER, Math.floor(val.number));
+        sto.mode = Modes.RETURN;
         return Promise.resolve(sto.updateStore("$", temp));
       }
       case Types.STRING.ord: {
@@ -126,6 +133,7 @@ export function createCastIntFun () {
           const result = parser.parseTerm();
           if (result instanceof IntLiteral) {
             const temp = new StoreObject(Types.INTEGER, result.value);
+            sto.mode = Modes.RETURN;
             return Promise.resolve(sto.updateStore("$", temp));
           }
         } catch (error) { 
@@ -150,6 +158,7 @@ export function createCastBoolFun () {
       const val = parser.parseTerm();
       if (val instanceof BoolLiteral) {
         const temp = new StoreObject(Types.BOOLEAN, val.value);
+        sto.mode = Modes.RETURN;
         return Promise.resolve(sto.updateStore("$", temp));
       }
     } catch (error) { }
@@ -168,6 +177,7 @@ export function createCastStringFun () {
     const val = store.applyStore('str');
     let result = convertToString(val)
     const temp = new StoreObject(Types.STRING, result);
+    sto.mode = Modes.RETURN;
     return Promise.resolve(sto.updateStore("$", temp));
   }
   const block = new Commands.CommandBlock([], [new Commands.SysCall(castStringFun)]);
