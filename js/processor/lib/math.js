@@ -5,6 +5,7 @@ import { toReal } from "./../../typeSystem/parsers";
 import { BigNumber } from 'bignumber.js';
 import { MultiType } from '../../typeSystem/multiType';
 import { CompoundType } from '../../typeSystem/compoundType';
+import { Modes } from '../modes';
 
 /**
  * sin
@@ -25,6 +26,7 @@ export function createSinFun () {
      const x = sto.applyStore('x');
      const result = toReal(Math.sin(x.number));
      const temp = new StoreObject(Types.REAL, result);
+     sto.mode = Modes.RETURN;
      return Promise.resolve(sto.updateStore('$', temp));
    };
 
@@ -40,6 +42,7 @@ export function createCosFun () {
     const x = sto.applyStore('x');
     const result = toReal(Math.cos(x.number));
     const temp = new StoreObject(Types.REAL, result);
+    sto.mode = Modes.RETURN;
     return Promise.resolve(sto.updateStore('$', temp));
   };
 
@@ -55,6 +58,7 @@ export function createTanFun () {
     const x = sto.applyStore('x');
     const result = toReal(Math.tan(x.number));
     const temp = new StoreObject(Types.REAL, result);
+    sto.mode = Modes.RETURN;
     return Promise.resolve(sto.updateStore('$', temp));
   };
 
@@ -70,6 +74,7 @@ export function createSqrtFun () {
     const x = sto.applyStore('x');
     const result = x.value.sqrt();
     const temp = new StoreObject(Types.REAL, result);
+    sto.mode = Modes.RETURN;
     return Promise.resolve(sto.updateStore('$', temp));
   };
 
@@ -86,6 +91,7 @@ export function createPowFun () {
     const y = sto.applyStore('y');
     const result = toReal(Math.pow(x.number, y.number));
     const temp = new StoreObject(Types.REAL, result);
+    sto.mode = Modes.RETURN;
     return Promise.resolve(sto.updateStore('$', temp));
   };
 
@@ -105,6 +111,7 @@ export function createLogFun () {
     }
     const result = toReal(Math.log10(x.number));
     const temp = new StoreObject(Types.REAL, result);
+    sto.mode = Modes.RETURN;
     return Promise.resolve(sto.updateStore('$', temp));
   };
 
@@ -120,6 +127,7 @@ export function createAbsFun () {
     const x = sto.applyStore('x');
     const result = x.value.abs();
     const temp = new StoreObject(x.type, result);
+    sto.mode = Modes.RETURN;
     return Promise.resolve(sto.updateStore('$', temp));
   };
 
@@ -135,6 +143,7 @@ export function createNegateFun () {
     const x = sto.applyStore('x');
     const result = x.value.negated();
     const temp = new StoreObject(x.type, result);
+    sto.mode = Modes.RETURN;
     return Promise.resolve(sto.updateStore('$', temp));
   };
 
@@ -150,6 +159,7 @@ export function createInvertFun () {
     const x = sto.applyStore('x');
     const result = toReal(1).dividedBy(x.value);
     const temp = new StoreObject(Types.REAL, result);
+    sto.mode = Modes.RETURN;
     return Promise.resolve(sto.updateStore('$', temp));
   };
 
@@ -166,6 +176,7 @@ export function createMaxFun () {
     const numbers = x.value.map(stoObj => stoObj.number);
     const result = BigNumber.max(numbers);
     const temp = new StoreObject(x.type.innerType, result);
+    sto.mode = Modes.RETURN;
     return Promise.resolve(sto.updateStore('$', temp));
   };
  const paramType = new CompoundType(new MultiType([Types.INTEGER, Types.REAL]), 1);
@@ -182,6 +193,7 @@ export function createMinFun () {
     const numbers = x.value.map(stoObj => stoObj.value.toNumber());
     const result = BigNumber.min(numbers);
     const temp = new StoreObject(x.type.innerType, result);
+    sto.mode = Modes.RETURN;
     return Promise.resolve(sto.updateStore('$', temp));
   };
  const paramType = new CompoundType(new MultiType([Types.INTEGER, Types.REAL]), 1);
