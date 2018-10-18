@@ -3,6 +3,7 @@ import * as Commands from './../../ast/commands';
 import { Types } from './../../typeSystem/types';
 import { toInt } from "./../../typeSystem/parsers";
 import { CompoundType } from '../../typeSystem/compoundType';
+import { Modes } from '../modes';
 
 /**
  * num_elements
@@ -14,6 +15,7 @@ export function createNumElementsFun () {
   const numElementsFun = (sto, _) => {
     const vector  = sto.applyStore("vector");
     const temp = new StoreObject(Types.INTEGER, toInt(vector.lines));
+    sto.mode = Modes.RETURN;
     return Promise.resolve(sto.updateStore("$", temp));
   }
 
@@ -28,6 +30,7 @@ export function createMatrixLinesFun () {
   const matrixLinesFun = (sto, _) => {
     const matrix  = sto.applyStore("matrix");
     const temp = new StoreObject(Types.INTEGER, toInt(matrix.lines));
+    sto.mode = Modes.RETURN;
     return Promise.resolve(sto.updateStore("$", temp));
   }
 
@@ -42,6 +45,7 @@ export function createMatrixColumnsFun () {
   const matrixColumnsFun = (sto, _) => {
     const matrix  = sto.applyStore("matrix");
     const temp = new StoreObject(Types.INTEGER, toInt(matrix.columns));
+    sto.mode = Modes.RETURN;
     return Promise.resolve(sto.updateStore("$", temp));
   }
 

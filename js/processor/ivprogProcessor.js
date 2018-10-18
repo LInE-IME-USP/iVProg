@@ -146,11 +146,6 @@ export class IVProgProcessor {
             calleeStore.insertStore(formalParameter.id, realValue);
           }
         } else {
-          console.log("######");
-          console.log(stoObj);
-          console.log(stoObj.value);
-          console.log(stoObj.type);
-          console.log(stoObj.refValue);
           throw new Error(`Parameter ${formalParameter.id} is not compatible with the value given.`);
         }
       }
@@ -217,7 +212,14 @@ export class IVProgProcessor {
     return new Promise((resolve, reject) => {
       const func = this.findFunction(cmd.id);
       this.runFunction(func, cmd.actualParameters, store)
-        .then(_ => resolve(store))
+        .then(sto => {
+          if(!Types.VOID.isCompatible(func.returnType) && sto.mode !== Modes.RETURN) {
+            // TODO: better error message
+            reject(new Error(`Function ${func.name} must have a return command`));
+          } else {
+            resolve(store);
+          }
+        })
         .catch(err => reject(err));
     }); 
   }
@@ -600,6 +602,9 @@ export class IVProgProcessor {
     }
     const $newStore = this.runFunction(func, exp.actualParameters, store);
     return $newStore.then( sto => {
+      if(sto.mode !== Modes.RETURN) {
+        return Promise.reject(new Error("The function that was called did not had a return command: "+exp.id));
+      }
       const val = sto.applyStore('$');
       if (val instanceof StoreObjectArray) {
         return Promise.resolve(Object.assign(new StoreObjectArray(null,null,null,null,null), val));
