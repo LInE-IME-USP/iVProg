@@ -35,6 +35,8 @@ program.addFunction(mainFunction);
 
 window.program_obj = program;
 
+window.generator = CodeManagement.generate;
+
 WatchJS.watch(program.globals, function(){
       console.log("as globais foram alteradas!");
   }, 1);
@@ -292,7 +294,7 @@ export function initVisualUI () {
   });
 
   $('.assessment').on('click', () => {
-    toggleTextualCoding();
+    runCodeAssessment();
   });
 }
 
@@ -310,11 +312,11 @@ function runCodeAssessment () {
   if (strCode == null) {
     return;
   }
-  domConsole = new DOMConsole("#ivprog-term", testCases);
+  domConsole = new DOMConsole("#ivprog-term");
   $("#ivprog-term").slideDown(500);
   const lexer = LanguageService.getCurrentLexer();
   const ast = new IVProgParser(strCode, lexer).parseTree();
-  const proc = new IVProgProcessor(ast); 
+  const proc = new IVProgProcessor(ast,testCases); 
   proc.registerInput(domConsole);
   proc.registerOutput(domConsole);
   proc.interpretAST().then( _ => {

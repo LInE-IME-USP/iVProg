@@ -31,20 +31,53 @@ function getAnswer () {
         
     } else {
         // Montar o retorno com a criação da atividade do professor
-        return prepareTestCases();
+        var ret = ' { ' + prepareTestCases() 
+            + ',\n"settings_data_types": \n' + JSON.stringify($('form[name="settings_data_types"]').serializeArray()) 
+            + ',\n"settings_commands": \n' + JSON.stringify($('form[name="settings_commands"]').serializeArray()) 
+            + ',\n"settings_functions": \n' + JSON.stringify($('form[name="settings_functions"]').serializeArray()) 
+            + ' } ';
+
+        if ($("input[name='include_algo']").is(':checked')) {
+            ret += '\n\nalgorithm\n\n';
+            ret += generator();
+        }
+
+        return ret;
     }
 }
 
 function prepareTestCases () {
-    var ret = '{ \n "testcases" : [ '
+    var ret = ' \n "testcases" : [ '
     var test_cases_array = $('form[name="test_cases"]').serializeArray();
     for (var i = 0; i < test_cases_array.length; i = i + 2) {
         ret += '\n{ ';
-        ret += '\n "input": "' + test_cases_array[i].value + '",'
-        ret += '\n "output": "' + test_cases_array[i+1].value + '" '
-        ret += '\n},'
+        ret += '\n "input": [';
+        var inps = test_cases_array[i].value.match(/[^\r\n]+/g);
+        if (inps) {
+            for (var j = 0; j < inps.length; j++) {
+                ret += '"' + inps[j] + '"';
+                if ((j + 1) < inps.length) {
+                    ret += ', ';
+                }
+            }
+        }
+        ret += '], \n "output": [';
+        var outs = test_cases_array[i+1].value.match(/[^\r\n]+/g);
+        if (outs) {
+            for (var j = 0; j < outs.length; j++) {
+                ret += '"' + outs[j] + '"';
+                if ((j + 1) < outs.length) {
+                    ret += ', ';
+                }
+            }
+        }
+        ret += ']';
+        ret += '\n}'
+        if ((i + 2) < test_cases_array.length) {
+            ret += ',';
+        }
     }
-    ret += '\n] }';
+    ret += '\n] ';
     return ret;
 }
 
@@ -62,6 +95,11 @@ function getEvaluation () {
 
 
 var testCases = null;
+var settingsDataTypes = null;
+var settingsCommands = null;
+var settingsFunctions = null;
+var algorithm_in_ilm = null;
+
 
 // Função para que o iMA leia os dados da atividade fornecidos pelo iTarefa
 function getiLMContent () {
@@ -69,8 +107,21 @@ function getiLMContent () {
     // O parâmetro "iLM_PARAM_Assignment" fornece o URL do endereço que deve ser
     // requisitado via AJAX para a captura dos dados da atividade
     $.get(iLMparameters.iLM_PARAM_Assignment, function (data) {
-        // testCases é preenchida
+        if (iLMparameters.iLM_PARAM_SendAnswer == 'false') {
+            prepareActivityToStudent(data);
+        } else {
+
+        }
     });
+}
+
+function prepareActivityToStudent(ilm_cont) {
+    var content = JSON.parse(ilm_cont.split('algorithm')[0]);
+    testCases = content.testcases;
+    settingsDataTypes = content.settings_data_types;
+    settingsCommands = content.settings_commands;
+    settingsFunctions = content.settings_functions;
+    algorithm_in_ilm = ilm_cont.split('algorithm')[1];
 }
 
 // Função para organizar se para criação, visualização ou resolução de atividade
@@ -79,6 +130,21 @@ function prepareEnvironment () {
         prepareActivityCreation();
     }
 }
+
+$(document).ready(function() {
+
+    // Se iLM_PARAM_SendAnswer for false, então trata-se de resolução de atividade,
+    // portanto, a "DIV" de resolução é liberada
+    if (iLMparameters.iLM_PARAM_SendAnswer == 'false') {
+        //$('.resolucao').css("display","block");
+        getiLMContent();
+
+    } else {
+        // Caso não esteja em modo de resolução de atividade, a visualização no momento
+        // é para a elaboração de atividade:
+        //$('.elaboracao').css("display","block");
+    }
+});
 
 // Função para preparar a interface para o professor criar atividade:
 function prepareActivityCreation () {
@@ -91,7 +157,7 @@ function prepareActivityCreation () {
     $('.main_title').remove();
     $('.ui.accordion').addClass('styled');
     
-    $('<div class="ui checkbox"><input type="checkbox" name="include_algo" tabindex="0" class="hidden"><label>'+LocalizedStrings.getUI('text_teacher_algorithm_include')+'</label></div>').insertBefore('.content_margin');
+    $('<div class="ui checkbox"><input type="checkbox" name="include_algo" class="include_algo" tabindex="0" class="hidden"><label>'+LocalizedStrings.getUI('text_teacher_algorithm_include')+'</label></div>').insertBefore('.content_margin');
     
     var cases_test_div = $('<div class="ui accordion styled"><div class="active title"><i class="dropdown icon"></i>'+LocalizedStrings.getUI('text_teacher_test_case')+'</div><div class="active content"></div></div>');
 
@@ -112,9 +178,6 @@ function prepareActivityCreation () {
 
 function prepareTableTestCases (div_el) {
 
-    //return JSON.stringify($('form[name="elaborar"]').serializeArray());
-
-
     var table_el = '<form name="test_cases"><table class="ui blue table"><thead><tr><th width="30px">#</th><th>'+LocalizedStrings.getUI('text_teacher_test_case_input')+'</th><th>'+LocalizedStrings.getUI('text_teacher_test_case_output')+'</th><th width="80px">'+LocalizedStrings.getUI('text_teacher_test_case_actions')+'</th></tr></thead>'
             + '<tbody class="content_cases"></tbody></table></form>';
 
@@ -128,11 +191,13 @@ function prepareTableTestCases (div_el) {
 
 }
 
+var hist = false;
+
 function addTestCase () {
-    var new_row = $('<tr><td class="counter"></td><td class="expandingArea"><textarea rows="1" name="input"></textarea></td><td class="expandingArea"><textarea rows="1" name="output"></textarea></td><td class="btn_actions"><button class="ui icon button"><i class="red icon times"></i></button></td></tr>');
+    var new_row = $('<tr><td class="counter"></td><td class="expandingArea"><textarea rows="1" name="input" class="text_area_input"></textarea></td><td class="expandingArea"><textarea rows="1" name="output" class="text_area_output"></textarea></td><td class="btn_actions"><div class="ui button_remove_case"><i class="red icon times large"></i></div></td></tr>');
     $('.content_cases').append(new_row);
 
-    new_row.find('button').click(function(e) {
+    new_row.find('.button_remove_case').click(function(e) {
         new_row.remove();
         updateTestCaseCounter();
     });
@@ -143,6 +208,19 @@ function addTestCase () {
     });
     
     updateTestCaseCounter();
+
+     $('.text_area_output').keydown(function(e) {
+        var code = e.keyCode || e.which;
+        if (code == 9 && $(this).closest("tr").is(":last-child")) {
+            hist = true;
+            addTestCase();
+        }
+     });
+     if (!hist) {
+        $( ".content_cases tr:last" ).find('.text_area_input').focus();
+     } else {
+        hist = false;
+     }
 }
 
 function updateTestCaseCounter () {
@@ -155,17 +233,17 @@ function updateTestCaseCounter () {
 
 function prepareTableSettings (div_el) {
     div_el.append('<h4 class="ui header">'+LocalizedStrings.getUI('text_teacher_data_types')+'</h4>');
-    div_el.append('<div class="ui stackable five column grid">'
+    div_el.append('<form name="settings_data_types"><div class="ui stackable five column grid">'
         +'<div class="column"><div class="ui checkbox"><input type="checkbox" name="integer_data_type" checked tabindex="0" class="hidden small"><label>'+LocalizedStrings.getUI('integer')+'</label></div></div>'
         +'<div class="column"><div class="ui checkbox"><input type="checkbox" name="real_data_type" checked tabindex="0" class="hidden small"><label>'+LocalizedStrings.getUI('real')+'</label></div></div>'
         +'<div class="column"><div class="ui checkbox"><input type="checkbox" name="text_data_type" checked tabindex="0" class="hidden small"><label>'+LocalizedStrings.getUI('text')+'</label></div></div>'
         +'<div class="column"><div class="ui checkbox"><input type="checkbox" name="boolean_data_type" checked tabindex="0" class="hidden small"><label>'+LocalizedStrings.getUI('boolean')+'</label></div></div>'
         +'<div class="column"><div class="ui checkbox"><input type="checkbox" name="void_data_type" checked tabindex="0" class="hidden small"><label>'+LocalizedStrings.getUI('void')+'</label></div></div>'
-        +'</div>');
+        +'</div></form>');
 
 
     div_el.append('<h4 class="ui header">'+LocalizedStrings.getUI('text_teacher_commands')+'</h4>');
-    div_el.append('<div class="ui stackable three column grid">'
+    div_el.append('<form name="settings_commands"><div class="ui stackable three column grid">'
         +'<div class="column"><div class="ui checkbox"><input type="checkbox" name="commands_read" checked tabindex="0" class="hidden small"><label>'+LocalizedStrings.getUI('text_read_var')+'</label></div></div>'
         +'<div class="column"><div class="ui checkbox"><input type="checkbox" name="commands_write" checked tabindex="0" class="hidden small"><label>'+LocalizedStrings.getUI('text_write_var')+'</label></div></div>'
         +'<div class="column"><div class="ui checkbox"><input type="checkbox" name="commands_comment" checked tabindex="0" class="hidden small"><label>'+LocalizedStrings.getUI('text_comment')+'</label></div></div>'
@@ -176,13 +254,13 @@ function prepareTableSettings (div_el) {
         +'<div class="column"><div class="ui checkbox"><input type="checkbox" name="commands_while" checked tabindex="0" class="hidden small"><label>'+LocalizedStrings.getUI('text_whiletrue')+'</label></div></div>'
         +'<div class="column"><div class="ui checkbox"><input type="checkbox" name="commands_dowhile" checked tabindex="0" class="hidden small"><label>'+LocalizedStrings.getUI('text_dowhiletrue')+'</label></div></div>'
         +'<div class="column"><div class="ui checkbox"><input type="checkbox" name="commands_switch" checked tabindex="0" class="hidden small"><label>'+LocalizedStrings.getUI('text_switch')+'</label></div></div>'
-        +'</div>');
+        +'</div></form>');
 
     div_el.append('<h4 class="ui header">'+LocalizedStrings.getUI('text_teacher_functions')+'</h4>');
-    div_el.append('<div class="ui stackable one column grid">'
-        +'<div class="column"><div class="ui checkbox"><input type="checkbox" name="" checked tabindex="0" class="hidden small"><label>'+LocalizedStrings.getUI('text_teacher_create_functions')+'</label></div></div>'
-        +'<div class="column"><div class="ui checkbox"><input type="checkbox" name="" checked tabindex="0" class="hidden small"><label>'+LocalizedStrings.getUI('text_teacher_create_movement_functions')+'</label></div></div>'
-        +'</div>');
+    div_el.append('<form name="settings_functions"><div class="ui stackable one column grid">'
+        +'<div class="column"><div class="ui checkbox"><input type="checkbox" name="functions_creation" checked tabindex="0" class="hidden small"><label>'+LocalizedStrings.getUI('text_teacher_create_functions')+'</label></div></div>'
+        +'<div class="column"><div class="ui checkbox"><input type="checkbox" name="functions_move" checked tabindex="0" class="hidden small"><label>'+LocalizedStrings.getUI('text_teacher_create_movement_functions')+'</label></div></div>'
+        +'</div></form>');
 
     $('.ui.checkbox').checkbox();
 
