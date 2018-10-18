@@ -19,7 +19,7 @@ var counter_new_parameters = 0;
 
 let domConsole = null;
 const program = new Models.Program();
-const variable1 = new Models.Variable(Types.REAL, "variable_1", 1, 1);
+const variable1 = new Models.Variable(Types.INTEGER, "a", 1);
 const mainFunction = new Models.Function(LocalizedStrings.getUI("start"), Types.VOID, 0, [], true, false, [variable1]);
 mainFunction.function_comment = new Models.Comment(LocalizedStrings.getUI('text_comment_main'));
 const parameter1 = new Models.Variable(Types.INTEGER, "par_1", 1);
@@ -75,6 +75,12 @@ function minimizeFunction (function_obj) {
 }
 
 function addHandlers (function_obj, function_container) {
+
+  // function_container.on('dragenter',function(e) {
+  //   e.preventDefault();
+  //   $(e.target).addClass('div-over')
+  //   console.log(e.target)
+  // })
 
   function_container.find('.ui.dropdown.function_return').dropdown({
       onChange: function(value, text, $selectedItem) {
@@ -188,7 +194,8 @@ function renderFunction (function_obj) {
   appender += '<div class="ui small icon buttons add_var_top_button"><div class="ui icon button add_var_button_function"><i class="icon superscript"></i></div>';
 
   appender += '<div class="ui icon button dropdown menu_commands" ><i class="icon code"></i> <div class="menu"> ';
-  appender += '<a class="item" data-command="'+Models.COMMAND_TYPES.reader+'"><i class="download icon"></i> ' +LocalizedStrings.getUI('text_read_var')+ '</a>'
+  appender += '<a class="item" data-command="'+Models.COMMAND_TYPES.break+'"><i class="download icon"></i> ' +LocalizedStrings.getUI('text_break')+ '</a>'
+        + '<a class="item" data-command="'+Models.COMMAND_TYPES.reader+'"><i class="download icon"></i> ' +LocalizedStrings.getUI('text_read_var')+ '</a>'
         + '<a class="item" data-command="'+Models.COMMAND_TYPES.writer+'"><i class="upload icon"></i> '+LocalizedStrings.getUI('text_write_var')+'</a>'
         + '<a class="item" data-command="'+Models.COMMAND_TYPES.comment+'"><i class="quote left icon"></i> '+LocalizedStrings.getUI('text_comment')+'</a>'
         + '<a class="item" data-command="'+Models.COMMAND_TYPES.attribution+'"><i class="arrow left icon"></i> '+LocalizedStrings.getUI('text_attribution')+'</a>'
@@ -608,7 +615,12 @@ renderFunction = function(function_obj) {
 
 			var menu_button = '<button class="fluid ui container segment labeled icon button list-group-item menu-item" draggable="true" data-function="' + function_obj.name + '"><i class="list icon"></i> ' + function_obj.name + '</button>';
 			menu_button = $(menu_button);
-      menu_button.data('fun',function_obj);
+      menu_button
+        .data('fun',function_obj)
+        .on('dragstart', function(e) {
+          e.originalEvent.dataTransfer.setData("text",JSON.stringify({type:"function",content:function_obj}));
+          //evt.originalEvent.dataTransfer.setData("text",$(this).data('command'));
+        })
 
 			$('.functions_labels').append(menu_button);
 			console.log("aqui")
@@ -641,12 +653,42 @@ renderFunction = function(function_obj) {
   $('.all_functions').append(appender);
 
   appender.data('fun', function_obj);
-  appender.find('.commands_list_div').data('fun', function_obj);
+  console.log("----====----->");
+  appender.find('.commands_list_div')
+    .data('fun', function_obj)
+    .attr('droppable',true)
+    .on('dragenter',function(e) {
+      e.preventDefault();
+      console.log('dragenter');
+      console.log(e.target)
+      $(e.target).addClass('div-over')
+      //e.stopPropagation();
+    }).on('dragover',function(e){
+      e.preventDefault();
+    })
+    .on('dragleave',function(e) {
+      e.preventDefault();
+      //e.stopPropagation();
+      console.log("dragleave")
+      $(e.target).removeClass('div-over')
+      console.log(e.target)
+    })
+    .on('drop',function(e){ 
+      e.preventDefault();
+      console.log('ondrop ' + e.originalEvent.dataTransfer.getData("text"));
+      console.log(e)
+      $(e.target).removeClass('div-over')
+      var data = JSON.parse(e.originalEvent.dataTransfer.getData("text"));
+      if (data.type == 'command')
+        CommandsManagement.prepareManageCommand(function_obj, $(e.target).closest('.function_div'), e, e.originalEvent.dataTransfer.getData("text"));
+      else {
+        CommandsManagement.prepareManageCommand(function_obj, $(e.target).closest('.function_div'), e, e.originalEvent.dataTransfer.getData("text"));
+      }
+    });
 
   renderFunctionReturn(function_obj, appender);
 
   addHandlers(function_obj, appender);
-
 
   // Rendering parameters:
   for (var j = 0; j < function_obj.parameters_list.length; j++) {
@@ -662,6 +704,9 @@ renderFunction = function(function_obj) {
   for (var j = 0; j < function_obj.commands.length; j++) {
     CommandsManagement.renderCommand(function_obj.commands[j], $(appender.find('.commands_list_div')[0]), 3, function_obj);
   }
+  console.log('kk')
+  console.log($($('.function_div')[0]).data('fun'))
+  console.log(appender.data('fun'))
 
 }
 
@@ -690,6 +735,7 @@ initVisualUI = function() {
   });
 
   var commands = [
+        {type: Models.COMMAND_TYPES.break, icon: "stop", text: LocalizedStrings.getUI('text_break')},
         {type: Models.COMMAND_TYPES.reader, icon: "download", text: LocalizedStrings.getUI('text_read_var')},
         {type: Models.COMMAND_TYPES.writer, icon: "upload", text: LocalizedStrings.getUI('text_write_var')},
         {type: Models.COMMAND_TYPES.comment, icon: "quote left", text: LocalizedStrings.getUI('text_comment')},
@@ -705,8 +751,48 @@ initVisualUI = function() {
   for (var i = 0; i < commands.length; i++) {
     var command = '<button class="fluid ui container segment labeled icon button list-group-item menu-item" draggable="true"  data-command="' + commands[i].type + '"><i class="' + commands[i].icon + ' icon"></i> ' + commands[i].text + '</button>';
     command = $(command);
-    command.on('click', function(evt){
-      CommandsManagement.createFloatingCommand(null, null, $(this).data('command'), evt);
+    command.on('dragstart', function(evt){
+      //evt.originalEvent.dataTransfer.setData("text",$(this).data('command'));
+      evt.originalEvent.dataTransfer.setData("text",JSON.stringify({type:"command",content:$(this).data('command')}));
+      console.log('dragstart')
+      // $('.commands_list_div').attr('droppable',true)
+      // .on('dragenter',function(e) {
+      //   e.preventDefault();
+      //   //e.stopPropagation();
+      //   console.log("dragenter")
+      //   e.originalEvent.dataTransfer.setData("text",$(this).data('command'));
+      //   console.log($(this).data('command'))
+      //   $(e.target).addClass('div-over')
+      //   console.log(e.target)
+      // }).on('dragover',function(e){
+      //   e.preventDefault();
+      // })
+      // .on('dragleave',function(e) {
+      //   e.preventDefault();
+      //   //e.stopPropagation();
+      //   console.log("dragleave")
+      //   $(e.target).removeClass('div-over')
+      //   console.log(e.target)
+      // })
+      // .on('drop',function(e){ 
+      //   e.preventDefault();
+      //   console.log('ondrop ' + e.originalEvent.dataTransfer.getData("text"))
+      //   CommandsManagement.prepareManageCommand(null, null, e, e.originalEvent.dataTransfer.getData("text"));
+      // })
+      /*$(".commands_list_div, .commands_list_div, .block_commands, .command_container").hover(
+        function(e) {
+          console.log("enter =>")
+          $(e.currentTarget).addClass('div-over');
+          console.log({target: e.target, currentTarget: e.currentTarget, relatedTarget: e.relatedTarget, delegateTarget: e.delegateTarget})
+        },
+        function(e) {
+          console.log("leave =>")
+          $(e.currentTarget).removeClass('div-over');
+          console.log({target: e.target, currentTarget: e.currentTarget, relatedTarget: e.relatedTarget, delegateTarget: e.delegateTarget})
+        }
+      )
+      CommandsManagement.createFloatingCommand(null, null, $(this).data('command'), evt);*/
+      
     });
     $('.list-commands').prepend(command);
   }

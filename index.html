@@ -54,7 +54,8 @@
 
           <div class="ui top attached tabular menu">
             <a class="item" data-tab="variaveis">Vari&aacute;veis</a>
-            <a class="item active" data-tab="funcoes">Fun&ccedil;&otilde;es</a>
+            <a class="item active" data-tab="comandos">Comandos</a>
+            <a class="item" data-tab="funcoes">Fun&ccedil;&otilde;es</a>
           </div>
           <div class="ui bottom attached tab segment" data-tab="variaveis">
             <div class="ui one column container segment ivprog_visual_panel loading">
@@ -64,7 +65,7 @@
               <div class="ui container list_globals list-group"></div>
             </div>
           </div>
-          <div class="ui bottom attached tab segment active" data-tab="funcoes">
+          <div class="ui bottom attached tab segment active" data-tab="comandos">
             <div class="ui one column container segment ivprog_visual_panel loading">
                 <!--mudar-->
                 <!-- <div class="ui teal small labeled icon button add_function_button" draggable="true">
@@ -73,8 +74,19 @@
                   </div> -->
 
               <div class="ui container list-group list-commands">
-                <div class="ui divider"></div>
-                <div class="functions_labels"></div>
+              </div>
+
+            </div>
+          </div>
+          <div class="ui bottom attached tab segment" data-tab="funcoes">
+            <div class="ui one column container segment ivprog_visual_panel loading">
+                <!--mudar-->
+                <!-- <div class="ui teal small labeled icon button add_function_button" draggable="true">
+                  <data class="i18n" value="Function">Function</data>
+                  <i class="add icon"></i>
+                  </div> -->
+
+              <div class="ui container list-group functions_labels">
               </div>
 
             </div>
@@ -153,13 +165,13 @@
 
         $('.menu .item')
           .tab();    ;
-
+/*
         document.querySelectorAll('.button.menu-item').forEach(function(element, index, array) {
           element.addEventListener('dragstart', function(e) {
               console.log(this);
 
           }, false);
-        });
+        });*/
       });
     </script>
 
