@@ -13,17 +13,17 @@ export class IVProgAssessment {
   }
 
   runTest () {
+    const outerRef = this;
     return new Promise((resolve, _) => {
       try {
         // try and show error messages through domconsole
-        const parser = IVProgParser.createParser(this.textCode);
+        const parser = IVProgParser.createParser(outerRef.textCode);
         const semantic = new SemanticAnalyser(parser.parseTree());
-        const processor = new IVProgProcessor(semantic.analyseTree());
-        const fun = this.partialBindTestCase(this.evaluateTestCase, processor);
+        const validTree = semantic.analyseTree();
+        const fun = outerRef.partialBindTestCase(outerRef.evaluateTestCase, new IVProgProcessor(validTree));
         // loop test cases and show messages through domconsole
-        const tests = this.testCases.map( t => {
-          console.log(t);
-          return fun(t.input, t.output)
+        const tests = outerRef.testCases.map( (t, name) => {
+          return outerRef.evaluateTestCase(new IVProgProcessor(validTree), t.input, t.output, name);
         });
         Promise.all(tests).then(results => {
           const count = results.reduce((p, n) => {
@@ -33,32 +33,28 @@ export class IVProgAssessment {
               return p + 0;
             }
           },0);
-          const failed = this.testCases.length - count;
+          const failed = outerRef.testCases.length - count;
           if(failed === 0) {
             resolve(1);
           } else {
-            resolve(count / this.testCases.length);
+            resolve(count / outerRef.testCases.length);
           }
         }).catch(err => {
-          this.domConsole.err("Erro durante a execução do programa");// try and show error messages through domconsole
-          this.domConsole.err(err.message);
+          outerRef.domConsole.err("Erro durante a execução do programa");// try and show error messages through domconsole
+          outerRef.domConsole.err(err.message);
           resolve(0);
         })
       } catch (error) {
-        this.domConsole.err("Erro durante a execução do programa");// try and show error messages through domconsole
-        this.domConsole.err(error.message);
+        outerRef.domConsole.err("Erro durante a execução do programa");// try and show error messages through domconsole
+        outerRef.domConsole.err(error.message);
         resolve(0);
       }
     });
   }
 
-  evaluateTestCase (prog, inputList, outputList) {
+  evaluateTestCase (prog, inputList, outputList, name) {
     const outerThis = this;
     return new Promise((resolve, reject) => {
-      console.log("===");
-      console.log(inputList);
-      console.log(outputList);
-      console.log("===");
       const input = new InputTest(inputList);
       const output = new OutputTest();
       prog.registerInput(input);
@@ -66,15 +62,15 @@ export class IVProgAssessment {
       prog.interpretAST().then( _ => {
         if (input.inputList.length !== input.index ||
           output.list.length !== outputList.length) {
-          outerThis.domConsole.err(`Caso de teste ${i + 1} falhou!`);
+          outerThis.domConsole.err(`Caso de teste ${name} falhou!`);
           resolve(false);
         } else {
           const isOk = outerThis.checkOutput(output.list, outputList);
           if(!isOk) {
-            outerThis.domConsole.err(`Caso de teste ${i + 1} falhou!`);
+            outerThis.domConsole.err(`Caso de teste ${name} falhou!`);
             resolve(false);
           } else {
-            outerThis.domConsole.info(`Caso de teste ${i + 1} passou!`);
+            outerThis.domConsole.info(`Caso de teste ${name} passou!`);
             resolve(true);
           }
         }
