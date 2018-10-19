@@ -16,6 +16,7 @@ import * as SwitchesManagement from './commands/switch';
 import * as FunctioncallsManagement from './commands/functioncall';
 import * as VariableValueMenuManagement from './commands/variable_value_menu';
 import * as BreaksManagement from './commands/break';
+import * as ReturnsManagement from './commands/return';
 
 var has_element_created_draged = false;
 var which_element_is_draged = null;
@@ -113,6 +114,10 @@ export function createFloatingCommand (function_obj, function_container, command
 		case Models.COMMAND_TYPES.functioncall:
 			floatingObject = FunctioncallsManagement.createFloatingCommand();
 			break;
+
+		case Models.COMMAND_TYPES.return:
+			floatingObject = ReturnsManagement.createFloatingCommand();
+			break;
 	}
 
 	floatingObject.draggable().appendTo("body");
@@ -177,6 +182,10 @@ export function renderCommand (command, element_reference, before_after_inside, 
 			createdElement = SwitchesManagement.renderCommand(command, function_obj);
 			break;
 
+		case Models.COMMAND_TYPES.return:
+			createdElement = ReturnsManagement.renderCommand(command, function_obj);
+			break;
+
 	}
 
 	switch (before_after_inside) {
@@ -237,6 +246,9 @@ export function genericCreateCommand (command_type) {
 			var sc = [new Models.SwitchCase(new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.all, null, null, null, true))];
 
 			return new Models.Switch(new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.variable_and_function, null, null, null, true), sc);
+
+		case Models.COMMAND_TYPES.return:
+			return new Models.Return(new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.all, null, null, null, true));
 	}
 }
 

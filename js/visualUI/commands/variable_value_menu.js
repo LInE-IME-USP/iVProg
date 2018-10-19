@@ -12,7 +12,7 @@ export const VAR_OR_VALUE_TYPES = Object.freeze({only_variable: 1, only_value: 2
 	value_and_function: 6, all: 7});
 
 export function renderMenu (command, ref_object, dom_object, function_obj, size_field = 2, expression_element) {
-	var menu_var_or_value = '<div class="ui dropdown menu_var_or_value_dom"><div class="text"></div><i class="dropdown icon"></i><div class="menu">';
+	var menu_var_or_value = '<div class="ui dropdown menu_var_or_value_dom" data-algo="12"><div class="text"></div><i class="dropdown icon"></i><div class="menu">';
 
 	if (ref_object.variable_and_value == VAR_OR_VALUE_TYPES.only_function) {
 
@@ -75,6 +75,16 @@ export function renderMenu (command, ref_object, dom_object, function_obj, size_
     if (ref_object.content || ref_object.function_called) {
     	renderPreviousContent(function_obj, menu_var_or_value, ref_object, dom_object, command, expression_element);
     }
+
+}
+
+export function refreshMenu (menu_var_or_value_dom) {
+	console.log('\n\n');
+	console.log(menu_var_or_value_dom);
+	console.log("olá, fui chamado! note alguns DATAS recuperados: ");
+	console.log(menu_var_or_value_dom.data());
+	console.log('\n\n\n');
+
 }
 
 function renderPreviousContent (function_obj, menu_var_or_value, ref_object, dom_object, command, expression_element) {

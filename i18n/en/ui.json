@@ -47,6 +47,8 @@
   "text_iftrue": "If true then",
   "text_receives": "receives",
   "text_repeatNtimes": "Repeat N times",
+  "text_return":"return",
+  "text_btn_return":"Return",
   "text_whiletrue": "While true",
   "text_dowhiletrue": "Do while true",
   "text_switch": "Switch",

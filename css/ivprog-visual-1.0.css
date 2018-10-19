@@ -271,7 +271,8 @@ div.buttons_manage_columns {
 .ui.comment span {
 	font-style: italic;
 }
-.ui.comment, .ui.reader, .ui.writer, .ui.attribution, .ui.iftrue, .ui.repeatNtimes, .ui.whiletrue, .ui.dowhiletrue, .ui.switch, .ui.functioncall {
+.ui.comment, .ui.reader, .ui.writer, .ui.attribution, .ui.iftrue, .ui.repeatNtimes, .ui.whiletrue, .ui.dowhiletrue, .ui.switch, .ui.functioncall,
+.ui.return {
 	border: 1px solid gray;
 	padding: 5px;
 	border-radius: 5px;

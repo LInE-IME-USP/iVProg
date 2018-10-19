@@ -32,6 +32,8 @@
   "text_write_var": "Escrita de dados",
   "text_command_read":"leia",
   "text_command_write":"escreva",
+  "text_return":"retorne",
+  "text_btn_return":"Retorno",
   "text_comment": "Comentário",
   "join_or": "ou",
   "text_attribution": "Atribuição",

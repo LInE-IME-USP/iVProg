@@ -37,6 +37,8 @@
   "text_if":"if",
   "text_break":"break",
   "text_else":"else",
+  "text_return":"return",
+  "text_btn_return":"Return",
   "text_for":"for",
   "text_code_while":"while",
   "text_code_do":"do",

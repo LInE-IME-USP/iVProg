@@ -177,7 +177,7 @@ function renderFunctionReturn (function_obj, function_element) {
 }
 
 
-function renderFunction (function_obj) {
+export function renderFunction (function_obj) {
 
   var appender = '<div class="ui secondary segment function_div list-group-item">';
 
@@ -203,6 +203,7 @@ function renderFunction (function_obj) {
         + '<a class="item" data-command="'+Models.COMMAND_TYPES.whiletrue+'"><i class="sync icon"></i> '+LocalizedStrings.getUI('text_whiletrue')+'</a>'
         + '<a class="item" data-command="'+Models.COMMAND_TYPES.dowhiletrue+'"><i class="sync icon"></i> '+LocalizedStrings.getUI('text_dowhiletrue')+'</a>'
         + '<a class="item" data-command="'+Models.COMMAND_TYPES.switch+'"><i class="list icon"></i> '+LocalizedStrings.getUI('text_switch')+'</a>'
+        + '<a class="item" data-command="'+Models.COMMAND_TYPES.return+'"><i class="reply icon"></i> '+LocalizedStrings.getUI('text_btn_return')+'</a>'
         + '</div></div></div>';
 
   appender += '<div class="function_signature_div">'+LocalizedStrings.getUI("function")+' ';
@@ -224,14 +225,6 @@ function renderFunction (function_obj) {
     /*+ renderVariables(function_obj, sequence)*/
     + '</div>'
     + '<div class="ui bottom attached segment commands_list_div" id="function_drag_cmd_">';
-
-
-  if (function_obj.commands) {
-    for (var l = 0; l < function_obj.commands.length; l++) {
-      //appender += renderElementCommandGeneric(programa.funcoes[sequence].comandos[l], sequence, l, -1, l);
-      
-    }
-  }
 
   appender += '</div>';
 

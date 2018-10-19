@@ -149,7 +149,28 @@ function commandsCode (command_obj, indentation = 2) {
 
 		case Models.COMMAND_TYPES.switch:
 			return switchsCode(command_obj, indentation);
+
+		case Models.COMMAND_TYPES.return:
+			return returnsCode(command_obj, indentation);
 	}
+}
+
+function returnsCode(command_obj, indentation) {
+	var ret = '\n';
+
+	for (var i = 0; i < indentation; i++) {
+		ret += '\t';
+	}
+
+	ret += LocalizedStrings.getUI('text_return');
+
+	if (command_obj.variable_value_menu) {
+		try {
+			ret += ' ' + variableValueMenuCode(command_obj.variable_value_menu);
+		} catch(err) {}
+	}
+
+	return ret;
 }
 
 function breaksCode(command_obj, indentation) {

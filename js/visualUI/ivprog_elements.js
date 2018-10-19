@@ -1,8 +1,11 @@
+import * as VariableValueMenuManagement from './commands/variable_value_menu';
 import { Types } from './../ast/types';
 import WatchJS from 'melanke-watchjs';
+import * as AlgorithmManagement from './algorithm';
 
 export const COMMAND_TYPES = Object.freeze({function:"function", comment:"comment", reader:"reader", writer:"writer", attribution:"attribution", iftrue:"iftrue",
- repeatNtimes:"repeatNtimes", whiletrue:"whiletrue", dowhiletrue:"dowhiletrue", switch:"switch", switchcase:"switchcase", functioncall:"functioncall", break:"break"});
+ repeatNtimes:"repeatNtimes", whiletrue:"whiletrue", dowhiletrue:"dowhiletrue", switch:"switch", switchcase:"switchcase", functioncall:"functioncall", break:"break",
+ return:"return"});
 
 export const ARITHMETIC_TYPES = Object.freeze({plus:"plus", minus:"minus", multiplication:"multiplication", division:"division", module:"module", none:"none"});
 
@@ -170,6 +173,14 @@ export class Switch {
   }
 }
 
+export class Return {
+
+ constructor (variable_value_menu) {
+    this.type = COMMAND_TYPES.return;
+    this.variable_value_menu = variable_value_menu;
+  } 
+}
+
 export class SwitchCase {
 
  constructor (variable_value_menu, commands_block = []) {
@@ -226,6 +237,9 @@ export class Program {
     WatchJS.watch(function_to_add.variables_list, function(){
       console.log("as variáveis da função abaixo foram alteradas: ");
       console.log(function_to_add);
+
+      AlgorithmManagement.renderAlgorithm();
+
     }, 1);
 
     this.functions.push(function_to_add);
