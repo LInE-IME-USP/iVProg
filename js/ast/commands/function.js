@@ -1,4 +1,4 @@
-import { Types } from './../types';
+import { Types } from './../../typeSystem/types';
 
 export class Function {
 
@@ -7,10 +7,11 @@ export class Function {
     this.returnType = returnType;
     this.formalParameters = formalParameters;
     this.commandBlock = commandBlock;
+    this._sourceInfo = null;
   }
 
   get isMain () {
-    return this.name === null && this.returnType === Types.VOID;
+    return this.name === null && this.returnType.isCompatible(Types.VOID);
   }
 
   get commands () {
@@ -20,4 +21,12 @@ export class Function {
   get variablesDeclarations () {
     return this.commandBlock.variables;
   }
+
+  set sourceInfo (sourceInfo) {
+		this._sourceInfo = sourceInfo;
+	}
+
+	get sourceInfo () {
+		return this._sourceInfo;
+	}
 }

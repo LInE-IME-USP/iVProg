@@ -1,52 +1,5 @@
 import { LanguageService } from "./languageService";
+import line_i18n from 'line-i18n'
 import Langs from './../../i18n';
-
-export const StringTypes = Object.freeze({
-  ERROR: "error",
-  MESSAGE: "message",
-  UI: "ui"
-});
-
-export const LocalizedStrings = Object.freeze({
-
-  getString: (id, type) => {
-    let i18nObj = Langs[LanguageService.getLang()];
-    if(!!!i18nObj) {
-      console.warn(`Internal Error. The language set at ivprog.lang is not valid: ${LanguageService.getLang()}`);
-      i18nObj = Langs[LanguageService.getDefaultLang()];
-    }
-    if(!!!i18nObj[type]) {
-      return "{MISSING_I18N_TYPE_IDENTIFIER}";
-    } else if (!!!i18nObj[type][id]) {
-      return "{MISSING_I18N_IDENTIFIER}";
-    } else {
-      return i18nObj[type][id];
-    }
-  },
-
-  getOR: () => LocalizedStrings.getUI('join_or'),
-
-  getError: (id, context = []) => {
-    const text = LocalizedStrings.getString(id, StringTypes.ERROR);
-    return LocalizedStrings.processString(text, context)
-  },
-
-  getMessage: (id, context = []) => {
-    const text = LocalizedStrings.getString(id, StringTypes.MESSAGE);
-    return LocalizedStrings.processString(text, context)
-  },
-
-  getUI: (id, context = []) => {
-    const text = LocalizedStrings.getString(id, StringTypes.UI);
-    return LocalizedStrings.processString(text, context)
-  },
-
-  processString: (text, context) => {
-    for (let i = 0; i < context.length; i++) {
-      const v = context[i];
-      text = text.replace('\$'+i, v);
-    }
-    return text;
-  }
-
-});
+export const StringTypes = line_i18n.StringTypes;
+export const LocalizedStrings = Object.freeze(new line_i18n.LocalizedStrings(LanguageService, Langs, true));

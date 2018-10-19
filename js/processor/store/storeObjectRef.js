@@ -1,4 +1,5 @@
 import { StoreObject } from './storeObject';
+import { BigNumber } from "bignumber.js";
 
 export class StoreObjectRef extends StoreObject {
 
@@ -18,6 +19,14 @@ export class StoreObjectRef extends StoreObject {
 
   get value () {
     return this.store.applyStore(this.refID).value;
+  }
+
+  get number () {
+    if (this.value instanceof BigNumber) {
+      return this.value.toNumber();
+    } else {
+      return null;
+    }
   }
 
   getRefObj () {

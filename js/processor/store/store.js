@@ -1,4 +1,5 @@
 import { Modes } from './../modes';
+
 export class Store {
 
   constructor() {
@@ -42,17 +43,18 @@ export class Store {
         // TODO: better error message
         throw new Error("Cannot change value of a read only variable: " + id);
       }
-      if(oldObj.isCompatible(stoObj)) {
-        if(oldObj.isRef) {
-          oldObj.updateRef(stoObj);
-          return this;
-        }
+      if(oldObj.isRef) {
+        oldObj.updateRef(stoObj);
+        return this;
+      } else if(oldObj.isCompatible(stoObj)) {
         stoObj.setID(id);
         this.store[id] = Object.freeze(stoObj);
         return this;
       } else {
+        const oldType = oldObj.type;
+        const stoType = stoObj.type;
         // TODO: better error message
-        throw new Error(`${oldObj.type} is not compatible with the value given`);
+        throw new Error(`${oldType} is not compatible with type ${stoType} given`);
       }
     }
   }

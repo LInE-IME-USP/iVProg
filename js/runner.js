@@ -2,6 +2,7 @@ import { IVProgParser } from './ast/ivprogParser';
 import { IVProgProcessor } from './processor/ivprogProcessor';
 import {DOMConsole} from './io/domConsole';
 import { LanguageService } from './services/languageService';
+import { SemanticAnalyser } from './processor/semantic/semanticAnalyser';
 
 export function runner () {
 const ivprogLexer = LanguageService.getCurrentLexer();
@@ -29,14 +30,16 @@ try {
     const analiser = new IVProgParser(input, ivprogLexer);
     try {
       const data = analiser.parseTree();
-      const proc = new IVProgProcessor(data);
+      const semAna = new SemanticAnalyser(data);
+      const proc = new IVProgProcessor(semAna.analyseTree());
       proc.registerInput(domConsole);
       domConsole.clear();
       proc.registerOutput(domConsole);
       proc.interpretAST().then(sto => editor.load(sto.store))
-        .catch( e => alert(e));
+        .catch( e => {alert(e); console.log(e)});
     } catch (error) {
       alert(error);
+      console.log(error);
     }
     
   });

@@ -22,7 +22,7 @@ describe('The read function', function () {
     const exec = new IVProgProcessor(parser.parseTree());
     exec.registerInput(input);
     exec.interpretAST().then(sto => {
-      expect(sto.applyStore('a').value).toEqual(255);
+      expect(sto.applyStore('a').number).toEqual(255);
       done();
     }).catch( err => done(err));
   });

@@ -1,5 +1,5 @@
 import { Literal } from './literal';
-import { Types } from './../types';
+import { Types } from './../../typeSystem/types';
 
 export class VariableLiteral extends Literal {
   

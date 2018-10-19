@@ -29,7 +29,7 @@ describe('A case without return/break', function () {
     const parser = new IVProgParser(input, lexer);
     const exec = new IVProgProcessor(parser.parseTree());
     exec.interpretAST().then(sto => {
-      expect(sto.applyStore('a').value).toEqual(6);
+      expect(sto.applyStore('a').number).toEqual(6);
       done();
     }).catch( err => done(err));
   });

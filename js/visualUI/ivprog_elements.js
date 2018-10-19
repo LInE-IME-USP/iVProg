@@ -1,5 +1,5 @@
 import * as VariableValueMenuManagement from './commands/variable_value_menu';
-import { Types } from './../ast/types';
+import { Types } from './types';
 import WatchJS from 'melanke-watchjs';
 import * as AlgorithmManagement from './algorithm';
 

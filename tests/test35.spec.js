@@ -27,7 +27,7 @@ describe('A recursive call', function () {
     const parser = new IVProgParser(input, lexer);
     const exec = new IVProgProcessor(parser.parseTree());
     exec.interpretAST().then(sto => {
-      expect(sto.applyStore('a').value).toEqual(2);
+      expect(sto.applyStore('a').number).toEqual(2);
       done();
     }).catch( err => done(err));
   });

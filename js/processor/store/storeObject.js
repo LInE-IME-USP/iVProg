@@ -1,3 +1,5 @@
+import { BigNumber } from 'bignumber.js'
+
 export class StoreObject {
 
   constructor (type, value, readOnly = false) {
@@ -26,14 +28,26 @@ export class StoreObject {
   get value () {
     return this._value;
   }
+  
+  get number () {
+    if (this._value instanceof BigNumber) {
+      return this._value.toNumber();
+    } else {
+      return null;
+    }
+  }
 
   get readOnly () {
     return this._readOnly;
   }
 
+  set readOnly (value) {
+    this._readOnly = value;
+  }
+
   isCompatible (another) {
     if( another instanceof StoreObject) {
-      return this.type === another.type;
+      return this.type.isCompatible(another.type);
     }
     return false;
   }

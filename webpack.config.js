@@ -27,5 +27,10 @@ module.exports = {
     stats: {
         colors: true
     },
+    /*optimization: {
+        splitChunks: {
+            chunks: 'all'
+        }
+    },*/
     devtool: 'source-map'
 };

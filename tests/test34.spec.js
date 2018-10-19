@@ -23,7 +23,7 @@ describe('IfThenElse command ', function () {
     const parser = new IVProgParser(input, lexer);
     const exec = new IVProgProcessor(parser.parseTree());
     exec.interpretAST().then(sto => {
-      expect(sto.applyStore('a').value).toEqual(10);
+      expect(sto.applyStore('a').number).toEqual(10);
       done();
     }).catch( err => done(err));
   });

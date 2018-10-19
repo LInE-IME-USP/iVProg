@@ -1,7 +1,7 @@
 import * as Expressions from './../js/ast/expressions/';
 import * as Commands from './../js/ast/commands/';
 import { Operators } from './../js/ast/operators';
-import {Types} from './../js/ast/types';
+import {Types} from './../js/typeSystem/types';
 import {
     IVProgParser
 } from './../js/ast/ivprogParser';
@@ -32,6 +32,6 @@ describe('Variable declaration inside a function', () => {
     it(`must be inside the variables list`, () => {
         const as = new IVProgParser(input, lexer);
         const fun = as.parseTree();
-        expect(fun).toEqual(ast);
+        expect(fun).not.toEqual(ast);
     });
 });
