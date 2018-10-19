@@ -38,6 +38,7 @@ export function generate () {
 
 }
 
+
 function functionsCode (function_obj) {
 	var ret = '\n\t' + LocalizedStrings.getUI('function') + ' ';
 
