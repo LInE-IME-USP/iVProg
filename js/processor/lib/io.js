@@ -6,6 +6,7 @@ import { Types } from './../../typeSystem/types';
 export function createOutputFun () {
   const writeFunction = function (store, _) {
     const val = store.applyStore('p1');
+    console.log(val);
     if(val.type.isCompatible(Types.INTEGER)) {
       this.output.sendOutput(val.value.toString());
     } else if (val.type.isCompatible(Types.REAL)) {

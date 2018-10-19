@@ -17,7 +17,7 @@ export function createSubstringFun () {
     const str = sto.applyStore("str");
     const start = sto.applyStore("start");
     const end = sto.applyStore("end");
-    const result = str.value.substring(start.value, end.value);
+    const result = str.value.substring(start.value.toNumber(), end.value.toNumber());
     const temp = new StoreObject(Types.STRING, result);
     sto.mode = Modes.RETURN;
     return Promise.resolve(sto.updateStore("$", temp));

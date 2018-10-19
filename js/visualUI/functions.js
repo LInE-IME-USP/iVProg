@@ -10,14 +10,16 @@ import * as VariableValueMenu from './commands/variable_value_menu';
 import { DOMConsole } from './../io/domConsole';
 import { IVProgParser } from './../ast/ivprogParser';
 import { IVProgProcessor } from './../processor/ivprogProcessor';
-import { LanguageService } from '../services/languageService';
 import WatchJS from 'melanke-watchjs';
+import { SemanticAnalyser } from '../processor/semantic/semanticAnalyser';
+import { IVProgAssessment } from '../assessment/ivprogAssessment';
 
 
 var counter_new_functions = 0;
 var counter_new_parameters = 0;
 
-let domConsole = null; 
+let domConsole = null;
+let studentGrade = null;
 const program = new Models.Program();
 /*const variable1 = new Models.Variable(Types.INTEGER, "a", 1);
 const parameter1 = new Models.Variable(Types.INTEGER, "par_1", 1);
@@ -306,29 +308,20 @@ $( document ).ready(function() {
 
 
 function runCodeAssessment () {
+  studentGrade = null;
   const strCode = CodeManagement.generate();
   if (strCode == null) {
     return;
   }
   domConsole = new DOMConsole("#ivprog-term", testCases);
   $("#ivprog-term").slideDown(500);
-  const lexer = LanguageService.getCurrentLexer();
-  const ast = new IVProgParser(strCode, lexer).parseTree();
-  const proc = new IVProgProcessor(ast); 
-  proc.registerInput(domConsole);
-  proc.registerOutput(domConsole);
-  proc.interpretAST().then( _ => {
-    domConsole.info("Programa executado com sucesso!");
-    domConsole.info("Aperte qualquer tecla para fechar...");
-    const p = new Promise((resolve, _) => {
-      domConsole.requestInput(resolve);
-    });
-    p.then( _ => {
-      domConsole.dispose();
-      domConsole = null;
-      $("#ivprog-term").hide();
-    })
-  })
+  const testCases = [];
+  const runner = new IVProgAssessment(strCode, testCases, domConsole);
+  runner.runTest().then(grade => studentGrade = grade);
+  while(studentGrade == null) {
+    continue;
+  }
+  waitToCloseConsole()
 }
 
 function runCode () {
@@ -338,45 +331,38 @@ function runCode () {
   }
   domConsole = new DOMConsole("#ivprog-term");
   $("#ivprog-term").slideDown(500);
-  const lexer = LanguageService.getCurrentLexer();
-  const ast = new IVProgParser(strCode, lexer).parseTree();
-  const proc = new IVProgProcessor(ast);
-  proc.registerInput(domConsole);
-  proc.registerOutput(domConsole);
-  proc.interpretAST().then( _ => {
-    domConsole.info("Programa executado com sucesso!");
-    domConsole.info("Aperte qualquer tecla para fechar...");
-    const p = new Promise((resolve, _) => {
-      domConsole.requestInput(resolve);
-    });
-    p.then( _ => {
-      domConsole.dispose();
-      domConsole = null;
-      $("#ivprog-term").hide();
-    })
-  })
+  try {
+    const parser = IVProgParser.createParser(strCode);
+    const analyser = new SemanticAnalyser(parser.parseTree());
+    const data = analyser.analyseTree();
+    const proc = new IVProgProcessor(data);
+    proc.registerInput(domConsole);
+    proc.registerOutput(domConsole);
+    
+    proc.interpretAST().then( _ => {
+      domConsole.info("Programa executado com sucesso!");
+      waitToCloseConsole();
+    }).catch(err => {
+      domConsole.err(err.message);
+      waitToCloseConsole();
+    }) 
+  } catch (error) {
+    domConsole.err(error.message);
+    waitToCloseConsole();
+    console.log(error);
+  }
+  
 }
 
-function runCode () {
-  const strCode = CodeManagement.generate();
-  domConsole = new DOMConsole("#ivprog-term");
-  $("#ivprog-term").slideDown(500);
-  const lexer = LanguageService.getCurrentLexer();
-  const ast = new IVProgParser(strCode, lexer).parseTree();
-  const proc = new IVProgProcessor(ast);
-  proc.registerInput(domConsole);
-  proc.registerOutput(domConsole);
-  proc.interpretAST().then( _ => {
-    domConsole.info("Programa executado com sucesso!");
-    domConsole.info("Aperte qualquer tecla para fechar...");
-    const p = new Promise((resolve, _) => {
-      domConsole.requestInput(resolve);
-    });
-    p.then( _ => {
-      domConsole.dispose();
-      domConsole = null;
-      $("#ivprog-term").hide();
-    })
+function waitToCloseConsole () {
+  domConsole.info("Aperte qualquer tecla para fechar...");
+  const p = new Promise((resolve, _) => {
+    domConsole.requestInput(resolve, true);
+  });
+  p.then( _ => {
+    domConsole.dispose();
+    domConsole = null;
+    $("#ivprog-term").hide();
   })
 }
 
