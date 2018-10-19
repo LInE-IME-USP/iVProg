@@ -19,9 +19,9 @@ export class IVProgProcessor {
 
   constructor (ast) {
     this.ast = ast;
-    this.globalStore = new Store();
-    this.stores = [this.globalStore];
-    this.context = [Context.BASE];
+    this.globalStore = null;
+    this.stores = null;
+    this.context = null;
     this.input = null;
     this.output = null;
   }
@@ -48,7 +48,22 @@ export class IVProgProcessor {
     }
   }
 
+  prepareState () {
+    if(this.stores !== null) {
+      for (let i = 0; i < this.stores.length; i++) {
+        delete this.stores[i];
+      }
+      this.stores = null;
+    }
+    if(this.globalStore !== null)
+      this.globalStore = null;
+    this.globalStore = new Store();
+    this.stores = [this.globalStore];
+    this.context = [Context.BASE];
+  }
+
   interpretAST () {
+    this.prepareState();
     this.initGlobal();
     const mainFunc = this.findMainFunction();
     if(mainFunc === null) {
