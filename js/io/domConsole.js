@@ -16,7 +16,7 @@ export class DOMConsole {
 
   constructor (elementID) {
     this.input = null;
-    this.needInput = true;
+    this.needInput = false;
     this.anyKey = false;
     this.parent = $(elementID);
     this.setup();

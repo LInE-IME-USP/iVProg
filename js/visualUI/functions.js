@@ -308,12 +308,11 @@ function runCodeAssessment () {
   if (strCode == null) {
     return;
   }
-  domConsole = new DOMConsole("#ivprog-term");
+  if(domConsole == null)
+    domConsole = new DOMConsole("#ivprog-term");
   $("#ivprog-term").slideDown(500);
   const runner = new IVProgAssessment(strCode, testCases, domConsole);
   runner.runTest().then(grade => studentGrade = grade).catch( err => domConsole.err(err.message));
-  
-  waitToCloseConsole()
 }
 
 function runCode () {
@@ -321,7 +320,8 @@ function runCode () {
   if (strCode == null) {
     return;
   }
-  domConsole = new DOMConsole("#ivprog-term");
+  if(domConsole == null)
+    domConsole = new DOMConsole("#ivprog-term");
   $("#ivprog-term").slideDown(500);
   try {
     const parser = IVProgParser.createParser(strCode);
@@ -333,14 +333,11 @@ function runCode () {
     
     proc.interpretAST().then( _ => {
       domConsole.info("Programa executado com sucesso!");
-      waitToCloseConsole();
     }).catch(err => {
       domConsole.err(err.message);
-      waitToCloseConsole();
     }) 
   } catch (error) {
     domConsole.err(error.message);
-    waitToCloseConsole();
     console.log(error);
   }
   
