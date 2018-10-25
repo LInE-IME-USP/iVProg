@@ -52,25 +52,25 @@ export class IVProgAssessment {
         const millis = Date.now() - startTime;
         if (input.inputList.length !== input.index) {
           outerThis.domConsole.err(`Caso de teste ${name + 1}: Falhou, ainda restam entradas!`);
-          outerThis.domConsole.err(`Levou ${millis}ms`);
+          outerThis.domConsole.info(`Levou ${millis}ms`);
           resolve(1 * (input.index/inputList.length));
         } else if (output.list.length < outputList.length) {
           outerThis.domConsole.err(`Caso de teste ${name + 1}: Falhou <${inputList.join(", ")};${outputList.join(", ")};${output.list.join(", ")}>`);
-          outerThis.domConsole.err(`Levou ${millis}ms`);
+          outerThis.domConsole.info(`Levou ${millis}ms`);
           resolve(1 * (output.list.length/outputList.length));
         } else if (output.list.length > outputList.length) {
           outerThis.domConsole.err(`Caso de teste ${name + 1}: Falhou <${inputList.join(", ")};${outputList.join(", ")};${output.list.join(", ")}>`);
-          outerThis.domConsole.err(`Levou ${millis}ms`);
+          outerThis.domConsole.info(`Levou ${millis}ms`);
           resolve(1 * (outputList.length/output.list.length));
         } else {
           const isOk = outerThis.checkOutput(output.list, outputList);
           if(!isOk) {
             outerThis.domConsole.err(`Caso de teste ${name + 1}: Falhou <${inputList.join(", ")};${outputList.join(", ")};${output.list.join(", ")}>`);
-            outerThis.domConsole.err(`Levou ${millis}ms`);
+            outerThis.domConsole.info(`Levou ${millis}ms`);
             resolve(0);
           } else {
             outerThis.domConsole.info(`Caso de teste ${name + 1}: OK!`);
-            outerThis.domConsole.err(`Levou ${millis}ms`);
+            outerThis.domConsole.info(`Levou ${millis}ms`);
             resolve(1);
           }
         }
@@ -81,7 +81,7 @@ export class IVProgAssessment {
   checkOutput (aList, bList) {
     for (let i = 0; i < aList.length; i++) {
       const outValue = aList[i];
-      if(outValue !== bList[i]) {
+      if(outValue != bList[i]) {
         return false;
       }
     }
