@@ -22,14 +22,16 @@ export function renderAlgorithm () {
 	}
 	block_render = true;
 
-	console.log("rendering algorithm");
-
-	 $('.all_functions').children().off();
+ 	$('.all_functions').children().off();
 	$('.all_functions').empty();
 
 	for (var i = 0; i < window.program_obj.functions.length; i++) {
 		FunctionsManagement.renderFunction(window.program_obj.functions[i]);
 	}
+
+	for (var i = 0; i < window.program_obj.globals.length; i++) {
+		GlobalsManagement.renderGlobal(window.program_obj.globals[i]);
+	}	
 
 	setTimeout(function(){ block_render = false; }, 500);
 }

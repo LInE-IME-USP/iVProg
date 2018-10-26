@@ -415,7 +415,7 @@ function updateColumnsAndRowsText (global_container, global_var) {
 	}
 }
 
-function renderGlobal (global_var) {
+export function renderGlobal (global_var) {
 
 	var element = '<div class="ui label global_container"><div class="global_const">const: ';
 

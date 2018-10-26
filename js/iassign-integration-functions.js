@@ -28,9 +28,13 @@ function getAnswer () {
     // então trata-se de resolução de atividade
     if (iLMparameters.iLM_PARAM_SendAnswer == 'false') {
         // Montar o retorno com a resposta do aluno
-        var contentToSend = previousContent.split("algorithm")[0];
-        contentToSend += 'algorithm\n\n';
-        contentToSend += generator();
+        var contentToSend = previousContent.split("\n::algorithm::")[0];
+        contentToSend += '\n::algorithm::\n';
+        contentToSend += JSON.stringify(window.program_obj);
+
+        contentToSend += '\n::logs::';
+        contentToSend += getTrackingLogs();
+
         return contentToSend;
 
     } else {
@@ -42,8 +46,8 @@ function getAnswer () {
             + ' } ';
 
         if ($("input[name='include_algo']").is(':checked')) {
-            ret += '\n\nalgorithm\n\n';
-            ret += generator();
+            ret += '\n::algorithm::\n';
+            ret += JSON.stringify(window.program_obj);
         }
 
         return ret;
@@ -120,13 +124,16 @@ function getiLMContent () {
     });
 }
 
-function prepareActivityToStudent(ilm_cont) {
-    var content = JSON.parse(ilm_cont.split('algorithm')[0]);
+function prepareActivityToStudent (ilm_cont) {
+    var content = JSON.parse(ilm_cont.split('\n::algorithm::')[0]);
     testCases = content.testcases;
     settingsDataTypes = content.settings_data_types;
     settingsCommands = content.settings_commands;
     settingsFunctions = content.settings_functions;
-    algorithm_in_ilm = ilm_cont.split('algorithm')[1];
+    algorithm_in_ilm = ilm_cont.split('\n::algorithm::')[1].split('\n::logs::')[0];
+
+    window.program_obj = JSON.parse(algorithm_in_ilm);
+    renderAlgorithm();
 }
 
 // Função para organizar se para criação, visualização ou resolução de atividade
@@ -272,26 +279,52 @@ function prepareTableSettings (div_el) {
 
 }
 
+function getTrackingLogs () {
+    var ret = "";
+    for (var i = 0; i < trackingMatrix.length; i++) {
+        ret += "\n" + trackingMatrix[i][0] + "," + trackingMatrix[i][1] + "," + trackingMatrix[i][2];
+        if (trackingMatrix[i][2] === 1) {
+            ret += ',"' + trackingMatrix[i][3] + '"';
+        }
+    }
+    return ret;
+}
+
 // Tracking mouse movements
 var trackingMatrix = [];
 
 function adCoords(e, code){
     var x = e.pageX; 
     var y = e.pageY;
-    var d = new Date();
-    var t = d.getTime();
-    return [x, y, t, code];
+    if (code === 1) {
+        return [x, y, code, e.target.classList['value']];
+    } else {
+        return [x, y, code];
+    }
 }
 
 $( document ).ready(function() {
     $('.div_to_body').mousemove(function(e) {
-        console.log('mousemove');
         trackingMatrix.push(adCoords(e, 0));
     });
 
     $('.div_to_body').click(function(e) {
-        console.log('mouseclick');
         trackingMatrix.push(adCoords(e, 1));                    
     });
 
+    if (inIframe()) {
+        
+    }
+
 });
+
+
+
+
+function inIframe () {
+    try {
+        return window.self !== window.top;
+    } catch (e) {
+        return true;
+    }
+}

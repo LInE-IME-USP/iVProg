@@ -40,6 +40,7 @@ window.program_obj = program;
 
 window.generator = CodeManagement.generate;
 window.runCodeAssessment = runCodeAssessment;
+window.renderAlgorithm = AlgorithmManagement.renderAlgorithm;
 
 WatchJS.watch(program.globals, function(){
   AlgorithmManagement.renderAlgorithm();
