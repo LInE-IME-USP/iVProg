@@ -16,10 +16,10 @@ export function renderCommand (command, function_obj) {
 	var ret = '';
 	ret += '<div class="ui whiletrue command_container"> <i class="ui icon small random command_drag"></i> <i class="ui icon times red button_remove_command"></i> <div class="ui context_menu"></div> <span> ' + LocalizedStrings.getUI('text_code_while') + ' </span>';
 	ret += ' <div class="conditional_expression"></div>';
-	ret += ' { </span>';
+	ret += ' </span>';
 	ret += '<div class="ui block_commands">';
 	ret += '</div>';
-	ret += '<span> }</span>';
+	ret += '<span> </span>';
 	ret += '</div>';
 
 	var el = $(ret);

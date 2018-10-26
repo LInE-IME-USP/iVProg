@@ -27,8 +27,12 @@ function getAnswer () {
     // Se o parâmetro "iLM_PARAM_SendAnswer" for false,
     // então trata-se de resolução de atividade
     if (iLMparameters.iLM_PARAM_SendAnswer == 'false') {
-        // Montar o retorno da resposta do aluno
-        
+        // Montar o retorno com a resposta do aluno
+        var contentToSend = previousContent.split("algorithm")[0];
+        contentToSend += 'algorithm\n\n';
+        contentToSend += generator();
+        return contentToSend;
+
     } else {
         // Montar o retorno com a criação da atividade do professor
         var ret = ' { ' + prepareTestCases() 
@@ -85,11 +89,11 @@ function prepareTestCases () {
 // O retorno é um valor entre 0.0 e 1.0
 function getEvaluation () {
     if (iLMparameters.iLM_PARAM_SendAnswer == 'false') {
-        // Calcula a nota do aluno:
-
         // A chamada do método abaixo é obrigatória!
         // Observe que a chamada parte do iLM para o iTarefa
-        parent.getEvaluationCallback(0);
+        //parent.getEvaluationCallback(window.studentGrade);
+
+        runCodeAssessment();
     }
 }
 
@@ -99,7 +103,7 @@ var settingsDataTypes = null;
 var settingsCommands = null;
 var settingsFunctions = null;
 var algorithm_in_ilm = null;
-
+var previousContent = null;
 
 // Função para que o iMA leia os dados da atividade fornecidos pelo iTarefa
 function getiLMContent () {
@@ -108,6 +112,7 @@ function getiLMContent () {
     // requisitado via AJAX para a captura dos dados da atividade
     $.get(iLMparameters.iLM_PARAM_Assignment, function (data) {
         if (iLMparameters.iLM_PARAM_SendAnswer == 'false') {
+            previousContent = data;
             prepareActivityToStudent(data);
         } else {
 
@@ -266,3 +271,27 @@ function prepareTableSettings (div_el) {
 
 
 }
+
+// Tracking mouse movements
+var trackingMatrix = [];
+
+function adCoords(e, code){
+    var x = e.pageX; 
+    var y = e.pageY;
+    var d = new Date();
+    var t = d.getTime();
+    return [x, y, t, code];
+}
+
+$( document ).ready(function() {
+    $('.div_to_body').mousemove(function(e) {
+        console.log('mousemove');
+        trackingMatrix.push(adCoords(e, 0));
+    });
+
+    $('.div_to_body').click(function(e) {
+        console.log('mouseclick');
+        trackingMatrix.push(adCoords(e, 1));                    
+    });
+
+});

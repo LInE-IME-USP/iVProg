@@ -13,13 +13,14 @@ import { IVProgProcessor } from './../processor/ivprogProcessor';
 import WatchJS from 'melanke-watchjs';
 import { SemanticAnalyser } from '../processor/semantic/semanticAnalyser';
 import { IVProgAssessment } from '../assessment/ivprogAssessment';
-
+import * as AlgorithmManagement from './algorithm';
 
 var counter_new_functions = 0;
 var counter_new_parameters = 0;
 
+let studentTemp = null;
 let domConsole = null;
-let studentGrade = null;
+window.studentGrade = null;
 const program = new Models.Program();
 /*const variable1 = new Models.Variable(Types.INTEGER, "a", 1);
 const parameter1 = new Models.Variable(Types.INTEGER, "par_1", 1);
@@ -38,10 +39,11 @@ program.addFunction(mainFunction);
 window.program_obj = program;
 
 window.generator = CodeManagement.generate;
+window.runCodeAssessment = runCodeAssessment;
 
 WatchJS.watch(program.globals, function(){
-      console.log("as globais foram alteradas!");
-  }, 1);
+  AlgorithmManagement.renderAlgorithm();
+}, 1);
 
 function addFunctionHandler () {
 
@@ -220,7 +222,7 @@ export function renderFunction (function_obj) {
         + '( <i class="ui icon plus square outline add_parameter_button"></i> <div class="ui large labels parameters_list container_parameters_list">';
   }
     
-  appender += '</div> ) {</div>'
+  appender += '</div> ) </div>'
     + (function_obj.is_hidden ? ' <div class="function_area" style="display: none;"> ' : ' <div class="function_area"> ')
 
     + '<div class="ui top attached segment variables_list_div">'
@@ -230,7 +232,7 @@ export function renderFunction (function_obj) {
 
   appender += '</div>';
 
-  appender += '<div class="function_close_div">}</div>'
+  appender += '<div class="function_close_div"></div>'
     + '</div>'
     + '</div>';
 
@@ -290,8 +292,11 @@ export function initVisualUI () {
 
   $('.assessment').on('click', () => {
     runCodeAssessment();
+    is_iassign = true;
   });
 }
+
+var is_iassign = false;
 
 $( document ).ready(function() {
 
@@ -303,7 +308,8 @@ $( document ).ready(function() {
 
 
 function runCodeAssessment () {
-  studentGrade = null;
+  window.studentGrade = null;
+  studentTemp = null;
   const strCode = CodeManagement.generate();
   if (strCode == null) {
     return;
@@ -312,7 +318,25 @@ function runCodeAssessment () {
     domConsole = new DOMConsole("#ivprog-term");
   $("#ivprog-term").slideDown(500);
   const runner = new IVProgAssessment(strCode, testCases, domConsole);
-  runner.runTest().then(grade => studentGrade = grade).catch( err => domConsole.err(err.message));
+
+  runner.runTest().then(grade => studentTemp = grade).catch( err => domConsole.err(err.message));
+  
+  gradeMonitor();
+}
+
+function gradeMonitor () {
+
+  if (studentTemp == null) { 
+    setTimeout(gradeMonitor, 50); 
+  } else {
+    window.studentGrade = studentTemp;
+    if (!is_iassign) {
+      parent.getEvaluationCallback(window.studentGrade);
+    } else {
+      is_iassign = false;
+    }
+  }
+
 }
 
 function runCode () {
@@ -391,7 +415,7 @@ function updateParameterType(parameter_obj, new_type, new_dimensions = 0) {
 function renderParameter (function_obj, parameter_obj, function_container) {
   var ret = "";
 
-  ret += '<div class="ui label function_name_parameter"><span class="span_name_parameter label_enable_name_parameter">'+parameter_obj.name+'</span> <i class="icon small pencil alternate enable_edit_name_parameter label_enable_name_parameter"></i>';
+  ret += '<div class="ui label function_name_parameter">';
 
   ret += '<div class="ui dropdown parameter_type">';
 
@@ -428,6 +452,8 @@ function renderParameter (function_obj, parameter_obj, function_container) {
   }
 
   ret += '</div></div>';
+
+  ret += '<span class="span_name_parameter label_enable_name_parameter">'+parameter_obj.name+'</span> <i class="icon small pencil alternate enable_edit_name_parameter label_enable_name_parameter"></i>';
 
   ret += ' <i class="red icon times remove_parameter"></i></div>';
 

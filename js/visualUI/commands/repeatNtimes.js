@@ -14,11 +14,11 @@ export function createFloatingCommand () {
 }
 
 export function renderCommand (command, function_obj) {
-	var ret = '<div class="ui repeatNtimes command_container"> <i class="ui icon small random command_drag"></i> <i class="ui icon times red button_remove_command"></i> <div class="ui context_menu"></div> <span> ' + LocalizedStrings.getUI('text_for') + ' ( </span>  <div class="ui attribution_expression"><div class="ui variable_attribution"></div> <span class="text_receives"></span> <div class="ui var_value_expression"></div> </div> ; <div class="conditional_expression"></div> ;  <div class="ui incrementation_field"><div class="ui incrementation_variable"></div> <span class="text_inc_receives"></span> <div class="ui first_operand"></div><div class="ui operator"></div><div class="ui second_operand"></div></div> ) { </span>';
+	var ret = '<div class="ui repeatNtimes command_container"> <i class="ui icon small random command_drag"></i> <i class="ui icon times red button_remove_command"></i> <div class="ui context_menu"></div> <span> ' + LocalizedStrings.getUI('text_for') + ' ( </span>  <div class="ui attribution_expression"><div class="ui variable_attribution"></div> <span class="text_receives"></span> <div class="ui var_value_expression"></div> </div> ; <div class="conditional_expression"></div> ;  <div class="ui incrementation_field"><div class="ui incrementation_variable"></div> <span class="text_inc_receives"></span> <div class="ui first_operand"></div><div class="ui operator"></div><div class="ui second_operand"></div></div> ) </span>';
 	ret += '<div class="ui block_commands">';
 
 	ret += '</div>';
-	ret += '<span> }</span>';
+	ret += '<span> </span>';
 	ret += '</div>';
 	
 	var el = $(ret);

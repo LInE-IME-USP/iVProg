@@ -16,7 +16,7 @@ export function renderCommand (command, function_obj) {
 	ret += '<div class="ui iftrue command_container"><div class="ui data_block_if" data-if="true">  <i class="ui icon small random command_drag"></i> <i class="ui icon times red button_remove_command"></i> <i class="ui icon redo alternate blue button_refresh_attribution"></i>';
 	ret += '<span> ' + LocalizedStrings.getUI('text_if') + '</span>';
 	ret += ' <div class="conditional_expression"></div>';
-	ret += '<span> { </span> ';
+	ret += '<span> </span> ';
 	ret += '<div class="ui block_commands commands_if conditional_comands_block" data-if="true">';
 
 	/*if ((writer_obj.commands_block == null)
@@ -28,7 +28,7 @@ export function renderCommand (command, function_obj) {
 	}*/
 
 	ret += '</div></div>';
-	ret += '<div class="ui data_block_else" data-else="true"> <span> } ' + LocalizedStrings.getUI('text_else') + ' { </span>';
+	ret += '<div class="ui data_block_else" data-else="true"> <span> ' + LocalizedStrings.getUI('text_else') + ' </span>';
 
 	ret += '<div class="ui block_commands commands_else conditional_comands_block" data-else="true">';
 
@@ -42,7 +42,7 @@ export function renderCommand (command, function_obj) {
 
 	ret += '</div>';
 
-	ret += '<span> }</span></div>';
+	ret += '<span></span></div>';
 	ret += '</div>';
 
 	var el = $(ret);

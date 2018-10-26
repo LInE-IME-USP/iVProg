@@ -13,10 +13,23 @@ import { IVProgParser } from './../ast/ivprogParser';
 import { IVProgProcessor } from './../processor/ivprogProcessor';
 import { LanguageService } from '../services/languageService';
 
+var block_render = false;
+
 export function renderAlgorithm () {
+
+	if (block_render) {
+		return;
+	}
+	block_render = true;
+
+	console.log("rendering algorithm");
+
+	 $('.all_functions').children().off();
 	$('.all_functions').empty();
 
 	for (var i = 0; i < window.program_obj.functions.length; i++) {
 		FunctionsManagement.renderFunction(window.program_obj.functions[i]);
 	}
+
+	setTimeout(function(){ block_render = false; }, 500);
 }

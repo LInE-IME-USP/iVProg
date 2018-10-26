@@ -230,16 +230,11 @@ export class Program {
   addFunction (function_to_add) {
 
     WatchJS.watch(function_to_add.parameters_list, function(){
-      console.log("os parametros da função abaixo foram alterados:");
-      console.log(function_to_add);
+      AlgorithmManagement.renderAlgorithm();
     }, 1);
 
     WatchJS.watch(function_to_add.variables_list, function(){
-      console.log("as variáveis da função abaixo foram alteradas: ");
-      console.log(function_to_add);
-
       AlgorithmManagement.renderAlgorithm();
-
     }, 1);
 
     this.functions.push(function_to_add);
