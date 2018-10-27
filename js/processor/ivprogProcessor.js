@@ -15,7 +15,17 @@ import { StoreObjectArrayAddressRef } from './store/storeObjectArrayAddressRef';
 import { CompoundType } from './../typeSystem/compoundType';
 import { convertToString } from '../typeSystem/parsers';
 
+let loopTimeoutMs = 5000
+
 export class IVProgProcessor {
+
+  static get LOOP_TIMEOUT () {
+    return loopTimeoutMs;
+  }
+
+  static set LOOP_TIMEOUT (ms) {
+    loopTimeoutMs = ms;
+  }
 
   constructor (ast) {
     this.ast = ast;
@@ -23,6 +33,8 @@ export class IVProgProcessor {
     this.stores = [this.globalStore];
     this.context = [Context.BASE];
     this.input = null;
+    this.forceKill = false;
+    this.loopTimers = [];
     this.output = null;
   }
 
@@ -164,11 +176,11 @@ export class IVProgProcessor {
 
   executeCommand (store, cmd) {
 
-    while (store.mode === Modes.PAUSE) {
-      continue;
-    }
-
-    if(store.mode === Modes.RETURN) {
+    if(this.forceKill) {
+      return Promise.reject("Interrupção forçada do programa!");
+    } else if (store.mode === Modes.PAUSE) {
+      return Promise.resolve(this.executeCommand(store, cmd));
+    } else if(store.mode === Modes.RETURN) {
       return Promise.resolve(store);
     } else if(this.checkContext(Context.BREAKABLE) && store.mode === Modes.BREAK) {
       return Promise.resolve(store);
@@ -291,65 +303,93 @@ export class IVProgProcessor {
   }
 
   executeDoWhile (store, cmd) {
-    try {
-      this.context.push(Context.BREAKABLE);
-      const $newStore = this.executeCommands(store, cmd.commands);
-      return $newStore.then(sto => {
-        if(sto.mode === Modes.BREAK) {
-          this.context.pop();
-          sto.mode = Modes.RUN;
-          return Promise.resolve(sto);
-        }
-        const $value = this.evaluateExpression(sto, cmd.expression);
-        return $value.then(vl => {
-          if (!vl.type.isCompatible(Types.BOOLEAN)) {
-            // TODO: Better error message -- Inform line and column from token!!!!
-            // THIS IF SHOULD BE IN A SEMANTIC ANALYSER
-            return Promise.reject(new Error(`DoWhile expression must be of type boolean`));
+    const outerRef = this;
+    return new Promise((resolve, reject) => {
+      try {
+        outerRef.loopTimers.push(Date.now());
+        outerRef.context.push(Context.BREAKABLE);
+        const $newStore = outerRef.executeCommands(store, cmd.commands);
+        $newStore.then(sto => {
+          if(sto.mode === Modes.BREAK) {
+            outerRef.context.pop();
+            sto.mode = Modes.RUN;
+            outerRef.loopTimers.pop();
+            resolve(sto);
           }
-          if (vl.value) {
-            this.context.pop();
-            return this.executeCommand(sto, cmd);
-          } else {
-            this.context.pop();
-            return Promise.resolve(sto);
-          }
-        });
-      });
-    } catch (error) {
-      return Promise.reject(error)
-    }
+          const $value = outerRef.evaluateExpression(sto, cmd.expression);
+          $value.then(vl => {
+            if (!vl.type.isCompatible(Types.BOOLEAN)) {
+              // TODO: Better error message -- Inform line and column from token!!!!
+              // THIS IF SHOULD BE IN A SEMANTIC ANALYSER
+              reject(new Error(`DoWhile expression must be of type boolean`));
+            }
+            if (vl.value) {
+              outerRef.context.pop();
+              outerRef.loopTimers.forEach(t => {
+                if(Date.now() - t >= IVProgProcessor.LOOP_TIMEOUT) {
+                  console.log("Timeout...");
+                  outerRef.forceKill = true;
+                  reject(new Error("Potential endless loop detected."));
+                }  
+              })
+              resolve(outerRef.executeCommand(sto, cmd));
+            } else {
+              outerRef.context.pop();
+              outerRef.loopTimers.pop();
+              console.log("Clear Timeout...");
+              resolve(sto);
+            }
+          }).catch(err => reject(err));
+        }).catch(err => reject(err));
+      } catch (error) {
+        reject(error)
+      }
+    });
   }
 
   executeWhile (store, cmd) {
-    try {
-      this.context.push(Context.BREAKABLE);
-      const $value = this.evaluateExpression(store, cmd.expression);
-      return $value.then(vl => {
-        if(vl.type.isCompatible(Types.BOOLEAN)) {
-          if(vl.value) {
-            const $newStore = this.executeCommands(store, cmd.commands);
-            return $newStore.then(sto => {
-              this.context.pop();
-              if (sto.mode === Modes.BREAK) {
-                sto.mode = Modes.RUN;
-                return Promise.resolve(sto);
-              }
-              return this.executeCommand(sto, cmd);
-            });
+    const outerRef = this;
+    return new Promise((resolve, reject) => {
+      try {
+        outerRef.loopTimers.push(Date.now());
+        outerRef.context.push(Context.BREAKABLE);
+        const $value = outerRef.evaluateExpression(store, cmd.expression);
+        $value.then(vl => {
+          if(vl.type.isCompatible(Types.BOOLEAN)) {
+            if(vl.value) {
+              const $newStore = outerRef.executeCommands(store, cmd.commands);
+              $newStore.then(sto => {
+                outerRef.context.pop();
+                if (sto.mode === Modes.BREAK) {
+                  outerRef.loopTimers.pop();
+                  sto.mode = Modes.RUN;
+                  resolve(sto);
+                } else
+                  outerRef.loopTimers.forEach(t => {
+                    if(Date.now() - t >= IVProgProcessor.LOOP_TIMEOUT) {
+                      console.log("Timeout...");
+                      outerRef.forceKill = true;
+                      reject(new Error("Potential endless loop detected."));
+                    }  
+                  })
+                  resolve(outerRef.executeCommand(sto, cmd));
+              }).catch(err => reject(err));
+            } else {
+              outerRef.context.pop();
+              outerRef.loopTimers.pop();
+              console.log("Clear Timeout...");
+              resolve(store);
+            }
           } else {
-            this.context.pop();
-            return Promise.resolve(store);
+            // TODO: Better error message -- Inform line and column from token!!!!
+            // THIS IF SHOULD BE IN A SEMANTIC ANALYSER
+            reject(new Error(`Loop condition must be of type boolean`));
           }
-        } else {
-          // TODO: Better error message -- Inform line and column from token!!!!
-          // THIS IF SHOULD BE IN A SEMANTIC ANALYSER
-          return Promise.reject(new Error(`Loop condition must be of type boolean`));
-        }
-      });
-    } catch (error) {
-      return Promise.reject(error);
-    }
+        }).catch(err => reject(err));
+      } catch (error) {
+        reject(error);
+      }
+    });
   }
 
   executeIfThenElse (store, cmd) {

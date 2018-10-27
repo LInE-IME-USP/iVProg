@@ -44,6 +44,7 @@ export function createInputFun () {
       } else if (typeToConvert.isCompatible(Types.STRING)) {
         stoObj = new StoreObject(Types.STRING, toString(text));
       }
+      this.loopTimers.splice(0,this.loopTimers.length)
       store.updateStore('p1', stoObj);
       return Promise.resolve(store);
     });
