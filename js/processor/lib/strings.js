@@ -1,4 +1,3 @@
-import * as Promise from 'bluebird';
 import { StoreObject } from '../store/storeObject';
 import * as Commands from './../../ast/commands';
 import { Types } from './../../typeSystem/types';

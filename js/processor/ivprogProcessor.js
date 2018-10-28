@@ -1,4 +1,3 @@
-import * as Promise from 'bluebird'
 import { Store } from './store/store';
 import { StoreObject } from './store/storeObject';
 import { StoreObjectArray } from './store/storeObjectArray';
@@ -222,7 +221,7 @@ export class IVProgProcessor {
   }
 
   executeFunctionCall (store, cmd) {
-    return new Promise.Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       const func = this.findFunction(cmd.id);
       this.runFunction(func, cmd.actualParameters, store)
         .then(sto => {
@@ -306,7 +305,7 @@ export class IVProgProcessor {
 
   executeDoWhile (store, cmd) {
     const outerRef = this;
-    return new Promise.Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       try {
         outerRef.loopTimers.push(Date.now());
         outerRef.context.push(Context.BREAKABLE);
@@ -352,7 +351,7 @@ export class IVProgProcessor {
 
   executeWhile (store, cmd) {
     const outerRef = this;
-    return new Promise.Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       try {
         outerRef.loopTimers.push(Date.now());
         outerRef.context.push(Context.BREAKABLE);
@@ -474,7 +473,7 @@ export class IVProgProcessor {
   }
 
   executeArrayIndexAssign (store, cmd) {
-    return new Promise.Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       const mustBeArray = store.applyStore(cmd.id);
       if(!(mustBeArray.type instanceof CompoundType)) {
         reject(new Error(cmd.id + " is not a vector/matrix"));
