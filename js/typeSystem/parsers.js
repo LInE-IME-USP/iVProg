@@ -1,9 +1,9 @@
 import { LanguageService } from "../services/languageService";
 import { Types } from "./types";
-import { BigNumber } from 'bignumber.js'
+import Decimal from "decimal.js";
 
 export function toInt (str) {
-  return new BigNumber(str);
+  return new Decimal(str);
 }
 
 export function toString (str) {
@@ -20,7 +20,7 @@ export function toString (str) {
 }
 
 export function toReal (value) {
-  return new BigNumber(value);
+  return new Decimal(value);
 }
 
 export function toBool (str) {

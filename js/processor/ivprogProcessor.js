@@ -1,3 +1,4 @@
+import * as Promise from 'bluebird'
 import { Store } from './store/store';
 import { StoreObject } from './store/storeObject';
 import { StoreObjectArray } from './store/storeObjectArray';
@@ -15,7 +16,7 @@ import { StoreObjectArrayAddressRef } from './store/storeObjectArrayAddressRef';
 import { CompoundType } from './../typeSystem/compoundType';
 import { convertToString } from '../typeSystem/parsers';
 
-let loopTimeoutMs = 5000
+let loopTimeoutMs = 10000
 
 export class IVProgProcessor {
 
@@ -221,7 +222,7 @@ export class IVProgProcessor {
   }
 
   executeFunctionCall (store, cmd) {
-    return new Promise((resolve, reject) => {
+    return new Promise.Promise((resolve, reject) => {
       const func = this.findFunction(cmd.id);
       this.runFunction(func, cmd.actualParameters, store)
         .then(sto => {
@@ -233,6 +234,7 @@ export class IVProgProcessor {
           }
         })
         .catch(err => reject(err));
+      return null;
     }); 
   }
 
@@ -304,7 +306,7 @@ export class IVProgProcessor {
 
   executeDoWhile (store, cmd) {
     const outerRef = this;
-    return new Promise((resolve, reject) => {
+    return new Promise.Promise((resolve, reject) => {
       try {
         outerRef.loopTimers.push(Date.now());
         outerRef.context.push(Context.BREAKABLE);
@@ -344,12 +346,13 @@ export class IVProgProcessor {
       } catch (error) {
         reject(error)
       }
+      return null;
     });
   }
 
   executeWhile (store, cmd) {
     const outerRef = this;
-    return new Promise((resolve, reject) => {
+    return new Promise.Promise((resolve, reject) => {
       try {
         outerRef.loopTimers.push(Date.now());
         outerRef.context.push(Context.BREAKABLE);
@@ -386,9 +389,11 @@ export class IVProgProcessor {
             reject(new Error(`Loop condition must be of type boolean`));
           }
         }).catch(err => reject(err));
+        
       } catch (error) {
         reject(error);
       }
+      return null;
     });
   }
 
@@ -469,7 +474,7 @@ export class IVProgProcessor {
   }
 
   executeArrayIndexAssign (store, cmd) {
-    return new Promise((resolve, reject) => {
+    return new Promise.Promise((resolve, reject) => {
       const mustBeArray = store.applyStore(cmd.id);
       if(!(mustBeArray.type instanceof CompoundType)) {
         reject(new Error(cmd.id + " is not a vector/matrix"));
@@ -804,7 +809,7 @@ export class IVProgProcessor {
         case Operators.DIV.ord: {
           result = left.value / right.value;
           if (Types.INTEGER.isCompatible(resultType))
-            result = left.value.idiv(right.value);
+            result = left.value.divToInt(right.value);
           else
             result = left.value.div(right.value);
           return new StoreObject(resultType, result);

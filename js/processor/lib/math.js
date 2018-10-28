@@ -1,8 +1,9 @@
+import * as Promise from 'bluebird';
 import { StoreObject } from '../store/storeObject';
 import * as Commands from './../../ast/commands';
 import { Types } from './../../typeSystem/types';
 import { toReal } from "./../../typeSystem/parsers";
-import { BigNumber } from 'bignumber.js';
+import { Decimal } from 'decimal.js';
 import { MultiType } from '../../typeSystem/multiType';
 import { CompoundType } from '../../typeSystem/compoundType';
 import { Modes } from '../modes';
@@ -21,10 +22,14 @@ import { Modes } from '../modes';
  * min
  */
 
+function convertToRadians (degrees) {
+  return degrees.times(Decimal.acos(-1)).div(180);
+}
+
 export function createSinFun () {
    const sinFun = (sto, _) => {
      const x = sto.applyStore('x');
-     const result = toReal(Math.sin(x.number));
+     const result = Decimal.sin(convertToRadians(x.value));
      const temp = new StoreObject(Types.REAL, result);
      sto.mode = Modes.RETURN;
      return Promise.resolve(sto.updateStore('$', temp));
@@ -32,7 +37,7 @@ export function createSinFun () {
 
   const block = new Commands.CommandBlock([],  [new Commands.SysCall(sinFun)]);
   const func = new Commands.Function('$sin', Types.REAL,
-    [new Commands.FormalParameter(new MultiType([[Types.INTEGER, Types.REAL]]), 'x', false)],
+    [new Commands.FormalParameter(new MultiType([Types.INTEGER, Types.REAL]), 'x', false)],
     block);
   return func;
 }
@@ -40,7 +45,7 @@ export function createSinFun () {
 export function createCosFun () {
   const cosFun = (sto, _) => {
     const x = sto.applyStore('x');
-    const result = toReal(Math.cos(x.number));
+    const result = Decimal.cos(convertToRadians(x.value));
     const temp = new StoreObject(Types.REAL, result);
     sto.mode = Modes.RETURN;
     return Promise.resolve(sto.updateStore('$', temp));
@@ -56,7 +61,7 @@ export function createCosFun () {
 export function createTanFun () {
   const tanFun = (sto, _) => {
     const x = sto.applyStore('x');
-    const result = toReal(Math.tan(x.number));
+    const result = Decimal.tan(convertToRadians(x.value));
     const temp = new StoreObject(Types.REAL, result);
     sto.mode = Modes.RETURN;
     return Promise.resolve(sto.updateStore('$', temp));
@@ -87,9 +92,9 @@ export function createSqrtFun () {
 
 export function createPowFun () {
   const powFun = (sto, _) => {
-    const x = sto.applyStore('x');f
+    const x = sto.applyStore('x');
     const y = sto.applyStore('y');
-    const result = toReal(Math.pow(x.number, y.number));
+    const result = x.value.pow(y.value);
     const temp = new StoreObject(Types.REAL, result);
     sto.mode = Modes.RETURN;
     return Promise.resolve(sto.updateStore('$', temp));
@@ -109,7 +114,7 @@ export function createLogFun () {
     if (x.value.isNegative()) {
       return Promise.reject("the value passed to log function cannot be negative");
     }
-    const result = toReal(Math.log10(x.number));
+    const result = Decimal.log10(x.value);
     const temp = new StoreObject(Types.REAL, result);
     sto.mode = Modes.RETURN;
     return Promise.resolve(sto.updateStore('$', temp));
@@ -173,8 +178,8 @@ export function createInvertFun () {
 export function createMaxFun () {
   const maxFun = (sto, _) => {
     const x = sto.applyStore('x');
-    const numbers = x.value.map(stoObj => stoObj.number);
-    const result = BigNumber.max(numbers);
+    const numbers = x.value.map(stoObj => stoObj.value.toNumber());
+    const result = Decimal.max(numbers);
     const temp = new StoreObject(x.type.innerType, result);
     sto.mode = Modes.RETURN;
     return Promise.resolve(sto.updateStore('$', temp));
@@ -191,7 +196,7 @@ export function createMinFun () {
   const minFun = (sto, _) => {
     const x = sto.applyStore('x');
     const numbers = x.value.map(stoObj => stoObj.value.toNumber());
-    const result = BigNumber.min(numbers);
+    const result = Decimal.min(numbers);
     const temp = new StoreObject(x.type.innerType, result);
     sto.mode = Modes.RETURN;
     return Promise.resolve(sto.updateStore('$', temp));
