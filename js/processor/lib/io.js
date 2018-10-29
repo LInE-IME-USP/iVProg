@@ -6,7 +6,6 @@ import { Types } from './../../typeSystem/types';
 export function createOutputFun () {
   const writeFunction = function (store, _) {
     const val = store.applyStore('p1');
-    console.log(val);
     if(val.type.isCompatible(Types.INTEGER)) {
       this.output.sendOutput(val.value.toString());
     } else if (val.type.isCompatible(Types.REAL)) {
@@ -45,6 +44,7 @@ export function createInputFun () {
       } else if (typeToConvert.isCompatible(Types.STRING)) {
         stoObj = new StoreObject(Types.STRING, toString(text));
       }
+      this.loopTimers.splice(0,this.loopTimers.length)
       store.updateStore('p1', stoObj);
       return Promise.resolve(store);
     });

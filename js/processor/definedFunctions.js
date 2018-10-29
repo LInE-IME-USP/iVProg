@@ -96,7 +96,13 @@ export const LanguageDefinedFunction = Object.freeze({
       }
       return lib + "." + internalName;
     }
-    return valueToKey(localName, LanguageService.getCurrentLangFuncs());
+    const funcName = valueToKey(localName, LanguageService.getCurrentLangFuncs());
+    if(funcName !== null) {
+      if(funcsObject[funcName]) {
+        return funcName;
+      }
+    }
+    return null;
   },
   getFunction: (internalName) => {
     if (internalName.indexOf(".") !== -1) {
