@@ -46,8 +46,8 @@
   },
   "dependencies": {
     "antlr4": "^4.7.1",
-    "bignumber.js": "^7.2.1",
+    "decimal.js": "^10.0.1",
     "jquery": "^3.3.1",
-    "line-i18n": "git+https://git.lcalion.com/lucascalion/line-i18n.git"
+    "line-i18n": "git+https://git.lcalion.com/LInE/line-i18n.git"
   }
 }

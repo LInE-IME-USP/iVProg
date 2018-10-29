@@ -1,4 +1,4 @@
-import { BigNumber } from 'bignumber.js'
+import Decimal from 'decimal.js';
 
 export class StoreObject {
 
@@ -30,7 +30,7 @@ export class StoreObject {
   }
   
   get number () {
-    if (this._value instanceof BigNumber) {
+    if (this._value instanceof Decimal) {
       return this._value.toNumber();
     } else {
       return null;

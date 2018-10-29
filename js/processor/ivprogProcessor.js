@@ -15,7 +15,17 @@ import { StoreObjectArrayAddressRef } from './store/storeObjectArrayAddressRef';
 import { CompoundType } from './../typeSystem/compoundType';
 import { convertToString } from '../typeSystem/parsers';
 
+let loopTimeoutMs = 10000
+
 export class IVProgProcessor {
+
+  static get LOOP_TIMEOUT () {
+    return loopTimeoutMs;
+  }
+
+  static set LOOP_TIMEOUT (ms) {
+    loopTimeoutMs = ms;
+  }
 
   constructor (ast) {
     this.ast = ast;
@@ -23,6 +33,8 @@ export class IVProgProcessor {
     this.stores = [this.globalStore];
     this.context = [Context.BASE];
     this.input = null;
+    this.forceKill = false;
+    this.loopTimers = [];
     this.output = null;
   }
 
@@ -155,20 +167,21 @@ export class IVProgProcessor {
 
   executeCommands (store, cmds) {
     // helper to partially apply a function, in this case executeCommand
+    const outerRef = this;
     const partial = (fun, cmd) => (sto) => fun(sto, cmd);
     return cmds.reduce((lastCommand, next) => {
-      const nextCommand = partial(this.executeCommand.bind(this), next);
+      const nextCommand = partial(outerRef.executeCommand.bind(outerRef), next);
       return lastCommand.then(nextCommand);
     }, Promise.resolve(store));
   }
 
   executeCommand (store, cmd) {
 
-    while (store.mode === Modes.PAUSE) {
-      continue;
-    }
-
-    if(store.mode === Modes.RETURN) {
+    if(this.forceKill) {
+      return Promise.reject("Interrupção forçada do programa!");
+    } else if (store.mode === Modes.PAUSE) {
+      return Promise.resolve(this.executeCommand(store, cmd));
+    } else if(store.mode === Modes.RETURN) {
       return Promise.resolve(store);
     } else if(this.checkContext(Context.BREAKABLE) && store.mode === Modes.BREAK) {
       return Promise.resolve(store);
@@ -209,19 +222,16 @@ export class IVProgProcessor {
   }
 
   executeFunctionCall (store, cmd) {
-    return new Promise((resolve, reject) => {
-      const func = this.findFunction(cmd.id);
-      this.runFunction(func, cmd.actualParameters, store)
-        .then(sto => {
-          if(!Types.VOID.isCompatible(func.returnType) && sto.mode !== Modes.RETURN) {
-            // TODO: better error message
-            reject(new Error(`Function ${func.name} must have a return command`));
-          } else {
-            resolve(store);
-          }
-        })
-        .catch(err => reject(err));
-    }); 
+    const func = this.findFunction(cmd.id);
+    return this.runFunction(func, cmd.actualParameters, store)
+      .then(sto => {
+        if(!Types.VOID.isCompatible(func.returnType) && sto.mode !== Modes.RETURN) {
+          // TODO: better error message
+          return Promise.reject(new Error(`Function ${func.name} must have a return command`));
+        } else {
+          return store;
+        }
+      })
   }
 
   executeSwitch (store, cmd) {
@@ -291,16 +301,19 @@ export class IVProgProcessor {
   }
 
   executeDoWhile (store, cmd) {
+    const outerRef = this;
     try {
-      this.context.push(Context.BREAKABLE);
-      const $newStore = this.executeCommands(store, cmd.commands);
+      outerRef.loopTimers.push(Date.now());
+      outerRef.context.push(Context.BREAKABLE);
+      const $newStore = outerRef.executeCommands(store, cmd.commands);
       return $newStore.then(sto => {
         if(sto.mode === Modes.BREAK) {
-          this.context.pop();
+          outerRef.context.pop();
           sto.mode = Modes.RUN;
-          return Promise.resolve(sto);
+          outerRef.loopTimers.pop();
+          return sto;
         }
-        const $value = this.evaluateExpression(sto, cmd.expression);
+        const $value = outerRef.evaluateExpression(sto, cmd.expression);
         return $value.then(vl => {
           if (!vl.type.isCompatible(Types.BOOLEAN)) {
             // TODO: Better error message -- Inform line and column from token!!!!
@@ -308,45 +321,69 @@ export class IVProgProcessor {
             return Promise.reject(new Error(`DoWhile expression must be of type boolean`));
           }
           if (vl.value) {
-            this.context.pop();
-            return this.executeCommand(sto, cmd);
+            outerRef.context.pop();
+            for (let i = 0; i < outerRef.loopTimers.length; i++) {
+              const time = outerRef.loopTimers[i];
+              if(Date.now() - time >= IVProgProcessor.LOOP_TIMEOUT) {
+                console.log("Kill by Timeout...");
+                outerRef.forceKill = true;
+                return Promise.reject(new Error("Potential endless loop detected."));
+              }
+            }
+            return outerRef.executeCommand(sto, cmd);
           } else {
-            this.context.pop();
-            return Promise.resolve(sto);
+            outerRef.context.pop();
+            outerRef.loopTimers.pop();
+            console.log("Clear Timeout...");
+            return sto;
           }
-        });
-      });
+        })
+      })
     } catch (error) {
-      return Promise.reject(error)
+      return Promise.reject(error);
     }
   }
 
   executeWhile (store, cmd) {
+    const outerRef = this;
     try {
-      this.context.push(Context.BREAKABLE);
-      const $value = this.evaluateExpression(store, cmd.expression);
+      outerRef.loopTimers.push(Date.now());
+      outerRef.context.push(Context.BREAKABLE);
+      const $value = outerRef.evaluateExpression(store, cmd.expression);
       return $value.then(vl => {
         if(vl.type.isCompatible(Types.BOOLEAN)) {
           if(vl.value) {
-            const $newStore = this.executeCommands(store, cmd.commands);
+            const $newStore = outerRef.executeCommands(store, cmd.commands);
             return $newStore.then(sto => {
-              this.context.pop();
+              outerRef.context.pop();
               if (sto.mode === Modes.BREAK) {
+                outerRef.loopTimers.pop();
                 sto.mode = Modes.RUN;
-                return Promise.resolve(sto);
+                return sto;
               }
-              return this.executeCommand(sto, cmd);
+              for (let i = 0; i < outerRef.loopTimers.length; i++) {
+                const time = outerRef.loopTimers[i];
+                if(Date.now() - time >= IVProgProcessor.LOOP_TIMEOUT) {
+                  console.log("Kill by Timeout...");
+                  outerRef.forceKill = true;
+                  return Promise.reject(new Error("Potential endless loop detected."));
+                }
+              }
+              return outerRef.executeCommand(sto, cmd);
             });
           } else {
-            this.context.pop();
-            return Promise.resolve(store);
+            outerRef.context.pop();
+            outerRef.loopTimers.pop();
+            console.log("Clear Timeout...");
+            return store;
           }
         } else {
           // TODO: Better error message -- Inform line and column from token!!!!
           // THIS IF SHOULD BE IN A SEMANTIC ANALYSER
           return Promise.reject(new Error(`Loop condition must be of type boolean`));
         }
-      });
+      })
+      
     } catch (error) {
       return Promise.reject(error);
     }
@@ -429,67 +466,60 @@ export class IVProgProcessor {
   }
 
   executeArrayIndexAssign (store, cmd) {
-    return new Promise((resolve, reject) => {
-      const mustBeArray = store.applyStore(cmd.id);
-      if(!(mustBeArray.type instanceof CompoundType)) {
-        reject(new Error(cmd.id + " is not a vector/matrix"));
-        return;
+    const mustBeArray = store.applyStore(cmd.id);
+    if(!(mustBeArray.type instanceof CompoundType)) {
+      return Promise.reject(new Error(cmd.id + " is not a vector/matrix"));
+    }
+    const line$ = this.evaluateExpression(store, cmd.line);
+    const column$ = this.evaluateExpression(store, cmd.column);
+    const value$ =  this.evaluateExpression(store, cmd.expression);
+    return Promise.all([line$, column$, value$]).then(results => {
+      const lineSO = results[0];
+      if(!Types.INTEGER.isCompatible(lineSO.type)) {
+        // TODO: better error message
+        //SHOULD NOT BE HERE. IT MUST HAVE A SEMANTIC ANALYSIS
+        return Promise.reject(new Error("Array dimension must be of type int"));
       }
-      const line$ = this.evaluateExpression(store, cmd.line);
-      const column$ = this.evaluateExpression(store, cmd.column);
-      const value$ =  this.evaluateExpression(store, cmd.expression);
-      Promise.all([line$, column$, value$]).then(results => {
-        const lineSO = results[0];
-        if(!Types.INTEGER.isCompatible(lineSO.type)) {
+      const line = lineSO.number;
+      const columnSO = results[1];
+      let column = null
+      if (columnSO !== null) {
+        if(!Types.INTEGER.isCompatible(columnSO.type)) {
           // TODO: better error message
           //SHOULD NOT BE HERE. IT MUST HAVE A SEMANTIC ANALYSIS
-          reject(new Error("Array dimension must be of type int"));
-          return;
+          return Promise.reject(new Error("Array dimension must be of type int"));
         }
-        const line = lineSO.number;
-        const columnSO = results[1];
-        let column = null
-        if (columnSO !== null) {
-          if(!Types.INTEGER.isCompatible(columnSO.type)) {
-            // TODO: better error message
-            //SHOULD NOT BE HERE. IT MUST HAVE A SEMANTIC ANALYSIS
-            reject(new Error("Array dimension must be of type int"));
-            return;
-          }
-          column = columnSO.number;
-        }
-        const value = this.parseStoreObjectValue(results[2]);
-        if (line >= mustBeArray.lines) {
-          // TODO: better error message
-          return Promise.reject(new Error(`${exp.id}: index out of bounds: ${lines}`));
-        }
-        if (column !== null && mustBeArray.columns === null ){
-          // TODO: better error message
-          return Promise.reject(new Error(`${exp.id}: index out of bounds: ${column}`));
-        }
-        if(column !== null && column >= mustBeArray.columns) {
-          // TODO: better error message
-          return Promise.reject(new Error(`${exp.id}: index out of bounds: ${column}`));
-        }
+        column = columnSO.number;
+      }
+      const value = this.parseStoreObjectValue(results[2]);
+      if (line >= mustBeArray.lines) {
+        // TODO: better error message
+        return Promise.reject(new Error(`${exp.id}: index out of bounds: ${lines}`));
+      }
+      if (column !== null && mustBeArray.columns === null ){
+        // TODO: better error message
+        return Promise.reject(new Error(`${exp.id}: index out of bounds: ${column}`));
+      }
+      if(column !== null && column >= mustBeArray.columns) {
+        // TODO: better error message
+        return Promise.reject(new Error(`${exp.id}: index out of bounds: ${column}`));
+      }
 
-        const newArray = Object.assign(new StoreObjectArray(null,null,null), mustBeArray);
-        if (column !== null) {
-         if (value.type instanceof CompoundType) {
-           reject(new Error("Invalid operation. This must be a value: line "+cmd.sourceInfo.line));
-           return;
-         }
-         newArray.value[line].value[column] = value;
-         store.updateStore(cmd.id, newArray);
-        } else {
-         if(mustBeArray.columns !== null && value.type instanceof CompoundType) {
-          reject(new Error("Invalid operation. This must be a vector: line "+cmd.sourceInfo.line));
-          return;
-         }
-         newArray.value[line] = value;
-         store.updateStore(cmd.id, newArray);
+      const newArray = Object.assign(new StoreObjectArray(null,null,null), mustBeArray);
+      if (column !== null) {
+        if (value.type instanceof CompoundType) {
+          return Promise.reject(new Error("Invalid operation. This must be a value: line "+cmd.sourceInfo.line));
         }
-        resolve(store);
-      }).catch(err => reject(err));
+        newArray.value[line].value[column] = value;
+        store.updateStore(cmd.id, newArray);
+      } else {
+        if(mustBeArray.columns !== null && value.type instanceof CompoundType) {
+          return Promise.reject(new Error("Invalid operation. This must be a vector: line "+cmd.sourceInfo.line));
+        }
+        newArray.value[line] = value;
+        store.updateStore(cmd.id, newArray);
+      }
+      return store;
     });
   }
 
@@ -764,7 +794,7 @@ export class IVProgProcessor {
         case Operators.DIV.ord: {
           result = left.value / right.value;
           if (Types.INTEGER.isCompatible(resultType))
-            result = left.value.idiv(right.value);
+            result = left.value.divToInt(right.value);
           else
             result = left.value.div(right.value);
           return new StoreObject(resultType, result);
