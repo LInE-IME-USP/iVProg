@@ -740,7 +740,7 @@ initVisualUI = function() {
         {type: Models.COMMAND_TYPES.writer, icon: "upload", text: LocalizedStrings.getUI('text_write_var')},
         {type: Models.COMMAND_TYPES.comment, icon: "quote left", text: LocalizedStrings.getUI('text_comment')},
         {type: Models.COMMAND_TYPES.attribution, icon: "arrow left", text: LocalizedStrings.getUI('text_attribution')},
-        {type: Models.COMMAND_TYPES.functioncall, icon: "hand point right", text: LocalizedStrings.getUI('text_functioncall')},
+        //{type: Models.COMMAND_TYPES.functioncall, icon: "hand point right", text: LocalizedStrings.getUI('text_functioncall')},
         {type: Models.COMMAND_TYPES.iftrue, icon: "random", text: LocalizedStrings.getUI('text_iftrue')},
         {type: Models.COMMAND_TYPES.repeatNtimes, icon: "sync", text: LocalizedStrings.getUI('text_repeatNtimes')},
         {type: Models.COMMAND_TYPES.whiletrue, icon: "sync", text: LocalizedStrings.getUI('text_whiletrue')},

@@ -344,7 +344,15 @@ div.buttons_manage_columns {
 
 /* DOUGLAS */
 /*
+.div-over {
+	border-style: dotted;
+}*/
 
 .div-over {
 	outline: dashed 2px blue;
+}
+
+button.ui.segment {
+	margin-bottom: 0.5em;
+	margin-top: 0.5em;
 }
