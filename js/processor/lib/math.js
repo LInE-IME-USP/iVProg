@@ -177,8 +177,8 @@ export function createInvertFun () {
 export function createMaxFun () {
   const maxFun = (sto, _) => {
     const x = sto.applyStore('x');
-    const numbers = x.value.map(stoObj => stoObj.value.toNumber());
-    const result = Decimal.max(numbers);
+    const numbers = x.value.map(stoObj => stoObj.value);
+    const result = Decimal.max(...numbers);
     const temp = new StoreObject(x.type.innerType, result);
     sto.mode = Modes.RETURN;
     return Promise.resolve(sto.updateStore('$', temp));
@@ -194,8 +194,8 @@ export function createMaxFun () {
 export function createMinFun () {
   const minFun = (sto, _) => {
     const x = sto.applyStore('x');
-    const numbers = x.value.map(stoObj => stoObj.value.toNumber());
-    const result = Decimal.min(numbers);
+    const numbers = x.value.map(stoObj => stoObj.value);
+    const result = Decimal.min(...numbers);
     const temp = new StoreObject(x.type.innerType, result);
     sto.mode = Modes.RETURN;
     return Promise.resolve(sto.updateStore('$', temp));
