@@ -6,12 +6,15 @@ body {
   height: 100%;
 }
 
-.div_to_body {
-  height: 90%;
+.ui.raised.container.segment.div_to_body {
+  height: 96%;
+  padding: 10px;
+  padding-left: 6px;
+  padding-right: 6px;
 }
 
 .ivprog_visual_panel {
-	height: 91%;
+	height: 96%;
 	overflow: auto;
 	overflow-x: auto;
 
@@ -174,8 +177,9 @@ body {
 }
 
 .ui.segment.ivprog_visual_panel {
-	padding: 8px;
-	background-image: url('../img/background-panel.png');
+	padding: 3px;
+	margin-top: -5px;
+	background: #edf4ff;
 }
 
 .ui.segment.function_div {
@@ -428,3 +432,9 @@ div.buttons_manage_columns {
 	padding-top: 10px;
 }
 
+.ui.icon.button.add-globalVar-button.add_global_button {
+	padding: 8px;
+}
+.all_functions {
+	margin-top: -5px;
+}

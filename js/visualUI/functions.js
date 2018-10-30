@@ -305,6 +305,13 @@ $( document ).ready(function() {
     renderFunction(program.functions[i]);
   }
 
+  $('.div_to_body div a').popup({
+    delay: {
+      show: 750,
+      hide: 0
+    }
+  });
+
 });
 
 
@@ -320,25 +327,16 @@ function runCodeAssessment () {
   $("#ivprog-term").slideDown(500);
   const runner = new IVProgAssessment(strCode, testCases, domConsole);
 
-  runner.runTest().then(grade => studentTemp = grade).catch( err => domConsole.err(err.message));
-  
-  gradeMonitor();
-}
-
-function gradeMonitor () {
-
-  if (studentTemp == null) { 
-    setTimeout(gradeMonitor, 50); 
-  } else {
-    window.studentGrade = studentTemp;
+  runner.runTest().then(grade => {
     if (!is_iassign) {
-      parent.getEvaluationCallback(window.studentGrade);
+      parent.getEvaluationCallback(grade);
     } else {
       is_iassign = false;
     }
-  }
-
+  }).catch( err => domConsole.err(err.message));
+  
 }
+
 
 function runCode () {
   const strCode = CodeManagement.generate();

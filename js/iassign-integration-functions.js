@@ -132,7 +132,8 @@ function prepareActivityToStudent (ilm_cont) {
     settingsFunctions = content.settings_functions;
     algorithm_in_ilm = ilm_cont.split('\n::algorithm::')[1].split('\n::logs::')[0];
 
-    window.program_obj = JSON.parse(algorithm_in_ilm);
+    window.program_obj.functions = JSON.parse(algorithm_in_ilm).functions;
+    window.program_obj.globals = JSON.parse(algorithm_in_ilm).globals;
     renderAlgorithm();
 }
 
@@ -313,12 +314,14 @@ $( document ).ready(function() {
     });
 
     if (inIframe()) {
-        
+        orderIcons();
     }
 
 });
 
-
+function orderIcons() {
+    $('.ui.one.column.doubling.stackable.grid.container').css('display', 'none');
+}
 
 
 function inIframe () {
