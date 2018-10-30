@@ -14,17 +14,17 @@ import { StoreObjectArrayAddress } from './store/storeObjectArrayAddress';
 import { StoreObjectArrayAddressRef } from './store/storeObjectArrayAddressRef';
 import { CompoundType } from './../typeSystem/compoundType';
 import { convertToString } from '../typeSystem/parsers';
-
-let loopTimeoutMs = 10000
+import { Config } from '../util/config';
+import Decimal from 'decimal.js';
 
 export class IVProgProcessor {
 
   static get LOOP_TIMEOUT () {
-    return loopTimeoutMs;
+    return Config.config.loopTimeout;
   }
 
   static set LOOP_TIMEOUT (ms) {
-    loopTimeoutMs = ms;
+    Config.setConfig({loopTimeout: ms});
   }
 
   constructor (ast) {
@@ -789,18 +789,30 @@ export class IVProgProcessor {
         }
         case Operators.SUB.ord:
           return new StoreObject(resultType, left.value.minus(right.value));
-        case Operators.MULT.ord:
-          return new StoreObject(resultType, left.value.times(right.value));
+        case Operators.MULT.ord: {
+          result = left.value.times(right.value);
+          if(result.dp() > Config.config.decimalPlaces) {
+            result = new Decimal(result.toFixed(Config.config.decimalPlaces));
+          }
+          return new StoreObject(resultType, result);
+        }
         case Operators.DIV.ord: {
-          result = left.value / right.value;
           if (Types.INTEGER.isCompatible(resultType))
             result = left.value.divToInt(right.value);
           else
             result = left.value.div(right.value);
+          if(result.dp() > Config.config.decimalPlaces) {
+            result = new Decimal(result.toFixed(Config.config.decimalPlaces));
+          }
           return new StoreObject(resultType, result);
         }
-        case Operators.MOD.ord:
-          return new StoreObject(resultType, left.value.modulo(right.value));
+        case Operators.MOD.ord: {
+          result = left.value.modulo(right.value);
+          if(result.dp() > Config.config.decimalPlaces) {
+            result = new Decimal(result.toFixed(Config.config.decimalPlaces));
+          }
+          return new StoreObject(resultType, result);
+        }          
         case Operators.GT.ord: {
           if (Types.STRING.isCompatible(left.type)) {
             result = left.value.length > right.value.length;
