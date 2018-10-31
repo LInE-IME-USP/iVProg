@@ -29,7 +29,7 @@ export class IVProgProcessor {
 
   constructor (ast) {
     this.ast = ast;
-    this.globalStore = new Store();
+    this.globalStore = new Store("$global");
     this.stores = [this.globalStore];
     this.context = [Context.BASE];
     this.input = null;
@@ -101,7 +101,8 @@ export class IVProgProcessor {
   }
 
   runFunction (func, actualParameters, store) {
-    let funcStore = new Store();
+    const funcName = func.isMain ? 'main' : func.name;
+    let funcStore = new Store(funcName);
     funcStore.extendStore(this.globalStore);
     let returnStoreObject = null;
     if(func.returnType instanceof CompoundType) {
@@ -113,10 +114,7 @@ export class IVProgProcessor {
     } else {
       returnStoreObject = new StoreObject(func.returnType, null);
     }
-    const funcName = func.isMain ? 'main' : func.name;
-    const funcNameStoreObject = new StoreObject(Types.STRING, funcName, true);
     funcStore.insertStore('$', returnStoreObject);
-    funcStore.insertStore('$name', funcNameStoreObject);
     const newFuncStore$ = this.associateParameters(func.formalParameters, actualParameters, store, funcStore);
     return newFuncStore$.then(sto => {
       this.context.push(Context.FUNCTION);
@@ -420,7 +418,7 @@ export class IVProgProcessor {
     try {
       const funcType = store.applyStore('$');
       const $value = this.evaluateExpression(store, cmd.expression);
-      const funcName = store.applyStore('$name');
+      const funcName = store.name;
       return $value.then(vl => {
 
         if(vl === null && funcType.isCompatible(Types.VOID)) {
@@ -430,7 +428,7 @@ export class IVProgProcessor {
         if (vl === null || !funcType.type.isCompatible(vl.type)) {
           // TODO: Better error message -- Inform line and column from token!!!!
           // THIS IF SHOULD BE IN A SEMANTIC ANALYSER
-          return Promise.reject(new Error(`Function ${funcName.value} must return ${funcType.type} instead of ${vl.type}.`));
+          return Promise.reject(new Error(`Function ${funcName} must return ${funcType.type} instead of ${vl.type}.`));
         } else {
           let realValue = this.parseStoreObjectValue(vl);
           store.updateStore('$', realValue);
