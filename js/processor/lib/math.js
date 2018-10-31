@@ -39,9 +39,9 @@ export function createSinFun () {
        result = new Decimal(-1);
      } else {
        result = Decimal.sin(convertToRadians(angle));
-     }     
-     if(result.dp() > Config.config.decimalPlaces) {
-      result = new Decimal(result.toFixed(Config.config.decimalPlaces));
+     }
+     if(result.dp() > Config.decimalPlaces) {
+      result = new Decimal(result.toFixed(Config.decimalPlaces));
     }
      const temp = new StoreObject(Types.REAL, result);
      sto.mode = Modes.RETURN;
@@ -68,8 +68,8 @@ export function createCosFun () {
       result = new Decimal(0)
     }
     result = Decimal.cos(convertToRadians(angle));
-    if(result.dp() > Config.config.decimalPlaces) {
-      result = new Decimal(result.toFixed(Config.config.decimalPlaces));
+    if(result.dp() > Config.decimalPlaces) {
+      result = new Decimal(result.toFixed(Config.decimalPlaces));
     }
     const temp = new StoreObject(Types.REAL, result);
     sto.mode = Modes.RETURN;
@@ -91,8 +91,8 @@ export function createTanFun () {
       return Promise.reject("Tangent of "+x.value.toNumber()+"° is undefined.");
     }
     let result = Decimal.tan(convertToRadians(angle));
-    if(result.dp() > Config.config.decimalPlaces) {
-      result = new Decimal(result.toFixed(Config.config.decimalPlaces));
+    if(result.dp() > Config.decimalPlaces) {
+      result = new Decimal(result.toFixed(Config.decimalPlaces));
     }
     const temp = new StoreObject(Types.REAL, result);
     sto.mode = Modes.RETURN;
@@ -110,8 +110,8 @@ export function createSqrtFun () {
   const sqrtFun = (sto, _) => {
     const x = sto.applyStore('x');
     let result = x.value.sqrt();
-    if(result.dp() > Config.config.decimalPlaces) {
-      result = new Decimal(result.toFixed(Config.config.decimalPlaces));
+    if(result.dp() > Config.decimalPlaces) {
+      result = new Decimal(result.toFixed(Config.decimalPlaces));
     }
     const temp = new StoreObject(Types.REAL, result);
     sto.mode = Modes.RETURN;
@@ -130,8 +130,8 @@ export function createPowFun () {
     const x = sto.applyStore('x');
     const y = sto.applyStore('y');
     let result = x.value.pow(y.value);
-    if(result.dp() > Config.config.decimalPlaces) {
-      result = new Decimal(result.toFixed(Config.config.decimalPlaces));
+    if(result.dp() > Config.decimalPlaces) {
+      result = new Decimal(result.toFixed(Config.decimalPlaces));
     }
     const temp = new StoreObject(Types.REAL, result);
     sto.mode = Modes.RETURN;
@@ -153,8 +153,8 @@ export function createLogFun () {
       return Promise.reject("the value passed to log function cannot be negative");
     }
     let result = Decimal.log10(x.value);
-    if(result.dp() > Config.config.decimalPlaces) {
-      result = new Decimal(result.toFixed(Config.config.decimalPlaces));
+    if(result.dp() > Config.decimalPlaces) {
+      result = new Decimal(result.toFixed(Config.decimalPlaces));
     }
     const temp = new StoreObject(Types.REAL, result);
     sto.mode = Modes.RETURN;
@@ -204,8 +204,8 @@ export function createInvertFun () {
   const invertFun = (sto, _) => {
     const x = sto.applyStore('x');
     let result = toReal(1).dividedBy(x.value);
-    if(result.dp() > Config.config.decimalPlaces) {
-      result = new Decimal(result.toFixed(Config.config.decimalPlaces));
+    if(result.dp() > Config.decimalPlaces) {
+      result = new Decimal(result.toFixed(Config.decimalPlaces));
     }
     const temp = new StoreObject(Types.REAL, result);
     sto.mode = Modes.RETURN;

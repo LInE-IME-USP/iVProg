@@ -20,7 +20,7 @@ import Decimal from 'decimal.js';
 export class IVProgProcessor {
 
   static get LOOP_TIMEOUT () {
-    return Config.config.loopTimeout;
+    return Config.loopTimeout;
   }
 
   static set LOOP_TIMEOUT (ms) {
@@ -789,8 +789,8 @@ export class IVProgProcessor {
           return new StoreObject(resultType, left.value.minus(right.value));
         case Operators.MULT.ord: {
           result = left.value.times(right.value);
-          if(result.dp() > Config.config.decimalPlaces) {
-            result = new Decimal(result.toFixed(Config.config.decimalPlaces));
+          if(result.dp() > Config.decimalPlaces) {
+            result = new Decimal(result.toFixed(Config.decimalPlaces));
           }
           return new StoreObject(resultType, result);
         }
@@ -799,15 +799,15 @@ export class IVProgProcessor {
             result = left.value.divToInt(right.value);
           else
             result = left.value.div(right.value);
-          if(result.dp() > Config.config.decimalPlaces) {
-            result = new Decimal(result.toFixed(Config.config.decimalPlaces));
+          if(result.dp() > Config.decimalPlaces) {
+            result = new Decimal(result.toFixed(Config.decimalPlaces));
           }
           return new StoreObject(resultType, result);
         }
         case Operators.MOD.ord: {
           result = left.value.modulo(right.value);
-          if(result.dp() > Config.config.decimalPlaces) {
-            result = new Decimal(result.toFixed(Config.config.decimalPlaces));
+          if(result.dp() > Config.decimalPlaces) {
+            result = new Decimal(result.toFixed(Config.decimalPlaces));
           }
           return new StoreObject(resultType, result);
         }          

@@ -1,20 +1,18 @@
-let config = null;
+class ConfigObject {
 
-export class Config {
-
-  static get config () {
-    return config;
+  constructor () {
+    this.loopTimeout = 5000;
+    this.decimalPlaces = 5;
+    this.intConvertRoundMode = 2;
   }
 
-  static setConfig(opts) {
-    config = Object.assign(config, opts);
-  }
-
-  constructor (loopTimeout, decimalPlaces, intConvertRoundMode) {
-    this.loopTimeout = loopTimeout;
-    this.decimalPlaces = decimalPlaces;
-    this.intConvertRoundMode = intConvertRoundMode;
+  setConfig (opts) {
+    for (const key in opts) {
+      if(this.hasOwnProperty(key)){
+        this[key] = opts[key];
+      }
+    }
   }
 }
-
-config = new Config(5000, 5, 2);
+let config = new ConfigObject();
+export const Config = config;
