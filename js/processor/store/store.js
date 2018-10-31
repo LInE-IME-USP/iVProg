@@ -2,7 +2,8 @@ import { Modes } from './../modes';
 
 export class Store {
 
-  constructor() {
+  constructor(name) {
+    this.name = name;
     this.store = {};
     this.nextStore = null;
     this.mode = Modes.RUN; 
