@@ -47,6 +47,8 @@
   "text_iftrue": "If true then",
   "text_receives": "receives",
   "text_repeatNtimes": "Repeat N times",
+  "text_return":"return",
+  "text_btn_return":"Return",
   "text_whiletrue": "While true",
   "text_dowhiletrue": "Do while true",
   "text_switch": "Switch",
@@ -54,5 +56,18 @@
   "text_value": "Value",
   "text_operator": "Operator",
   "text_parentheses": "Parentheses",
-  "text_change": "Change"
+  "text_change": "Change",
+  "text_teacher_algorithm": "Algorithm",
+  "text_teacher_algorithm_include": "Include the following algorithm in exercise",
+  "text_teacher_test_case": "Test cases",
+  "text_teacher_config": "Settings",
+  "text_teacher_data_types": "Data types",
+  "text_teacher_commands": "Commands",
+  "text_teacher_functions": "Functions",
+  "text_teacher_create_functions": "Create new functions",
+  "text_teacher_create_movement_functions": "Move functions",
+  "text_teacher_test_case_input": "Input",
+  "text_teacher_test_case_output": "Output",
+  "text_teacher_test_case_actions": "Actions",
+  "text_teacher_test_case_add": "Add test cases"
 }

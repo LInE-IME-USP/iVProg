@@ -6,12 +6,15 @@ body {
   height: 100%;
 }
 
-.div_to_body {
-  height: 90%;
+.ui.raised.container.segment.div_to_body {
+  height: 96%;
+  padding: 10px;
+  padding-left: 6px;
+  padding-right: 6px;
 }
 
 .ivprog_visual_panel {
-	height: 91%;
+	height: 96%;
 	overflow: auto;
 	overflow-x: auto;
 
@@ -149,7 +152,7 @@ body {
 .function_name_div, .function_return_div, .function_name_parameter, .created_div_valor_var, .function_return, .var_value_menu_div, .variable_rendered, .variable_rendered div, .var_attributed,
 .expression_operand_1, .expression_operand_2, .operator, .div_comment_text, .value_rendered, .parameters_function_called, .parameters_function_called div, .expression_elements,
 .expression_element, .var_rendered, .menu_add_item, .component_element, .component_element, .conditional_expression, .variable_attribution, .attribution_expression, .var_value_expression,
-.incrementation_field, .incrementation_variable, .first_operand, .operator, .second_operand, .variable_to_switch, .variable_case {
+.incrementation_field, .incrementation_variable, .first_operand, .operator, .second_operand, .variable_to_switch, .variable_case, .button_remove_case, .editing_name_var {
 	display: inline;
 }
 
@@ -162,7 +165,7 @@ body {
 	font-style: italic;
 }
 
-.enable_edit_name_function, .enable_edit_name_parameter, .add_parameter, .remove_parameter, .add_parameter_button, .remove_variable {
+.enable_edit_name_function, .add_parameter, .remove_parameter, .add_parameter_button, .remove_variable {
 	cursor: pointer;
 }
 
@@ -174,8 +177,9 @@ body {
 }
 
 .ui.segment.ivprog_visual_panel {
-	padding: 8px;
-	background-image: url('../img/background-panel.png');
+	padding: 3px;
+	margin-top: -5px;
+	background: #edf4ff;
 }
 
 .ui.segment.function_div {
@@ -271,7 +275,8 @@ div.buttons_manage_columns {
 .ui.comment span {
 	font-style: italic;
 }
-.ui.comment, .ui.reader, .ui.writer, .ui.attribution, .ui.iftrue, .ui.repeatNtimes, .ui.whiletrue, .ui.dowhiletrue, .ui.switch, .ui.functioncall {
+.ui.comment, .ui.reader, .ui.writer, .ui.attribution, .ui.iftrue, .ui.repeatNtimes, .ui.whiletrue, .ui.dowhiletrue, .ui.switch, .ui.functioncall,
+.ui.return {
 	border: 1px solid gray;
 	padding: 5px;
 	border-radius: 5px;
@@ -304,7 +309,6 @@ div.buttons_manage_columns {
 
 .list_globals, .global_const {
 	display: inline;
-	cursor: pointer;
 }
 
 .created_element {
@@ -342,6 +346,98 @@ div.buttons_manage_columns {
     margin-left: -30px;
 }
 
+.height_100 {
+  height: 100%;
+}
+
+.default_visual_title {
+  display: none;
+}
+
+.expandingArea textarea {
+	min-height: 30px;
+	resize: none;
+	padding: 5px;
+}
+
+.ui table .btn_actions {
+	text-align: center;
+}
+
+.button_remove_case {
+	cursor: pointer;
+	padding: 3px;
+}
+
+.ui.button_add_case {
+	margin-top: 10px;
+}
+.accordion {
+	margin: auto;
+}
+
+.global_container:hover {
+	border: 2px solid gray;
+	padding-left: 8px;
+	padding-right: 8px;
+	padding-top: 6px;
+	padding-bottom: 4px;
+}
+
+.global_container .global_type, .editing_name_var, .global_container .span_value_variable {
+	background: #cecece;
+	border-radius: 5px;
+	padding: 4px;
+	margin-left: 5px;
+	margin-right: 5px;
+}
+
+.global_container .global_type:hover, .editing_name_var:hover, .global_container .span_value_variable:hover {
+	background: #848484;
+	color: #fff;
+	z-index: 999999;
+}
+
+.editing_name_var {
+	min-width: 40px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+}
+
+.global_container .global_type:active {
+	background: #636363;
+	color: #fff;
+}
+
+.global_container i {
+	cursor: pointer;
+}
+
+.global_container .ui.icon.plus.square.outline, .global_container .ui.icon.minus.square.outline {
+	font-size: 120%;
+}
+
+.character_equals {
+	vertical-align: sub;
+    font-size: 150%;
+}
+
+.red.icon.times.remove_global {
+	float: right;
+    margin-right: -1px;
+    margin-left: 8px;
+}
+
+.tr_manage_lines {
+	padding-top: 10px;
+}
+
+.ui.icon.button.add-globalVar-button.add_global_button {
+	padding: 8px;
+}
+.all_functions {
+	margin-top: -5px;
+}
 /* DOUGLAS */
 /*
 .div-over {

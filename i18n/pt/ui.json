@@ -32,6 +32,8 @@
   "text_write_var": "Escrita de dados",
   "text_command_read":"leia",
   "text_command_write":"escreva",
+  "text_return":"retorne",
+  "text_btn_return":"Retorno",
   "text_comment": "Comentário",
   "join_or": "ou",
   "text_attribution": "Atribuição",
@@ -55,5 +57,18 @@
   "text_value": "Valor",
   "text_operator": "Operador",
   "text_parentheses": "Parênteses",
-  "text_change": "Alterar"
+  "text_change": "Alterar",
+  "text_teacher_algorithm": "Algoritmo",
+  "text_teacher_algorithm_include": "Incluir o algoritmo abaixo no exercício",
+  "text_teacher_test_case": "Casos de teste",
+  "text_teacher_config": "Configurações",
+  "text_teacher_data_types": "Tipos de dados",
+  "text_teacher_commands": "Comandos",
+  "text_teacher_functions": "Funções",
+  "text_teacher_create_functions": "Criar novas funções",
+  "text_teacher_create_movement_functions": "Movimentar funções",
+  "text_teacher_test_case_input": "Entrada",
+  "text_teacher_test_case_output": "Saída",
+  "text_teacher_test_case_actions": "Ações",
+  "text_teacher_test_case_add": "Adicionar caso de teste"
 }

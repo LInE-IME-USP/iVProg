@@ -1,4 +1,4 @@
-import { Types } from './../ast/types';
+import { Types } from './types';
 import WatchJS from 'melanke-watchjs';
 
 export const COMMAND_TYPES = Object.freeze({function:"function", comment:"comment", reader:"reader", writer:"writer", attribution:"attribution", iftrue:"iftrue",

@@ -30,7 +30,7 @@ describe('A break command inside a switch..case', function () {
     const parser = new IVProgParser(input, lexer);
     const exec = new IVProgProcessor(parser.parseTree());
     exec.interpretAST().then(sto => {
-      expect(sto.applyStore('a').value).toEqual(-5);
+      expect(sto.applyStore('a').number).toEqual(-5);
       done();
     }).catch( err => done(err));
   });

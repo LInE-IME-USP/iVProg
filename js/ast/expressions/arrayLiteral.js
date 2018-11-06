@@ -1,10 +1,9 @@
 import { Literal } from './literal';
-import { Types } from './../types';
 
 export class ArrayLiteral extends Literal {
   
-  constructor(value) {
-    super(Types.ARRAY);
+  constructor(type, value) {
+    super(type);
     this.value = value;
   }
 

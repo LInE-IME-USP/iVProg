@@ -16,7 +16,8 @@ export class DOMConsole {
 
   constructor (elementID) {
     this.input = null;
-    this.needInput = true;
+    this.needInput = false;
+    this.anyKey = false;
     this.parent = $(elementID);
     this.setup();
     this.inputListeners = [];
@@ -34,7 +35,7 @@ export class DOMConsole {
         return;
       }
       const keyCode = event.which;
-      if (keyCode === 13) {
+      if (keyCode === 13 || this.anyKey) {
         let text = this.input.val();
         text = text.replace('[\n\r]+', '');
         this.notifyListeners(text);
@@ -57,6 +58,7 @@ export class DOMConsole {
     this.inputListeners.forEach(resolve => resolve(text));
     this.inputListeners.splice(0, this.inputListeners.length);
     this.needInput = false;
+    this.anyKey = false;
   }
 
   write (text) {
@@ -97,8 +99,9 @@ export class DOMConsole {
     this.parent.empty();
   }
 
-  requestInput (callback) {
+  requestInput (callback, anyKey = false) {
     this.inputListeners.push(callback);
+    this.anyKey = anyKey;
     this.input.focus();
     this.needInput = true;
   }

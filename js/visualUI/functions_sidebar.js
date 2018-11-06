@@ -10,11 +10,10 @@ import * as VariableValueMenu from './commands/variable_value_menu';
 import { DOMConsole } from './../io/domConsole';
 import { IVProgParser } from './../ast/ivprogParser';
 import { IVProgProcessor } from './../processor/ivprogProcessor';
-import { LanguageService } from '../services/languageService';
 import WatchJS from 'melanke-watchjs';
 import { SemanticAnalyser } from '../processor/semantic/semanticAnalyser';
 import { IVProgAssessment } from '../assessment/ivprogAssessment';
-import * as AlgorithmManagement from './algorithm';
+import * as AlgorithmManagement from './algorithm_sidebar';
 
 
 var counter_new_functions = 0;
@@ -37,9 +36,12 @@ program.addFunction(mainFunction);
 
 window.program_obj = program;
 
+window.generator = CodeManagement.generate;
+window.runCodeAssessment = runCodeAssessment;
+window.renderAlgorithm = AlgorithmManagement.renderAlgorithm;
 WatchJS.watch(program.globals, function(){
-      console.log("as globais foram alteradas!");
-  }, 1);
+  AlgorithmManagement.renderAlgorithm();
+}, 1);
 
 function addFunctionHandler () {
 
@@ -68,7 +70,6 @@ function updateReturnType (function_obj, new_type, new_dimensions = 0) {
 }
 
 function removeFunction (function_obj) {
-
   var index = program.functions.indexOf(function_obj);
   if (index > -1) {
     program.functions.splice(index, 1);
@@ -220,7 +221,7 @@ export function renderFunction (function_obj) {
   } else {
       appender += '<div class="ui function_return"></div>';
 
-      appender += '<div class="function_name_div"><span class="span_name_function name_function_updated">'+function_obj.name+'</span> <i class="icon small pencil alternate enable_edit_name_function name_function_updated"></i></div> '
+      appender += '<div class="function_name_div"><span class="span_name_function name_function_updated">'+function_obj.name+'</span> <i class="icon small pencil alternate enable_edit_name_function name_function_updated"></i></div> ' 
         + '( <i class="ui icon plus square outline add_parameter_button"></i> <div class="ui large labels parameters_list container_parameters_list">';
   }
 
@@ -307,6 +308,13 @@ $( document ).ready(function() {
     renderFunction(program.functions[i]);
   }
 
+  $('.div_to_body div a').popup({
+    delay: {
+      show: 750,
+      hide: 0
+    }
+  });
+
 });
 
 
@@ -322,25 +330,16 @@ function runCodeAssessment () {
   $("#ivprog-term").slideDown(500);
   const runner = new IVProgAssessment(strCode, testCases, domConsole);
 
-  runner.runTest().then(grade => studentTemp = grade).catch( err => domConsole.err(err.message));
-  
-  gradeMonitor();
-}
-
-function gradeMonitor () {
-
-  if (studentTemp == null) { 
-    setTimeout(gradeMonitor, 50); 
-  } else {
-    window.studentGrade = studentTemp;
+  runner.runTest().then(grade => {
     if (!is_iassign) {
-      parent.getEvaluationCallback(window.studentGrade);
+      parent.getEvaluationCallback(grade);
     } else {
       is_iassign = false;
     }
-  }
-
+  }).catch( err => domConsole.err(err.message));
+  
 }
+
 
 function runCode () {
   const strCode = CodeManagement.generate();

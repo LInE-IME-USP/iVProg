@@ -30,7 +30,7 @@ describe('A non-const global variable', function () {
     const parser = new IVProgParser(input, lexer);
     const exec = new IVProgProcessor(parser.parseTree());
     exec.interpretAST().then(sto => {
-      expect(sto.applyStore('a').value).toEqual(13);
+      expect(sto.applyStore('a').number).toEqual(13);
       done();
     }).catch( err => done(err));
   });
