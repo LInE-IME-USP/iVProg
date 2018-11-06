@@ -152,6 +152,18 @@ $(document).ready(function() {
         //$('.resolucao').css("display","block");
         getiLMContent();
 
+
+        $( document ).ready(function() {
+            $('.div_to_body').mousemove(function(e) {
+                trackingMatrix.push(adCoords(e, 0));
+            });
+
+            $('.div_to_body').click(function(e) {
+                trackingMatrix.push(adCoords(e, 1));                    
+            });
+
+        });
+
     } else {
         // Caso não esteja em modo de resolução de atividade, a visualização no momento
         // é para a elaboração de atividade:
@@ -305,13 +317,6 @@ function adCoords(e, code){
 }
 
 $( document ).ready(function() {
-    $('.div_to_body').mousemove(function(e) {
-        trackingMatrix.push(adCoords(e, 0));
-    });
-
-    $('.div_to_body').click(function(e) {
-        trackingMatrix.push(adCoords(e, 1));                    
-    });
 
     if (inIframe()) {
         orderIcons();
@@ -321,6 +326,8 @@ $( document ).ready(function() {
 
 function orderIcons() {
     $('.ui.one.column.doubling.stackable.grid.container').css('display', 'none');
+    $('.only_in_frame').css('display', 'block');
+    
 }
 
 

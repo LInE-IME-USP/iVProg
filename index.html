@@ -41,49 +41,45 @@
                 <button class="ui button active visual_coding_button">Visual</button>
                 <button class="ui button textual_coding_button">Textual</button>
               </div>
-
-              <a class="ivprog_format_info">
-                <i class="circular inverted some-wrapping-div teal info icon small label ivprog_format_info popup"></i>
-              </a>
-              <div class="ui custom popup">
-                Choice how you prefer to develop. If disabled, teacher doesn't allow this change. <a href="#">See documentation about it.</a>
-              </div>
             </div>
           </div>
 
       </div>
-      
+    </div>
 
+    <div class="ui container main_title only_in_frame" style="display: none;">
+      <h2>iVProg</h2>
+      <span class="subtext">interactive coding</span>
     </div>
 
     <div class="ui raised container segment div_to_body">
 
       <div class="ui icon menu center aligned container" style="width: 438px; margin-top: -25px;">
-        <a class="item visual_coding_button" data-content="Testing interface">
+        <a class="item visual_coding_button">
           <i class="window maximize outline icon"></i>
         </a>
         <a class="item textual_coding_button">
           <i class="code icon"></i>
         </a>
-        <a class="item">
+        <a class="item upload_file_button">
           <i class="upload icon"></i>
         </a>
-        <a class="item">
+        <a class="item download_file_button">
           <i class="download icon"></i>
         </a>
         <a class="item undo_button disabled">
           <i class="undo icon"></i>
         </a>
-        <a class="item">
+        <a class="item redo_button">
           <i class="redo icon"></i>
         </a>
         <a class="item run_button">
           <i class="play icon"></i>
         </a>
-        <a class="item assessment">
+        <a class="item assessment assessment_button">
           <i class="check icon"></i>
         </a>
-        <a class="item">
+        <a class="item help_button">
           <i class="help icon"></i>
         </a>
       </div>
@@ -115,9 +111,10 @@
       <div class="ui one column container segment ivprog_textual_panel loading" style="display: none;">
         <textarea class="ivprog_textual_code" disabled></textarea>
       </div>
-      <div id='ivprog-term' class="six column wide" style="display: none">
+
+      <div id='ivprog-term' class="six column wide">
+        <div class="div_toggle_console"><i class="inverted terminal icon green button_toggle_console"></i></div>
       </div>
-      
     </div>
 
     </div>

@@ -227,8 +227,8 @@ export function renderFunction (function_obj) {
     + (function_obj.is_hidden ? ' <div class="function_area" style="display: none;"> ' : ' <div class="function_area"> ')
 
     + '<div class="ui top attached segment variables_list_div">'
-    /*+ renderVariables(function_obj, sequence)*/
     + '</div>'
+
     + '<div class="ui bottom attached segment commands_list_div" id="function_drag_cmd_">';
 
   appender += '</div>';
@@ -264,6 +264,14 @@ export function renderFunction (function_obj) {
     CommandsManagement.renderCommand(function_obj.commands[j], $(appender.find('.commands_list_div')[0]), 3, function_obj);
   }
 
+
+  $('.minimize_function_button').popup({
+    content : LocalizedStrings.getUI("tooltip_minimize"),
+    delay: {
+      show: 750,
+      hide: 0
+    }
+  });
 }
 
 
@@ -295,6 +303,10 @@ export function initVisualUI () {
     runCodeAssessment();
     is_iassign = true;
   });
+
+  $('.div_toggle_console').on('click', () => {
+    toggleConsole();
+  });
 }
 
 var is_iassign = false;
@@ -305,17 +317,92 @@ $( document ).ready(function() {
     renderFunction(program.functions[i]);
   }
 
-  $('.div_to_body div a').popup({
+  var time_show = 750;
+  $('.visual_coding_button').popup({
+    content : LocalizedStrings.getUI("tooltip_visual"),
     delay: {
-      show: 750,
+      show: time_show,
+      hide: 0
+    }
+  });
+  $('.textual_coding_button').popup({
+    content : LocalizedStrings.getUI("tooltip_textual"),
+    delay: {
+      show: time_show,
+      hide: 0
+    }
+  });
+  $('.upload_file_button').popup({
+    content : LocalizedStrings.getUI("tooltip_upload"),
+    delay: {
+      show: time_show,
+      hide: 0
+    }
+  });
+  $('.download_file_button').popup({
+    content : LocalizedStrings.getUI("tooltip_download"),
+    delay: {
+      show: time_show,
+      hide: 0
+    }
+  });
+  $('.undo_button').popup({
+    content : LocalizedStrings.getUI("tooltip_undo"),
+    delay: {
+      show: time_show,
+      hide: 0
+    }
+  });
+  $('.redo_button').popup({
+    content : LocalizedStrings.getUI("tooltip_redo"),
+    delay: {
+      show: time_show,
+      hide: 0
+    }
+  });
+  $('.run_button').popup({
+    content : LocalizedStrings.getUI("tooltip_run"),
+    delay: {
+      show: time_show,
+      hide: 0
+    }
+  });
+  $('.assessment_button').popup({
+    content : LocalizedStrings.getUI("tooltip_evaluate"),
+    delay: {
+      show: time_show,
+      hide: 0
+    }
+  });
+  $('.help_button').popup({
+    content : LocalizedStrings.getUI("tooltip_help"),
+    delay: {
+      show: time_show,
+      hide: 0
+    }
+  });
+  $('.add_global_button').popup({
+    content : LocalizedStrings.getUI("tooltip_add_global"),
+    delay: {
+      show: time_show,
+      hide: 0
+    }
+  });
+  $('.div_toggle_console').popup({
+    content : LocalizedStrings.getUI("tooltip_console"),
+    delay: {
+      show: time_show,
       hide: 0
     }
   });
 
+
+
 });
 
-
 function runCodeAssessment () {
+  toggleConsole(true);
+
   window.studentGrade = null;
   studentTemp = null;
   const strCode = CodeManagement.generate();
@@ -339,6 +426,8 @@ function runCodeAssessment () {
 
 
 function runCode () {
+  toggleConsole(true);
+
   const strCode = CodeManagement.generate();
   if (strCode == null) {
     return;
@@ -353,17 +442,43 @@ function runCode () {
     const proc = new IVProgProcessor(data);
     proc.registerInput(domConsole);
     proc.registerOutput(domConsole);
-    
+    $("#ivprog-term").addClass('ivprog-term-active');
+
     proc.interpretAST().then( _ => {
       domConsole.info("Programa executado com sucesso!");
+      $("#ivprog-term").removeClass('ivprog-term-active');
     }).catch(err => {
       domConsole.err(err.message);
+      $("#ivprog-term").removeClass('ivprog-term-active');
     }) 
   } catch (error) {
     domConsole.err(error.message);
     console.log(error);
   }
   
+}
+
+function toggleConsole (is_running) {
+
+  if (is_running) {
+    $('.ivprog-term-div').css('display', 'block');
+    $('#ivprog-term').css('min-height', '160px');
+    $('#ivprog-term').css('margin-top', '-170px');
+    return;
+  }
+
+  if ($('#ivprog-term').css('min-height') == '160px') {
+    // esconder
+    $('.ivprog-term-div').css('display', 'none');
+    $('#ivprog-term').css('min-height', '0');
+    $('#ivprog-term').css('margin-top', '-30px');
+    $('#ivprog-term').css('padding', '5px');
+  } else {
+    // mostrar
+    $('.ivprog-term-div').css('display', 'block');
+    $('#ivprog-term').css('min-height', '160px');
+    $('#ivprog-term').css('margin-top', '-170px');
+  }
 }
 
 function waitToCloseConsole () {

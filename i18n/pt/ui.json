@@ -70,5 +70,17 @@
   "text_teacher_test_case_input": "Entrada",
   "text_teacher_test_case_output": "Saída",
   "text_teacher_test_case_actions": "Ações",
-  "text_teacher_test_case_add": "Adicionar caso de teste"
+  "text_teacher_test_case_add": "Adicionar caso de teste",
+  "tooltip_visual": "Programação visual",
+  "tooltip_textual": "Programação textual",
+  "tooltip_upload": "Upload de código fonte",
+  "tooltip_download": "Download do código fonte",
+  "tooltip_undo": "Desfazer",
+  "tooltip_redo": "Refazer",
+  "tooltip_run": "Executar o programa",
+  "tooltip_evaluate": "Avaliar o programa",
+  "tooltip_help": "Ajuda",
+  "tooltip_add_global": "Adicionar variável global",
+  "tooltip_minimize": "Ocultar os elementos da função",
+  "tooltip_console": "Abrir/fechar o terminal"
 }

@@ -69,5 +69,18 @@
   "text_teacher_test_case_input": "Input",
   "text_teacher_test_case_output": "Output",
   "text_teacher_test_case_actions": "Actions",
-  "text_teacher_test_case_add": "Add test cases"
+  "text_teacher_test_case_add": "Add test cases",
+  "tooltip_visual": "Visual programming",
+  "tooltip_textual": "Textual programming",
+  "tooltip_upload": "Upload code file",
+  "tooltip_download": "Download code file",
+  "tooltip_undo": "Undo",
+  "tooltip_redo": "Redo",
+  "tooltip_run": "Run program",
+  "tooltip_evaluate": "Evaluate program",
+  "tooltip_help": "Help",
+  "tooltip_add_global": "Add global variable",
+  "tooltip_minimize": "Hidde function elements",
+  "tooltip_console": "Open/Close console"
+
 }

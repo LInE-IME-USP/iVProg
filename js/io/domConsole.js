@@ -17,6 +17,7 @@ export class DOMConsole {
   constructor (elementID) {
     this.input = null;
     this.needInput = false;
+    this.termDiv = null;
     this.anyKey = false;
     this.parent = $(elementID);
     this.setup();
@@ -46,18 +47,18 @@ export class DOMConsole {
   }
 
   _setupDom () {
-    const termDiv = $("<div></div>");
-    termDiv.addClass("ivprog-term-div");
+    this.termDiv = $("<div></div>");
+    this.termDiv.addClass("ivprog-term-div");
     this.input = $('<input text="type">')
     this.input.addClass("ivprog-term-input");
-    termDiv.append(this.input);
-    this.parent.append(termDiv);
+    this.termDiv.append(this.input);
+    this.parent.append(this.termDiv);
   }
 
   notifyListeners (text) {
     this.inputListeners.forEach(resolve => resolve(text));
     this.inputListeners.splice(0, this.inputListeners.length);
-    this.needInput = false;
+    this.hideInput();
     this.anyKey = false;
   }
 
@@ -79,6 +80,13 @@ export class DOMConsole {
     textDiv.addClass(divClass);
     textDiv.append(text);
     textDiv.insertBefore(this.input);
+    this.scrollTerm();
+  }
+
+  scrollTerm () {
+    this.termDiv.animate({
+      scrollTop: this.termDiv.prop('scrollHeight')
+    }, 0);
   }
 
   getClassForType (type) {
@@ -99,11 +107,21 @@ export class DOMConsole {
     this.parent.empty();
   }
 
+  showInput () {
+    this.needInput = true;
+    this.input.show();
+    this.input.focus();
+  }
+
+  hideInput () {
+    this.needInput = false;
+    this.input.hide();
+  }
+
   requestInput (callback, anyKey = false) {
     this.inputListeners.push(callback);
     this.anyKey = anyKey;
-    this.input.focus();
-    this.needInput = true;
+    this.showInput();
   }
 
   sendOutput (text) {

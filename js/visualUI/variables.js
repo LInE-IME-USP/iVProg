@@ -92,7 +92,7 @@ export function renderVariable (function_container, new_var, function_obj) {
   	} else {
   		element += '<div class="text">' + LocalizedStrings.getUI(new_var.type.toLowerCase()) + '</div>';
   	}
-	element += '<i class="dropdown icon"></i><div class="menu">';
+	element += '<div class="menu">';
 
 	for (var tm in Types) {
   		if (tm == Types.VOID.toUpperCase()) {
@@ -106,7 +106,6 @@ export function renderVariable (function_container, new_var, function_obj) {
   			continue;
   		}
   		element += '<div class="item">'
-	    	+ '<i class="dropdown icon"></i>'
 	    	+  LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI(tm.toLowerCase())
 	      	+  '<div class="menu">'
 		        + '<div class="item" data-text="'+ LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI(tm.toLowerCase())+' [ ] " data-type="'+tm+'" data-dimensions="1">[ ]</div>'
@@ -117,7 +116,7 @@ export function renderVariable (function_container, new_var, function_obj) {
 
     element += '</div></div> ';
 
-    element += '<span class="span_name_variable enable_edit_name_variable">'+new_var.name+'</span> <i class="icon small pencil alternate enable_edit_name_variable"></i>';
+    element += '<span class="span_name_variable enable_edit_name_variable">'+new_var.name+'</span> ';
 
 	element += ' = <div class="ui div_valor_var">'+new_var.value+'</div>';    
 
