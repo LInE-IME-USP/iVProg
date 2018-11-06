@@ -1,12 +1,11 @@
 import { StoreObject } from './storeObject';
 import Decimal from 'decimal.js';
 
-export class StoreObjectRef extends StoreObject {
+export class StoreObjectArrayAddressRef extends StoreObject {
 
-  constructor (refID, store) {
+  constructor (address) {
     super(null, null, false);
-    this.refID = refID;
-    this.store = store;
+    this.address = address;
   }
 
   get isRef () {
@@ -14,11 +13,11 @@ export class StoreObjectRef extends StoreObject {
   }
 
   get type () {
-    return this.store.applyStore(this.refID).type;
+    return this.address.type;
   }
 
   get value () {
-    return this.store.applyStore(this.refID).value;
+    return this.address.value;
   }
 
   get number () {
@@ -30,14 +29,15 @@ export class StoreObjectRef extends StoreObject {
   }
 
   getRefObj () {
-    return this.store.applyStore(this.refID);
+    return this.address.refValue;
   }
 
   updateRef (stoObj) {
-    this.store.updateStore(this.refID, stoObj);
+    const newArray = this.address.updateArrayObject(stoObj);
+    this.address.store.updateStore(this.address.refID, newArray);
   }
 
   isCompatible (another) {
-    return this.store.applyStore(this.refID).isCompatible(another);
+    return this.address.isCompatible(another);
   }
 }

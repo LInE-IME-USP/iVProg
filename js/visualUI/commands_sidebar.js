@@ -20,7 +20,7 @@ import * as BreaksManagement from './commands/break';
 var has_element_created_draged = false;
 var which_element_is_draged = null;
 
-export function removeCommand (command, function_obj, dom_obj) {
+export function removeCommand(command, function_obj, dom_obj) {
 	console.log('debugging removeCommand');
 	console.log('command');
 	console.log(command);
@@ -38,20 +38,20 @@ export function removeCommand (command, function_obj, dom_obj) {
 	try {
 		if (dom_obj.parent().parent().data('command').commands_block.indexOf(command) > -1) {
 			dom_obj.parent().parent().data('command').commands_block.splice
-			(dom_obj.parent().parent().data('command').commands_block.indexOf(command), 1);
+				(dom_obj.parent().parent().data('command').commands_block.indexOf(command), 1);
 			return true;
-		}	
-	} catch (err) {}
-	
+		}
+	} catch (err) { }
+
 	try {
 		if (dom_obj.parent().parent().data('command').type == Models.COMMAND_TYPES.iftrue) {
 			if (dom_obj.parent().parent().data('command').commands_else.indexOf(command) > -1) {
 				dom_obj.parent().parent().data('command').commands_else.splice
-				(dom_obj.parent().parent().data('command').commands_else.indexOf(command), 1);
+					(dom_obj.parent().parent().data('command').commands_else.indexOf(command), 1);
 				return true;
 			}
 		}
-	} catch (err) {}
+	} catch (err) { }
 
 	console.log('veja: ');
 	console.log(dom_obj.parent());
@@ -66,7 +66,7 @@ export function removeCommand (command, function_obj, dom_obj) {
 	return false;
 }
 
-export function createFloatingCommand (function_obj, function_container, command_type, mouse_event) {
+export function createFloatingCommand(function_obj, function_container, command_type, mouse_event) {
 	var floatingObject;
 
 	switch (command_type) {
@@ -117,10 +117,10 @@ export function createFloatingCommand (function_obj, function_container, command
 
 	floatingObject.draggable().appendTo("body");
 
-	floatingObject.mouseup(function(evt) {
-	  manageCommand(function_obj, function_container, evt, command_type);
+	floatingObject.mouseup(function (evt) {
+		manageCommand(function_obj, function_container, evt, command_type);
 	});
-	
+
 	floatingObject.css("position", "absolute");
 	mouse_event.type = "mousedown.draggable";
 	mouse_event.target = floatingObject[0];
@@ -130,7 +130,7 @@ export function createFloatingCommand (function_obj, function_container, command
 }
 
 // before_after_inside: 1 -> before, 2 -> after, 3 -> inside
-export function renderCommand (command, element_reference, before_after_inside, function_obj) {
+export function renderCommand(command, element_reference, before_after_inside, function_obj) {
 	var createdElement;
 	switch (command.type) {
 		case Models.COMMAND_TYPES.comment:
@@ -188,14 +188,14 @@ export function renderCommand (command, element_reference, before_after_inside, 
 			createdElement.insertAfter(element_reference);
 			break;
 
-		case 3: 
+		case 3:
 			element_reference.append(createdElement);
 			break;
 	}
 
 }
 
-export function genericCreateCommand (command_type) {
+export function genericCreateCommand(command_type) {
 
 	switch (command_type) {
 
@@ -212,7 +212,7 @@ export function genericCreateCommand (command_type) {
 			return new Models.Writer([new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.all, null, null, null, true)]);
 
 		case Models.COMMAND_TYPES.attribution:
-			return new Models.Attribution(new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.only_variable, null, null, null, false), 
+			return new Models.Attribution(new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.only_variable, null, null, null, false),
 				[]);
 
 		case Models.COMMAND_TYPES.functioncall:
@@ -222,9 +222,9 @@ export function genericCreateCommand (command_type) {
 			return new Models.IfTrue(new Models.ConditionalExpression(null), null, null);
 
 		case Models.COMMAND_TYPES.repeatNtimes:
-			return new Models.RepeatNTimes(new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.only_variable, null, null, null, false), 
-											new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.only_variable, null, null, null, false),
-										     null, new Models.ConditionalExpression(null), null, null);
+			return new Models.RepeatNTimes(new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.only_variable, null, null, null, false),
+				new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.only_variable, null, null, null, false),
+				null, new Models.ConditionalExpression(null), null, null);
 
 		case Models.COMMAND_TYPES.whiletrue:
 			return new Models.WhileTrue(new Models.ConditionalExpression(null), null);
@@ -240,9 +240,9 @@ export function genericCreateCommand (command_type) {
 	}
 }
 
-function manageCommand (function_obj, function_container, event, command_type, function_called) {
+function manageCommand(function_obj, function_container, event, command_type, function_called) {
 
-	$( ".created_element" ).each(function( index ) { 
+	$(".created_element").each(function (index) {
 		$(this).remove();
 	});
 
@@ -258,12 +258,12 @@ function manageCommand (function_obj, function_container, event, command_type, f
 	var esta_na_div_correta = false;
 	if (el.hasClass("commands_list_div")) {
 		esta_na_div_correta = true;
-	} 
+	}
 	for (var i = 0; i < hier.length; i++) {
 		var temp = $(hier[i]);
 		if (temp.hasClass("commands_list_div")) {
 			esta_na_div_correta = true;
-		} 
+		}
 		if (temp.data('fun') == function_obj) {
 			esta_correto = true;
 			break;
@@ -288,21 +288,21 @@ function manageCommand (function_obj, function_container, event, command_type, f
 
 		// Se a lista de comandos estiver vazia, então é o primeiro.
 		// Portanto, ele deve soltar o elemento obrigatoriamente no objeto vazio
-		if ((el.data('fun').commands == null)  || (el.data('fun').commands.length == 0)) {
-				// pode adicionar 
-				el.data('fun').commands = [];
+		if ((el.data('fun').commands == null) || (el.data('fun').commands.length == 0)) {
+			// pode adicionar 
+			el.data('fun').commands = [];
 
-				var new_cmd = null;
-				
-				if (function_called == null) 
-					new_cmd = genericCreateCommand(command_type);
-				else if (command_type == 'functioncall')
-					new_cmd = new Models.FunctionCall(new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.only_function, function_called, null, null, false), null);
+			var new_cmd = null;
 
-				el.data('fun').commands.push(new_cmd);
+			if (function_called == null)
+				new_cmd = genericCreateCommand(command_type);
+			else if (command_type == 'functioncall')
+				new_cmd = new Models.FunctionCall(new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.only_function, function_called, null, null, false), null);
 
-				renderCommand(new_cmd, $(function_container).find('.commands_list_div'), 3, function_obj);
-			
+			el.data('fun').commands.push(new_cmd);
+
+			renderCommand(new_cmd, $(function_container).find('.commands_list_div'), 3, function_obj);
+
 		} else { // Entra nesse else, caso já existam outros comandos no bloco:
 
 			findNearbyCommandToAddInFunctionScope(el, event, $(function_container).find('.commands_list_div'), function_obj, command_type, function_called);
@@ -350,7 +350,7 @@ function manageCommand (function_obj, function_container, event, command_type, f
 			}
 		}
 
-		
+
 
 		// se a hierarquia possuir apenas um elemento, então está na raiz dos comandos: 
 		if (hierarquia_bottom_up.length == 1) {
@@ -359,14 +359,14 @@ function manageCommand (function_obj, function_container, event, command_type, f
 			for (var i = 0; i < hier_find.length; i++) {
 				if (typeof $(hier_find[i]).data('command') !== 'undefined') {
 					console.log('QQ2');
-					findBeforeOrAfterCommandToAdd(hier_find[i], event, function_obj, command_type);
+					findBeforeOrAfterCommandToAdd(hier_find[i], event, function_obj, command_type, function_called);
 					sub_elemento = true;
 					break;
 				}
 			}
 			if (!sub_elemento) {
 				console.log('QQ3');
-				findBeforeOrAfterCommandToAdd(el[0], event, function_obj, command_type);
+				findBeforeOrAfterCommandToAdd(el[0], event, function_obj, command_type, function_called);
 			}
 		} else {
 			console.log('QQ4');
@@ -387,28 +387,28 @@ function manageCommand (function_obj, function_container, event, command_type, f
 					}
 				}
 			}
-			
+
 		}
 	}
-	
+
 	has_element_created_draged = false;
 	which_element_is_draged = null;
 }
 
-function insertCommandInBlockHierar (el, event, function_obj, command_type, hier_dom, hier_obj, function_called = null) {
+function insertCommandInBlockHierar(el, event, function_obj, command_type, hier_dom, hier_obj, function_called = null) {
 	var el_jq = $(el);
 	var command_parent = el_jq.data('command');
-	
+
 	if ((el_jq.data('command').type == Models.COMMAND_TYPES.repeatNtimes) ||
-		(el_jq.data('command').type == Models.COMMAND_TYPES.whiletrue)  ||
+		(el_jq.data('command').type == Models.COMMAND_TYPES.whiletrue) ||
 		(el_jq.data('command').type == Models.COMMAND_TYPES.dowhiletrue) ||
-		(el_jq.data('command').type == Models.COMMAND_TYPES.switch) ) {
+		(el_jq.data('command').type == Models.COMMAND_TYPES.switch)) {
 
 		console.log('QQ17');
 
 		if ((el_jq.data('command').type == Models.COMMAND_TYPES.repeatNtimes) ||
-			(el_jq.data('command').type == Models.COMMAND_TYPES.whiletrue)  ||
-			(el_jq.data('command').type == Models.COMMAND_TYPES.dowhiletrue) ) {
+			(el_jq.data('command').type == Models.COMMAND_TYPES.whiletrue) ||
+			(el_jq.data('command').type == Models.COMMAND_TYPES.dowhiletrue)) {
 
 			console.log('QQ18');
 
@@ -417,7 +417,7 @@ function insertCommandInBlockHierar (el, event, function_obj, command_type, hier
 				command_parent.commands_block = [];
 
 				var recentComand = null;
-				if(function_called == null)
+				if (function_called == null)
 					recentComand = genericCreateCommand(command_type);
 				else if (command_type == "functioncall")
 					recentComand = new Models.FunctionCall(new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.only_function, function_called, null, null, false), null);
@@ -436,13 +436,13 @@ function insertCommandInBlockHierar (el, event, function_obj, command_type, hier
 	} else {
 		console.log('QQ19');
 		// entra neste bloco, se soltou o comando sobre outro comando dentro de um subbloco:
-		findBeforeOrAfterCommandToAddInsertBlock(el, event, function_obj, command_type);
+		findBeforeOrAfterCommandToAddInsertBlock(el, event, function_obj, command_type, function_called);
 	}
 }
 
 
 
-function findNearbyCommandToAddInBlockScope (el, event, node_list_commands, function_obj, command_type, command_parent, function_called = null) {
+function findNearbyCommandToAddInBlockScope(el, event, node_list_commands, function_obj, command_type, command_parent, function_called = null) {
 
 	var all_sub = $(node_list_commands).find('div.command_container');
 
@@ -455,7 +455,7 @@ function findNearbyCommandToAddInBlockScope (el, event, node_list_commands, func
 
 	// Descobrindo o elemento mais próximo:
 	for (var i = 0; i < all_sub.length; i++) {
-	
+
 		t_top = all_sub[i].getBoundingClientRect().top;
 		t_bot = all_sub[i].getBoundingClientRect().top + all_sub[i].getBoundingClientRect().height;
 
@@ -472,7 +472,7 @@ function findNearbyCommandToAddInBlockScope (el, event, node_list_commands, func
 		recentComand = genericCreateCommand(command_type);
 	else if (command_type == 'functioncall')
 		recentComand = new Models.FunctionCall(new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.only_function, function_called, null, null, false), null);
-		
+
 	// Está mais próximo da borda de baixo, ou seja.. inserir por último:
 	if ((borda_inferior - event.clientY) < menor_distancia) {
 
@@ -485,7 +485,7 @@ function findNearbyCommandToAddInBlockScope (el, event, node_list_commands, func
 		var index = command_parent.commands_block.indexOf($(elemento_menor_distancia).data('command'));
 
 		if (index > -1) {
-		    command_parent.commands_block.splice(index, 0, recentComand);
+			command_parent.commands_block.splice(index, 0, recentComand);
 		}
 
 		renderCommand(recentComand, elemento_menor_distancia, 1, function_obj);
@@ -494,7 +494,7 @@ function findNearbyCommandToAddInBlockScope (el, event, node_list_commands, func
 
 
 
-function findBeforeOrAfterCommandToAddInsertBlock (el, event, function_obj, command_type) {
+function findBeforeOrAfterCommandToAddInsertBlock(el, event, function_obj, command_type, function_called = null) {
 
 	var el_jq = $(el);
 	var command_parent = $(el.parentNode.parentNode).data('command');
@@ -579,8 +579,13 @@ function findBeforeOrAfterCommandToAddInsertBlock (el, event, function_obj, comm
 	// Está mais próximo da borda de baixo, ou seja.. inserir por último:
 
 	if (d_top < d_bot) {
-		
-		var recentComand = genericCreateCommand(command_type);
+
+		var recentComand = null;
+		if (function_called == null)
+			recentComand = genericCreateCommand(command_type);
+		else if (command_type == 'functioncall')
+			recentComand = new Models.FunctionCall(new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.only_function, function_called, null, null, false), null);
+
 
 		console.log('MMM1');
 
@@ -593,12 +598,15 @@ function findBeforeOrAfterCommandToAddInsertBlock (el, event, function_obj, comm
 				if (command_parent.commands_else == null || command_parent.commands_else.length == 0) {
 					command_parent.commands_else = [];
 
-					var recentComand = genericCreateCommand(command_type);
-					command_parent.commands_else.push(recentComand);
+					var recentComand = null;
+					if (function_called == null)
+						recentComand = genericCreateCommand(command_type);
+					else if (command_type == 'functioncall') recentComand = new Models.FunctionCall(new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.only_function, function_called, null, null, false), null);
+						command_parent.commands_else.push(recentComand);
 
 					renderCommand(recentComand, el_jq, 3, function_obj);
 				} else { // Se já tem algum comando no bloco:
-					findInBlockCorrectPlace(el_jq, event, function_obj, command_type, true);
+					findInBlockCorrectPlace(el_jq, event, function_obj, command_type, true, function_called);
 				}
 				return;
 			}
@@ -606,7 +614,7 @@ function findBeforeOrAfterCommandToAddInsertBlock (el, event, function_obj, comm
 			var index = command_parent.commands_else.indexOf(command_target);
 
 			if (index > -1) {
-			    command_parent.commands_else.splice(index, 0, recentComand);
+				command_parent.commands_else.splice(index, 0, recentComand);
 			}
 
 			renderCommand(recentComand, el, 1, function_obj);
@@ -617,16 +625,20 @@ function findBeforeOrAfterCommandToAddInsertBlock (el, event, function_obj, comm
 				if (command_parent.commands_block == null || command_parent.commands_block.length == 0) {
 					command_parent.commands_block = [];
 					console.log('SSS4');
-					var recentComand = genericCreateCommand(command_type);
+					var recentComand = null;
+					if (function_called == null)
+						recentComand = genericCreateCommand(command_type);
+					else if (command_type == 'functioncall')
+						recentComand = new Models.FunctionCall(new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.only_function, function_called, null, null, false), null);
 					command_parent.commands_block.push(recentComand);
 
 					renderCommand(recentComand, el_jq, 3, function_obj);
 				} else {
 					console.log('SSS5');
-					findInBlockCorrectPlace(el_jq, event, function_obj, command_type);
+					findInBlockCorrectPlace(el_jq, event, function_obj, command_type, function_called);
 				}
-				
-				
+
+
 				return;
 			}
 			console.log('MMM6');
@@ -634,17 +646,21 @@ function findBeforeOrAfterCommandToAddInsertBlock (el, event, function_obj, comm
 			var index = command_parent.commands_block.indexOf(command_target);
 
 			if (index > -1) {
-			    command_parent.commands_block.splice(index, 0, recentComand);
+				command_parent.commands_block.splice(index, 0, recentComand);
 			}
 
 			renderCommand(recentComand, el, 1, function_obj);
 		}
 
-		
+
 
 	} else {
 		console.log('XXX1');
-		var recentComand = genericCreateCommand(command_type);
+		var recentComand = null;
+		if (function_called == null)
+			recentComand = genericCreateCommand(command_type);
+		else if (command_type == 'functioncall')
+			recentComand = new Models.FunctionCall(new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.only_function, function_called, null, null, false), null);
 
 		if (is_in_else) {
 
@@ -653,13 +669,17 @@ function findBeforeOrAfterCommandToAddInsertBlock (el, event, function_obj, comm
 				if (command_parent.commands_else == null || command_parent.commands_else.length == 0) {
 					command_parent.commands_else = [];
 					console.log('SSS1');
-					var recentComand = genericCreateCommand(command_type);
+					var recentComand = null;
+					if (function_called == null)
+						recentComand = genericCreateCommand(command_type);
+					else if (command_type == 'functioncall')
+						recentComand = new Models.FunctionCall(new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.only_function, function_called, null, null, false), null);
 					command_parent.commands_else.push(recentComand);
 
 					renderCommand(recentComand, el_jq, 3, function_obj);
 				} else { // Se já tem algum comando no bloco:
 					console.log('SSS2');
-					findInBlockCorrectPlace(el_jq, event, function_obj, command_type, true);
+					findInBlockCorrectPlace(el_jq, event, function_obj, command_type, true, function_called);
 				}
 				return;
 			}
@@ -668,7 +688,7 @@ function findBeforeOrAfterCommandToAddInsertBlock (el, event, function_obj, comm
 			var index = command_parent.commands_else.indexOf(command_target);
 
 			if (index > -1) {
-			    command_parent.commands_else.splice((index + 1), 0, recentComand);
+				command_parent.commands_else.splice((index + 1), 0, recentComand);
 			}
 
 			renderCommand(recentComand, el, 2, function_obj);
@@ -680,16 +700,20 @@ function findBeforeOrAfterCommandToAddInsertBlock (el, event, function_obj, comm
 				if (command_parent.commands_block == null || command_parent.commands_block.length == 0) {
 					command_parent.commands_block = [];
 
-					var recentComand = genericCreateCommand(command_type);
+					var recentComand = null;
+					if (function_called == null)
+						recentComand = genericCreateCommand(command_type);
+					else if (command_type == 'functioncall')
+						recentComand = new Models.FunctionCall(new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.only_function, function_called, null, null, false), null);
 					command_parent.commands_block.push(recentComand);
 					console.log('SSS6');
 					renderCommand(recentComand, el_jq, 3, function_obj);
 				} else {
 					console.log('SSS7');
-					findInBlockCorrectPlace(el_jq, event, function_obj, command_type);
+					findInBlockCorrectPlace(el_jq, event, function_obj, command_type, function_called);
 				}
-				
-				
+
+
 				return;
 			}
 
@@ -697,40 +721,45 @@ function findBeforeOrAfterCommandToAddInsertBlock (el, event, function_obj, comm
 			var index = command_parent.commands_block.indexOf(command_target);
 
 			if (index > -1) {
-			    command_parent.commands_block.splice((index + 1), 0, recentComand);
+				command_parent.commands_block.splice((index + 1), 0, recentComand);
 			}
 
 			renderCommand(recentComand, el, 2, function_obj);
 		}
 
-		
+
 	}
 }
 
-function insertCommandInBlock (el, event, function_obj, command_type) {
+function insertCommandInBlock(el, event, function_obj, command_type, function_called = 0) {
 	var el_jq = $(el);
 	var command_parent = el_jq.data('command');
 
 	if ((el_jq.data('command').type == Models.COMMAND_TYPES.repeatNtimes) ||
-		(el_jq.data('command').type == Models.COMMAND_TYPES.whiletrue)  ||
-		(el_jq.data('command').type == Models.COMMAND_TYPES.dowhiletrue) ) {
+		(el_jq.data('command').type == Models.COMMAND_TYPES.whiletrue) ||
+		(el_jq.data('command').type == Models.COMMAND_TYPES.dowhiletrue)) {
 
 		// Se não tiver outro comando ainda no bloco, só adiciona: 
 		if (command_parent.commands_block == null || command_parent.commands_block.length == 0) {
 			command_parent.commands_block = [];
 
-			var recentComand = genericCreateCommand(command_type);
+			var recentComand = null;
+			if (function_called == null)
+				recentComand = genericCreateCommand(command_type);
+			else if (command_type == 'functioncall')
+				recentComand = new Models.FunctionCall(new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.only_function, function_called, null, null, false), null);
+
 			command_parent.commands_block.push(recentComand);
 
 			renderCommand(recentComand, el_jq.find('.block_commands'), 3, function_obj);
 		} else { // Se já tem algum comando no bloco:
-			findInBlockCorrectPlace(el, event, function_obj, command_type);
+			findInBlockCorrectPlace(el, event, function_obj, command_type, function_called);
 		}
 
 	} else if (el_jq.data('command').type == Models.COMMAND_TYPES.iftrue) {
 
 		console.log('QQ9');
-		
+
 		// no if ou no else?
 		var correct_div = $(document.elementFromPoint(event.pageX, event.pageY));
 		var is_in_if = true;
@@ -757,24 +786,32 @@ function insertCommandInBlock (el, event, function_obj, command_type) {
 			if (command_parent.commands_block == null || command_parent.commands_block.length == 0) {
 				command_parent.commands_block = [];
 
-				var recentComand = genericCreateCommand(command_type);
+				var recentComand = null;
+				if (function_called == null)
+					recentComand = genericCreateCommand(command_type);
+				else if (command_type == 'functioncall')
+					recentComand = new Models.FunctionCall(new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.only_function, function_called, null, null, false), null);
 				command_parent.commands_block.push(recentComand);
 
 				renderCommand(recentComand, el_jq.find('.commands_if'), 3, function_obj);
 			} else { // Se já tem algum comando no bloco:
-				findInBlockCorrectPlace(el_jq.find('.commands_if'), event, function_obj, command_type);
+				findInBlockCorrectPlace(el_jq.find('.commands_if'), event, function_obj, command_type, function_called);
 			}
 
 		} else {
 			if (command_parent.commands_else == null || command_parent.commands_else.length == 0) {
 				command_parent.commands_else = [];
 
-				var recentComand = genericCreateCommand(command_type);
+				var recentComand = null;
+				if (function_called == null)
+					recentComand = genericCreateCommand(command_type);
+				else if (command_type == 'functioncall')
+					recentComand = new Models.FunctionCall(new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.only_function, function_called, null, null, false), null);
 				command_parent.commands_else.push(recentComand);
 
 				renderCommand(recentComand, el_jq.find('.commands_else'), 3, function_obj);
 			} else { // Se já tem algum comando no bloco:
-				findInBlockCorrectPlace(el_jq.find('.commands_else'), event, function_obj, command_type, true);
+				findInBlockCorrectPlace(el_jq.find('.commands_else'), event, function_obj, command_type, true, function_called);
 			}
 
 		}
@@ -785,13 +822,13 @@ function insertCommandInBlock (el, event, function_obj, command_type) {
 	}
 }
 
-function addCommandToSwitchCase (event, function_obj, command_type) {
+function addCommandToSwitchCase(event, function_obj, command_type) {
 
 	var el = $(document.elementFromPoint(event.clientX, event.clientY));
 
 	var which_case = el.data('switchcase');
 	var case_div = el;
-	
+
 	if (!which_case) {
 		var hier_find = el.parentsUntil(".all_cases_div");
 		for (var i = 0; i < hier_find.length; i++) {
@@ -806,11 +843,15 @@ function addCommandToSwitchCase (event, function_obj, command_type) {
 	if (which_case.commands_block == null || which_case.commands_block.length < 1) {
 		which_case.commands_block = [];
 
-		var recentComand = genericCreateCommand(command_type);
+		var recentComand = null;
+		if (function_called == null)
+			recentComand = genericCreateCommand(command_type);
+		else if (command_type == 'functioncall')
+			recentComand = new Models.FunctionCall(new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.only_function, function_called, null, null, false), null);
 		which_case.commands_block.push(recentComand);
 		renderCommand(recentComand, case_div.find('.case_commands_block'), 3, function_obj);
 	} else {
-		findInBlockCorrectPlaceInSwitchCase(which_case, case_div, event, function_obj, command_type);
+		findInBlockCorrectPlaceInSwitchCase(which_case, case_div, event, function_obj, command_type, function_called);
 	}
 
 }
@@ -818,7 +859,7 @@ function addCommandToSwitchCase (event, function_obj, command_type) {
 
 
 
-function findInBlockCorrectPlaceInSwitchCase (which_case, case_div, event, function_obj, command_type) {
+function findInBlockCorrectPlaceInSwitchCase(which_case, case_div, event, function_obj, command_type) {
 
 	var all_sub = case_div.find('div.command_container');
 
@@ -831,7 +872,7 @@ function findInBlockCorrectPlaceInSwitchCase (which_case, case_div, event, funct
 
 	// Descobrindo o elemento mais próximo:
 	for (var i = 0; i < all_sub.length; i++) {
-	
+
 		t_top = all_sub[i].getBoundingClientRect().top;
 		t_bot = all_sub[i].getBoundingClientRect().top + all_sub[i].getBoundingClientRect().height;
 
@@ -842,10 +883,14 @@ function findInBlockCorrectPlaceInSwitchCase (which_case, case_div, event, funct
 	}
 
 	var borda_inferior = elemento_menor_distancia.parentNode.getBoundingClientRect().top + elemento_menor_distancia.parentNode.getBoundingClientRect().height;
-	
+
 	// Está mais próximo da borda de baixo, ou seja.. inserir por último:
 	if ((borda_inferior - event.clientY) < menor_distancia) {
-		var recentComand = genericCreateCommand(command_type);
+		var recentComand = null;
+		if (function_called == null)
+			recentComand = genericCreateCommand(command_type);
+		else if (command_type == 'functioncall')
+			recentComand = new Models.FunctionCall(new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.only_function, function_called, null, null, false), null);
 
 		which_case.commands_block.push(recentComand);
 
@@ -853,18 +898,22 @@ function findInBlockCorrectPlaceInSwitchCase (which_case, case_div, event, funct
 
 	} else {
 
-		var recentComand = genericCreateCommand(command_type);
+		var recentComand = null;
+		if (function_called == null)
+			recentComand = genericCreateCommand(command_type);
+		else if (command_type == 'functioncall')
+			recentComand = new Models.FunctionCall(new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.only_function, function_called, null, null, false), null);
 
 		var index = which_case.commands_block.indexOf($(elemento_menor_distancia).data('command'));
 
 		if (index > -1) {
-		    which_case.commands_block.splice(index, 0, recentComand);
-		    renderCommand(recentComand, elemento_menor_distancia, 1, function_obj);
+			which_case.commands_block.splice(index, 0, recentComand);
+			renderCommand(recentComand, elemento_menor_distancia, 1, function_obj);
 		}
 	}
 }
 
-function findInBlockCorrectPlace (el, event, function_obj, command_type, is_in_else = false) {
+function findInBlockCorrectPlace(el, event, function_obj, command_type, is_in_else = false) {
 	var el_jq = $(el);
 	var all_sub = el_jq.find('div.command_container');
 
@@ -877,7 +926,7 @@ function findInBlockCorrectPlace (el, event, function_obj, command_type, is_in_e
 
 	// Descobrindo o elemento mais próximo:
 	for (var i = 0; i < all_sub.length; i++) {
-	
+
 		t_top = all_sub[i].getBoundingClientRect().top;
 		t_bot = all_sub[i].getBoundingClientRect().top + all_sub[i].getBoundingClientRect().height;
 
@@ -891,13 +940,17 @@ function findInBlockCorrectPlace (el, event, function_obj, command_type, is_in_e
 
 	console.log("menor_distancia: ");
 	console.log(elemento_menor_distancia);
-	
+
 	// Está mais próximo da borda de baixo, ou seja.. inserir por último:
 	if ((borda_inferior - event.clientY) < menor_distancia) {
 
 		console.log('QQ11');
-		
-		var recentComand = genericCreateCommand(command_type);
+
+		var recentComand = null;
+		if (function_called == null)
+			recentComand = genericCreateCommand(command_type);
+		else if (command_type == 'functioncall')
+			recentComand = new Models.FunctionCall(new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.only_function, function_called, null, null, false), null);
 
 		var command_parent = el_jq.data('command');
 
@@ -922,7 +975,11 @@ function findInBlockCorrectPlace (el, event, function_obj, command_type, is_in_e
 
 		console.log('QQ12');
 
-		var recentComand = genericCreateCommand(command_type);
+		var recentComand = null;
+		if (function_called == null)
+			recentComand = genericCreateCommand(command_type);
+		else if (command_type == 'functioncall')
+			recentComand = new Models.FunctionCall(new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.only_function, function_called, null, null, false), null);
 
 		var command_parent = el_jq.data('command');
 
@@ -931,31 +988,31 @@ function findInBlockCorrectPlace (el, event, function_obj, command_type, is_in_e
 			var index = command_parent.commands_else.indexOf($(elemento_menor_distancia).data('command'));
 
 			if (index > -1) {
-			    command_parent.commands_else.splice(index, 0, recentComand);
-			    renderCommand(recentComand, elemento_menor_distancia, 1, function_obj);
+				command_parent.commands_else.splice(index, 0, recentComand);
+				renderCommand(recentComand, elemento_menor_distancia, 1, function_obj);
 			}
 
 		} else {
 			var index = command_parent.commands_block.indexOf($(elemento_menor_distancia).data('command'));
 
 			if (index > -1) {
-			    command_parent.commands_block.splice(index, 0, recentComand);
-			    renderCommand(recentComand, elemento_menor_distancia, 1, function_obj);
+				command_parent.commands_block.splice(index, 0, recentComand);
+				renderCommand(recentComand, elemento_menor_distancia, 1, function_obj);
 			}
 
 		}
-		
+
 	}
 }
 
-function findBeforeOrAfterCommandToAdd (el, event, function_obj, command_type) {
+function findBeforeOrAfterCommandToAdd(el, event, function_obj, command_type, function_called = null) {
 	switch ($(el).data('command').type) {
 		case Models.COMMAND_TYPES.iftrue:
 		case Models.COMMAND_TYPES.switch:
 		case Models.COMMAND_TYPES.repeatNtimes:
 		case Models.COMMAND_TYPES.whiletrue:
 		case Models.COMMAND_TYPES.dowhiletrue:
-			insertCommandInBlock(el, event, function_obj, command_type);
+			insertCommandInBlock(el, event, function_obj, command_type, function_called);
 			return;
 	}
 
@@ -973,31 +1030,40 @@ function findBeforeOrAfterCommandToAdd (el, event, function_obj, command_type) {
 
 	// Está mais próximo da borda de baixo, ou seja.. inserir por último:
 	if (d_top < d_bot) {
-		
-		var recentComand = genericCreateCommand(command_type);
+
+		var recentComand = null;
+		if (function_called == null)
+			recentComand = genericCreateCommand(command_type);
+		else if (command_type == 'functioncall')
+			recentComand = new Models.FunctionCall(new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.only_function, function_called, null, null, false), null);
+
 
 		var index = function_obj.commands.indexOf($(el).data('command'));
 
 		if (index > -1) {
-		    function_obj.commands.splice(index, 0, recentComand);
+			function_obj.commands.splice(index, 0, recentComand);
 		}
 
 		renderCommand(recentComand, el, 1, function_obj);
 
 	} else {
-		var recentComand = genericCreateCommand(command_type);
+		var recentComand = null;
+		if (function_called == null)
+			recentComand = genericCreateCommand(command_type);
+		else if (command_type == 'functioncall')
+			recentComand = new Models.FunctionCall(new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.only_function, function_called, null, null, false), null);
 
 		var index = function_obj.commands.indexOf($(el).data('command'));
 
 		if (index > -1) {
-		    function_obj.commands.splice((index + 1), 0, recentComand);
+			function_obj.commands.splice((index + 1), 0, recentComand);
 		}
 
 		renderCommand(recentComand, el, 2, function_obj);
 	}
 }
 
-function findNearbyCommandToAddInFunctionScope (el, event, node_list_commands, function_obj, command_type, function_called = null) {
+function findNearbyCommandToAddInFunctionScope(el, event, node_list_commands, function_obj, command_type, function_called = null) {
 
 	var all_sub = $(node_list_commands).find('div.command_container');
 
@@ -1010,7 +1076,7 @@ function findNearbyCommandToAddInFunctionScope (el, event, node_list_commands, f
 
 	// Descobrindo o elemento mais próximo:
 	for (var i = 0; i < all_sub.length; i++) {
-	
+
 		t_top = all_sub[i].getBoundingClientRect().top;
 		t_bot = all_sub[i].getBoundingClientRect().top + all_sub[i].getBoundingClientRect().height;
 
@@ -1021,16 +1087,16 @@ function findNearbyCommandToAddInFunctionScope (el, event, node_list_commands, f
 	}
 
 	var borda_inferior = elemento_menor_distancia.parentNode.getBoundingClientRect().top + elemento_menor_distancia.parentNode.getBoundingClientRect().height;
-	
+
 	var recentComand = null;
-	if (function_called == null) 
+	if (function_called == null)
 		recentComand = genericCreateCommand(command_type);
 	else if (command_type == 'functioncall')
 		recentComand = new Models.FunctionCall(new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.only_function, function_called, null, null, false), null);
 
 	// Está mais próximo da borda de baixo, ou seja.. inserir por último:
 	if ((borda_inferior - event.clientY) < menor_distancia) {
-		
+
 		function_obj.commands.push(recentComand);
 		//
 		renderCommand(recentComand, node_list_commands, 3, function_obj);
@@ -1040,7 +1106,7 @@ function findNearbyCommandToAddInFunctionScope (el, event, node_list_commands, f
 		var index = function_obj.commands.indexOf($(elemento_menor_distancia).data('command'));
 
 		if (index > -1) {
-		    function_obj.commands.splice(index, 0, recentComand);
+			function_obj.commands.splice(index, 0, recentComand);
 		}
 
 		renderCommand(recentComand, elemento_menor_distancia, 1, function_obj);
@@ -1101,14 +1167,14 @@ createFloatingCommand = function (function_obj, function_container, command_type
 	}
 	floatingObject.draggable().appendTo("body");
 
-	floatingObject.on('dragstart', function(e) {
+	floatingObject.on('dragstart', function (e) {
 		console.log("TESTEEEEE");
 	}).trigger('dragstart');
 
-	floatingObject.mouseup(function(evt) {
+	floatingObject.mouseup(function (evt) {
 		console.log('mouseup')
 		$(".commands_list_div, .commands_list_div, .block_commands, .command_container").off('mouseenter mouseleave');
-	  manageCommand(function_obj, function_container, evt, command_type);
+		manageCommand(function_obj, function_container, evt, command_type);
 	});
 
 	floatingObject.css("position", "absolute");
@@ -1238,6 +1304,6 @@ manageCommand = function(function_obj, function_container, event, command_type) 
 	which_element_is_draged = null;
 }
 */
-export function prepareManageCommand (function_obj, function_container, evt, command_type, function_called = null) {
+export function prepareManageCommand(function_obj, function_container, evt, command_type, function_called = null) {
 	manageCommand(function_obj, function_container, evt, command_type, function_called);
 }

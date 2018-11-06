@@ -12,23 +12,28 @@ import { IVProgParser } from './../ast/ivprogParser';
 import { IVProgProcessor } from './../processor/ivprogProcessor';
 import { LanguageService } from '../services/languageService';
 import WatchJS from 'melanke-watchjs';
+import { SemanticAnalyser } from '../processor/semantic/semanticAnalyser';
+import { IVProgAssessment } from '../assessment/ivprogAssessment';
+import * as AlgorithmManagement from './algorithm';
 
 
 var counter_new_functions = 0;
 var counter_new_parameters = 0;
 
+let studentTemp = null;
 let domConsole = null;
+window.studentGrade = null;
 const program = new Models.Program();
-const variable1 = new Models.Variable(Types.INTEGER, "a", 1);
-const mainFunction = new Models.Function(LocalizedStrings.getUI("start"), Types.VOID, 0, [], true, false, [variable1]);
+/*const variable1 = new Models.Variable(Types.INTEGER, "a", 1);*/
+const mainFunction = new Models.Function(LocalizedStrings.getUI("start"), Types.VOID, 0, [], true, false);
 mainFunction.function_comment = new Models.Comment(LocalizedStrings.getUI('text_comment_main'));
-const parameter1 = new Models.Variable(Types.INTEGER, "par_1", 1);
+/*const parameter1 = new Models.Variable(Types.INTEGER, "par_1", 1);
 const command1 = new Models.Comment(new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.only_value, "Testing rendering commands"));
 
-const sumFunction = new Models.Function("soma", Types.INTEGER, 0, [parameter1], false, false, [], null, [command1]);
+const sumFunction = new Models.Function("soma", Types.INTEGER, 0, [parameter1], false, false, [], null, [command1]);*/
 
 program.addFunction(mainFunction);
-program.addFunction(sumFunction);
+//program.addFunction(sumFunction);
 
 window.program_obj = program;
 
@@ -178,7 +183,7 @@ function renderFunctionReturn (function_obj, function_element) {
 }
 
 
-function renderFunction (function_obj) {
+export function renderFunction (function_obj) {
 
   var appender = '<div class="ui secondary segment function_div list-group-item">';
 
@@ -194,8 +199,7 @@ function renderFunction (function_obj) {
   appender += '<div class="ui small icon buttons add_var_top_button"><div class="ui icon button add_var_button_function"><i class="icon superscript"></i></div>';
 
   appender += '<div class="ui icon button dropdown menu_commands" ><i class="icon code"></i> <div class="menu"> ';
-  appender += '<a class="item" data-command="'+Models.COMMAND_TYPES.break+'"><i class="download icon"></i> ' +LocalizedStrings.getUI('text_break')+ '</a>'
-        + '<a class="item" data-command="'+Models.COMMAND_TYPES.reader+'"><i class="download icon"></i> ' +LocalizedStrings.getUI('text_read_var')+ '</a>'
+  appender += '<a class="item" data-command="'+Models.COMMAND_TYPES.reader+'"><i class="download icon"></i> ' +LocalizedStrings.getUI('text_read_var')+ '</a>'
         + '<a class="item" data-command="'+Models.COMMAND_TYPES.writer+'"><i class="upload icon"></i> '+LocalizedStrings.getUI('text_write_var')+'</a>'
         + '<a class="item" data-command="'+Models.COMMAND_TYPES.comment+'"><i class="quote left icon"></i> '+LocalizedStrings.getUI('text_comment')+'</a>'
         + '<a class="item" data-command="'+Models.COMMAND_TYPES.attribution+'"><i class="arrow left icon"></i> '+LocalizedStrings.getUI('text_attribution')+'</a>'
@@ -205,6 +209,7 @@ function renderFunction (function_obj) {
         + '<a class="item" data-command="'+Models.COMMAND_TYPES.whiletrue+'"><i class="sync icon"></i> '+LocalizedStrings.getUI('text_whiletrue')+'</a>'
         + '<a class="item" data-command="'+Models.COMMAND_TYPES.dowhiletrue+'"><i class="sync icon"></i> '+LocalizedStrings.getUI('text_dowhiletrue')+'</a>'
         + '<a class="item" data-command="'+Models.COMMAND_TYPES.switch+'"><i class="list icon"></i> '+LocalizedStrings.getUI('text_switch')+'</a>'
+        + '<a class="item" data-command="'+Models.COMMAND_TYPES.return+'"><i class="reply icon"></i> '+LocalizedStrings.getUI('text_btn_return')+'</a>'
         + '</div></div></div>';
 
   appender += '<div class="function_signature_div">'+LocalizedStrings.getUI("function")+' ';
@@ -219,7 +224,7 @@ function renderFunction (function_obj) {
         + '( <i class="ui icon plus square outline add_parameter_button"></i> <div class="ui large labels parameters_list container_parameters_list">';
   }
 
-  appender += '</div> ) {</div>'
+  appender += '</div> ) </div>'
     + (function_obj.is_hidden ? ' <div class="function_area" style="display: none;"> ' : ' <div class="function_area"> ')
 
     + '<div class="ui top attached segment variables_list_div">'
@@ -228,16 +233,9 @@ function renderFunction (function_obj) {
     + '<div class="ui bottom attached segment commands_list_div" id="function_drag_cmd_">';
 
 
-  if (function_obj.commands) {
-    for (var l = 0; l < function_obj.commands.length; l++) {
-      //appender += renderElementCommandGeneric(programa.funcoes[sequence].comandos[l], sequence, l, -1, l);
-
-    }
-  }
-
   appender += '</div>';
 
-  appender += '<div class="function_close_div">}</div>'
+  appender += '<div class="function_close_div"></div>'
     + '</div>'
     + '</div>';
 
@@ -294,7 +292,14 @@ export function initVisualUI () {
   $('.textual_coding_button').on('click', () => {
     toggleTextualCoding();
   });
+
+  $('.assessment').on('click', () => {
+    runCodeAssessment();
+    is_iassign = true;
+  });
 }
+
+var is_iassign = false;
 
 $( document ).ready(function() {
 
@@ -304,26 +309,76 @@ $( document ).ready(function() {
 
 });
 
+
+function runCodeAssessment () {
+  window.studentGrade = null;
+  studentTemp = null;
+  const strCode = CodeManagement.generate();
+  if (strCode == null) {
+    return;
+  }
+  if(domConsole == null)
+    domConsole = new DOMConsole("#ivprog-term");
+  $("#ivprog-term").slideDown(500);
+  const runner = new IVProgAssessment(strCode, testCases, domConsole);
+
+  runner.runTest().then(grade => studentTemp = grade).catch( err => domConsole.err(err.message));
+  
+  gradeMonitor();
+}
+
+function gradeMonitor () {
+
+  if (studentTemp == null) { 
+    setTimeout(gradeMonitor, 50); 
+  } else {
+    window.studentGrade = studentTemp;
+    if (!is_iassign) {
+      parent.getEvaluationCallback(window.studentGrade);
+    } else {
+      is_iassign = false;
+    }
+  }
+
+}
+
 function runCode () {
   const strCode = CodeManagement.generate();
-  domConsole = new DOMConsole("#ivprog-term");
+  if (strCode == null) {
+    return;
+  }
+  if(domConsole == null)
+    domConsole = new DOMConsole("#ivprog-term");
   $("#ivprog-term").slideDown(500);
-  const lexer = LanguageService.getCurrentLexer();
-  const ast = new IVProgParser(strCode, lexer).parseTree();
-  const proc = new IVProgProcessor(ast);
-  proc.registerInput(domConsole);
-  proc.registerOutput(domConsole);
-  proc.interpretAST().then( _ => {
-    domConsole.info("Programa executado com sucesso!");
-    domConsole.info("Aperte qualquer tecla para fechar...");
-    const p = new Promise((resolve, _) => {
-      domConsole.requestInput(resolve);
-    });
-    p.then( _ => {
-      domConsole.dispose();
-      domConsole = null;
-      $("#ivprog-term").hide();
-    })
+  try {
+    const parser = IVProgParser.createParser(strCode);
+    const analyser = new SemanticAnalyser(parser.parseTree());
+    const data = analyser.analyseTree();
+    const proc = new IVProgProcessor(data);
+    proc.registerInput(domConsole);
+    proc.registerOutput(domConsole);
+    
+    proc.interpretAST().then( _ => {
+      domConsole.info("Programa executado com sucesso!");
+    }).catch(err => {
+      domConsole.err(err.message);
+    }) 
+  } catch (error) {
+    domConsole.err(error.message);
+    console.log(error);
+  }
+  
+}
+
+function waitToCloseConsole () {
+  domConsole.info("Aperte qualquer tecla para fechar...");
+  const p = new Promise((resolve, _) => {
+    domConsole.requestInput(resolve, true);
+  });
+  p.then( _ => {
+    domConsole.dispose();
+    domConsole = null;
+    $("#ivprog-term").hide();
   })
 }
 
@@ -363,7 +418,7 @@ function updateParameterType(parameter_obj, new_type, new_dimensions = 0) {
 function renderParameter (function_obj, parameter_obj, function_container) {
   var ret = "";
 
-  ret += '<div class="ui label function_name_parameter"><span class="span_name_parameter label_enable_name_parameter">'+parameter_obj.name+'</span> <i class="icon small pencil alternate enable_edit_name_parameter label_enable_name_parameter"></i>';
+  ret += '<div class="ui label function_name_parameter">';
 
   ret += '<div class="ui dropdown parameter_type">';
 
@@ -400,6 +455,8 @@ function renderParameter (function_obj, parameter_obj, function_container) {
   }
 
   ret += '</div></div>';
+
+  ret += '<span class="span_name_parameter label_enable_name_parameter">'+parameter_obj.name+'</span> <i class="icon small pencil alternate enable_edit_name_parameter label_enable_name_parameter"></i>';
 
   ret += ' <i class="red icon times remove_parameter"></i></div>';
 
@@ -600,6 +657,7 @@ renderFunction = function(function_obj) {
         + '<a class="item" data-command="'+Models.COMMAND_TYPES.whiletrue+'"><i class="sync icon"></i> '+LocalizedStrings.getUI('text_whiletrue')+'</a>'
         + '<a class="item" data-command="'+Models.COMMAND_TYPES.dowhiletrue+'"><i class="sync icon"></i> '+LocalizedStrings.getUI('text_dowhiletrue')+'</a>'
         + '<a class="item" data-command="'+Models.COMMAND_TYPES.switch+'"><i class="list icon"></i> '+LocalizedStrings.getUI('text_switch')+'</a>'
+        + '<a class="item" data-command="'+Models.COMMAND_TYPES.return+'"><i class="reply icon"></i> '+LocalizedStrings.getUI('text_btn_return')+'</a>'
         + '</div></div></div>';
 
   appender += '<div class="function_signature_div">'+LocalizedStrings.getUI("function")+' ';
@@ -613,20 +671,34 @@ renderFunction = function(function_obj) {
       appender += '<div class="function_name_div"><span class="span_name_function name_function_updated">'+function_obj.name+'</span> <i class="icon small pencil alternate enable_edit_name_function name_function_updated"></i></div> '
         + '( <i class="ui icon plus square outline add_parameter_button"></i> <div class="ui large labels parameters_list container_parameters_list">';
 
-			var menu_button = '<button class="fluid ui container segment labeled icon button list-group-item menu-item" draggable="true" data-function="' + function_obj.name + '"><i class="list icon"></i> ' + function_obj.name + '</button>';
-			menu_button = $(menu_button);
+      var menu_button = '<button class="fluid ui container segment labeled icon button list-group-item menu-item" draggable="true" data-function="' + function_obj.name + '"><i class="list icon"></i> <span class="function_name">' + function_obj.name + '</span> (<span class="function_params"></span>) : <span class="function_return_type"></span></button>';
+      var params = "";
+      menu_button = $(menu_button);
+      
+      for (var j = 0; j < function_obj.parameters_list.length; j++) {
+        if (j > 0)
+          params += ',';
+        params += function_obj.parameters_list[j].type;
+      }
       menu_button
         .data('fun',function_obj)
         .on('dragstart', function(e) {
           e.originalEvent.dataTransfer.setData("text",JSON.stringify({type:"function",content:function_obj}));
           //evt.originalEvent.dataTransfer.setData("text",$(this).data('command'));
         })
+        .find('.function_params').text(params)
+        .find('.function_return_type').text(function_obj.type);
 
 			$('.functions_labels').append(menu_button);
-			console.log("aqui")
+      console.log("aqui");
+      
+      //var menu_button = $('.functions_labels > [data-function=' + function_obj.name + ']');
+      //var params = "";
+      //menu_button
+
   }
 
-  appender += '</div> ) {</div>'
+  appender += '</div> ) </div>'
     + (function_obj.is_hidden ? ' <div class="function_area" style="display: none;"> ' : ' <div class="function_area"> ')
 
     + '<div class="ui top attached segment variables_list_div">'
@@ -634,17 +706,9 @@ renderFunction = function(function_obj) {
     + '</div>'
     + '<div class="ui bottom attached segment commands_list_div" id="function_drag_cmd_">';
 
-
-  if (function_obj.commands) {
-    for (var l = 0; l < function_obj.commands.length; l++) {
-      //appender += renderElementCommandGeneric(programa.funcoes[sequence].comandos[l], sequence, l, -1, l);
-
-    }
-  }
-
   appender += '</div>';
 
-  appender += '<div class="function_close_div">}</div>'
+  appender += '<div class="function_close_div"></div>'
     + '</div>'
     + '</div>';
 
@@ -932,4 +996,51 @@ enableNameFunctionUpdate = function(function_obj, parent_node) {
     }
   });
 
+}
+
+addParameter = function (function_obj, function_container) {
+  if (function_obj.parameters_list == null) {
+    function_obj.parameters_list = [];
+  }
+  var new_parameter = new Models.Variable(Types.INTEGER, LocalizedStrings.getUI("new_parameter") + "_" + counter_new_parameters);
+  function_obj.parameters_list.push(new_parameter);
+  counter_new_parameters ++;
+
+  renderParameter(function_obj, new_parameter, function_container);
+
+  var menu_button = $('.functions_labels > [data-function=' + function_obj.name + ']');
+  var params = "";
+  for (var j = 0; j < function_obj.parameters_list.length; j++) {
+    if (j > 0)
+      params += ',';
+    params += function_obj.parameters_list[j].type;
+  }
+  menu_button.find('.function_params').text(params);
+}
+
+updateReturnType = function (function_obj, new_type, new_dimensions = 0) {
+  function_obj.return_type = new_type;
+  function_obj.return_dimensions = new_dimensions;
+
+  var menu_button = $('.functions_labels > [data-function=' + function_obj.name + ']');
+  menu_button.find('.function_return_type').text(new_type);
+}
+
+updateParameterType = function (parameter_obj, new_type, new_dimensions = 0) {
+  parameter_obj.type = new_type;
+  parameter_obj.dimensions = new_dimensions;
+
+  if (new_dimensions > 0) {
+    parameter_obj.rows = new_dimensions;
+    parameter_obj.columns = 2;
+  }
+
+  var menu_button = $('.functions_labels > [data-function=' + function_obj.name + ']');
+  var params = "";
+  for (var j = 0; j < function_obj.parameters_list.length; j++) {
+    if (j > 0)
+      params += ',';
+    params += function_obj.parameters_list[j].type;
+  }
+  menu_button.find('.function_params').text(params);
 }
