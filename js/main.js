@@ -1,12 +1,13 @@
 import { runner } from './runner';
 import { initVisualUI } from './visualUI/functions';
 import { LocalizedStrings} from './services/localizedStringsService';
-import line_i18n from 'line-i18n';
+import { i18nHelper } from "./services/i18nHelper";
 
-const StringTypes = line_i18n.StringTypes;
+const i18n = i18nHelper.i18n
+
 export {
   runner,
   initVisualUI,
   LocalizedStrings,
-  StringTypes
+  i18n
 }

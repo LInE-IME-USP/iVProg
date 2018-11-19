@@ -34,7 +34,7 @@ var button_ready = function() {
     .dropdown()
   ;
 
-  $('.program_signature_text').text(i18n('program'));
+  $('.program_signature_text').text(ivprogCore.i18n('program'));
 
   // Atualiza a tela do algoritmo
   //renderAlgorithm();
