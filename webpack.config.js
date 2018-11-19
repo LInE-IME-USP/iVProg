@@ -7,7 +7,8 @@ module.exports = {
     output: {
         path: path.resolve(__dirname, 'build'),
         filename: 'ivprog.bundle.js',
-        library: 'ivprogCore'
+        library: 'ivprogCore',
+        libraryTarget: 'umd'
     },
     node: {
         fs: 'empty',
