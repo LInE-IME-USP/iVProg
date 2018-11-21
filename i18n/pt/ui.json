@@ -42,7 +42,8 @@
   "text_else":"senao",
   "text_for":"para",
   "text_code_while":"enquanto",
-  "text_code_do":"faça",
+  "text_code_do":"faca",
+  "text_command_do":"faça",
   "text_code_switch": "escolha",
   "text_code_case": "caso",
   "text_logic_expression": "Expressão Lógica",
@@ -82,5 +83,8 @@
   "tooltip_help": "Ajuda",
   "tooltip_add_global": "Adicionar variável global",
   "tooltip_minimize": "Ocultar os elementos da função",
-  "tooltip_console": "Abrir/fechar o terminal"
+  "tooltip_console": "Abrir/fechar o terminal",
+  "var_menu_select_var": "Selecione uma variável",
+  "var_menu_select_all": "Selecione",
+  "var_menu_select_function": "Selecione uma função"
 }

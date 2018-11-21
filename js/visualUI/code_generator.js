@@ -155,7 +155,7 @@ function commandsCode (command_obj, indentation = 2) {
 	}
 }
 
-function returnsCode(command_obj, indentation) {
+function returnsCode (command_obj, indentation) {
 	var ret = '\n';
 
 	for (var i = 0; i < indentation; i++) {
@@ -173,7 +173,7 @@ function returnsCode(command_obj, indentation) {
 	return ret;
 }
 
-function breaksCode(command_obj, indentation) {
+function breaksCode (command_obj, indentation) {
 	var ret = '\n';
 
 	for (var i = 0; i < indentation; i++) {
@@ -185,7 +185,7 @@ function breaksCode(command_obj, indentation) {
 	return ret;
 }
 
-function switchsCode(command_obj, indentation) {
+function switchsCode (command_obj, indentation) {
 	var ret = '\n';
 
 	for (var i = 0; i < indentation; i++) {
@@ -213,7 +213,7 @@ function switchsCode(command_obj, indentation) {
 	return ret;
 }
 
-function switchcasesCode(switchcase, indentation) {
+function switchcasesCode (switchcase, indentation) {
 	var ret = '\n';
 
 	for (var i = 0; i < indentation; i++) {
@@ -234,7 +234,7 @@ function switchcasesCode(switchcase, indentation) {
 
 }
 
-function repeatNtimesCode(command_obj, indentation) {
+function repeatNtimesCode (command_obj, indentation) {
 	var ret = '\n';
 
 	for (var i = 0; i < indentation; i++) {
@@ -743,8 +743,10 @@ function variablesCode (variable_obj) {
 
 		switch (temp.type) {
 			case Types.INTEGER:
-			case Types.REAL:
 				ret += '= {' + temp.value + '}';
+				break;
+			case Types.REAL:
+				ret += '= {' + temp.value.toFixed(2) + '}';
 				break;
 			case Types.TEXT:
 				ret += '= {';
@@ -777,11 +779,23 @@ function variablesCode (variable_obj) {
 
 		switch (temp.type) {
 			case Types.INTEGER:
-			case Types.REAL:
 				ret += '= {';
 
 				for (var j = 0; j < temp.rows; j++) {
 					ret += '{' + temp.value[j] + '}';
+
+					if ((j + 1) < temp.rows) {
+						ret += ',';
+					}
+				}
+
+				ret += '}';
+				break;
+			case Types.REAL:
+				ret += '= {';
+
+				for (var j = 0; j < temp.rows; j++) {
+					ret += '{' + temp.value[j].toFixed(2) + '}';
 
 					if ((j + 1) < temp.rows) {
 						ret += ',';
@@ -841,8 +855,10 @@ function variablesCode (variable_obj) {
 
 		switch (temp.type) {
 			case Types.INTEGER:
-			case Types.REAL:
 				ret += '= ' + temp.value;
+				break;
+			case Types.REAL:
+				ret += '= ' + temp.value.toFixed(2);
 				break;
 			case Types.TEXT:
 				ret += '= "' + temp.value + '"';
@@ -896,8 +912,17 @@ function globalsCode () {
 
 				switch (temp.type) {
 					case Types.INTEGER:
-					case Types.REAL:
 						ret += '= {' + temp.value + '}';
+						break;
+					case Types.REAL:
+						ret += '= {';
+						for (var j = 0; j < temp.value.length; j++) {
+							ret += temp.value[j].toFixed(2);
+							if ((j + 1) < temp.value.length) {
+								ret += ',';
+							}
+						}
+						ret += '}';
 						break;
 					case Types.TEXT:
 						ret += '= {';
@@ -930,12 +955,33 @@ function globalsCode () {
 
 				switch (temp.type) {
 					case Types.INTEGER:
-					case Types.REAL:
 						ret += '= {';
 
 						for (var j = 0; j < temp.rows; j++) {
 							ret += '{' + temp.value[j] + '}';
 
+							if ((j + 1) < temp.rows) {
+								ret += ',';
+							}
+						}
+
+						ret += '}';
+						break;
+					case Types.REAL:
+						ret += '= {';
+
+						for (var j = 0; j < temp.rows; j++) {
+							ret += '{';
+
+							for (var k = 0; k < temp.columns; k++) {
+								ret += temp.value[j][k].toFixed(2);
+
+								if ((k + 1) < temp.columns) {
+									ret += ',';
+								}
+							}
+
+							ret += '}';
 							if ((j + 1) < temp.rows) {
 								ret += ',';
 							}
@@ -994,8 +1040,10 @@ function globalsCode () {
 
 				switch (temp.type) {
 					case Types.INTEGER:
-					case Types.REAL:
 						ret += '= ' + temp.value;
+						break;
+					case Types.REAL:
+						ret += '= ' + temp.value.toFixed(2);
 						break;
 					case Types.TEXT:
 						ret += '= "' + temp.value + '"';

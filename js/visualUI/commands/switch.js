@@ -46,6 +46,23 @@ export function renderCase (switchcase, command, function_obj, el) {
 
 	el.append(casediv);
 
+	if (switchcase.commands_block) {
+		for (var j = 0; j < switchcase.commands_block.length; j++) {
+		    CommandsManagement.renderCommand(switchcase.commands_block[j], $(casediv.find('.case_commands_block')[0]), 3, function_obj);
+		}
+	}
+
+	casediv.find('.button_remove_command').on('click', function() {
+		for (var i = 0; i < command.cases.length; i++) {
+			if (switchcase == command.cases[i]) {
+				delete command.cases[i];
+				command.cases.splice(i, 1);
+				casediv.remove();
+				break;
+			}
+		}
+	});
+
 }
 
 function addHandlers (command, function_obj, switch_dom) {

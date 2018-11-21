@@ -73,9 +73,66 @@ export function renderMenu (command, ref_object, dom_object, function_obj, size_
     addFunctionsToMenu(function_obj, menu_var_or_value, ref_object, expression_element);
 
     if (ref_object.content || ref_object.function_called) {
-    	renderPreviousContent(function_obj, menu_var_or_value, ref_object, dom_object, command, expression_element);
+    	// Verificar se a variável ainda existe:
+    	if (isVarInProgram(ref_object.content, function_obj)) {
+    		renderPreviousContent(function_obj, menu_var_or_value, ref_object, dom_object, command, expression_element);
+    	} else {
+    		if (ref_object.content && ref_object.content.type) {
+    			ref_object.content = null;
+    			appendSelectText(ref_object, menu_var_or_value);
+    		} else {
+    			renderPreviousContent(function_obj, menu_var_or_value, ref_object, dom_object, command, expression_element);
+    		}
+    	}
+    } else {
+    	appendSelectText(ref_object, menu_var_or_value);
     }
 
+}
+
+function appendSelectText (ref_object, menu_var_or_value) {
+	switch(ref_object.variable_and_value) {
+		case VAR_OR_VALUE_TYPES.only_variable:
+			menu_var_or_value.find('.text').append('<i>'+LocalizedStrings.getUI('var_menu_select_var')+'</i>');
+			break;
+		case VAR_OR_VALUE_TYPES.all:
+			menu_var_or_value.find('.text').append('<i>'+LocalizedStrings.getUI('var_menu_select_all')+'</i>');
+			break;
+		case VAR_OR_VALUE_TYPES.variable_and_function:
+			menu_var_or_value.find('.text').append('<i>'+LocalizedStrings.getUI('var_menu_select_all')+'</i>');
+			break;
+		case VAR_OR_VALUE_TYPES.only_function:
+			menu_var_or_value.find('.text').append('<i>'+LocalizedStrings.getUI('var_menu_select_function')+'</i>');
+			break;
+	}
+}
+
+function isVarInProgram (var_obj, function_obj) {
+	// Verify in globals:
+	if (window.program_obj.globals) {
+		for (var i = 0; i < window.program_obj.globals.length; i++) {
+			if (window.program_obj.globals[i] == var_obj) {
+				return true;
+			}
+		}
+	}
+	// Verify in locals:
+	if (function_obj.variables_list) {
+		for (var i = 0; i < function_obj.variables_list.length; i++) {
+			if (function_obj.variables_list[i] == var_obj) {
+				return true;
+			}
+		}
+	}
+	// Verify in parameters:
+	if (function_obj.parameters_list) {
+		for (var i = 0; i < function_obj.parameters_list.length; i++) {
+			if (function_obj.parameters_list[i] == var_obj) {
+				return true;
+			}
+		}
+	}
+	return false;
 }
 
 export function refreshMenu (menu_var_or_value_dom) {
@@ -109,6 +166,20 @@ function renderPreviousContent (function_obj, menu_var_or_value, ref_object, dom
 }
 
 function variableValueMenuCode (command, variable_obj, dom_object, function_obj, menu_var_or_value, expression_element) {
+	
+	if (variable_obj.content || variable_obj.function_called) {
+    	// Verificar se a variável ainda existe:
+    	if (isVarInProgram(variable_obj.content, function_obj)) {
+    		
+    	} else {
+    		if (variable_obj.content && variable_obj.content.type) {
+    			variable_obj.content = null;
+    			appendSelectText(variable_obj, menu_var_or_value);
+    		}
+    	}
+    } else {
+    	appendSelectText(variable_obj, menu_var_or_value);
+    }
 
 	if (variable_obj.content == null && variable_obj.function_called == null) {
 		renderMenu(command, variable_obj, dom_object, function_obj, 2, expression_element);
@@ -176,7 +247,7 @@ function variableValueMenuCode (command, variable_obj, dom_object, function_obj,
 
 			var parameters_menu = '<div class="parameters_function_called"> '+variable_obj.function_called.name+' <span> ( </span>';
 			for (var j = 0; j < variable_obj.function_called.parameters_list.length; j++) {
-				parameters_menu += '<div class="parameter_'+j+'"></div>';
+				parameters_menu += '<div class="render_style_param parameter_'+j+'"></div>';
 				if ((j + 1) != variable_obj.function_called.parameters_list.length) {
 					parameters_menu += ' , ';
 				}
@@ -289,6 +360,10 @@ function variableValueMenuCode (command, variable_obj, dom_object, function_obj,
 		      }
 			});
 
+			if (!variable_obj.column) {
+				variable_obj.column = new Models.VariableValueMenu(VAR_OR_VALUE_TYPES.all, null, null, null, true);
+			}
+
 			variableValueMenuCode(command, variable_obj.column, $(variable_render.find('.column_container')), function_obj, menu_var_or_value, expression_element);
 
 		} else if (variable_obj.content.dimensions == 2) {
@@ -343,6 +418,13 @@ function variableValueMenuCode (command, variable_obj, dom_object, function_obj,
 			     }
 		      }
 			});
+
+			if (!variable_obj.column) {
+				variable_obj.column = new Models.VariableValueMenu(VAR_OR_VALUE_TYPES.all, null, null, null, true);
+			}
+			if (!variable_obj.row) {
+				variable_obj.row = new Models.VariableValueMenu(VAR_OR_VALUE_TYPES.all, null, null, null, true);
+			}
 
 			variableValueMenuCode(command, variable_obj.row, $(variable_render.find('.row_container')), function_obj, menu_var_or_value, expression_element);
 			variableValueMenuCode(command, variable_obj.column, $(variable_render.find('.column_container')), function_obj, menu_var_or_value, expression_element);
@@ -566,6 +648,19 @@ function addHandlers (command, ref_object, dom_object, menu_var_or_value, functi
 	        width: inputWidth
 	    })
 	}).trigger('input');
+
+
+	if (command.type == Models.COMMAND_TYPES.comment) {
+		dom_object.parent().on('click', function(e) {
+			dom_object.find('.value_rendered').remove();
+			dom_object.find('.value_rendered').empty();
+			dom_object.find('.value_rendered').remove();
+			dom_object.empty();
+			dom_object.append('<span class="menu_var_or_value_dom"> </span>');
+			
+			openInputToValue(command, ref_object, dom_object, menu_var_or_value, function_obj, expression_element)
+		});
+	}
 	
 }
 
@@ -582,7 +677,7 @@ function openInputToFunction (command, ref_object, dom_object, menu_var_or_value
 
 		var parameters_menu = '<div class="parameters_function_called"> '+function_selected.name+' <span> ( </span>';
 		for (var j = 0; j < function_selected.parameters_list.length; j++) {
-			parameters_menu += '<div class="parameter_'+j+'"></div>';
+			parameters_menu += '<div class="render_style_param parameter_'+j+'"></div>';
 			if ((j + 1) != function_selected.parameters_list.length) {
 				parameters_menu += ' , ';
 			}
@@ -881,6 +976,19 @@ function openInputToValue (command, ref_object, dom_object, menu_var_or_value, f
 			$(this).remove();
 		}
 	});
+
+	if (command.type == Models.COMMAND_TYPES.comment) {
+		rendered.parent().on('click', function(e) {
+			console.log("TTT14");
+			rendered.remove();
+			rendered.empty();
+			rendered.remove();
+			dom_object.empty();
+			dom_object.append('<span class="menu_var_or_value_dom"> </span>');
+			
+			openInputToValue(command, ref_object, dom_object, menu_var_or_value, function_obj, expression_element)
+		});
+	}
 
 	rendered.on('click', function(e) {
 		console.log("TTT2");

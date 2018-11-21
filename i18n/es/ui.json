@@ -42,6 +42,7 @@
   "text_for":"for",
   "text_code_while":"while",
   "text_code_do":"do",
+  "text_command_do":"do",
   "text_code_switch": "switch",
   "text_code_case": "case",
   "text_logic_expression": "Logic Expression",
@@ -81,5 +82,8 @@
   "tooltip_help": "Help",
   "tooltip_add_global": "Add global variable",
   "tooltip_minimize": "Hidde function elements",
-  "tooltip_console": "Open/Close console"
+  "tooltip_console": "Open/Close console",
+  "var_menu_select_var": "Select a var",
+  "var_menu_select_all": "Select",
+  "var_menu_select_function": "Select a function"
 }

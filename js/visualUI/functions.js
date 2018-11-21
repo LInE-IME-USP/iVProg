@@ -32,6 +32,8 @@ const sumFunction = new Models.Function("soma", Types.INTEGER, 0, [parameter1], 
 program.addFunction(sumFunction);
 */
 
+console.log('       ___           ___                    ________          \n      /   /         /   /                  /   ____/  \n     /   /         /   /                  /   /        \n    /   /         /   /  ______    ___   /   /__         \n   /   /         /   /  /      \\  /  /  /   ___/      \n  /   /______   /   /  /   /\\   \\/  /  /   /      \n /          /  /   /  /   /  \\     /  /   /____     \n/__________/  /___/  /___/    \\___/  /________/       ');
+
 const mainFunction = new Models.Function(LocalizedStrings.getUI("start"), Types.VOID, 0, [], true, false);
 mainFunction.function_comment = new Models.Comment(LocalizedStrings.getUI('text_comment_main'));
 program.addFunction(mainFunction);
@@ -88,7 +90,6 @@ function addHandlers (function_obj, function_container) {
 
   function_container.find('.ui.dropdown.function_return').dropdown({
       onChange: function(value, text, $selectedItem) {
-        $selectedItem = $($selectedItem);
         if ($selectedItem.data('dimensions')) {
           updateReturnType(function_obj, Types[$selectedItem.data('type')], $selectedItem.data('dimensions'));
         } else {
@@ -136,8 +137,6 @@ function addHandlers (function_obj, function_container) {
     function_container.find(".function_area").toggle();
     function_container.find(".add_var_top_button").toggle();
   });
-
-
 }
 
 // Essa função imprime o tipo de retorno da função e cria o menu do tipo 'select' para alteração
@@ -147,13 +146,17 @@ function renderFunctionReturn (function_obj, function_element) {
     
     if (function_obj.return_dimensions > 0) {
       ret += '<div class="text">'+ LocalizedStrings.getUI("vector") +':'+ LocalizedStrings.getUI(function_obj.return_type);
+      if (function_obj.return_dimensions == 1) {
+        ret += ' [ ] ';
+      } else {
+        ret += ' [ ] [ ] ';
+      }
       ret += '</div>';
     } else {
       ret += '<div class="text">'+LocalizedStrings.getUI(function_obj.return_type)+'</div>';
     }
 
-    ret += '<i class="dropdown icon"></i>'
-      + '<div class="menu">';
+    ret += '<div class="menu">';
 
 
     for (var tm in Types) {
@@ -215,15 +218,15 @@ export function renderFunction (function_obj) {
 
   if (function_obj.is_main) {
       appender += '<div class="function_name_div">  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ' + LocalizedStrings.getUI('void') + ' &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="span_name_function" >'+function_obj.name+'</span> </div> '
-        + '( <div class="ui large labels parameters_list">';
+        + ' <span class="parethesis_function">( </span> <div class="ui large labels parameters_list">';
   } else {
       appender += '<div class="ui function_return"></div>';
 
-      appender += '<div class="function_name_div"><span class="span_name_function name_function_updated">'+function_obj.name+'</span> <i class="icon small pencil alternate enable_edit_name_function name_function_updated"></i></div> ' 
-        + '( <i class="ui icon plus square outline add_parameter_button"></i> <div class="ui large labels parameters_list container_parameters_list">';
+      appender += '<div class="function_name_div function_name_div_updated"><span class="span_name_function name_function_updated">'+function_obj.name+'</span> </div> ' 
+        + ' <span class="parethesis_function"> ( </span> <i class="ui icon plus square outline add_parameter_button"></i> <div class="ui large labels parameters_list container_parameters_list">';
   }
     
-  appender += '</div> ) </div>'
+  appender += '</div> <span class="parethesis_function"> ) </span> </div>'
     + (function_obj.is_hidden ? ' <div class="function_area" style="display: none;"> ' : ' <div class="function_area"> ')
 
     + '<div class="ui top attached segment variables_list_div">'
@@ -395,9 +398,6 @@ $( document ).ready(function() {
       hide: 0
     }
   });
-
-
-
 });
 
 function runCodeAssessment () {
@@ -423,7 +423,6 @@ function runCodeAssessment () {
   }).catch( err => domConsole.err(err.message));
   
 }
-
 
 function runCode () {
   toggleConsole(true);
@@ -499,12 +498,18 @@ function toggleTextualCoding () {
   $('.ivprog_textual_panel').css('display', 'block');
   $('.ivprog_textual_panel').removeClass('loading');
   $('.ivprog_textual_code').text(code);
+
+  $('.visual_coding_button').removeClass('active');
+  $('.textual_coding_button').addClass('active');
 }
 
 function toggleVisualCoding () {
   $('.ivprog_textual_panel').addClass('loading');
   $('.ivprog_textual_panel').css('display', 'none');
   $('.ivprog_visual_panel').css('display', 'block');
+
+  $('.textual_coding_button').removeClass('active');
+  $('.visual_coding_button').addClass('active');
 }
 
 function removeParameter (function_obj, parameter_obj, parameter_container) {
@@ -535,13 +540,17 @@ function renderParameter (function_obj, parameter_obj, function_container) {
 
   if (parameter_obj.dimensions > 0) {
     ret += '<div class="text">'+ LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI(parameter_obj.type);
+    if (parameter_obj.dimensions == 1) {
+      ret += ' [ ] ';
+    } else {
+      ret += ' [ ] [ ] ';
+    }
     ret += '</div>';
   } else {
     ret += '<div class="text">'+LocalizedStrings.getUI(parameter_obj.type)+'</div>';
   }
 
-  ret += '<i class="dropdown icon"></i>'
-    + '<div class="menu">';
+  ret += '<div class="menu">';
 
   
   for (var tm in Types) {
@@ -567,7 +576,7 @@ function renderParameter (function_obj, parameter_obj, function_container) {
 
   ret += '</div></div>';
 
-  ret += '<span class="span_name_parameter label_enable_name_parameter">'+parameter_obj.name+'</span> <i class="icon small pencil alternate enable_edit_name_parameter label_enable_name_parameter"></i>';
+  ret += '<div class="parameter_div_edit"><span class="span_name_parameter label_enable_name_parameter">'+parameter_obj.name+'</span></div> ';
 
   ret += ' <i class="red icon times remove_parameter"></i></div>';
 
@@ -581,10 +590,10 @@ function renderParameter (function_obj, parameter_obj, function_container) {
   
   ret.find('.ui.dropdown.parameter_type').dropdown({
     onChange: function(value, text, $selectedItem) {
-      if ($($selectedItem).data('dimensions')) {
-        updateParameterType(parameter_obj, Types[$($selectedItem).data('type')], $($selectedItem).data('dimensions'));
+      if ($selectedItem.data('dimensions')) {
+        updateParameterType(parameter_obj, Types[$selectedItem.data('type')], $selectedItem.data('dimensions'));
       } else {
-        updateParameterType(parameter_obj, Types[$($selectedItem).data('type')]);
+        updateParameterType(parameter_obj, Types[$selectedItem.data('type')]);
       }
     }
   });
@@ -599,49 +608,55 @@ var opened_name_parameter = false;
 var opened_input_parameter = null;
 function enableNameParameterUpdate (parameter_obj, parent_node) {
   if (opened_name_parameter) {
-    $(opened_input_parameter).focus();
+    opened_input_parameter.focus();
     return;
   }
   opened_name_parameter = true;
+  parent_node = $(parent_node);
 
-  $(parent_node).find('.span_name_parameter').text('');
-  $( "<input type='text' class='width-dynamic input_name_function' autocomplete='off' autocorrect='off' autocapitalize='off' spellcheck='false' value='"+parameter_obj.name+"' />" ).insertBefore($(parent_node).find('.span_name_parameter'));
+  var input_field;
 
-  $('.width-dynamic').on('input', function() {
-    var inputWidth = $(this).textWidth()+10;
-    opened_input_parameter = this;
-    $(this).focus();
+  parent_node.find('.span_name_parameter').text('');
+  input_field = $( "<input type='text' class='width-dynamic input_name_function' autocomplete='off' autocorrect='off' autocapitalize='off' spellcheck='false' value='"+parameter_obj.name+"' />" );
+  input_field.insertBefore(parent_node.find('.span_name_parameter'));
 
-    var tmpStr = $(this).val();
-    $(this).val('');
-    $(this).val(tmpStr);
+  input_field.on('input', function() {
+    var inputWidth = input_field.textWidth()+10;
+    opened_input_parameter = input_field;
+    input_field.focus();
 
-    $(this).css({
+    var tmpStr = input_field.val();
+    input_field.val('');
+    input_field.val(tmpStr);
+
+    input_field.css({
         width: inputWidth
     })
   }).trigger('input');
 
-  $('.width-dynamic').focusout(function() {
+  input_field.focusout(function() {
     /// update array:
-    if ($(this).val().trim()) {
-      parameter_obj.name = $(this).val().trim();
-      $(parent_node).find('.span_name_parameter').text(parameter_obj.name);
+    if (input_field.val().trim()) {
+      parameter_obj.name = input_field.val().trim();
+      parent_node.find('.span_name_parameter').text(parameter_obj.name);
     }
-    $(this).remove();
+    input_field.off();
+    input_field.remove();
 
     /// update elements:
     opened_name_parameter = false;
     opened_input_parameter = false;
   });
 
-  $('.width-dynamic').on('keydown', function(e) {
+  input_field.on('keydown', function(e) {
     var code = e.keyCode || e.which;
     if(code == 13) {
-      if ($(this).val().trim()) {
-        parameter_obj.name = $(this).val().trim();
-        $(parent_node).find('.span_name_parameter').text(parameter_obj.name);
+      if (input_field.val().trim()) {
+        parameter_obj.name = input_field.val().trim();
+        parent_node.find('.span_name_parameter').text(parameter_obj.name);
       }
-      $(this).remove();
+      input_field.off();
+      input_field.remove();
 
       /// update elements:
       opened_name_parameter = false;
@@ -649,65 +664,79 @@ function enableNameParameterUpdate (parameter_obj, parent_node) {
 
     }
     if(code == 27) {
-      $(parent_node).find('.span_name_parameter').text(parameter_obj.name);
-
-      $(this).remove();
+      parent_node.find('.span_name_parameter').text(parameter_obj.name);
+      input_field.off();
+      input_field.remove();
 
       /// update elements:
       opened_name_parameter = false;
       opened_input_parameter = false;
     }
   });
-
+  input_field.select();
 }
 
 var opened_name_function = false;
 var opened_input = null;
-function enableNameFunctionUpdate(function_obj, parent_node) {
+var previousPadding = null;
+function enableNameFunctionUpdate (function_obj, parent_node) {
   if (opened_name_function) {
-    $(opened_input).focus();
+    opened_input.focus();
     return;
   }
+  parent_node = $(parent_node);
+  parent_node.find('.span_name_function').text('');
+  var input_field;
+  if (!previousPadding) {
+    previousPadding = parent_node.find('.span_name_function').css('padding-left');
+  }
+  parent_node.find('.span_name_function').css('padding-left', '0');
+  parent_node.find('.span_name_function').css('padding-right', '0');
+  
+  input_field = $( "<input type='text' class='width-dynamic input_name_function' autocomplete='off' autocorrect='off' autocapitalize='off' spellcheck='false' value='"+function_obj.name+"' />" );
+  input_field.insertBefore(parent_node.find('.span_name_function'));
 
-  $(parent_node).find('.span_name_function').text('');
-  $( "<input type='text' class='width-dynamic input_name_function' autocomplete='off' autocorrect='off' autocapitalize='off' spellcheck='false' value='"+function_obj.name+"' />" ).insertBefore($(parent_node).find('.span_name_function'));
+  input_field.on('input', function() {
+    var inputWidth = input_field.textWidth()+10;
+    opened_input = input_field;
+    input_field.focus();
 
-  $('.width-dynamic').on('input', function() {
-    var inputWidth = $(this).textWidth()+10;
-    opened_input = this;
-    $(this).focus();
+    var tmpStr = input_field.val();
+    input_field.val('');
+    input_field.val(tmpStr);
 
-    var tmpStr = $(this).val();
-    $(this).val('');
-    $(this).val(tmpStr);
-
-    $(this).css({
+    input_field.css({
         width: inputWidth
     })
   }).trigger('input');
 
-  $('.width-dynamic').focusout(function() {
+  input_field.focusout(function() {
     /// update array:
-    if ($(this).val().trim()) {
-      function_obj.name = $(this).val().trim();
+    if (input_field.val().trim()) {
+      function_obj.name = input_field.val().trim();
     }
-    $(this).remove();
-    $(parent_node).find('.span_name_function').text(function_obj.name);
+    input_field.off();
+    input_field.remove();
+    parent_node.find('.span_name_function').css('padding-left', previousPadding);
+    parent_node.find('.span_name_function').css('padding-right', previousPadding);
+    parent_node.find('.span_name_function').text(function_obj.name);
 
     /// update elements:
     opened_name_function = false;
     opened_input = false;
   });
 
-  $('.width-dynamic').on('keydown', function(e) {
+  input_field.on('keydown', function(e) {
     var code = e.keyCode || e.which;
     if(code == 13) {
-      if ($(this).val().trim()) {
-        function_obj.name = $(this).val().trim();
+      if (input_field.val().trim()) {
+        function_obj.name = input_field.val().trim();
       }
-      $(this).remove();
-
-      $(parent_node).find('.span_name_function').text(function_obj.name);
+      input_field.off();
+      input_field.remove();
+      parent_node.find('.span_name_function').css('padding-left', previousPadding);
+      parent_node.find('.span_name_function').css('padding-right', previousPadding);
+      parent_node.find('.span_name_function').text(function_obj.name);
 
       /// update elements:
       opened_name_function = false;
@@ -715,14 +744,17 @@ function enableNameFunctionUpdate(function_obj, parent_node) {
     }
     if(code == 27) {
 
-      $(this).remove();
-
-      $(parent_node).find('.span_name_function').text(function_obj.name);
+      input_field.off();
+      input_field.remove();
+      parent_node.find('.span_name_function').css('padding-left', previousPadding);
+      parent_node.find('.span_name_function').css('padding-right', previousPadding);
+      parent_node.find('.span_name_function').text(function_obj.name);
 
       /// update elements:
       opened_name_function = false;
       opened_input = false;
     }
   });
+  input_field.select();
   
 }

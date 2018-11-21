@@ -14,9 +14,8 @@ export function createFloatingCommand () {
 }
 
 export function renderCommand (command, function_obj) {
-	var ret = '<div class="ui repeatNtimes command_container"> <i class="ui icon small random command_drag"></i> <i class="ui icon times red button_remove_command"></i> <div class="ui context_menu"></div> <span> ' + LocalizedStrings.getUI('text_for') + ' ( </span>  <div class="ui attribution_expression"><div class="ui variable_attribution"></div> <span class="text_receives"></span> <div class="ui var_value_expression"></div> </div> ; <div class="conditional_expression"></div> ;  <div class="ui incrementation_field"><div class="ui incrementation_variable"></div> <span class="text_inc_receives"></span> <div class="ui first_operand"></div><div class="ui operator"></div><div class="ui second_operand"></div></div> ) </span>';
+	var ret = '<div class="ui repeatNtimes command_container"> <i class="ui icon small random command_drag"></i> <i class="ui icon times red button_remove_command"></i> <div class="ui context_menu"></div>  <span class="span_command_spec"> ' + LocalizedStrings.getUI('text_for') + ' ( </span>  <div class="ui attribution_expression"><div class="ui variable_attribution"></div> <span class="text_receives span_command_spec"></span> <div class="ui var_value_expression div_expression_st"></div> </div> ; <div class="conditional_expression"></div> ;  <div class="ui incrementation_field"><div class="ui incrementation_variable"></div> <span class="text_inc_receives span_command_spec"></span> <div class="ui first_operand"></div><div class="ui operator"></div><div class="ui second_operand"></div></div>  <span class="span_command_spec"> ) </span>';
 	ret += '<div class="ui block_commands">';
-
 	ret += '</div>';
 	ret += '<span> </span>';
 	ret += '</div>';
@@ -33,6 +32,12 @@ export function renderCommand (command, function_obj) {
 	ConditionalExpressionManagement.renderExpression(command, command.expression2, function_obj, el.find('.conditional_expression'));
 
 	VariableValueMenu.renderMenu(command, command.var_incrementation, el.find('.incrementation_variable'), function_obj);	
+
+	if (command.commands_block) {
+		for (var j = 0; j < command.commands_block.length; j++) {
+		    CommandsManagement.renderCommand(command.commands_block[j], $(el.find('.block_commands')[0]), 3, function_obj);
+		}
+	}
 
 	return el;
 }

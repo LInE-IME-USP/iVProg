@@ -17,7 +17,7 @@ var iLMparameters = {
 
 // Set the lang parameter to the localStorage for easy access
 // and no dependency to the global scope, avoind future 'strict mode' problems
-localStorage.setItem('ivprog.lang', iLMparameters.lang);
+//localStorage.setItem('ivprog.lang', iLMparameters.lang);
 
 // Função chamada pelo iTarefa quando o professor finaliza a criação da atividade
 // ou quando o aluno finaliza a resolução do exercício
@@ -130,10 +130,12 @@ function prepareActivityToStudent (ilm_cont) {
     settingsDataTypes = content.settings_data_types;
     settingsCommands = content.settings_commands;
     settingsFunctions = content.settings_functions;
-    algorithm_in_ilm = ilm_cont.split('\n::algorithm::')[1].split('\n::logs::')[0];
-
-    window.program_obj.functions = JSON.parse(algorithm_in_ilm).functions;
-    window.program_obj.globals = JSON.parse(algorithm_in_ilm).globals;
+    if (ilm_cont.split('\n::algorithm::')[1]) {
+        algorithm_in_ilm = ilm_cont.split('\n::algorithm::')[1].split('\n::logs::')[0];
+        window.program_obj.functions = JSON.parse(algorithm_in_ilm).functions;
+        window.program_obj.globals = JSON.parse(algorithm_in_ilm).globals;
+    }
+    $('.assessment_button').removeClass('disabled');
     renderAlgorithm();
 }
 
@@ -169,6 +171,11 @@ $(document).ready(function() {
         // é para a elaboração de atividade:
         //$('.elaboracao').css("display","block");
     }
+
+    if (!testCases) {
+        $('.assessment_button').addClass('disabled');
+    }
+
 });
 
 // Função para preparar a interface para o professor criar atividade:

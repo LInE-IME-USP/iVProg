@@ -14,34 +14,14 @@ export function createFloatingCommand () {
 export function renderCommand (command, function_obj) {
 	var ret = '';
 	ret += '<div class="ui iftrue command_container"><div class="ui data_block_if" data-if="true">  <i class="ui icon small random command_drag"></i> <i class="ui icon times red button_remove_command"></i> <i class="ui icon redo alternate blue button_refresh_attribution"></i>';
-	ret += '<span> ' + LocalizedStrings.getUI('text_if') + '</span>';
+	ret += '<span class="span_command_spec"> ' + LocalizedStrings.getUI('text_if') + '</span>';
 	ret += ' <div class="conditional_expression"></div>';
 	ret += '<span> </span> ';
 	ret += '<div class="ui block_commands commands_if conditional_comands_block" data-if="true">';
-
-	/*if ((writer_obj.commands_block == null)
-			|| (writer_obj.commands_block.length == 0)) {
-	} else {
-		for (ki = 0; ki < writer_obj.commands_block.length; ki ++) {
-			ret += renderElementCommandGeneric(writer_obj.commands_block[ki], function_index, ki, iftrue_index, (fullpath + ',' + ki));
-		}
-	}*/
-
-	ret += '</div></div>';
-	ret += '<div class="ui data_block_else" data-else="true"> <span> ' + LocalizedStrings.getUI('text_else') + ' </span>';
-
+ 	ret += '</div></div>';
+	ret += '<div class="ui data_block_else" data-else="true"> <span class="span_command_spec"> ' + LocalizedStrings.getUI('text_else') + ' </span>';
 	ret += '<div class="ui block_commands commands_else conditional_comands_block" data-else="true">';
-
-	/*if ((writer_obj.commands_else == null)
-			|| (writer_obj.commands_else.length == 0)) {
-	} else {
-		for (ki = 0; ki < writer_obj.commands_else.length; ki ++) {
-			ret += renderElementCommandGeneric(writer_obj.commands_else[ki], function_index, ki, iftrue_index, (fullpath + ',' + ki));
-		}
-	}*/
-
 	ret += '</div>';
-
 	ret += '<span></span></div>';
 	ret += '</div>';
 
@@ -51,8 +31,6 @@ export function renderCommand (command, function_obj) {
 	el.find('.data_block_if').data('command', command);
 	el.find('.data_block_else').data('command', command);
 
-	//data_block_if
-
 	addHandlers(command, function_obj, el);
 
 	ConditionalExpressionManagement.renderExpression(command, command.expression, function_obj, el.find('.conditional_expression'));
@@ -61,6 +39,17 @@ export function renderCommand (command, function_obj) {
 		el.find('.conditional_expression').empty();
 		ConditionalExpressionManagement.renderExpression(command, command.expression, function_obj, el.find('.conditional_expression'));		
 	});
+
+	if (command.commands_block) {
+		for (var j = 0; j < command.commands_block.length; j++) {
+		    CommandsManagement.renderCommand(command.commands_block[j], $(el.find('.commands_if')[0]), 3, function_obj);
+		}
+	}
+	if (command.commands_else) {
+		for (var j = 0; j < command.commands_else.length; j++) {
+		    CommandsManagement.renderCommand(command.commands_else[j], $(el.find('.commands_else')[0]), 3, function_obj);
+		}
+	}
 
 	return el;
 }
