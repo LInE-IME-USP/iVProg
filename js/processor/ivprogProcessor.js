@@ -416,7 +416,7 @@ export class IVProgProcessor {
 
   executeReturn (store, cmd) {
     try {
-      const funcType = store.applyStore('$');
+      const funcType = store.applyStore('$').type;
       const $value = this.evaluateExpression(store, cmd.expression);
       const funcName = store.name;
       return $value.then(vl => {
@@ -425,7 +425,7 @@ export class IVProgProcessor {
           return Promise.resolve(store);
         }
 
-        if (vl === null || !funcType.type.isCompatible(vl.type)) {
+        if (vl === null || !funcType.isCompatible(vl.type)) {
           // TODO: Better error message -- Inform line and column from token!!!!
           // THIS IF SHOULD BE IN A SEMANTIC ANALYSER
           return Promise.reject(new Error(`Function ${funcName} must return ${funcType.type} instead of ${vl.type}.`));
