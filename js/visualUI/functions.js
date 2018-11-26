@@ -27,8 +27,27 @@ const program = new Models.Program();
 
 window.system_functions = [];
 window.system_functions.push(new Models.SystemFunction('$sin', Types.REAL, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
-  "seno de um número", Models.SYSTEM_FUNCTIONS_CATEGORIES.math));
-
+  null, Models.SYSTEM_FUNCTIONS_CATEGORIES.math));
+window.system_functions.push(new Models.SystemFunction('$cos', Types.REAL, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
+  null, Models.SYSTEM_FUNCTIONS_CATEGORIES.math));
+window.system_functions.push(new Models.SystemFunction('$tan', Types.REAL, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
+  null, Models.SYSTEM_FUNCTIONS_CATEGORIES.math));
+window.system_functions.push(new Models.SystemFunction('$sqrt', Types.REAL, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
+  null, Models.SYSTEM_FUNCTIONS_CATEGORIES.math));
+window.system_functions.push(new Models.SystemFunction('$pow', Types.REAL, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true), new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
+  null, Models.SYSTEM_FUNCTIONS_CATEGORIES.math));
+window.system_functions.push(new Models.SystemFunction('$log', Types.REAL, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
+  null, Models.SYSTEM_FUNCTIONS_CATEGORIES.math));
+window.system_functions.push(new Models.SystemFunction('$abs', Types.REAL, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
+  null, Models.SYSTEM_FUNCTIONS_CATEGORIES.math));
+window.system_functions.push(new Models.SystemFunction('$negate', Types.REAL, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
+  null, Models.SYSTEM_FUNCTIONS_CATEGORIES.math));
+window.system_functions.push(new Models.SystemFunction('$invert', Types.REAL, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
+  null, Models.SYSTEM_FUNCTIONS_CATEGORIES.math));
+window.system_functions.push(new Models.SystemFunction('$max', Types.REAL, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
+  null, Models.SYSTEM_FUNCTIONS_CATEGORIES.math));
+window.system_functions.push(new Models.SystemFunction('$min', Types.REAL, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
+  null, Models.SYSTEM_FUNCTIONS_CATEGORIES.math));
 /*const variable1 = new Models.Variable(Types.INTEGER, "a", 1);
 const parameter1 = new Models.Variable(Types.INTEGER, "par_1", 1);
 const command1 = new Models.Comment(new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.only_value, "Testing rendering commands"));

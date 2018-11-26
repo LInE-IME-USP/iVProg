@@ -202,7 +202,7 @@ function variableValueMenuCode (command, variable_obj, dom_object, function_obj,
 			if (variable_obj.function_called.name) {
 				parameters_menu = '<div class="parameters_function_called"> '+variable_obj.function_called.name+' <span> ( </span>';
 			} else {
-				parameters_menu = '<div class="parameters_function_called"> <i>'+LocalizedStrings.getUI(variable_obj.function_called.identifier)+'</i> <span> ( </span>';
+				parameters_menu = '<div class="parameters_function_called"> <i>'+LocalizedStrings.getUI(variable_obj.function_called.category)+'.'+LocalizedStrings.getUI(variable_obj.function_called.identifier)+'</i> <span> ( </span>';
 			}
 
 			parameters_menu += '<span> ) </span></div>';
@@ -260,7 +260,7 @@ function variableValueMenuCode (command, variable_obj, dom_object, function_obj,
 			if (variable_obj.function_called.name) {
 				parameters_menu = '<div class="parameters_function_called"> '+variable_obj.function_called.name+' <span> ( </span>';
 			} else {
-				parameters_menu = '<div class="parameters_function_called"> <i>'+LocalizedStrings.getUI(variable_obj.function_called.identifier)+'</i> <span> ( </span>';
+				parameters_menu = '<div class="parameters_function_called"> <i>'+LocalizedStrings.getUI(variable_obj.function_called.category)+'.'+LocalizedStrings.getUI(variable_obj.function_called.identifier)+'</i> <span> ( </span>';
 			}
 
 			for (var j = 0; j < variable_obj.function_called.parameters_list.length; j++) {
@@ -724,7 +724,7 @@ function openInputToFunction (command, ref_object, dom_object, menu_var_or_value
 		if (function_selected.name) {
 			parameters_menu = '<div class="parameters_function_called"> '+function_selected.name+' <span> ( </span>';
 		} else {
-			parameters_menu = '<div class="parameters_function_called"> <i>'+LocalizedStrings.getUI(function_selected.identifier)+'</i> <span> ( </span>';
+			parameters_menu = '<div class="parameters_function_called"> <i>'+LocalizedStrings.getUI(function_selected.category)+'.'+LocalizedStrings.getUI(function_selected.identifier)+'</i> <span> ( </span>';
 		}
 		for (var j = 0; j < function_selected.parameters_list.length; j++) {
 			parameters_menu += '<div class="render_style_param parameter_'+j+'"></div>';
@@ -794,7 +794,7 @@ function openInputToFunction (command, ref_object, dom_object, menu_var_or_value
 		if (function_selected.name) {
 			parameters_menu = '<div class="parameters_function_called"> '+function_selected.name+' <span> ( </span>';
 		} else {
-			parameters_menu = '<div class="parameters_function_called"> <i>'+LocalizedStrings.getUI(function_selected.identifier)+'</i> <span> ( </span>';
+			parameters_menu = '<div class="parameters_function_called"> <i>'+LocalizedStrings.getUI(function_selected.category)+'.'+LocalizedStrings.getUI(function_selected.identifier)+'</i> <span> ( </span>';
 		}
 		
 		parameters_menu += '<span> ) </span></div>';

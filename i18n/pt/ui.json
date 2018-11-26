@@ -92,5 +92,21 @@
   "var_menu_select_var": "Selecione uma variável",
   "var_menu_select_all": "Selecione",
   "var_menu_select_function": "Selecione uma função",
-  "expression_menu_select": "Selecione uma expressão"
+  "expression_menu_select": "Selecione uma expressão",
+  "$sin": "sen",
+  "math": "Matematica",
+  "text": "Texto",
+  "arrangement": "Arranjo",
+  "conversion": "Conversao",
+  "$sin": "seno",
+  "$cos": "cosseno",
+  "$tan": "tangente",
+  "$sqrt": "raiz_quadrada",
+  "$pow": "potencia",
+  "$log": "logaritmo",
+  "$abs": "modulo",
+  "$negate": "trocar_sinal",
+  "$invert": "inverter_valor",
+  "$max": "maximo",
+  "$min": "minimo"
 }

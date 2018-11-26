@@ -618,7 +618,7 @@ function variableValueMenuCode (variable_obj) {
 		if (variable_obj.function_called.name) {
 			ret += variable_obj.function_called.name + ' ( ';
 		} else {
-			ret += LocalizedStrings.getUI(variable_obj.function_called.identifier) + ' ( ';
+			ret += LocalizedStrings.getUI(variable_obj.function_called.category)+'.'+LocalizedStrings.getUI(variable_obj.function_called.identifier) + ' ( ';
 		}
 
 		if (variable_obj.parameters_list) {
