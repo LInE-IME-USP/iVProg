@@ -6,6 +6,7 @@ import { Decimal } from 'decimal.js';
 import { MultiType } from '../../typeSystem/multiType';
 import { CompoundType } from '../../typeSystem/compoundType';
 import { Modes } from '../modes';
+import { Config } from '../../util/config';
 
 /**
  * sin
@@ -28,7 +29,20 @@ function convertToRadians (degrees) {
 export function createSinFun () {
    const sinFun = (sto, _) => {
      const x = sto.applyStore('x');
-     const result = Decimal.sin(convertToRadians(x.value));
+     const angle = x.value.mod(360);
+     let result = null;
+     if(angle.eq(90)) {
+       result = new Decimal(1);
+     } else if (angle.eq(180)) {
+      result = new Decimal(0);
+     } else if (angle.eq(270)) {
+       result = new Decimal(-1);
+     } else {
+       result = Decimal.sin(convertToRadians(angle));
+     }
+     if(result.dp() > Config.decimalPlaces) {
+      result = new Decimal(result.toFixed(Config.decimalPlaces));
+    }
      const temp = new StoreObject(Types.REAL, result);
      sto.mode = Modes.RETURN;
      return Promise.resolve(sto.updateStore('$', temp));
@@ -44,7 +58,19 @@ export function createSinFun () {
 export function createCosFun () {
   const cosFun = (sto, _) => {
     const x = sto.applyStore('x');
-    const result = Decimal.cos(convertToRadians(x.value));
+    const angle = x.value.mod(360);
+    let result = null;
+    if(angle.eq(90)) {
+      result = new Decimal(0);
+    } else if (angle.eq(180)) {
+      result = new Decimal(-1);
+    } else if (angle.eq(270)) {
+      result = new Decimal(0)
+    }
+    result = Decimal.cos(convertToRadians(angle));
+    if(result.dp() > Config.decimalPlaces) {
+      result = new Decimal(result.toFixed(Config.decimalPlaces));
+    }
     const temp = new StoreObject(Types.REAL, result);
     sto.mode = Modes.RETURN;
     return Promise.resolve(sto.updateStore('$', temp));
@@ -60,7 +86,14 @@ export function createCosFun () {
 export function createTanFun () {
   const tanFun = (sto, _) => {
     const x = sto.applyStore('x');
-    const result = Decimal.tan(convertToRadians(x.value));
+    const angle = x.value.mod(360);
+    if(angle.eq(90) || angle.eq(270)) {
+      return Promise.reject("Tangent of "+x.value.toNumber()+"° is undefined.");
+    }
+    let result = Decimal.tan(convertToRadians(angle));
+    if(result.dp() > Config.decimalPlaces) {
+      result = new Decimal(result.toFixed(Config.decimalPlaces));
+    }
     const temp = new StoreObject(Types.REAL, result);
     sto.mode = Modes.RETURN;
     return Promise.resolve(sto.updateStore('$', temp));
@@ -76,7 +109,10 @@ export function createTanFun () {
 export function createSqrtFun () {
   const sqrtFun = (sto, _) => {
     const x = sto.applyStore('x');
-    const result = x.value.sqrt();
+    let result = x.value.sqrt();
+    if(result.dp() > Config.decimalPlaces) {
+      result = new Decimal(result.toFixed(Config.decimalPlaces));
+    }
     const temp = new StoreObject(Types.REAL, result);
     sto.mode = Modes.RETURN;
     return Promise.resolve(sto.updateStore('$', temp));
@@ -93,7 +129,10 @@ export function createPowFun () {
   const powFun = (sto, _) => {
     const x = sto.applyStore('x');
     const y = sto.applyStore('y');
-    const result = x.value.pow(y.value);
+    let result = x.value.pow(y.value);
+    if(result.dp() > Config.decimalPlaces) {
+      result = new Decimal(result.toFixed(Config.decimalPlaces));
+    }
     const temp = new StoreObject(Types.REAL, result);
     sto.mode = Modes.RETURN;
     return Promise.resolve(sto.updateStore('$', temp));
@@ -113,7 +152,10 @@ export function createLogFun () {
     if (x.value.isNegative()) {
       return Promise.reject("the value passed to log function cannot be negative");
     }
-    const result = Decimal.log10(x.value);
+    let result = Decimal.log10(x.value);
+    if(result.dp() > Config.decimalPlaces) {
+      result = new Decimal(result.toFixed(Config.decimalPlaces));
+    }
     const temp = new StoreObject(Types.REAL, result);
     sto.mode = Modes.RETURN;
     return Promise.resolve(sto.updateStore('$', temp));
@@ -161,7 +203,10 @@ export function createNegateFun () {
 export function createInvertFun () {
   const invertFun = (sto, _) => {
     const x = sto.applyStore('x');
-    const result = toReal(1).dividedBy(x.value);
+    let result = toReal(1).dividedBy(x.value);
+    if(result.dp() > Config.decimalPlaces) {
+      result = new Decimal(result.toFixed(Config.decimalPlaces));
+    }
     const temp = new StoreObject(Types.REAL, result);
     sto.mode = Modes.RETURN;
     return Promise.resolve(sto.updateStore('$', temp));

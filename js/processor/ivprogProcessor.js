@@ -14,24 +14,24 @@ import { StoreObjectArrayAddress } from './store/storeObjectArrayAddress';
 import { StoreObjectArrayAddressRef } from './store/storeObjectArrayAddressRef';
 import { CompoundType } from './../typeSystem/compoundType';
 import { convertToString } from '../typeSystem/parsers';
-
-let loopTimeoutMs = 10000
+import { Config } from '../util/config';
+import Decimal from 'decimal.js';
 
 export class IVProgProcessor {
 
   static get LOOP_TIMEOUT () {
-    return loopTimeoutMs;
+    return Config.loopTimeout;
   }
 
   static set LOOP_TIMEOUT (ms) {
-    loopTimeoutMs = ms;
+    Config.setConfig({loopTimeout: ms});
   }
 
   constructor (ast) {
     this.ast = ast;
-    this.globalStore = null;
-    this.stores = null;
-    this.context = null;
+    this.globalStore = new Store("$global");
+    this.stores = [this.globalStore];
+    this.context = [Context.BASE];
     this.input = null;
     this.forceKill = false;
     this.loopTimers = [];
@@ -73,7 +73,7 @@ export class IVProgProcessor {
     }
     if(this.globalStore !== null)
       this.globalStore = null;
-    this.globalStore = new Store();
+    this.globalStore = new Store("$global");
     this.stores = [this.globalStore];
     this.context = [Context.BASE];
   }
@@ -120,7 +120,8 @@ export class IVProgProcessor {
   }
 
   runFunction (func, actualParameters, store) {
-    let funcStore = new Store();
+    const funcName = func.isMain ? 'main' : func.name;
+    let funcStore = new Store(funcName);
     funcStore.extendStore(this.globalStore);
     let returnStoreObject = null;
     if(func.returnType instanceof CompoundType) {
@@ -132,10 +133,7 @@ export class IVProgProcessor {
     } else {
       returnStoreObject = new StoreObject(func.returnType, null);
     }
-    const funcName = func.isMain ? 'main' : func.name;
-    const funcNameStoreObject = new StoreObject(Types.STRING, funcName, true);
     funcStore.insertStore('$', returnStoreObject);
-    funcStore.insertStore('$name', funcNameStoreObject);
     const newFuncStore$ = this.associateParameters(func.formalParameters, actualParameters, store, funcStore);
     return newFuncStore$.then(sto => {
       this.context.push(Context.FUNCTION);
@@ -437,19 +435,19 @@ export class IVProgProcessor {
 
   executeReturn (store, cmd) {
     try {
-      const funcType = store.applyStore('$');
+      const funcType = store.applyStore('$').type;
       const $value = this.evaluateExpression(store, cmd.expression);
-      const funcName = store.applyStore('$name');
+      const funcName = store.name;
       return $value.then(vl => {
 
         if(vl === null && funcType.isCompatible(Types.VOID)) {
           return Promise.resolve(store);
         }
 
-        if (vl === null || !funcType.type.isCompatible(vl.type)) {
+        if (vl === null || !funcType.isCompatible(vl.type)) {
           // TODO: Better error message -- Inform line and column from token!!!!
           // THIS IF SHOULD BE IN A SEMANTIC ANALYSER
-          return Promise.reject(new Error(`Function ${funcName.value} must return ${funcType.type} instead of ${vl.type}.`));
+          return Promise.reject(new Error(`Function ${funcName} must return ${funcType.type} instead of ${vl.type}.`));
         } else {
           let realValue = this.parseStoreObjectValue(vl);
           store.updateStore('$', realValue);
@@ -808,18 +806,30 @@ export class IVProgProcessor {
         }
         case Operators.SUB.ord:
           return new StoreObject(resultType, left.value.minus(right.value));
-        case Operators.MULT.ord:
-          return new StoreObject(resultType, left.value.times(right.value));
+        case Operators.MULT.ord: {
+          result = left.value.times(right.value);
+          if(result.dp() > Config.decimalPlaces) {
+            result = new Decimal(result.toFixed(Config.decimalPlaces));
+          }
+          return new StoreObject(resultType, result);
+        }
         case Operators.DIV.ord: {
-          result = left.value / right.value;
           if (Types.INTEGER.isCompatible(resultType))
             result = left.value.divToInt(right.value);
           else
             result = left.value.div(right.value);
+          if(result.dp() > Config.decimalPlaces) {
+            result = new Decimal(result.toFixed(Config.decimalPlaces));
+          }
           return new StoreObject(resultType, result);
         }
-        case Operators.MOD.ord:
-          return new StoreObject(resultType, left.value.modulo(right.value));
+        case Operators.MOD.ord: {
+          result = left.value.modulo(right.value);
+          if(result.dp() > Config.decimalPlaces) {
+            result = new Decimal(result.toFixed(Config.decimalPlaces));
+          }
+          return new StoreObject(resultType, result);
+        }          
         case Operators.GT.ord: {
           if (Types.STRING.isCompatible(left.type)) {
             result = left.value.length > right.value.length;
