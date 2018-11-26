@@ -614,7 +614,12 @@ function variableValueMenuCode (variable_obj) {
 
 	var ret = '';
 	if (variable_obj.function_called) {
-		ret += variable_obj.function_called.name + ' ( ';
+
+		if (variable_obj.function_called.name) {
+			ret += variable_obj.function_called.name + ' ( ';
+		} else {
+			ret += LocalizedStrings.getUI(variable_obj.function_called.identifier) + ' ( ';
+		}
 
 		if (variable_obj.parameters_list) {
 			for (var i = 0; i < variable_obj.parameters_list.length; i++) {

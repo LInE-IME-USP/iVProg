@@ -13,9 +13,9 @@ export function createFloatingCommand () {
 
 export function renderCommand (command, function_obj) {
 	var ret = '';
-	ret += '<div class="ui iftrue command_container"><div class="ui data_block_if" data-if="true">  <i class="ui icon small random command_drag"></i> <i class="ui icon times red button_remove_command"></i> <i class="ui icon redo alternate blue button_refresh_attribution"></i>';
+	ret += '<div class="ui iftrue command_container"><div class="ui data_block_if" data-if="true">  <i class="ui icon small random command_drag"></i> <i class="ui icon times red button_remove_command"></i>';
 	ret += '<span class="span_command_spec"> ' + LocalizedStrings.getUI('text_if') + '</span>';
-	ret += ' <div class="conditional_expression"></div>';
+	ret += ' <span class="span_command_spec"> ( </span> <div class="conditional_expression"></div> <span class="span_command_spec"> ) </span>';
 	ret += '<span> </span> ';
 	ret += '<div class="ui block_commands commands_if conditional_comands_block" data-if="true">';
  	ret += '</div></div>';
@@ -34,11 +34,6 @@ export function renderCommand (command, function_obj) {
 	addHandlers(command, function_obj, el);
 
 	ConditionalExpressionManagement.renderExpression(command, command.expression, function_obj, el.find('.conditional_expression'));
-
-	el.find('.button_refresh_attribution').on('click', function() {
-		el.find('.conditional_expression').empty();
-		ConditionalExpressionManagement.renderExpression(command, command.expression, function_obj, el.find('.conditional_expression'));		
-	});
 
 	if (command.commands_block) {
 		for (var j = 0; j < command.commands_block.length; j++) {

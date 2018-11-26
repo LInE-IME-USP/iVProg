@@ -17,7 +17,7 @@ export function renderCommand (command, function_obj) {
 	ret += '<div class="ui dowhiletrue command_container"> <i class="ui icon small random command_drag"></i> <i class="ui icon times red button_remove_command"></i> <div class="ui context_menu"></div>  <span class="span_command_spec"> ' + LocalizedStrings.getUI('text_command_do') + ' </span>';
 	ret += '<div class="ui block_commands" data-subblock="" data-idcommand="">';
 	ret += '</div>';
-	ret += ' <span class="span_command_spec"> ' + LocalizedStrings.getUI('text_code_while') + ' </span> <div class="conditional_expression"></div>';
+	ret += ' <span class="span_command_spec"> ' + LocalizedStrings.getUI('text_code_while') + ' </span> <span class="span_command_spec"> ( </span> <div class="conditional_expression"></div> <span class="span_command_spec"> ) </span>';
 	ret += '</div>';
 
 	var el = $(ret);

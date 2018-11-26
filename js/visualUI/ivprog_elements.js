@@ -17,6 +17,8 @@ export const ARITHMETIC_COMPARISON = Object.freeze({greater_than:"greater_than",
 
 export const LOGIC_COMPARISON = Object.freeze({equals_to:"equals_to", not_equals_to:"not_equals_to", and:"and", or:"or"});
 
+export const SYSTEM_FUNCTIONS_CATEGORIES = Object.freeze({math:"math", text:"text", arrangement:"arrangement", conversion:"conversion"});
+
 export class Variable {
 
   constructor (type, name, value, dimensions = 0, is_constant = false, rows = 0, columns = 0) {
@@ -43,6 +45,19 @@ export class Function {
     this.variables_list = variables_list;
     this.function_comment = function_comment;
     this.commands = commands;
+  }
+}
+
+export class SystemFunction {
+
+  constructor (identifier, return_type, return_dimensions, parameters_list, function_comment = null, category) {
+    this.type = COMMAND_TYPES.function;
+    this.identifier = identifier;
+    this.return_type = return_type;
+    this.return_dimensions = return_dimensions;
+    this.parameters_list = parameters_list;
+    this.function_comment = function_comment;
+    this.category = category;
   }
 }
 

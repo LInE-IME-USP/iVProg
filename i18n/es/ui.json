@@ -71,6 +71,11 @@
   "text_teacher_test_case_output": "Output",
   "text_teacher_test_case_actions": "Actions",
   "text_teacher_test_case_add": "Add test cases",
+  "text_header_ivprog_functions": "iVProg Functions",
+  "text_menu_functions_math":"Mathematics",
+  "text_menu_functions_text":"Text",
+  "text_menu_functions_arrangement":"Arrangement",
+  "text_menu_functions_conversion":"Conversion",
   "tooltip_visual": "Visual programming",
   "tooltip_textual": "Textual programming",
   "tooltip_upload": "Upload code file",
@@ -85,5 +90,6 @@
   "tooltip_console": "Open/Close console",
   "var_menu_select_var": "Select a var",
   "var_menu_select_all": "Select",
-  "var_menu_select_function": "Select a function"
+  "var_menu_select_function": "Select a function",
+  "expression_menu_select": "Select an expression"
 }

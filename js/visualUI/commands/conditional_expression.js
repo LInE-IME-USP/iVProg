@@ -120,11 +120,11 @@ function renderLogicOperator (command, all_expression, expression_logic, logic_o
 
 function renderLogicExpression (command, all_expression, expression_logic, function_obj, element_to_append, initial_el_to_render) {
 
-	var exp_el_par_1 = $(' <span class="span_command_spec"> ( </span> ');
+	var exp_el_par_1 = $(' <span class="span_command_spec"> </span> ');
 	var exp_el_expr_el_1 = $('<div class="expression_element"></div>');
 	var exp_el_expr_operand = $('<div class="expression_element"></div>');
 	var exp_el_expr_el_2 = $('<div class="expression_element"></div>');
-	var exp_el_par_2 = $(' <span class="span_command_spec"> ) </span> ');
+	var exp_el_par_2 = $(' <span class="span_command_spec"> </span> ');
 
 	if (expression_logic.first_operand.type == Models.EXPRESSION_TYPES.exp_logic) {
 		renderLogicExpression(command, all_expression, expression_logic.first_operand, function_obj, exp_el_expr_el_1);
@@ -159,11 +159,11 @@ function renderLogicExpression (command, all_expression, expression_logic, funct
 
 function renderArithmeticExpression (command, all_expression, expression_arithmetic, function_obj, element_to_append) {
 
-	var exp_el_par_1 = $(' <span class="span_command_spec"> ( </span> ');
+	var exp_el_par_1 = $(' <span class="span_command_spec"> </span> ');
 	var exp_el_expr_el_1 = $('<div class="expression_element"></div>');
 	var exp_el_expr_operand = $('<div class="expression_element"></div>');
 	var exp_el_expr_el_2 = $('<div class="expression_element"></div>');
-	var exp_el_par_2 = $(' <span class="span_command_spec"> ) </span> ');
+	var exp_el_par_2 = $(' <span class="span_command_spec"> </span> ');
 
 
 	if (expression_arithmetic.first_operand.type == Models.EXPRESSION_TYPES.exp_logic) {
@@ -193,7 +193,7 @@ function renderArithmeticExpression (command, all_expression, expression_arithme
 
 function renderStartMenu (command, expression, function_obj, initial_el_to_render) {
 	var start_menu = '';
-	start_menu += '<div class="ui dropdown menu_start_rendered"><div class="text"></div><i class="dropdown icon"></i><div class="menu">';
+	start_menu += '<div class="ui dropdown menu_start_rendered"><div class="text"><i>'+LocalizedStrings.getUI('expression_menu_select')+'</i></div><i class="dropdown icon"></i><div class="menu">';
 	start_menu += '<div class="item" data-exp="'+Models.EXPRESSION_TYPES.exp_logic+'">'+LocalizedStrings.getUI('text_logic_expression')+'</div>';
 	start_menu += '<div class="item" data-exp="'+Models.EXPRESSION_TYPES.exp_arithmetic+'">'+LocalizedStrings.getUI('text_arithmetic_expression')+'</div>';
 	start_menu += '</div></div>';
@@ -223,9 +223,9 @@ function renderStartMenu (command, expression, function_obj, initial_el_to_rende
     	}
 	});
 
-	initial_el_to_render.append(' <span class="span_command_spec"> ( </span> ');
+	initial_el_to_render.append(' <span class="span_command_spec"> </span> ');
 	
 	initial_el_to_render.append(start_menu);
 
-	initial_el_to_render.append(' <span class="span_command_spec"> ) </span> ');
+	initial_el_to_render.append(' <span class="span_command_spec"> </span> ');
 }

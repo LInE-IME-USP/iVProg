@@ -50,18 +50,6 @@ var button_ready = function() {
 
   });
 
-
-  //Sortable:
-  Sortable.create(listWithHandle, {
-    handle: '.glyphicon-move',
-    animation: 100,
-    ghostClass: 'ghost',
-    group: 'functions_divs_drag',
-    // onEnd: function (evt) {
-    //   updateSequenceFunctionHandler(evt.oldIndex, evt.newIndex);
-    // }
-  });
-
 };
 
 var mouseX;

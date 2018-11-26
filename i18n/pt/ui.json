@@ -72,6 +72,11 @@
   "text_teacher_test_case_output": "Saída",
   "text_teacher_test_case_actions": "Ações",
   "text_teacher_test_case_add": "Adicionar caso de teste",
+  "text_header_ivprog_functions": "Funções do iVProg",
+  "text_menu_functions_math":"Matemática",
+  "text_menu_functions_text":"Texto",
+  "text_menu_functions_arrangement":"Arranjo",
+  "text_menu_functions_conversion":"Conversão",
   "tooltip_visual": "Programação visual",
   "tooltip_textual": "Programação textual",
   "tooltip_upload": "Upload de código fonte",
@@ -86,5 +91,6 @@
   "tooltip_console": "Abrir/fechar o terminal",
   "var_menu_select_var": "Selecione uma variável",
   "var_menu_select_all": "Selecione",
-  "var_menu_select_function": "Selecione uma função"
+  "var_menu_select_function": "Selecione uma função",
+  "expression_menu_select": "Selecione uma expressão"
 }

@@ -15,6 +15,8 @@ import { SemanticAnalyser } from '../processor/semantic/semanticAnalyser';
 import { IVProgAssessment } from '../assessment/ivprogAssessment';
 import * as AlgorithmManagement from './algorithm';
 
+import '../Sortable.js';
+
 var counter_new_functions = 0;
 var counter_new_parameters = 0;
 
@@ -22,6 +24,11 @@ let studentTemp = null;
 let domConsole = null;
 window.studentGrade = null;
 const program = new Models.Program();
+
+window.system_functions = [];
+window.system_functions.push(new Models.SystemFunction('$sin', Types.REAL, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
+  "seno de um número", Models.SYSTEM_FUNCTIONS_CATEGORIES.math));
+
 /*const variable1 = new Models.Variable(Types.INTEGER, "a", 1);
 const parameter1 = new Models.Variable(Types.INTEGER, "par_1", 1);
 const command1 = new Models.Comment(new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.only_value, "Testing rendering commands"));
@@ -398,7 +405,22 @@ $( document ).ready(function() {
       hide: 0
     }
   });
+
+  Sortable.create(listWithHandle, {
+    handle: '.glyphicon-move',
+    animation: 100,
+    ghostClass: 'ghost',
+    group: 'functions_divs_drag',
+    onEnd: function (evt) {
+       updateSequenceFunction(evt.oldIndex, evt.newIndex);
+    }
+  });
+
 });
+
+function updateSequenceFunction (oldIndex, newIndex) {
+  program_obj.functions.splice(newIndex, 0, program_obj.functions.splice(oldIndex, 1)[0]);
+}
 
 function runCodeAssessment () {
   toggleConsole(true);

@@ -151,7 +151,8 @@ body {
 .function_name_div, .function_return_div, .function_name_parameter, .created_div_valor_var, .function_return, .var_value_menu_div, .variable_rendered, .variable_rendered div, .var_attributed,
 .expression_operand_1, .expression_operand_2, .operator, .div_comment_text, .value_rendered, .parameters_function_called, .parameters_function_called div, .expression_elements,
 .expression_element, .var_rendered, .menu_add_item, .component_element, .component_element, .conditional_expression, .variable_attribution, .attribution_expression, .var_value_expression,
-.incrementation_field, .incrementation_variable, .first_operand, .operator, .second_operand, .variable_to_switch, .variable_case, .button_remove_case, .editing_name_var, .parameter_div_edit {
+.incrementation_field, .incrementation_variable, .first_operand, .operator, .second_operand, .variable_to_switch, .variable_case, .button_remove_case, .editing_name_var, .parameter_div_edit,
+.all_elements_write, .container_var_element_control {
 	display: inline;
 }
 
@@ -282,7 +283,15 @@ div.buttons_manage_columns {
 	margin: 5px;
 	background: #f9f9f9;
 }
-
+.ui.repeatNtimes .separator_character {
+	margin-right: 10px;
+}
+.ui.repeatNtimes, .ui.whiletrue {
+    min-height: 50px;
+}
+.ui.dowhiletrue .ui.block_commands {
+	min-height: 10px;
+}
 .add_var_top_button {
 	padding-right: 50px;
 }
@@ -615,4 +624,7 @@ div.function_name_div_updated:active,
     width: 100%;
     display: inline-block;
     font-style: italic;
+}
+.ui.dropdown.menu_start_rendered .text i {
+    padding-right: 8px;
 }

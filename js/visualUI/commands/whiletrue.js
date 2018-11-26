@@ -15,7 +15,7 @@ export function createFloatingCommand () {
 export function renderCommand (command, function_obj) {
 	var ret = '';
 	ret += '<div class="ui whiletrue command_container"> <i class="ui icon small random command_drag"></i> <i class="ui icon times red button_remove_command"></i> <div class="ui context_menu"></div>  <span class="span_command_spec"> ' + LocalizedStrings.getUI('text_code_while') + ' </span>';
-	ret += ' <div class="conditional_expression"></div>';
+	ret += '<span class="span_command_spec"> ( </span> <div class="conditional_expression"></div> <span class="span_command_spec"> ) </span>';
 	ret += ' </span>';
 	ret += '<div class="ui block_commands">';
 	ret += '</div>';
