@@ -62,5 +62,9 @@ export const SyntaxErrorFactory = Object.freeze({
   },
   main_parameters: () => {
     return new SyntaxError(LocalizedStrings.getError("main_parameters"));
+  },
+  duplicate_variable: (token) => {
+    const context = [token.text, token.line, token.column];
+    return new SyntaxError(LocalizedStrings.getError("duplicate_variable", context));
   }
 });

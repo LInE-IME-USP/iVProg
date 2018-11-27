@@ -47,7 +47,8 @@ export class IVProgParser {
     this.parsingArrayDimension = 0;
     this.scope = [];
     this.langFuncs = LanguageService.getCurrentLangFuncs();
-    this.definedFuncsNameList = []
+    this.definedFuncsNameList = [];
+    this.definedVariablesStack = [];
   }
 
   parseTree () {
@@ -72,8 +73,20 @@ export class IVProgParser {
     this.scope.push(scope);
   }
 
+  pushVariableStack () {
+    this.definedVariablesStack.push([]);
+  }
+
   popScope () {
     return this.scope.pop();
+  }
+
+  popVariableStack () {
+    return this.definedVariablesStack.pop();
+  }
+
+  getCurrentVariableStack () {
+    return this.definedVariablesStack[this.definedVariablesStack.length - 1];
   }
 
   isEOF () {
@@ -91,13 +104,16 @@ export class IVProgParser {
       this.consumeNewLines();
       this.checkOpenCurly();
       this.pos++;
+      this.pushVariableStack();
       while(true) {
         this.consumeNewLines();
         const token = this.getToken();
         if (token.type === this.lexerClass.RK_CONST || this.isVariableType(token)) {
           globalVars = globalVars.concat(this.parseGlobalVariables());
         } else if (token.type === this.lexerClass.RK_FUNCTION) {
+          this.pushVariableStack();
           functions = functions.concat(this.parseFunction());
+          this.popVariableStack();
         } else {
           break;
         }
@@ -109,6 +125,7 @@ export class IVProgParser {
       if(!this.isEOF()) {
         throw SyntaxErrorFactory.extra_lines();
       }
+      this.popVariableStack();
       return {global: globalVars, functions: functions};
     } else {
       throw SyntaxErrorFactory.token_missing_one(this.lexer.literalNames[this.lexerClass.RK_PROGRAM], token);
@@ -213,6 +230,14 @@ export class IVProgParser {
     this.definedFuncsNameList.push(id);
   }
 
+  checkVariableDuplicate (variableID, variableIDToken) {
+    const index = this.getCurrentVariableStack().indexOf(variableID);
+    if(index !== -1) {
+      throw SyntaxErrorFactory.duplicate_variable(variableIDToken);
+    }
+    this.getCurrentVariableStack().push(variableID);
+  }
+
   consumeForSemiColon () {
     const eosToken = this.getToken();
     if (eosToken.type === this.lexerClass.EOS && eosToken.text.match(';')) {
@@ -260,7 +285,7 @@ export class IVProgParser {
     let dim2 = null;
     const idToken = this.getToken();
     const idString = this.parseID();
-    
+    this.checkVariableDuplicate(idString,idToken);
     // Check for array or vector
     // ID[int/IDi][int/IDj]
     if (this.checkOpenBrace(true)) {
@@ -491,7 +516,9 @@ export class IVProgParser {
     while(true) {
       let dimensions = 0;
       const typeString = this.parseType();
+      const idToken = this.getToken();
       const idString = this.parseID();
+      this.checkVariableDuplicate(idString, idToken);
       if (this.checkOpenBrace(true)) {
         this.pos++;
         dimensions++;
