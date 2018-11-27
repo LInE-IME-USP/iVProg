@@ -79,4 +79,9 @@ export class ArrayLiteral extends Literal {
     }
     return valid;
   }
+
+  toString () {
+    const strList = this.value.map(arrayLiteral => arrayLiteral.toString());
+    return "{" + strList.join(',') + "}";
+  }
 }

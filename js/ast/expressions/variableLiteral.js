@@ -7,4 +7,8 @@ export class VariableLiteral extends Literal {
     super(Types.UNDEFINED);
     this.id = id;
   }
+
+  toString () {
+    return this.id;
+  }
 }

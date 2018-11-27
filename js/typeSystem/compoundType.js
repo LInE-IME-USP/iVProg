@@ -18,6 +18,14 @@ export class CompoundType extends Type {
     return false;
   }
 
+  stringInfo () {
+    const list = this.innerType.stringInfo();
+    list.forEach(v => {
+      v.dim = this.dimensions;
+    });
+    return list;
+  }
+
   canAccept (another) {
     if(another instanceof CompoundType) {
       return this.dimensions > another.dimensions && this.innerType.isCompatible(another.innerType);

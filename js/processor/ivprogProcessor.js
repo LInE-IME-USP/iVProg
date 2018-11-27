@@ -205,7 +205,7 @@ export class IVProgProcessor {
       return this.executeFor(store, cmd);
     } else if (cmd instanceof Commands.Switch) {
       return this.executeSwitch(store, cmd);
-    } else if (cmd instanceof Commands.FunctionCall) {
+    } else if (cmd instanceof Expressions.FunctionCall) {
       return this.executeFunctionCall(store, cmd);
     } else if (cmd instanceof Commands.SysCall) {
       return this.executeSysCall(store, cmd);

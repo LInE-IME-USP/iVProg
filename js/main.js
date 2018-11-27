@@ -1,5 +1,6 @@
 import { IVProgParser } from './ast/ivprogParser';
 import { IVProgProcessor } from './processor/ivprogProcessor';
+import { SemanticAnalyser } from "./processor/semantic/semanticAnalyser";
 import {DOMInput} from './io/domInput';
 import {DOMOutput} from './io/domOutput';
 import { LanguageService } from './services/languageService';
@@ -31,7 +32,8 @@ try {
     const analiser = new IVProgParser(input, ivprogLexer);
     try {
       const data = analiser.parseTree();
-      const proc = new IVProgProcessor(data);
+      const semAna = new SemanticAnalyser(data);
+      const proc = new IVProgProcessor(semAna.analyseTree());
       proc.registerInput(domIn);
       domOut.clear();
       proc.registerOutput(domOut);
