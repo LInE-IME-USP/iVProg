@@ -39,7 +39,7 @@ export const SyntaxErrorFactory = Object.freeze({
     const context = [token.line, cmdName];
     return new SyntaxError(LocalizedStrings.getError("invalid_break_command", context));
   },
-  invalid_terminal: () => {
+  invalid_terminal: (token) => {
     const context = [token.text, token.line, token.column];
     return new SyntaxError(LocalizedStrings.getError('invalid_terminal', context));
   },
@@ -55,5 +55,12 @@ export const SyntaxErrorFactory = Object.freeze({
   invalid_id_format: (token) => {
     const context = [token.text, token.line, token.column];
     return new SyntaxError(LocalizedStrings.getError("invalid_id_format", context));
+  },
+  duplicate_function: (token) => {
+    const context = [token.text, token.line, token.column];
+    return new SyntaxError(LocalizedStrings.getError("duplicate_function", context));
+  },
+  main_parameters: () => {
+    return new SyntaxError(LocalizedStrings.getError("main_parameters"));
   }
 });

@@ -47,6 +47,7 @@ export class IVProgParser {
     this.parsingArrayDimension = 0;
     this.scope = [];
     this.langFuncs = LanguageService.getCurrentLangFuncs();
+    this.definedFuncsNameList = []
   }
 
   parseTree () {
@@ -201,6 +202,15 @@ export class IVProgParser {
         return false;
     }
     return true;
+  }
+
+  checkFunctionDuplicate (functionID, funcIDToken) {
+    const id = functionID === null ? "$main" : functionID;
+    const index = this.definedFuncsNameList.indexOf(id);
+    if(index !== -1) {
+      throw SyntaxErrorFactory.duplicate_function(funcIDToken);
+    }
+    this.definedFuncsNameList.push(id);
   }
 
   consumeForSemiColon () {
@@ -372,7 +382,6 @@ export class IVProgParser {
     this.checkOpenCurly();
     const beginArray = this.getToken();
     if (this.parsingArrayDimension >= 2) {
-      // TODO: better error message
       throw SyntaxErrorFactory.token_missing_list(`Array dimensions exceed maximum size of 2 at line ${beginArray.line}`);
     }
     this.pos++;
@@ -441,7 +450,9 @@ export class IVProgParser {
         dimensions++;
       }
     }
+    const funcIDToken = this.getToken();
     const functionID = this.parseID();
+    this.checkFunctionDuplicate(functionID, funcIDToken);
     this.checkOpenParenthesis();
     this.pos++;
     this.consumeNewLines();
@@ -461,10 +472,11 @@ export class IVProgParser {
     }
     const func = new Commands.Function(functionID, returnType, formalParams, commandsBlock);
     if (functionID === null && !func.isMain) {
-      // TODO: better error message
       throw SyntaxErrorFactory.invalid_main_return(LanguageDefinedFunction.getMainFunctionName(),
         this.lexer.literalNames[this.lexerClass.RK_VOID],
         token.line);
+    } else if (func.isMain && formalParams.length !== 0) {
+      throw SyntaxErrorFactory.main_parameters();
     }
     this.popScope();
     return func;
@@ -592,7 +604,6 @@ export class IVProgParser {
     const token = this.getToken();
     if (this.isVariableType(token)) {
       if(!this.insideScope(IVProgParser.FUNCTION)) {
-        // TODO better error message
         throw SyntaxErrorFactory.invalid_var_declaration(token.line);
       }
       this.pushScope(IVProgParser.BASE);
@@ -614,7 +625,6 @@ export class IVProgParser {
       return this.parseFor();
     } else if (token.type === this.lexerClass.RK_BREAK ) {
       if(!this.insideScope(IVProgParser.BREAKABLE)) {
-        // TODO better error message
         throw SyntaxErrorFactory.invalid_break_command(
           this.lexer.literalNames[this.lexerClass.RK_BREAK],
           token
@@ -710,7 +720,6 @@ export class IVProgParser {
       } else if(maybeIf.type === this.lexerClass.RK_IF) {
         elseBlock = this.parseIfThenElse();
       } else {
-        // TODO better error message
         throw SyntaxErrorFactory.token_missing_list([this.lexer.literalNames[this.lexerClass.RK_IF], '{'], maybeIf);
       }
       return new Commands.IfThenElse(logicalExpression, cmdBlocks, elseBlock);
