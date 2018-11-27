@@ -33,5 +33,8 @@
   "line_outbounds": "Número de linhas $0 é invaálido para a matriz $1 que possui $2 linhas",
   "invalid_infix_op": "Não é possível aplicar a operação $0 entre os tipos $1 e $2",
   "invalid_unary_op": "Não é possível aplicar a operação $0 ao tipo $1",
-  "unknown_op": "Erro interno crítico: Operação $0 desconhecida"
+  "unknown_op": "Erro interno crítico: Operação $0 desconhecida",
+  "duplicate_function": "A função $0 na linha: $1, coluna: $2 já foi definida anteriormente.",
+  "duplicate_variable": "A variável $0 na linha: $1, coluna: $2 já foi declarada anteriormente.",
+  "main_parameters": "A função inicio não pode ter parâmetros."
 }
