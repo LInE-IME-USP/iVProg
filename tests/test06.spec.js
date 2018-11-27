@@ -15,7 +15,9 @@ describe('While command', () => {
 
     it(`should not result in SyntaxError`, () => {
         const as = new IVProgParser(input, lexer);
+        as.pushVariableStack();
         const fun = as.parseFunction.bind(as);
         expect(fun).not.toThrow();
+        as.popVariableStack();
     });
 });
