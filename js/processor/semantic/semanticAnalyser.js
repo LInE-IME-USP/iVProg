@@ -49,6 +49,10 @@ export class SemanticAnalyser {
     }
   }
 
+  getMainFunction () {
+    return this.ast.functions.find(v => v.isMain);
+  }
+
   findFunction (name) {
     if(name.match(/^\$.+$/)) {
       const fun = LanguageDefinedFunction.getFunction(name);
@@ -142,9 +146,12 @@ export class SemanticAnalyser {
     } else if (expression instanceof Literal) {
       return this.evaluateLiteralType(expression);
     } else if (expression instanceof FunctionCall) {
+      if (expression.isMainCall) {
+        throw new Error("void return used in expression");
+      }
       const fun = this.findFunction(expression.id);
       if (fun.returnType.isCompatible(Types.VOID)) {
-        throw new Error("void return");
+        throw new Error("void return used in expression");
       }
       this.assertParameters(fun, expression.actualParameters);
       return fun.returnType;
@@ -384,7 +391,12 @@ export class SemanticAnalyser {
       }
 
     } else if (cmd instanceof FunctionCall) {
-      const fun = this.findFunction(cmd.id);
+      let fun = null;
+      if (cmd.isMainCall) {
+        fun = this.getMainFunction();
+      } else {
+        fun = this.findFunction(cmd.id);
+      }
       this.assertParameters(fun, cmd.actualParameters);
       return optional;
     } else if (cmd instanceof Return) {

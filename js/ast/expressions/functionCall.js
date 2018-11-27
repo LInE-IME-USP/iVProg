@@ -8,6 +8,10 @@ export class FunctionCall extends Expression {
 		this.actualParameters = actualParameters;
 	}
 
+	get isMainCall () {
+		return this.id === null;
+	}
+
 	get parametersSize () {
 		return this.actualParameters.length;
 	}

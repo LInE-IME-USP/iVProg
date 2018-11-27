@@ -220,7 +220,12 @@ export class IVProgProcessor {
   }
 
   executeFunctionCall (store, cmd) {
-    const func = this.findFunction(cmd.id);
+    let func = null;
+    if(cmd.isMainCall) {
+      func = this.findMainFunction();
+    } else {
+      func = this.findFunction(cmd.id);
+    }
     return this.runFunction(func, cmd.actualParameters, store)
       .then(sto => {
         if(!Types.VOID.isCompatible(func.returnType) && sto.mode !== Modes.RETURN) {
@@ -623,6 +628,9 @@ export class IVProgProcessor {
   }
 
   evaluateFunctionCall (store, exp) {
+    if(exp.isMainCall) {
+      return Promise.reject(new Error(`Main function cannot be used inside an expression`));
+    }
     const func = this.findFunction(exp.id);
     if(Types.VOID.isCompatible(func.returnType)) {
       // TODO: better error message
