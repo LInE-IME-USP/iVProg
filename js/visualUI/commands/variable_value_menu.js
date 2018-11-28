@@ -11,7 +11,7 @@ import * as RepeatNTimesManagement from './repeatNtimes';
 export const VAR_OR_VALUE_TYPES = Object.freeze({only_variable: 1, only_value: 2, only_function: 3, variable_and_function: 4, variable_and_value_opt: 5,
 	value_and_function: 6, all: 7});
 
-export function renderMenu (command, ref_object, dom_object, function_obj, size_field = 2, expression_element) {
+export function renderMenu (command, ref_object, dom_object, function_obj, size_field = 2, expression_element) { 
 	var menu_var_or_value = '<div class="ui dropdown menu_var_or_value_dom" data-algo="12"><div class="text"></div><i class="dropdown icon"></i><div class="menu">';
 
 	if (ref_object.variable_and_value == VAR_OR_VALUE_TYPES.only_variable) {
