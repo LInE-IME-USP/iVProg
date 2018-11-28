@@ -126,5 +126,153 @@ export const ProcessorErrorFactory  = Object.freeze({
   invalid_case_type: (exp, type, dim) => {
     const context = [exp, translateType(type, dim)];
     return new SemanticError(LocalizedStrings.getError("invalid_case_type", context));
+  },
+  void_in_expression_full: (id, sourceInfo) => {
+    if(sourceInfo) {
+      const context = [sourceInfo.line, sourceInfo.column, id];
+      return new SemanticError(LocalizedStrings.getError("void_in_expression_full", context));
+    } else {
+      return ProcessorErrorFactory.void_in_expression(id);
+    }
+  },
+  void_in_expression: (id) => {
+    const context = [id];
+    return new SemanticError(LocalizedStrings.getError("void_in_expression", context));
+  },
+  invalid_array_access_full: (id, sourceInfo) => {
+    if(sourceInfo) {
+      const context = [id, sourceInfo.line, sourceInfo.column];
+      return new SemanticError(LocalizedStrings.getError("invalid_array_access_full", context));
+    } else {
+      return ProcessorErrorFactory.invalid_array_access(id);
+    }
+  },
+  invalid_array_access: (id) => {
+    const context = [id];
+    return new SemanticError(LocalizedStrings.getError("invalid_array_access", context));
+  },
+  invalid_matrix_access_full: (id, sourceInfo) => {
+    if(sourceInfo) {
+      const context = [id, sourceInfo.line, sourceInfo.column];
+      return new SemanticError(LocalizedStrings.getError("invalid_matrix_access_full", context));
+    } else {
+      return ProcessorErrorFactory.invalid_matrix_access(id);
+    }
+  },
+  invalid_matrix_access: (id) => {
+    const context = [id];
+    return new SemanticError(LocalizedStrings.getError("invalid_matrix_access", context));
+  },
+  matrix_column_outbounds_full: (id, value, columns, sourceInfo) => {
+    if(sourceInfo) {
+      const context = [sourceInfo.line, value, id, columns];
+      return new SemanticError(LocalizedStrings.getError("matrix_column_outbounds_full", context));
+    } else {
+      return ProcessorErrorFactory.matrix_column_outbounds(id, value, columns);
+    }
+  },
+  matrix_column_outbounds: (id, value, columns) => {
+    const context = [value, id, columns];
+    return new SemanticError(LocalizedStrings.getError("matrix_column_outbounds", context));
+  },
+  matrix_line_outbounds_full: (id, value, lines, sourceInfo) => {
+    if(sourceInfo) {
+      const context = [sourceInfo.line, value, id, lines];
+      return new SemanticError(LocalizedStrings.getError("matrix_line_outbounds_full", context));
+    } else {
+      return ProcessorErrorFactory.matrix_line_outbounds(id, value, lines);
+    }
+  },
+  matrix_line_outbounds: (id, value, lines) => {
+    const context = [value, id, lines];
+    return new SemanticError(LocalizedStrings.getError("matrix_line_outbounds", context));
+  },
+  vector_column_outbounds_full: (id, value, columns, sourceInfo) => {
+    if(sourceInfo) {
+      const context = [sourceInfo.line, value, id, columns];
+      return new SemanticError(LocalizedStrings.getError("vector_column_outbounds_full", context));
+    } else {
+      return ProcessorErrorFactory.vector_column_outbounds(id, value, columns);
+    }
+  },
+  vector_column_outbounds: (id, value, columns) => {
+    const context = [value, id, columns];
+    return new SemanticError(LocalizedStrings.getError("vector_column_outbounds", context));
+  },
+  vector_line_outbounds_full: (id, value, lines, sourceInfo) => {
+    if(sourceInfo) {
+      const context = [sourceInfo.line, value, id, lines];
+      return new SemanticError(LocalizedStrings.getError("vector_line_outbounds_full", context));
+    } else {
+      return ProcessorErrorFactory.vector_line_outbounds(id, value, lines);
+    }
+  },
+  vector_line_outbounds: (id, value, lines) => {
+    const context = [value, id, lines];
+    return new SemanticError(LocalizedStrings.getError("vector_line_outbounds", context));
+  },
+  function_no_return: (id) => {
+    const context = [id];
+    return new SemanticError(LocalizedStrings.getError("function_no_return", context));
+  },
+  invalid_void_return_full: (id, type, dim, sourceInfo) => {
+    if(sourceInfo) {
+      const context = [sourceInfo.line, id, translateType(type, dim)];
+      return new SemanticError(LocalizedStrings.getError("invalid_void_return_full", context));
+    } else {
+      return ProcessorErrorFactory.invalid_void_return(id, type, dim);
+    }
+  },
+  invalid_void_return: (id, type, dim) => {
+    const context = [id, translateType(type, dim)];
+    return new SemanticError(LocalizedStrings.getError("invalid_void_return_full", context));
+  },
+  invalid_return_type_full: (id, type, dim, sourceInfo) => {
+    if(sourceInfo) {
+      const context = [sourceInfo.line, id, translateType(type, dim)];
+      return new SemanticError(LocalizedStrings.getError("invalid_return_type_full", context));
+    } else {
+      return ProcessorErrorFactory.invalid_return_type(id, type, dim);
+    }
+  },
+  invalid_return_type: (id, type, dim) => {
+    const context = [id, translateType(type, dim)];
+    return new SemanticError(LocalizedStrings.getError("invalid_return_type", context));
+  },
+  invalid_parameters_size_full: (id, value, count, sourceInfo) => {
+    if(sourceInfo) {
+      const context = [sourceInfo.line, id, value, count];
+      return new SemanticError(LocalizedStrings.getError("invalid_parameters_size_full", context));
+    } else {
+      return ProcessorErrorFactory.invalid_parameters_size(id, value, count);
+    }
+  },
+  invalid_parameters_size: (id, value, count) => {
+    const context = [id, value, count];
+    return new SemanticError(LocalizedStrings.getError("invalid_parameters_size", context));
+  },
+  invalid_parameter_type_full: (id, exp, sourceInfo) => {
+    if(sourceInfo) {
+      const context = [exp, id, sourceInfo.line];
+      return new SemanticError(LocalizedStrings.getError("invalid_parameter_type_full", context));
+    } else {
+      return ProcessorErrorFactory.invalid_parameter_type(id, exp);
+    }
+  },
+  invalid_parameter_type: (id, exp) => {
+    const context = [exp, id];
+    return new SemanticError(LocalizedStrings.getError("invalid_parameter_type_full", context));
+  },
+  invalid_ref_full: (id, exp, sourceInfo) => {
+    if(sourceInfo) {
+      const context = [exp, id , sourceInfo.line];
+      return new SemanticError(LocalizedStrings.getError("invalid_ref_full", context));
+    } else {
+      return ProcessorErrorFactory.invalid_ref(id, exp);
+    }
+  },
+  invalid_ref: (id, exp) => {
+    const context = [exp, id];
+    return new SemanticError(LocalizedStrings.getError("invalid_ref", context));
   }
 });
