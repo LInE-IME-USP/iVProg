@@ -8,4 +8,11 @@ export class InfixApp extends Expression {
     this.left = left;
     this.right = right;
   }
+
+  toString () {
+    const l = this.left.toString();
+    const op = this.op.value;
+    const r = this.right.toString();
+    return l + op + r;
+  }
 }

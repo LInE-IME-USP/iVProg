@@ -4,6 +4,9 @@
   "start": "inicio",
   "void": "vazio",
   "integer": "inteiro",
+  "and": "E",
+  "or": "OU",
+  "not": "nao",
   "real": "real",
   "program": "programa",
   "text": "cadeia",
@@ -22,5 +25,7 @@
   "text_read_var": "Leitura de dados",
   "text_write_var": "Escrita de dados",
   "text_comment": "Comentário",
-  "join_or": "ou"
+  "join_or": "ou",
+  "matrix_string": "matriz de $0",
+  "vector_string": "vetor de $0"
 }

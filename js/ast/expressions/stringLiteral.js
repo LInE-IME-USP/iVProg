@@ -7,4 +7,8 @@ export class StringLiteral extends Literal {
     super(Types.STRING);
     this.value = value;
   }
+
+  toString() {
+    return this.value;
+  }
 }

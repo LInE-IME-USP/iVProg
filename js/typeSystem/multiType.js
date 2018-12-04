@@ -15,6 +15,15 @@ export class MultiType extends Type {
     return null;
   }
 
+  stringInfo () {
+    let list = [];
+    for (let i = 0; i < this.types.length; i++) {
+      const t = this.types[i];
+      list = list.concat(t.stringInfo());
+    }
+    return list;
+  }
+
   isCompatible (another) {
     if(another instanceof Type) {
       for (let i = 0; i < this.types.length; i++) {

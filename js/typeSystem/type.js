@@ -12,6 +12,10 @@ export class Type {
     return this.baseType.ord;
   }
 
+  stringInfo () {
+    return [{type: this.baseType.name, dim: 0}];
+  }
+
   isCompatible (another) {
     if(another instanceof Type) {
       return this.baseType.isCompatible(another.baseType);
