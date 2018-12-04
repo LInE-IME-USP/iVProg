@@ -17,6 +17,7 @@ export class SemanticAnalyser {
     const lexer = new this.lexerClass(null);
     this.literalNames = lexer.literalNames;
     this.symbolMap = null;
+    this.currentFunction = null;
   }
 
   pushMap () {
@@ -57,7 +58,7 @@ export class SemanticAnalyser {
     if(name.match(/^\$.+$/)) {
       const fun = LanguageDefinedFunction.getFunction(name);
       if(!!!fun) {
-        throw ProcessorErrorFactory.unknown_command(name);
+        throw ProcessorErrorFactory.not_implemented(name);
       }
       return fun;
     } else {
@@ -243,12 +244,17 @@ export class SemanticAnalyser {
         if (!dimType.isCompatible(Types.INTEGER)) {
           throw ProcessorErrorFactory.array_dimension_not_int_full(literal.sourceInfo);
         }
-        if ((lines instanceof IntLiteral) && !lines.value.eq(literal.value.length)) {
-          if(type.dimensions > 1) {
-            throw ProcessorErrorFactory.matrix_line_outbounds_full(id, literal.value.length, lines.values.toNumber(), literal.sourceInfo)
-          } else {
-            throw ProcessorErrorFactory.vector_line_outbounds_full(id, literal.value.length, lines.values.toNumber(), literal.sourceInfo)
+        if ((lines instanceof IntLiteral)) {
+          if (!lines.value.eq(literal.value.length)) {
+            if(type.dimensions > 1) {
+              throw ProcessorErrorFactory.matrix_line_outbounds_full(id, literal.value.length, lines.values.toNumber(), literal.sourceInfo)
+            } else {
+              throw ProcessorErrorFactory.vector_line_outbounds_full(id, literal.value.length, lines.values.toNumber(), literal.sourceInfo)
+            }
+          } else if (line.value.isNeg()) {
+            throw ProcessorErrorFactory.array_dimension_not_positive_full(literal.sourceInfo);
           }
+          
         }
         literal.value.reduce((last, next) => {
           const eType = this.evaluateExpressionType(next);
@@ -264,13 +270,19 @@ export class SemanticAnalyser {
       } else {
         const dimType = this.evaluateExpressionType(columns);
         if (!dimType.isCompatible(Types.INTEGER)) {
-          throw ProcessorErrorFactory.array_dimension_not_int_full(literal.sourceInfo);        }
-        if ((columns instanceof IntLiteral) && !columns.value.eq(literal.value.length)) {
-          if(type.dimensions > 1) {
-            throw ProcessorErrorFactory.matrix_column_outbounds_full(id, literal.value.length, columns.values.toNumber(), literal.sourceInfo)
-          } else {
-            throw ProcessorErrorFactory.invalid_matrix_access_full(id, literal.sourceInfo);
+          throw ProcessorErrorFactory.array_dimension_not_int_full(literal.sourceInfo);
+        }
+        if ((columns instanceof IntLiteral)) {
+          if (!columns.value.eq(literal.value.length)) {
+            if(type.dimensions > 1) {
+              throw ProcessorErrorFactory.matrix_column_outbounds_full(id, literal.value.length, columns.values.toNumber(), literal.sourceInfo)
+            } else {
+              throw ProcessorErrorFactory.invalid_matrix_access_full(id, literal.sourceInfo);
+            }
+          } else if (columns.value.isNeg()) {
+            throw ProcessorErrorFactory.array_dimension_not_positive_full(literal.sourceInfo);
           }
+          
         }
         for (let i = 0; i < columns; i++) {
           const anotherArray = literal.value[i];
@@ -299,6 +311,7 @@ export class SemanticAnalyser {
 
   assertFunction (fun) {
     this.pushMap();
+    this.currentFunction = fun;
     fun.formalParameters.forEach(formalParam => {
       if(formalParam.type instanceof CompoundType) {
         if(formalParam.type.dimensions > 1) {
@@ -441,16 +454,17 @@ export class SemanticAnalyser {
       this.assertParameters(fun, cmd.actualParameters);
       return optional;
     } else if (cmd instanceof Return) {
+      const funcName = this.currentFunction.isMain ? LanguageDefinedFunction.getMainFunctionName() : this.currentFunction.name
       if (cmd.expression === null && !type.isCompatible(Types.VOID)) {
         const stringInfo = type.stringInfo();
         const info = stringInfo[0];
-        throw ProcessorErrorFactory.invalid_void_return_full(info.type, info.dim, cmd.sourceInfo);
+        throw ProcessorErrorFactory.invalid_void_return_full(funcName, info.type, info.dim, cmd.sourceInfo);
       } else if (cmd.expression !== null) {
         const resultType = this.evaluateExpressionType(cmd.expression);
         if (!type.isCompatible(resultType)) {
           const stringInfo = type.stringInfo();
           const info = stringInfo[0];
-          throw ProcessorErrorFactory.invalid_return_type_full(info.type, info.dim, cmd.sourceInfo);
+          throw ProcessorErrorFactory.invalid_return_type_full(funcName, info.type, info.dim, cmd.sourceInfo);
         } else {
           return true;
         }
