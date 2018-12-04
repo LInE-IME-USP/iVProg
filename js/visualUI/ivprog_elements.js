@@ -17,7 +17,7 @@ export const ARITHMETIC_COMPARISON = Object.freeze({greater_than:"greater_than",
 
 export const LOGIC_COMPARISON = Object.freeze({equals_to:"equals_to", not_equals_to:"not_equals_to", and:"and", or:"or"});
 
-export const SYSTEM_FUNCTIONS_CATEGORIES = Object.freeze({math:"math", text:"text", arrangement:"arrangement", conversion:"conversion"});
+export const SYSTEM_FUNCTIONS_CATEGORIES = Object.freeze({math:"math", text:"text_t", arrangement:"arrangement", conversion:"conversion"});
 
 export class Variable {
 

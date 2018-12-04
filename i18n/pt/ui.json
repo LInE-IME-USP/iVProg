@@ -95,7 +95,7 @@
   "expression_menu_select": "Selecione uma expressão",
   "$sin": "sen",
   "math": "Matematica",
-  "text": "Texto",
+  "text_t": "Texto",
   "arrangement": "Arranjo",
   "conversion": "Conversao",
   "$sin": "seno",
@@ -108,5 +108,10 @@
   "$negate": "trocar_sinal",
   "$invert": "inverter_valor",
   "$max": "maximo",
-  "$min": "minimo"
+  "$min": "minimo",
+  "$substring": "subcadeia",
+  "$length": "comprimento",
+  "$uppercase": "caixa_alta",
+  "$lowercase": "caixa_baixa",
+  "$charAt": "texto_na_posicao"
 }

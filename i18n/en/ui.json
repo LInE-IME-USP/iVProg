@@ -93,7 +93,7 @@
   "var_menu_select_function": "Select a function",
   "expression_menu_select": "Select an expression",
   "math": "Mathematic",
-  "text": "Text",
+  "text_t": "Text",
   "arrangement": "Arrangement",
   "conversion": "Conversion",
   "$sin": "sin",
@@ -106,5 +106,10 @@
   "$negate": "negate",
   "$invert": "invert",
   "$max": "maximum",
-  "$min": "minimum"
+  "$min": "minimum",
+  "$substring": "substring",
+  "$length": "length",
+  "$uppercase": "uppercase",
+  "$lowercase": "lowercase",
+  "$charAt": "char_at"
 }

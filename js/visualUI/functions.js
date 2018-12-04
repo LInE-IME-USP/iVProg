@@ -26,6 +26,7 @@ window.studentGrade = null;
 const program = new Models.Program();
 
 window.system_functions = [];
+// Adding math functions:
 window.system_functions.push(new Models.SystemFunction('$sin', Types.REAL, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
   null, Models.SYSTEM_FUNCTIONS_CATEGORIES.math));
 window.system_functions.push(new Models.SystemFunction('$cos', Types.REAL, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
@@ -48,6 +49,40 @@ window.system_functions.push(new Models.SystemFunction('$max', Types.REAL, 0, [n
   null, Models.SYSTEM_FUNCTIONS_CATEGORIES.math));
 window.system_functions.push(new Models.SystemFunction('$min', Types.REAL, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
   null, Models.SYSTEM_FUNCTIONS_CATEGORIES.math));
+// Adding text functions:
+window.system_functions.push(new Models.SystemFunction('$substring', Types.TEXT, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true),
+  new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true),new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
+  null, Models.SYSTEM_FUNCTIONS_CATEGORIES.text));
+window.system_functions.push(new Models.SystemFunction('$length', Types.INTEGER, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
+  null, Models.SYSTEM_FUNCTIONS_CATEGORIES.text));
+window.system_functions.push(new Models.SystemFunction('$uppercase', Types.TEXT, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
+  null, Models.SYSTEM_FUNCTIONS_CATEGORIES.text));
+window.system_functions.push(new Models.SystemFunction('$lowercase', Types.TEXT, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
+  null, Models.SYSTEM_FUNCTIONS_CATEGORIES.text));
+window.system_functions.push(new Models.SystemFunction('$charAt', Types.TEXT, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true), new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
+  null, Models.SYSTEM_FUNCTIONS_CATEGORIES.text));
+// Adding arrangement functions:
+window.system_functions.push(new Models.SystemFunction('$numElements', Types.INTEGER, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
+  null, Models.SYSTEM_FUNCTIONS_CATEGORIES.arrangement));
+window.system_functions.push(new Models.SystemFunction('$matrixLines', Types.INTEGER, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
+  null, Models.SYSTEM_FUNCTIONS_CATEGORIES.arrangement));
+window.system_functions.push(new Models.SystemFunction('$matrixColumns', Types.INTEGER, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
+  null, Models.SYSTEM_FUNCTIONS_CATEGORIES.arrangement));
+// Adding conversion functions:
+window.system_functions.push(new Models.SystemFunction('$isReal', Types.BOOLEAN, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
+  null, Models.SYSTEM_FUNCTIONS_CATEGORIES.conversion));
+window.system_functions.push(new Models.SystemFunction('$isInt', Types.BOOLEAN, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
+  null, Models.SYSTEM_FUNCTIONS_CATEGORIES.conversion));
+window.system_functions.push(new Models.SystemFunction('$isBool', Types.BOOLEAN, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
+  null, Models.SYSTEM_FUNCTIONS_CATEGORIES.conversion));
+window.system_functions.push(new Models.SystemFunction('$castReal', Types.REAL, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
+  null, Models.SYSTEM_FUNCTIONS_CATEGORIES.conversion));
+window.system_functions.push(new Models.SystemFunction('$castInt', Types.INTEGER, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
+  null, Models.SYSTEM_FUNCTIONS_CATEGORIES.conversion));
+window.system_functions.push(new Models.SystemFunction('$castBool', Types.BOOLEAN, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
+  null, Models.SYSTEM_FUNCTIONS_CATEGORIES.conversion));
+window.system_functions.push(new Models.SystemFunction('$castString', Types.TEXT, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
+  null, Models.SYSTEM_FUNCTIONS_CATEGORIES.conversion));
 /*const variable1 = new Models.Variable(Types.INTEGER, "a", 1);
 const parameter1 = new Models.Variable(Types.INTEGER, "par_1", 1);
 const command1 = new Models.Comment(new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.only_value, "Testing rendering commands"));

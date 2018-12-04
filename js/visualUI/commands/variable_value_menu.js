@@ -12,13 +12,37 @@ export const VAR_OR_VALUE_TYPES = Object.freeze({only_variable: 1, only_value: 2
 	value_and_function: 6, all: 7});
 
 export function renderMenu (command, ref_object, dom_object, function_obj, size_field = 2, expression_element) {
+	console.log('\n\ndebugging: ');
+	console.log(command);
+	console.log(ref_object);
+	console.log(dom_object);
+	console.log(function_obj);
+	console.log(size_field);
+	console.log(expression_element);
+	console.log('fim\n\n');
+
+	// Verificar se o objeto atual trata-se de uma chamada de função e conferir se possui a quantidade correta de parâmetros
+	// Caso não possua, tem que adicionar as variáveis que servirão de parâmetros:
+	if (ref_object.function_called) {
+		if (ref_object.function_called.parameters_list) {
+
+			while (ref_object.function_called.parameters_list.length != ref_object.parameters_list.length) {
+				if (ref_object.parameters_list.length > ref_object.function_called.parameters_list.length) {
+					ref_object.parameters_list.pop();
+				} else {
+					ref_object.parameters_list.push(new Models.VariableValueMenu(VAR_OR_VALUE_TYPES.all, null, null, null, true));
+				}
+			}
+		}
+	}
+
 	var menu_var_or_value = '<div class="ui dropdown menu_var_or_value_dom" data-algo="12"><div class="text"></div><i class="dropdown icon"></i><div class="menu">';
 
 	if (ref_object.variable_and_value == VAR_OR_VALUE_TYPES.only_variable) {
 
 		menu_var_or_value = '<div class="ui dropdown menu_var_or_value_dom"><div class="text"></div><i class="dropdown icon"></i><div class="menu menu_only_vars">';
 		menu_var_or_value += '</div>';
-	} 
+	}
 
 	if ((ref_object.variable_and_value == VAR_OR_VALUE_TYPES.variable_and_function) || (ref_object.variable_and_value == VAR_OR_VALUE_TYPES.variable_and_value_opt) || (ref_object.variable_and_value == VAR_OR_VALUE_TYPES.all)) {
 		
@@ -76,17 +100,32 @@ export function renderMenu (command, ref_object, dom_object, function_obj, size_
 	addIVProgFunctionsToMenu(function_obj, menu_var_or_value, ref_object, expression_element);
 
     if (ref_object.content || ref_object.function_called) {
-    	// Verificar se a variável ainda existe:
-    	if (isVarInProgram(ref_object.content, function_obj)) {
-    		renderPreviousContent(function_obj, menu_var_or_value, ref_object, dom_object, command, expression_element);
-    	} else {
-    		if (ref_object.content && ref_object.content.type) {
-    			ref_object.content = null;
-    			appendSelectText(ref_object, menu_var_or_value);
-    		} else {
+    	if (ref_object.content) {
+    		// Verificar se a variável ainda existe:
+    		if (isVarInProgram(ref_object.content, function_obj)) {
     			renderPreviousContent(function_obj, menu_var_or_value, ref_object, dom_object, command, expression_element);
+	    	} else {
+	    		if (ref_object.content && ref_object.content.type) {
+	    			ref_object.content = null;
+	    			appendSelectText(ref_object, menu_var_or_value);
+	    		} else {
+	    			renderPreviousContent(function_obj, menu_var_or_value, ref_object, dom_object, command, expression_element);
+	    		}
+	    	}
+    	} else if (ref_object.function_called) {
+    		// Verificar se a função ainda existe:
+    		if (isFunctionInProgram(ref_object.function_called)) {
+    			renderPreviousContent(function_obj, menu_var_or_value, ref_object, dom_object, command, expression_element);
+    		} else {
+    			ref_object.content = null;
+		     	ref_object.row = null;
+		     	ref_object.column = null;
+		     	delete ref_object.function_called;
+		     	delete ref_object.parameters_list;
+    			appendSelectText(ref_object, menu_var_or_value);
     		}
     	}
+
     } else {
     	appendSelectText(ref_object, menu_var_or_value);
     }
@@ -110,15 +149,18 @@ function appendSelectText (ref_object, menu_var_or_value) {
 	}
 }
 
-function isVarInProgram (var_obj, function_obj) {
-	// Verify in globals:
-	if (window.program_obj.globals) {
-		for (var i = 0; i < window.program_obj.globals.length; i++) {
-			if (window.program_obj.globals[i] == var_obj) {
+function isFunctionInProgram (function_called_obj) {
+	if (window.program_obj.functions) {
+		for (var i = 0; i < window.program_obj.functions.length; i++) {
+			if (window.program_obj.functions[i] == function_called_obj) {
 				return true;
 			}
 		}
 	}
+	return false;
+}
+
+function isVarInProgram (var_obj, function_obj) {
 	// Verify in locals:
 	if (function_obj.variables_list) {
 		for (var i = 0; i < function_obj.variables_list.length; i++) {
@@ -131,6 +173,14 @@ function isVarInProgram (var_obj, function_obj) {
 	if (function_obj.parameters_list) {
 		for (var i = 0; i < function_obj.parameters_list.length; i++) {
 			if (function_obj.parameters_list[i] == var_obj) {
+				return true;
+			}
+		}
+	}
+	// Verify in globals:
+	if (window.program_obj.globals) {
+		for (var i = 0; i < window.program_obj.globals.length; i++) {
+			if (window.program_obj.globals[i] == var_obj) {
 				return true;
 			}
 		}
@@ -591,6 +641,15 @@ function addIVProgFunctionsToMenu (function_obj, menu_var_or_value, ref_object, 
 		switch(window.system_functions[i].category) {
 			case Models.SYSTEM_FUNCTIONS_CATEGORIES.math:
 				sub_menu.find('.menu_math_functions').append(t);
+				break;
+			case Models.SYSTEM_FUNCTIONS_CATEGORIES.text:
+				sub_menu.find('.menu_text_functions').append(t);
+				break;
+			case Models.SYSTEM_FUNCTIONS_CATEGORIES.arrangement:
+				sub_menu.find('.menu_arrangement_functions').append(t);
+				break;
+			case Models.SYSTEM_FUNCTIONS_CATEGORIES.conversion:
+				sub_menu.find('.menu_conversion_functions').append(t);
 				break;
 		}	
 	}
