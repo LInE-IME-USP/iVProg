@@ -24,6 +24,10 @@ export function renderAlgorithm () {
 
  	$('.all_functions').children().off();
 	$('.all_functions').empty();
+	$('.functions_labels').children().off();
+	$('.functions_labels').empty();
+	$('.list_globals').children().off();
+	$('.list_globals').empty();	
 
 	for (var i = 0; i < window.program_obj.functions.length; i++) {
 		FunctionsManagement.renderFunction(window.program_obj.functions[i]);

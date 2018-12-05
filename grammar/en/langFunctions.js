@@ -19,15 +19,15 @@ export default {
   $castInt: "como_inteiro",
   $castBool: "como_logico",
   $castString: "como_cadeia",
-  $sin: "sen",
+  $sin: "sin",
   $cos: "cos",
   $tan: "tan",
-  $sqrt: "raiz_quadrada",
-  $pow: "pot",
+  $sqrt: "sqrt",
+  $pow: "pow",
   $log: "log",
-  $abs: "modulo",
-  $negate: "trocar_sinal",
-  $invert: "inverter_valor",
-  $max: "maximo",
-  $min: "minimo"
+  $abs: "abs",
+  $negate: "negate",
+  $invert: "invert",
+  $max: "maximum",
+  $min: "minimum"
 }

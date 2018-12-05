@@ -38,6 +38,7 @@ export function generate () {
 
 }
 
+
 function functionsCode (function_obj) {
 	var ret = '\n\t' + LocalizedStrings.getUI('function') + ' ';
 
@@ -148,10 +149,31 @@ function commandsCode (command_obj, indentation = 2) {
 
 		case Models.COMMAND_TYPES.switch:
 			return switchsCode(command_obj, indentation);
+
+		case Models.COMMAND_TYPES.return:
+			return returnsCode(command_obj, indentation);
 	}
 }
 
-function breaksCode(command_obj, indentation) {
+function returnsCode (command_obj, indentation) {
+	var ret = '\n';
+
+	for (var i = 0; i < indentation; i++) {
+		ret += '\t';
+	}
+
+	ret += LocalizedStrings.getUI('text_return');
+
+	if (command_obj.variable_value_menu) {
+		try {
+			ret += ' ' + variableValueMenuCode(command_obj.variable_value_menu);
+		} catch(err) {}
+	}
+
+	return ret;
+}
+
+function breaksCode (command_obj, indentation) {
 	var ret = '\n';
 
 	for (var i = 0; i < indentation; i++) {
@@ -163,7 +185,7 @@ function breaksCode(command_obj, indentation) {
 	return ret;
 }
 
-function switchsCode(command_obj, indentation) {
+function switchsCode (command_obj, indentation) {
 	var ret = '\n';
 
 	for (var i = 0; i < indentation; i++) {
@@ -191,7 +213,7 @@ function switchsCode(command_obj, indentation) {
 	return ret;
 }
 
-function switchcasesCode(switchcase, indentation) {
+function switchcasesCode (switchcase, indentation) {
 	var ret = '\n';
 
 	for (var i = 0; i < indentation; i++) {
@@ -212,7 +234,7 @@ function switchcasesCode(switchcase, indentation) {
 
 }
 
-function repeatNtimesCode(command_obj, indentation) {
+function repeatNtimesCode (command_obj, indentation) {
 	var ret = '\n';
 
 	for (var i = 0; i < indentation; i++) {
@@ -592,7 +614,12 @@ function variableValueMenuCode (variable_obj) {
 
 	var ret = '';
 	if (variable_obj.function_called) {
-		ret += variable_obj.function_called.name + ' ( ';
+
+		if (variable_obj.function_called.name) {
+			ret += variable_obj.function_called.name + ' ( ';
+		} else {
+			ret += LocalizedStrings.getUI(variable_obj.function_called.category)+'.'+LocalizedStrings.getUI(variable_obj.function_called.identifier) + ' ( ';
+		}
 
 		if (variable_obj.parameters_list) {
 			for (var i = 0; i < variable_obj.parameters_list.length; i++) {
@@ -721,8 +748,10 @@ function variablesCode (variable_obj) {
 
 		switch (temp.type) {
 			case Types.INTEGER:
-			case Types.REAL:
 				ret += '= {' + temp.value + '}';
+				break;
+			case Types.REAL:
+				ret += '= {' + temp.value.toFixed(2) + '}';
 				break;
 			case Types.TEXT:
 				ret += '= {';
@@ -755,11 +784,23 @@ function variablesCode (variable_obj) {
 
 		switch (temp.type) {
 			case Types.INTEGER:
-			case Types.REAL:
 				ret += '= {';
 
 				for (var j = 0; j < temp.rows; j++) {
 					ret += '{' + temp.value[j] + '}';
+
+					if ((j + 1) < temp.rows) {
+						ret += ',';
+					}
+				}
+
+				ret += '}';
+				break;
+			case Types.REAL:
+				ret += '= {';
+
+				for (var j = 0; j < temp.rows; j++) {
+					ret += '{' + temp.value[j].toFixed(2) + '}';
 
 					if ((j + 1) < temp.rows) {
 						ret += ',';
@@ -819,8 +860,10 @@ function variablesCode (variable_obj) {
 
 		switch (temp.type) {
 			case Types.INTEGER:
-			case Types.REAL:
 				ret += '= ' + temp.value;
+				break;
+			case Types.REAL:
+				ret += '= ' + temp.value.toFixed(2);
 				break;
 			case Types.TEXT:
 				ret += '= "' + temp.value + '"';
@@ -874,8 +917,17 @@ function globalsCode () {
 
 				switch (temp.type) {
 					case Types.INTEGER:
-					case Types.REAL:
 						ret += '= {' + temp.value + '}';
+						break;
+					case Types.REAL:
+						ret += '= {';
+						for (var j = 0; j < temp.value.length; j++) {
+							ret += temp.value[j].toFixed(2);
+							if ((j + 1) < temp.value.length) {
+								ret += ',';
+							}
+						}
+						ret += '}';
 						break;
 					case Types.TEXT:
 						ret += '= {';
@@ -908,12 +960,33 @@ function globalsCode () {
 
 				switch (temp.type) {
 					case Types.INTEGER:
-					case Types.REAL:
 						ret += '= {';
 
 						for (var j = 0; j < temp.rows; j++) {
 							ret += '{' + temp.value[j] + '}';
 
+							if ((j + 1) < temp.rows) {
+								ret += ',';
+							}
+						}
+
+						ret += '}';
+						break;
+					case Types.REAL:
+						ret += '= {';
+
+						for (var j = 0; j < temp.rows; j++) {
+							ret += '{';
+
+							for (var k = 0; k < temp.columns; k++) {
+								ret += temp.value[j][k].toFixed(2);
+
+								if ((k + 1) < temp.columns) {
+									ret += ',';
+								}
+							}
+
+							ret += '}';
 							if ((j + 1) < temp.rows) {
 								ret += ',';
 							}
@@ -972,8 +1045,10 @@ function globalsCode () {
 
 				switch (temp.type) {
 					case Types.INTEGER:
-					case Types.REAL:
 						ret += '= ' + temp.value;
+						break;
+					case Types.REAL:
+						ret += '= ' + temp.value.toFixed(2);
 						break;
 					case Types.TEXT:
 						ret += '= "' + temp.value + '"';

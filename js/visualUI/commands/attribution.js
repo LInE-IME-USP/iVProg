@@ -14,16 +14,18 @@ export function createFloatingCommand () {
 
 export function renderCommand (command, function_obj) {
 	
-	var el = $('<div class="ui attribution command_container"><i class="ui icon small arrow left command_drag"></i> <i class="ui icon times red button_remove_command"></i> <i class="ui icon redo alternate blue button_refresh_attribution"></i> <div class="var_attributed"></div> <span class="text_attr_receives">'+LocalizedStrings.getUI('text_receives')+'</span> '
+	var el = $('<div class="ui attribution command_container"><i class="ui icon small arrow left command_drag"></i> <i class="ui icon times red button_remove_command"></i> <div class="var_attributed"></div> <span class="text_attr_receives span_command_spec">'+LocalizedStrings.getUI('text_receives')+'</span> '
 		 + '<div class="expression_elements"></div> </div>');
 	el.data('command', command);
 
 	VariableValueMenu.renderMenu(command, command.variable, el.find('.var_attributed'), function_obj);
 
-	var exp = new Models.ExpressionElement(Models.EXPRESSION_ELEMENTS.op_exp, [Models.ARITHMETIC_TYPES.none, 
+	if (!command.expression || command.expression.length < 1) {
+		var exp = new Models.ExpressionElement(Models.EXPRESSION_ELEMENTS.op_exp, [Models.ARITHMETIC_TYPES.none, 
 		new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.all, null, null, null, true)]);
 
-	command.expression.push(exp);
+		command.expression.push(exp);
+	}
 
 	addHandlers(command, function_obj, el);
 

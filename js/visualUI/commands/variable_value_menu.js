@@ -12,22 +12,27 @@ export const VAR_OR_VALUE_TYPES = Object.freeze({only_variable: 1, only_value: 2
 	value_and_function: 6, all: 7});
 
 export function renderMenu (command, ref_object, dom_object, function_obj, size_field = 2, expression_element) {
-	var menu_var_or_value = '<div class="ui dropdown menu_var_or_value_dom"><div class="text"></div><i class="dropdown icon"></i><div class="menu">';
+	var menu_var_or_value = '<div class="ui dropdown menu_var_or_value_dom" data-algo="12"><div class="text"></div><i class="dropdown icon"></i><div class="menu">';
 
-	if (ref_object.variable_and_value == VAR_OR_VALUE_TYPES.only_function) {
+	// Verificar se o objeto atual trata-se de uma chamada de função e conferir se possui a quantidade correta de parâmetros
+	// Caso não possua, tem que adicionar as variáveis que servirão de parâmetros:
+	if (ref_object.function_called) {
+		if (ref_object.function_called.parameters_list) {
 
-		menu_var_or_value = '<div class="ui dropdown menu_var_or_value_dom"><div class="text"></div><i class="dropdown icon"></i><div class="menu menu_only_functions">';
-		menu_var_or_value += '</div>';
-	} 
+			if (!ref_object.parameters_list) {
+				ref_object.parameters_list = [];
+			}
 
-	if ((ref_object.variable_and_value == VAR_OR_VALUE_TYPES.variable_and_function) 
-		|| (ref_object.variable_and_value == VAR_OR_VALUE_TYPES.value_and_function) || (ref_object.variable_and_value == VAR_OR_VALUE_TYPES.all)) {
-		
-		menu_var_or_value += '<div class="item" data-option="'+VAR_OR_VALUE_TYPES.only_function+'"><i class="dropdown icon"></i>'+LocalizedStrings.getUI('btn_function');
-		menu_var_or_value += '<div class="menu menu_only_functions">';
-		menu_var_or_value += '</div></div>';
+			while (ref_object.function_called.parameters_list.length != ref_object.parameters_list.length) {
+				if (ref_object.parameters_list.length > ref_object.function_called.parameters_list.length) {
+					ref_object.parameters_list.pop();
+				} else {
+					ref_object.parameters_list.push(new Models.VariableValueMenu(VAR_OR_VALUE_TYPES.all, null, null, null, true));
+				}
+			}
+		}
 	}
-	
+
 	if (ref_object.variable_and_value == VAR_OR_VALUE_TYPES.only_variable) {
 
 		menu_var_or_value = '<div class="ui dropdown menu_var_or_value_dom"><div class="text"></div><i class="dropdown icon"></i><div class="menu menu_only_vars">';
@@ -49,6 +54,21 @@ export function renderMenu (command, ref_object, dom_object, function_obj, size_
 		|| (ref_object.variable_and_value == VAR_OR_VALUE_TYPES.value_and_function) || (ref_object.variable_and_value == VAR_OR_VALUE_TYPES.all)) {
 
 		menu_var_or_value += '<div class="item" data-option="'+VAR_OR_VALUE_TYPES.only_value+'">'+LocalizedStrings.getUI('text_value')+'</div>';
+
+	}
+
+	if (ref_object.variable_and_value == VAR_OR_VALUE_TYPES.only_function) {
+
+		menu_var_or_value = '<div class="ui dropdown menu_var_or_value_dom"><div class="text"></div><i class="dropdown icon"></i><div class="menu menu_only_functions">';
+		menu_var_or_value += '</div>';
+	} 
+
+	if ((ref_object.variable_and_value == VAR_OR_VALUE_TYPES.variable_and_function) 
+		|| (ref_object.variable_and_value == VAR_OR_VALUE_TYPES.value_and_function) || (ref_object.variable_and_value == VAR_OR_VALUE_TYPES.all)) {
+		
+		menu_var_or_value += '<div class="item" data-option="'+VAR_OR_VALUE_TYPES.only_function+'"><i class="dropdown icon"></i>'+LocalizedStrings.getUI('btn_function');
+		menu_var_or_value += '<div class="menu menu_only_functions">';
+		menu_var_or_value += '</div></div>';
 
 		if (command.type == Models.COMMAND_TYPES.attribution) {
 			menu_var_or_value += '<div class="item"><i class="dropdown icon"></i>' + LocalizedStrings.getUI('text_change');
@@ -72,9 +92,78 @@ export function renderMenu (command, ref_object, dom_object, function_obj, size_
 
     addFunctionsToMenu(function_obj, menu_var_or_value, ref_object, expression_element);
 
+	addIVProgFunctionsToMenu(function_obj, menu_var_or_value, ref_object, expression_element);
+
     if (ref_object.content || ref_object.function_called) {
-    	renderPreviousContent(function_obj, menu_var_or_value, ref_object, dom_object, command, expression_element);
+    	// Verificar se a variável ainda existe:
+    	if (isVarInProgram(ref_object.content, function_obj)) {
+    		renderPreviousContent(function_obj, menu_var_or_value, ref_object, dom_object, command, expression_element);
+    	} else {
+    		if (ref_object.content && ref_object.content.type) {
+    			ref_object.content = null;
+    			appendSelectText(ref_object, menu_var_or_value);
+    		} else {
+    			renderPreviousContent(function_obj, menu_var_or_value, ref_object, dom_object, command, expression_element);
+    		}
+    	}
+    } else {
+    	appendSelectText(ref_object, menu_var_or_value);
     }
+
+}
+
+function appendSelectText (ref_object, menu_var_or_value) {
+	switch(ref_object.variable_and_value) {
+		case VAR_OR_VALUE_TYPES.only_variable:
+			menu_var_or_value.find('.text').append('<i>'+LocalizedStrings.getUI('var_menu_select_var')+'</i>');
+			break;
+		case VAR_OR_VALUE_TYPES.all:
+			menu_var_or_value.find('.text').append('<i>'+LocalizedStrings.getUI('var_menu_select_all')+'</i>');
+			break;
+		case VAR_OR_VALUE_TYPES.variable_and_function:
+			menu_var_or_value.find('.text').append('<i>'+LocalizedStrings.getUI('var_menu_select_all')+'</i>');
+			break;
+		case VAR_OR_VALUE_TYPES.only_function:
+			menu_var_or_value.find('.text').append('<i>'+LocalizedStrings.getUI('var_menu_select_function')+'</i>');
+			break;
+	}
+}
+
+function isVarInProgram (var_obj, function_obj) {
+	// Verify in globals:
+	if (window.program_obj.globals) {
+		for (var i = 0; i < window.program_obj.globals.length; i++) {
+			if (window.program_obj.globals[i] == var_obj) {
+				return true;
+			}
+		}
+	}
+	// Verify in locals:
+	if (function_obj.variables_list) {
+		for (var i = 0; i < function_obj.variables_list.length; i++) {
+			if (function_obj.variables_list[i] == var_obj) {
+				return true;
+			}
+		}
+	}
+	// Verify in parameters:
+	if (function_obj.parameters_list) {
+		for (var i = 0; i < function_obj.parameters_list.length; i++) {
+			if (function_obj.parameters_list[i] == var_obj) {
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+export function refreshMenu (menu_var_or_value_dom) {
+	console.log('\n\n');
+	console.log(menu_var_or_value_dom);
+	console.log("olá, fui chamado! note alguns DATAS recuperados: ");
+	console.log(menu_var_or_value_dom.data());
+	console.log('\n\n\n');
+
 }
 
 function renderPreviousContent (function_obj, menu_var_or_value, ref_object, dom_object, command, expression_element) {
@@ -99,6 +188,20 @@ function renderPreviousContent (function_obj, menu_var_or_value, ref_object, dom
 }
 
 function variableValueMenuCode (command, variable_obj, dom_object, function_obj, menu_var_or_value, expression_element) {
+	
+	if (variable_obj.content || variable_obj.function_called) {
+    	// Verificar se a variável ainda existe:
+    	if (isVarInProgram(variable_obj.content, function_obj)) {
+    		
+    	} else {
+    		if (variable_obj.content && variable_obj.content.type) {
+    			variable_obj.content = null;
+    			appendSelectText(variable_obj, menu_var_or_value);
+    		}
+    	}
+    } else {
+    	appendSelectText(variable_obj, menu_var_or_value);
+    }
 
 	if (variable_obj.content == null && variable_obj.function_called == null) {
 		renderMenu(command, variable_obj, dom_object, function_obj, 2, expression_element);
@@ -113,8 +216,14 @@ function variableValueMenuCode (command, variable_obj, dom_object, function_obj,
 			menu_var_or_value.find('.text').text(' ');
 			dom_object.find('.menu_var_or_value_dom').remove();
 
-			var parameters_menu = '<div class="parameters_function_called"> '+variable_obj.function_called.name+' <span> ( </span>';
+			var parameters_menu;
 			
+			if (variable_obj.function_called.name) {
+				parameters_menu = '<div class="parameters_function_called"> '+variable_obj.function_called.name+' <span> ( </span>';
+			} else {
+				parameters_menu = '<div class="parameters_function_called"> <i>'+LocalizedStrings.getUI(variable_obj.function_called.category)+'.'+LocalizedStrings.getUI(variable_obj.function_called.identifier)+'</i> <span> ( </span>';
+			}
+
 			parameters_menu += '<span> ) </span></div>';
 
 			parameters_menu = $(parameters_menu);
@@ -141,6 +250,7 @@ function variableValueMenuCode (command, variable_obj, dom_object, function_obj,
 
 			context_menu.dropdown({
 				onChange: function(value, text, $selectedItem) {
+				 console.log('S1');
 			     if ($selectedItem.data('clear')) {
 			     	console.log('PP1');
 			     	dom_object.text('');
@@ -164,9 +274,16 @@ function variableValueMenuCode (command, variable_obj, dom_object, function_obj,
 			menu_var_or_value.find('.text').text(' ');
 			dom_object.find('.menu_var_or_value_dom').remove();
 
-			var parameters_menu = '<div class="parameters_function_called"> '+variable_obj.function_called.name+' <span> ( </span>';
+			var parameters_menu;
+
+			if (variable_obj.function_called.name) {
+				parameters_menu = '<div class="parameters_function_called"> '+variable_obj.function_called.name+' <span> ( </span>';
+			} else {
+				parameters_menu = '<div class="parameters_function_called"> <i>'+LocalizedStrings.getUI(variable_obj.function_called.category)+'.'+LocalizedStrings.getUI(variable_obj.function_called.identifier)+'</i> <span> ( </span>';
+			}
+
 			for (var j = 0; j < variable_obj.function_called.parameters_list.length; j++) {
-				parameters_menu += '<div class="parameter_'+j+'"></div>';
+				parameters_menu += '<div class="render_style_param parameter_'+j+'"></div>';
 				if ((j + 1) != variable_obj.function_called.parameters_list.length) {
 					parameters_menu += ' , ';
 				}
@@ -177,8 +294,11 @@ function variableValueMenuCode (command, variable_obj, dom_object, function_obj,
 
 			dom_object.append(parameters_menu);
 
+			console.log("\nvariable_obj:");
+			console.log(variable_obj);
+
 			for (var j = 0; j < variable_obj.function_called.parameters_list.length; j++) {
-				renderMenu(command, variable_obj.parameters_list[j], parameters_menu.find('.parameter_'+j), function_obj, 2, expression_element);
+				renderMenu(command, new Models.VariableValueMenu(VAR_OR_VALUE_TYPES.all, null, null, null, true), parameters_menu.find('.parameter_'+j), function_obj, 2, expression_element);
 			}
 
 
@@ -202,6 +322,7 @@ function variableValueMenuCode (command, variable_obj, dom_object, function_obj,
 
 			context_menu.dropdown({
 				onChange: function(value, text, $selectedItem) {
+					console.log('S2');
 			     if ($selectedItem.data('clear')) {
 			     	console.log('PP2');
 			     	dom_object.text('');
@@ -260,6 +381,7 @@ function variableValueMenuCode (command, variable_obj, dom_object, function_obj,
 
 			context_menu.dropdown({
 				onChange: function(value, text, $selectedItem) {
+					console.log('S3');
 			     if ($selectedItem.data('clear')) {
 			     	console.log('PP3');
 			     	dom_object.text('');
@@ -278,6 +400,10 @@ function variableValueMenuCode (command, variable_obj, dom_object, function_obj,
 			     }
 		      }
 			});
+
+			if (!variable_obj.column) {
+				variable_obj.column = new Models.VariableValueMenu(VAR_OR_VALUE_TYPES.all, null, null, null, true);
+			}
 
 			variableValueMenuCode(command, variable_obj.column, $(variable_render.find('.column_container')), function_obj, menu_var_or_value, expression_element);
 
@@ -315,6 +441,7 @@ function variableValueMenuCode (command, variable_obj, dom_object, function_obj,
 
 			context_menu.dropdown({
 				onChange: function(value, text, $selectedItem) {
+					console.log('S4');
 			     if ($selectedItem.data('clear')) {
 			     	console.log('PP4');
 			     	dom_object.text('');
@@ -334,6 +461,13 @@ function variableValueMenuCode (command, variable_obj, dom_object, function_obj,
 		      }
 			});
 
+			if (!variable_obj.column) {
+				variable_obj.column = new Models.VariableValueMenu(VAR_OR_VALUE_TYPES.all, null, null, null, true);
+			}
+			if (!variable_obj.row) {
+				variable_obj.row = new Models.VariableValueMenu(VAR_OR_VALUE_TYPES.all, null, null, null, true);
+			}
+
 			variableValueMenuCode(command, variable_obj.row, $(variable_render.find('.row_container')), function_obj, menu_var_or_value, expression_element);
 			variableValueMenuCode(command, variable_obj.column, $(variable_render.find('.column_container')), function_obj, menu_var_or_value, expression_element);
 
@@ -351,7 +485,9 @@ function variableValueMenuCode (command, variable_obj, dom_object, function_obj,
 			var context_menu = '<div class="ui dropdown context_menu_clear"><div class="text"></div><i class="dropdown icon"></i><div class="menu">';
 			context_menu += '<div class="item" data-clear="true">'+LocalizedStrings.getUI('btn_clear')+'</div>';
 
-			if (command.type == Models.COMMAND_TYPES.attribution) {
+			if (command.type == Models.COMMAND_TYPES.attribution && !dom_object.hasClass('var_attributed')) {
+				console.log('dom_object6');
+				console.log(dom_object);
 				context_menu += '<div class="item"><i class="dropdown icon"></i>' + LocalizedStrings.getUI('text_change');
 				context_menu += '<div class="menu">';
 				context_menu += '<div class="item" data-exp="'+Models.EXPRESSION_ELEMENTS.exp_op_exp+'">EXP OP EXP</div>';
@@ -368,6 +504,7 @@ function variableValueMenuCode (command, variable_obj, dom_object, function_obj,
 
 			context_menu.dropdown({
 				onChange: function(value, text, $selectedItem) {
+					console.log('S5');
 			     if ($selectedItem.data('clear')) {
 			     	console.log('PP5');
 			     	dom_object.text('');
@@ -421,6 +558,7 @@ function variableValueMenuCode (command, variable_obj, dom_object, function_obj,
 
 		context_menu.dropdown({
 			onChange: function(value, text, $selectedItem) {
+				console.log('S6');
 		     if ($selectedItem.data('clear')) {
 		     	console.log('PP6');
 		     	dom_object.text('');
@@ -455,9 +593,29 @@ function variableValueMenuCode (command, variable_obj, dom_object, function_obj,
 			openInputToValue(command, variable_obj, dom_object, menu_var_or_value, function_obj, expression_element);
 		});
 	}
+}
 
-	
+function addIVProgFunctionsToMenu (function_obj, menu_var_or_value, ref_object, expression_element) {
+	var sub_menu = menu_var_or_value.find('.menu_only_functions');
+	sub_menu.append('<div class="divider"></div><div class="header">'+LocalizedStrings.getUI('text_header_ivprog_functions')+'</div>');
+	sub_menu.append('<div class="item"><i class="dropdown icon"></i>'+LocalizedStrings.getUI('text_menu_functions_math')+'<div class="menu menu_math_functions"></div></div>');
+	sub_menu.append('<div class="item"><i class="dropdown icon"></i>'+LocalizedStrings.getUI('text_menu_functions_text')+'<div class="menu menu_text_functions"></div></div>');
+	sub_menu.append('<div class="item"><i class="dropdown icon"></i>'+LocalizedStrings.getUI('text_menu_functions_arrangement')+'<div class="menu menu_arrangement_functions"></div></div>');
+	sub_menu.append('<div class="item"><i class="dropdown icon"></i>'+LocalizedStrings.getUI('text_menu_functions_conversion')+'<div class="menu menu_conversion_functions"></div></div>');
 
+	// Insert Math functions:
+	for (var i = 0; i < window.system_functions.length; i++) {
+		var t = $('<div class="item"></div>');
+		t.data('function_reference', window.system_functions[i]);
+		t.data('option', VAR_OR_VALUE_TYPES.only_function);
+		t.text(LocalizedStrings.getUI(window.system_functions[i].identifier));
+		
+		switch(window.system_functions[i].category) {
+			case Models.SYSTEM_FUNCTIONS_CATEGORIES.math:
+				sub_menu.find('.menu_math_functions').append(t);
+				break;
+		}	
+	}
 }
 
 function addFunctionsToMenu (function_obj, menu_var_or_value, ref_object, expression_element) {
@@ -518,6 +676,7 @@ function addHandlers (command, ref_object, dom_object, menu_var_or_value, functi
 	if (ref_object.variable_and_value != VAR_OR_VALUE_TYPES.only_value) {
 		menu_var_or_value.dropdown({
 		  onChange: function(value, text, $selectedItem) {
+		  	console.log('S7');
 		  	dom_object.find('.var_name').remove();
 		     switch ($selectedItem.data('option')) {
 		     	case VAR_OR_VALUE_TYPES.only_function:
@@ -556,6 +715,19 @@ function addHandlers (command, ref_object, dom_object, menu_var_or_value, functi
 	        width: inputWidth
 	    })
 	}).trigger('input');
+
+
+	if (command.type == Models.COMMAND_TYPES.comment) {
+		dom_object.parent().on('click', function(e) {
+			dom_object.find('.value_rendered').remove();
+			dom_object.find('.value_rendered').empty();
+			dom_object.find('.value_rendered').remove();
+			dom_object.empty();
+			dom_object.append('<span class="menu_var_or_value_dom"> </span>');
+			
+			openInputToValue(command, ref_object, dom_object, menu_var_or_value, function_obj, expression_element)
+		});
+	}
 	
 }
 
@@ -570,9 +742,14 @@ function openInputToFunction (command, ref_object, dom_object, menu_var_or_value
 		menu_var_or_value.find('.text').text(' ');
 		dom_object.find('.menu_var_or_value_dom').remove();
 
-		var parameters_menu = '<div class="parameters_function_called"> '+function_selected.name+' <span> ( </span>';
+		var parameters_menu;
+		if (function_selected.name) {
+			parameters_menu = '<div class="parameters_function_called"> '+function_selected.name+' <span> ( </span>';
+		} else {
+			parameters_menu = '<div class="parameters_function_called"> <i>'+LocalizedStrings.getUI(function_selected.category)+'.'+LocalizedStrings.getUI(function_selected.identifier)+'</i> <span> ( </span>';
+		}
 		for (var j = 0; j < function_selected.parameters_list.length; j++) {
-			parameters_menu += '<div class="parameter_'+j+'"></div>';
+			parameters_menu += '<div class="render_style_param parameter_'+j+'"></div>';
 			if ((j + 1) != function_selected.parameters_list.length) {
 				parameters_menu += ' , ';
 			}
@@ -610,6 +787,7 @@ function openInputToFunction (command, ref_object, dom_object, menu_var_or_value
 
 		context_menu.dropdown({
 			onChange: function(value, text, $selectedItem) {
+				console.log('S8');
 		     if ($selectedItem.data('clear')) {
 		     	console.log('PP7');
 		     	dom_object.text('');
@@ -633,7 +811,13 @@ function openInputToFunction (command, ref_object, dom_object, menu_var_or_value
 		menu_var_or_value.find('.text').text(' ');
 		dom_object.find('.menu_var_or_value_dom').remove();
 
-		var parameters_menu = '<div class="parameters_function_called"> '+function_selected.name+' <span> ( </span>';
+		var parameters_menu;
+
+		if (function_selected.name) {
+			parameters_menu = '<div class="parameters_function_called"> '+function_selected.name+' <span> ( </span>';
+		} else {
+			parameters_menu = '<div class="parameters_function_called"> <i>'+LocalizedStrings.getUI(function_selected.category)+'.'+LocalizedStrings.getUI(function_selected.identifier)+'</i> <span> ( </span>';
+		}
 		
 		parameters_menu += '<span> ) </span></div>';
 
@@ -661,6 +845,7 @@ function openInputToFunction (command, ref_object, dom_object, menu_var_or_value
 
 		context_menu.dropdown({
 			onChange: function(value, text, $selectedItem) {
+				console.log('S9');
 		     if ($selectedItem.data('clear')) {
 		     	console.log('PP8');
 		     	dom_object.text('');
@@ -683,10 +868,6 @@ function openInputToFunction (command, ref_object, dom_object, menu_var_or_value
 
 	if (command.type == Models.COMMAND_TYPES.attribution) {
 		AttribuitionsManagement.renderMenuOperations(command, ref_object, dom_object, menu_var_or_value, function_obj);
-	}
-
-	if (command.type == Models.COMMAND_TYPES.writer) {
-		WritersManagement.addContent(command, ref_object, dom_object, menu_var_or_value, function_obj, ref_object.content);
 	}
 }
 
@@ -729,7 +910,9 @@ function openInputToVariable (command, ref_object, dom_object, menu_var_or_value
 	var context_menu = '<div class="ui dropdown context_menu_clear"><div class="text"></div><i class="dropdown icon"></i><div class="menu">';
 	context_menu += '<div class="item" data-clear="true">'+LocalizedStrings.getUI('btn_clear')+'</div>';
 
-	if (command.type == Models.COMMAND_TYPES.attribution) {
+	if (command.type == Models.COMMAND_TYPES.attribution && !dom_object.hasClass('var_attributed')) {
+		console.log("dom_object 10: ");
+		console.log(dom_object);
 		context_menu += '<div class="item"><i class="dropdown icon"></i>' + LocalizedStrings.getUI('text_change');
 		context_menu += '<div class="menu">';
 		context_menu += '<div class="item" data-exp="'+Models.EXPRESSION_ELEMENTS.exp_op_exp+'">EXP OP EXP</div>';
@@ -746,6 +929,7 @@ function openInputToVariable (command, ref_object, dom_object, menu_var_or_value
 
 	context_menu.dropdown({
 		onChange: function(value, text, $selectedItem) {
+			console.log('S10');
 	     if ($selectedItem.data('clear')) {
 	     	console.log('PP9');
 	     	dom_object.text('');
@@ -773,12 +957,6 @@ function openInputToVariable (command, ref_object, dom_object, menu_var_or_value
 	if (command.type == Models.COMMAND_TYPES.attribution) {
 		AttribuitionsManagement.renderMenuOperations(command, ref_object, dom_object, menu_var_or_value, function_obj, variable_selected);
 	}
-
-	if (command.type == Models.COMMAND_TYPES.writer) {
-		WritersManagement.addContent(command, ref_object, dom_object, menu_var_or_value, function_obj, variable_selected);
-	}
-
-	
 }
 
 
@@ -821,6 +999,7 @@ function openInputToValue (command, ref_object, dom_object, menu_var_or_value, f
 
 	context_menu.dropdown({
 		onChange: function(value, text, $selectedItem) {
+			console.log('S11');
 	     if ($selectedItem.data('clear')) {
 	     	console.log('PP10');
 	     	dom_object.text('');
@@ -872,6 +1051,19 @@ function openInputToValue (command, ref_object, dom_object, menu_var_or_value, f
 		}
 	});
 
+	if (command.type == Models.COMMAND_TYPES.comment) {
+		rendered.parent().on('click', function(e) {
+			console.log("TTT14");
+			rendered.remove();
+			rendered.empty();
+			rendered.remove();
+			dom_object.empty();
+			dom_object.append('<span class="menu_var_or_value_dom"> </span>');
+			
+			openInputToValue(command, ref_object, dom_object, menu_var_or_value, function_obj, expression_element)
+		});
+	}
+
 	rendered.on('click', function(e) {
 		console.log("TTT2");
 		rendered.remove();
@@ -885,10 +1077,6 @@ function openInputToValue (command, ref_object, dom_object, menu_var_or_value, f
 
 	if (command.type == Models.COMMAND_TYPES.attribution) {
 		AttribuitionsManagement.renderMenuOperations(command, ref_object, dom_object, menu_var_or_value, function_obj);
-	}
-
-	if (command.type == Models.COMMAND_TYPES.writer) {
-		WritersManagement.addContent(command, ref_object, dom_object, menu_var_or_value, function_obj, ref_object.content);
 	}
 }
 

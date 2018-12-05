@@ -14,7 +14,7 @@ export function createFloatingCommand () {
 
 export function renderCommand (command, function_obj) {
 	var ret = '';
-	ret += '<div class="ui switch command_container"> <i class="ui icon small random command_drag" ></i> <i class="ui icon times red button_remove_command"></i> <div class="ui context_menu"></div> <span> '+LocalizedStrings.getUI('text_code_switch')+' ( <div class="ui variable_to_switch"></div> ) { <div class="ui all_cases_div"></div> }</span>';
+	ret += '<div class="ui switch command_container"> <i class="ui icon small random command_drag" ></i> <i class="ui icon times red button_remove_command"></i> <div class="ui context_menu"></div> <span> '+LocalizedStrings.getUI('text_code_switch')+' ( <div class="ui variable_to_switch"></div> ) <div class="ui all_cases_div"></div></span>';
 	ret += '</div>';
 
 	var el = $(ret);
@@ -45,6 +45,23 @@ export function renderCase (switchcase, command, function_obj, el) {
 	casediv.find('.case_commands_block').data('switchcase', switchcase);
 
 	el.append(casediv);
+
+	if (switchcase.commands_block) {
+		for (var j = 0; j < switchcase.commands_block.length; j++) {
+		    CommandsManagement.renderCommand(switchcase.commands_block[j], $(casediv.find('.case_commands_block')[0]), 3, function_obj);
+		}
+	}
+
+	casediv.find('.button_remove_command').on('click', function() {
+		for (var i = 0; i < command.cases.length; i++) {
+			if (switchcase == command.cases[i]) {
+				delete command.cases[i];
+				command.cases.splice(i, 1);
+				casediv.remove();
+				break;
+			}
+		}
+	});
 
 }
 

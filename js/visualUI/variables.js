@@ -77,13 +77,11 @@ function addHandlers (variable_obj, variable_container) {
 }
 
 
-export function renderVariable(function_container, new_var, function_obj) {
+export function renderVariable (function_container, new_var, function_obj) {
 
 	var element = '<div class="ui label variable_container">';
 
-	element += '<span class="span_name_variable enable_edit_name_variable">'+new_var.name+'</span> <i class="icon small pencil alternate enable_edit_name_variable"></i>';
- 	
- 	element += '<div class="ui dropdown variable_type">';
+	element += '<div class="ui dropdown variable_type">';
 
   	if (new_var.dimensions > 0) {
   		element += '<div class="text">'+ LocalizedStrings.getUI('vector') + ':' + LocalizedStrings.getUI(new_var.type.toLowerCase());
@@ -117,9 +115,11 @@ export function renderVariable(function_container, new_var, function_obj) {
 	    	+ '</div>';	
   	}
 
-    element += '</div></div>  = ';
+    element += '</div></div> ';
 
-	element += '<div class="ui div_valor_var">'+new_var.value+'</div>';    
+    element += '<span class="span_name_variable enable_edit_name_variable">'+new_var.name+'</span> <i class="icon small pencil alternate enable_edit_name_variable"></i>';
+
+	element += ' = <div class="ui div_valor_var">'+new_var.value+'</div>';    
 
 	element += ' <i class="red icon times remove_variable"></i></div>';
 

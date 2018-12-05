@@ -12,7 +12,7 @@ export function createFloatingCommand () {
 }
 
 export function renderCommand (command, function_obj) {
-	var el = '<div class="ui reader command_container"> <i class="ui icon small download command_drag"></i> <i class="ui icon times red button_remove_command"></i> <span>'+LocalizedStrings.getUI('text_command_read')+' ( </span> <div class="var_value_menu_div"></div> <span class="close_parentheses">)</span> </div>';
+	var el = '<div class="ui reader command_container"> <i class="ui icon small download command_drag"></i> <i class="ui icon times red button_remove_command"></i> <span class="span_command_spec">'+LocalizedStrings.getUI('text_command_read')+' ( </span> <div class="var_value_menu_div"></div> <span class="close_parentheses span_command_spec">)</span> </div>';
 	
 	el = $(el);
 	el.data('command', command);

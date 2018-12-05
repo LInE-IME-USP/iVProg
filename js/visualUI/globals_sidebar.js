@@ -83,7 +83,7 @@ function updateInitialValues (global_var) {
 			global_var.value = [LocalizedStrings.getUI('text_start'), LocalizedStrings.getUI('text_start')];
 		}
 		if (global_var.dimensions == 2) {
-			global_var.value = [[LocalizedStrings.getUI('text_start'), LocalizedStrings.getUI('text_start')],
+			global_var.value = [[LocalizedStrings.getUI('text_start'), LocalizedStrings.getUI('text_start')], 
 									[LocalizedStrings.getUI('text_start'), LocalizedStrings.getUI('text_start')]];
 		}
 	}
@@ -230,12 +230,12 @@ function renderValues (global_var, global_container) {
 
 	if (global_var.dimensions == 0) {
 		if (global_var.type == Types.REAL) {
-			ret += '<div class="created_div_valor_var"><span class="span_value_variable simple_var">'+global_var.value.toFixed(1)+'</span> <i class="icon small pencil alternate enable_edit_name_function simple_var"></i></div> ';
+			ret += '<div class="created_div_valor_var"><span class="span_value_variable simple_var">'+global_var.value.toFixed(1)+'</span>  </div> ';
 		} else {
 			if (global_var.type == Types.BOOLEAN) {
-				ret += '<div class="created_div_valor_var"><span class="span_value_variable boolean_simple_type">'+global_var.value+'</span> <i class="icon small pencil alternate enable_edit_name_function boolean_simple_type"></i></div> ';
+				ret += '<div class="created_div_valor_var"><span class="span_value_variable boolean_simple_type">'+global_var.value+'</span>  </div> ';
 			} else {
-				ret += '<div class="created_div_valor_var"><span class="span_value_variable simple_var">'+global_var.value+'</span> <i class="icon small pencil alternate enable_edit_name_function simple_var"></i></div> ';
+				ret += '<div class="created_div_valor_var"><span class="span_value_variable simple_var">'+global_var.value+'</span>  </div> ';
 			}
 		}
 	} else {
@@ -256,7 +256,7 @@ function renderValues (global_var, global_container) {
 					}
 				}
 			}
-
+			
 			ret += '</tr>';
 			ret += '</table>';
 
@@ -270,19 +270,19 @@ function renderValues (global_var, global_container) {
     				ret += '<tr>';
     				for (var k = 0; k < global_var.columns; k++) {
     					ret += '<td><span class="span_value_variable matrix_var" data-index="'+k+'" data-row="'+l+'">'+global_var.value[l][k].toFixed(1)+'</span>'+'</td>';
-    				}
+    				} 
     				ret += '</tr>';
 				}
 			} else {
 				for (var l = 0; l < global_var.rows; l++) {
     				ret += '<tr>';
     				for (var k = 0; k < global_var.columns; k++) {
-    					if (global_var.type == Types.BOOLEAN) {
+    					if (global_var.type == Types.BOOLEAN) { 
     						ret += '<td><span class="span_value_variable boolean_matrix_var" data-index="'+k+'" data-row="'+l+'">'+global_var.value[l][k]+'</span></td>';
     					} else {
     						ret += '<td><span class="span_value_variable matrix_var" data-index="'+k+'" data-row="'+l+'">'+global_var.value[l][k]+'</span></td>';
     					}
-    				}
+    				} 
     				ret += '</tr>';
 				}
 			}
@@ -296,7 +296,7 @@ function renderValues (global_var, global_container) {
 			ret += '<div class="buttons_manage_columns"><i class="ui icon minus square outline remove_global_matrix_column"></i>'
 		    	+ ' <i class="ui icon plus square outline add_global_matrix_column"></i></div>';
 		}
-
+		
 	}
 
 	$( global_container ).find( ".div_valor_var" ).html('');
@@ -356,12 +356,15 @@ function renderValues (global_var, global_container) {
 	});
 	$( global_container ).find( ".div_valor_var" ).append(ret);
 
+
+	updateColumnsAndRowsText(global_container, global_var);
+
 }
 
 function addHandlers (global_container) {
-	var global_var = $(global_container).data('associatedOject');
+	var global_var = global_container.data('associatedOject'); 
 	// Manage constant option:
-	$( global_container ).find( ".alternate_constant" ).on('click', function(e){
+	global_container.find( ".alternate_constant" ).on('click', function(e){
 		toggleConstant(global_var);
 
 		$( this ).removeClass( "on off" );
@@ -372,13 +375,13 @@ function addHandlers (global_container) {
 		}
 	});
 
-	// Manage global name:
-	$( global_container ).find( ".enable_edit_name_parameter" ).on('click', function(e){
+	// Manage global name: 
+	global_container.find( ".enable_edit_name_parameter" ).on('click', function(e){
 		enableNameUpdate(global_container);
 	});
 
 	// Menu to change type:
-	$( global_container ).find('.ui.dropdown.global_type').dropdown({
+	global_container.find('.ui.dropdown.global_type').dropdown({
 	    onChange: function(value, text, $selectedItem) {
 	    	if ($($selectedItem).data('dimensions')) {
 	    		updateType(global_var, Types[$($selectedItem).data('type')], $($selectedItem).data('dimensions'));
@@ -387,34 +390,54 @@ function addHandlers (global_container) {
 	    	}
 
 	    	renderValues(global_var, global_container);
+
 	    }
 	});
 
-	// Remove global:
-	$( global_container ).find( ".remove_global" ).on('click', function(e){
+	// Remove global: 
+	global_container.find( ".remove_global" ).on('click', function(e){
 		removeGlobal(global_var, global_container);
 	});
 
+	global_container
+	.on('dragstart', function(e) {
+		e.originalEvent.dataTransfer.setData("text",JSON.stringify({type:"var",content:global_var}));
+	})
+
 }
 
-function renderGlobal (global_var) {
+function updateColumnsAndRowsText (global_container, global_var) {
+	var prev = global_container.find('.text').text().split('[');
+	if (prev.length == 2) {
+		var ff = prev[0] + '[ ' + global_var.columns + ' ] ';
+		global_container.find('.text').empty();
+		global_container.find('.text').text(ff);
+	}
+	if (prev.length == 3) {
+		var ff = prev[0] + '[ ' + global_var.columns + ' ] [ ' + global_var.rows + ' ] ';
+		global_container.find('.text').empty();
+		global_container.find('.text').text(ff);
+	}
+}
+
+export function renderGlobal (global_var) {
 
 	var element = '<div class="ui label global_container"><div class="global_const">const: ';
 
-	element += '<i class="ui icon toggle '+(global_var.is_constant?"on":"off")+' alternate_constant"></i></div><span class="span_name_variable enable_edit_name_parameter">'+global_var.name+'</span> <i class="icon small pencil alternate enable_edit_name_parameter"></i>';
-
+	element += '<i class="ui icon toggle '+(global_var.is_constant?"on":"off")+' alternate_constant"></i></div>';
+ 	
  	element += '<div class="ui dropdown global_type">';
 
   	if (global_var.dimensions > 0) {
   		element += '<div class="text">'+ i18n('ui:vector') + ':' + LocalizedStrings.getUI(global_var.type);
   		for (var i = 0; i < global_var.dimensions; i ++) {
-  			element += ' [ ] ';
+  			element += ' [ <span class="dimensions_'+i+'"></span> ] ';
   		}
   		element += '</div>';
   	} else {
   		element += '<div class="text">' + LocalizedStrings.getUI(global_var.type.toLowerCase()) + '</div>';
   	}
-	element += '<i class="dropdown icon"></i><div class="menu">';
+	element += '<div class="menu">';
 
 	for (var tm in Types) {
   		if (tm == Types.VOID.toUpperCase()) {
@@ -434,24 +457,32 @@ function renderGlobal (global_var) {
 		        + '<div class="item" data-text="'+ LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI(tm.toLowerCase())+' [ ] " data-type="'+tm+'" data-dimensions="1">[ ]</div>'
 		        + '<div class="item" data-text="'+ LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI(tm.toLowerCase())+' [ ] [ ] " data-type="'+tm+'" data-dimensions="2">[ ] [ ] </div>'
 	      	+  '</div>'
-	    	+ '</div>';
+	    	+ '</div>';	
   	}
 
-    element += '</div></div>  = ';
+    element += '</div></div> <div class="editing_name_var"> <span class="span_name_variable enable_edit_name_parameter">'+global_var.name+'</span> </div> <span class="character_equals"> = </span> ';
 
-	element += '<div class="ui div_valor_var">'+global_var.value+'</div>';
+	element += '<div class="ui div_valor_var">'+global_var.value+'</div>';    
 
 	element += ' <i class="red icon times remove_global"></i></div>';
 
 	var complete_element = $(element);
 
-	$(complete_element).data('associatedOject', global_var);
+	complete_element.data('associatedOject', global_var);
 
 	$('.list_globals').append(complete_element);
 
 	addHandlers(complete_element);
 
 	renderValues(global_var, complete_element);
+
+	if (global_var.dimensions == 1) {
+		complete_element.find('.dimensions_0').text(global_var.columns);
+	}
+	if (global_var.dimensions == 2) {
+		complete_element.find('.dimensions_0').text(global_var.columns);
+		complete_element.find('.dimensions_1').text(global_var.rows);
+	}
 }
 
 var opened_name_value_matrix_global_v = false;
@@ -594,7 +625,7 @@ function enableGlobalValueUpdate (global_var, parent_node) {
 					global_var.value = $(this).val().trim();
 				}
 				$(parent_node).find('.span_value_variable').text(global_var.value);
-
+				
 			}
 		}
 		$(this).remove();
@@ -649,36 +680,34 @@ var opened_name_global = false;
 var opened_input_global = null;
 function enableNameUpdate (global_container) {
 
-	var global_var = $(global_container).data('associatedOject');
+	var global_var = global_container.data('associatedOject'); 
 
 	if (opened_name_global) {
-		$(opened_input_global).focus();
+		opened_input_global.focus();
 		return;
 	}
 	opened_name_global = true;
 
-	$( global_container ).find('.span_name_variable').text('');
-	$( "<input type='text' class='width-dynamic input_name_function' autocomplete='off' autocorrect='off' autocapitalize='off' spellcheck='false' value='"+global_var.name+"' />" ).insertBefore($(global_container).find('.span_name_variable'));
+	global_container.find('.span_name_variable').text('');
+	$( "<input type='text' class='width-dynamic input_name_function' autocomplete='off' autocorrect='off' autocapitalize='off' spellcheck='false' value='"+global_var.name+"' />" ).insertBefore(global_container.find('.span_name_variable'));
 
 	$('.width-dynamic').on('input', function() {
 	    var inputWidth = $(this).textWidth()+10;
-	    opened_input_global = this;
-	    $(this).focus();
+	    opened_input_global = $(this);
+	    opened_input_global.focus();
 
-	    var tmpStr = $(this).val();
-		$(this).val('');
-		$(this).val(tmpStr);
-
-	    $(this).css({
+	    opened_input_global.css({
 	        width: inputWidth
 	    })
 	}).trigger('input');
 
 	$('.width-dynamic').focusout(function() {
 		/// update array:
-		if ($(this).val().trim()) {
+		if ($(this).val().trim().length > 0) {
 			updateName(global_var, $(this).val().trim());
-			$(global_container).find('.span_name_variable').text(global_var.name);
+			global_container.find('.span_name_variable').text(global_var.name);
+		} else {
+			global_container.find('.span_name_variable').text(global_var.name);
 		}
 		$(this).remove();
 
@@ -692,7 +721,9 @@ function enableNameUpdate (global_container) {
 		if(code == 13) {
 			if ($(this).val().trim()) {
 				updateName(global_var, $(this).val().trim());
-				$(global_container).find('.span_name_variable').text(global_var.name);
+				global_container.find('.span_name_variable').text(global_var.name);
+			} else {
+				global_container.find('.span_name_variable').text(global_var.name);
 			}
 			$(this).remove();
 
@@ -702,7 +733,7 @@ function enableNameUpdate (global_container) {
 		}
 		if(code == 27) {
 
-			$(global_container).find('.span_name_variable').text(global_var.name);
+			global_container.find('.span_name_variable').text(global_var.name);
 
 			$(this).remove();
 
@@ -712,6 +743,8 @@ function enableNameUpdate (global_container) {
 		}
 	});
 
+	 $('.width-dynamic').select();
+	
 }
 
 
@@ -818,11 +851,11 @@ function enableGlobalVectorValueUpdate (global_var, index, parent_node) {
 
 
 $.fn.textWidth = function(text, font) {
-
+    
     if (!$.fn.textWidth.fakeEl) $.fn.textWidth.fakeEl = $('<span>').hide().appendTo(document.body);
-
+    
     $.fn.textWidth.fakeEl.text(text || this.val() || this.text() || this.attr('placeholder')).css('font', font || this.css('font'));
-
+    
     return $.fn.textWidth.fakeEl.width();
 };
 

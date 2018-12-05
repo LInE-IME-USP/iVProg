@@ -16,7 +16,6 @@ import { LanguageService } from '../services/languageService';
 var block_render = false;
 
 export function renderAlgorithm () {
-
 	if (block_render) {
 		return;
 	}
@@ -24,6 +23,9 @@ export function renderAlgorithm () {
 
  	$('.all_functions').children().off();
 	$('.all_functions').empty();
+
+	$('.list_globals').children().off();
+	$('.list_globals').empty();	
 
 	for (var i = 0; i < window.program_obj.functions.length; i++) {
 		FunctionsManagement.renderFunction(window.program_obj.functions[i]);

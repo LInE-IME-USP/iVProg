@@ -1,6 +1,6 @@
 import $ from 'jquery';
 import { Types } from './types';
-import * as Models from './ivprog_elements';
+import * as Models from './ivprog_elements_sidebar';
 import { LocalizedStrings } from './../services/localizedStringsService';
 import * as GlobalsManagement from './globals_sidebar';
 import * as VariablesManagement from './variables';
@@ -15,6 +15,7 @@ import { SemanticAnalyser } from '../processor/semantic/semanticAnalyser';
 import { IVProgAssessment } from '../assessment/ivprogAssessment';
 import * as AlgorithmManagement from './algorithm_sidebar';
 
+import '../Sortable.js';
 
 var counter_new_functions = 0;
 var counter_new_parameters = 0;
@@ -23,22 +24,52 @@ let studentTemp = null;
 let domConsole = null;
 window.studentGrade = null;
 const program = new Models.Program();
-/*const variable1 = new Models.Variable(Types.INTEGER, "a", 1);*/
-const mainFunction = new Models.Function(LocalizedStrings.getUI("start"), Types.VOID, 0, [], true, false);
-mainFunction.function_comment = new Models.Comment(LocalizedStrings.getUI('text_comment_main'));
-/*const parameter1 = new Models.Variable(Types.INTEGER, "par_1", 1);
+
+window.system_functions = [];
+window.system_functions.push(new Models.SystemFunction('$sin', Types.REAL, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
+  null, Models.SYSTEM_FUNCTIONS_CATEGORIES.math));
+window.system_functions.push(new Models.SystemFunction('$cos', Types.REAL, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
+  null, Models.SYSTEM_FUNCTIONS_CATEGORIES.math));
+window.system_functions.push(new Models.SystemFunction('$tan', Types.REAL, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
+  null, Models.SYSTEM_FUNCTIONS_CATEGORIES.math));
+window.system_functions.push(new Models.SystemFunction('$sqrt', Types.REAL, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
+  null, Models.SYSTEM_FUNCTIONS_CATEGORIES.math));
+window.system_functions.push(new Models.SystemFunction('$pow', Types.REAL, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true), new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
+  null, Models.SYSTEM_FUNCTIONS_CATEGORIES.math));
+window.system_functions.push(new Models.SystemFunction('$log', Types.REAL, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
+  null, Models.SYSTEM_FUNCTIONS_CATEGORIES.math));
+window.system_functions.push(new Models.SystemFunction('$abs', Types.REAL, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
+  null, Models.SYSTEM_FUNCTIONS_CATEGORIES.math));
+window.system_functions.push(new Models.SystemFunction('$negate', Types.REAL, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
+  null, Models.SYSTEM_FUNCTIONS_CATEGORIES.math));
+window.system_functions.push(new Models.SystemFunction('$invert', Types.REAL, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
+  null, Models.SYSTEM_FUNCTIONS_CATEGORIES.math));
+window.system_functions.push(new Models.SystemFunction('$max', Types.REAL, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
+  null, Models.SYSTEM_FUNCTIONS_CATEGORIES.math));
+window.system_functions.push(new Models.SystemFunction('$min', Types.REAL, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
+  null, Models.SYSTEM_FUNCTIONS_CATEGORIES.math));
+/*const variable1 = new Models.Variable(Types.INTEGER, "a", 1);
+const parameter1 = new Models.Variable(Types.INTEGER, "par_1", 1);
 const command1 = new Models.Comment(new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.only_value, "Testing rendering commands"));
 
-const sumFunction = new Models.Function("soma", Types.INTEGER, 0, [parameter1], false, false, [], null, [command1]);*/
+const sumFunction = new Models.Function("soma", Types.INTEGER, 0, [parameter1], false, false, [], null, [command1]);
 
+
+program.addFunction(sumFunction);
+*/
+
+console.log('       ___           ___                    ________          \n      /   /         /   /                  /   ____/  \n     /   /         /   /                  /   /        \n    /   /         /   /  ______    ___   /   /__         \n   /   /         /   /  /      \\  /  /  /   ___/      \n  /   /______   /   /  /   /\\   \\/  /  /   /      \n /          /  /   /  /   /  \\     /  /   /____     \n/__________/  /___/  /___/    \\___/  /________/       ');
+
+const mainFunction = new Models.Function(LocalizedStrings.getUI("start"), Types.VOID, 0, [], true, false);
+mainFunction.function_comment = new Models.Comment(LocalizedStrings.getUI('text_comment_main'));
 program.addFunction(mainFunction);
-//program.addFunction(sumFunction);
 
 window.program_obj = program;
 
 window.generator = CodeManagement.generate;
 window.runCodeAssessment = runCodeAssessment;
 window.renderAlgorithm = AlgorithmManagement.renderAlgorithm;
+
 WatchJS.watch(program.globals, function(){
   AlgorithmManagement.renderAlgorithm();
 }, 1);
@@ -70,6 +101,7 @@ function updateReturnType (function_obj, new_type, new_dimensions = 0) {
 }
 
 function removeFunction (function_obj) {
+  
   var index = program.functions.indexOf(function_obj);
   if (index > -1) {
     program.functions.splice(index, 1);
@@ -82,15 +114,8 @@ function minimizeFunction (function_obj) {
 
 function addHandlers (function_obj, function_container) {
 
-  // function_container.on('dragenter',function(e) {
-  //   e.preventDefault();
-  //   $(e.target).addClass('div-over')
-  //   console.log(e.target)
-  // })
-
   function_container.find('.ui.dropdown.function_return').dropdown({
       onChange: function(value, text, $selectedItem) {
-        $selectedItem = $($selectedItem);
         if ($selectedItem.data('dimensions')) {
           updateReturnType(function_obj, Types[$selectedItem.data('type')], $selectedItem.data('dimensions'));
         } else {
@@ -138,24 +163,26 @@ function addHandlers (function_obj, function_container) {
     function_container.find(".function_area").toggle();
     function_container.find(".add_var_top_button").toggle();
   });
-
-
 }
 
 // Essa função imprime o tipo de retorno da função e cria o menu do tipo 'select' para alteração
 function renderFunctionReturn (function_obj, function_element) {
 
   var ret = '<div class="ui dropdown function_return">';
-
+    
     if (function_obj.return_dimensions > 0) {
       ret += '<div class="text">'+ LocalizedStrings.getUI("vector") +':'+ LocalizedStrings.getUI(function_obj.return_type);
+      if (function_obj.return_dimensions == 1) {
+        ret += ' [ ] ';
+      } else {
+        ret += ' [ ] [ ] ';
+      }
       ret += '</div>';
     } else {
       ret += '<div class="text">'+LocalizedStrings.getUI(function_obj.return_type)+'</div>';
     }
 
-    ret += '<i class="dropdown icon"></i>'
-      + '<div class="menu">';
+    ret += '<div class="menu">';
 
 
     for (var tm in Types) {
@@ -173,13 +200,13 @@ function renderFunctionReturn (function_obj, function_element) {
             + '<div class="item '+(function_obj.return_type == tm.toLowerCase()  && function_obj.return_dimensions > 0 ? ' selected ' : '')+'" data-text="'+ LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI(tm.toLowerCase())+' [ ] " data-type="'+tm+'" data-dimensions="1">[ ]</div>'
             + '<div class="item '+(function_obj.return_type == tm.toLowerCase()  && function_obj.return_dimensions > 0 ? ' selected ' : '')+'" data-text="'+ LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI(tm.toLowerCase())+' [ ] [ ] " data-type="'+tm+'" data-dimensions="2">[ ] [ ] </div>'
           +  '</div>'
-        + '</div>';
+        + '</div>'; 
     }
 
     ret += '</div></div>';
 
     ret = $(ret);
-
+    
     function_element.find('.function_return').append(ret);
 }
 
@@ -191,14 +218,14 @@ export function renderFunction (function_obj) {
   if (function_obj.function_comment) {
     //appender += renderComment(function_obj.function_comment, sequence, true, -1);
   }
-
+    
   appender += '<span class="glyphicon glyphicon-move move_function" aria-hidden="true"><i class="icon sort alternate vertical"></i></span>';
 
   appender += (function_obj.is_main ? '<div class="div_start_minimize_v"> </div>' : '<button class="ui icon button large remove_function_button"><i class="red icon times"></i></button>')
     + '<button class="ui icon button tiny minimize_function_button"><i class="icon window minimize"></i></button>';
 
   appender += '<div class="ui small icon buttons add_var_top_button"><div class="ui icon button add_var_button_function"><i class="icon superscript"></i></div>';
-
+  
   appender += '<div class="ui icon button dropdown menu_commands" ><i class="icon code"></i> <div class="menu"> ';
   appender += '<a class="item" data-command="'+Models.COMMAND_TYPES.reader+'"><i class="download icon"></i> ' +LocalizedStrings.getUI('text_read_var')+ '</a>'
         + '<a class="item" data-command="'+Models.COMMAND_TYPES.writer+'"><i class="upload icon"></i> '+LocalizedStrings.getUI('text_write_var')+'</a>'
@@ -217,22 +244,21 @@ export function renderFunction (function_obj) {
 
   if (function_obj.is_main) {
       appender += '<div class="function_name_div">  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ' + LocalizedStrings.getUI('void') + ' &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="span_name_function" >'+function_obj.name+'</span> </div> '
-        + '( <div class="ui large labels parameters_list">';
+        + ' <span class="parethesis_function">( </span> <div class="ui large labels parameters_list">';
   } else {
       appender += '<div class="ui function_return"></div>';
 
-      appender += '<div class="function_name_div"><span class="span_name_function name_function_updated">'+function_obj.name+'</span> <i class="icon small pencil alternate enable_edit_name_function name_function_updated"></i></div> ' 
-        + '( <i class="ui icon plus square outline add_parameter_button"></i> <div class="ui large labels parameters_list container_parameters_list">';
+      appender += '<div class="function_name_div function_name_div_updated"><span class="span_name_function name_function_updated">'+function_obj.name+'</span> </div> ' 
+        + ' <span class="parethesis_function"> ( </span> <i class="ui icon plus square outline add_parameter_button"></i> <div class="ui large labels parameters_list container_parameters_list">';
   }
-
-  appender += '</div> ) </div>'
+    
+  appender += '</div> <span class="parethesis_function"> ) </span> </div>'
     + (function_obj.is_hidden ? ' <div class="function_area" style="display: none;"> ' : ' <div class="function_area"> ')
 
     + '<div class="ui top attached segment variables_list_div">'
-    /*+ renderVariables(function_obj, sequence)*/
     + '</div>'
-    + '<div class="ui bottom attached segment commands_list_div" id="function_drag_cmd_">';
 
+    + '<div class="ui bottom attached segment commands_list_div" id="function_drag_cmd_">';
 
   appender += '</div>';
 
@@ -252,7 +278,7 @@ export function renderFunction (function_obj) {
   addHandlers(function_obj, appender);
 
 
-  // Rendering parameters:
+  // Rendering parameters: 
   for (var j = 0; j < function_obj.parameters_list.length; j++) {
     renderParameter(function_obj, function_obj.parameters_list[j], appender);
   }
@@ -267,6 +293,14 @@ export function renderFunction (function_obj) {
     CommandsManagement.renderCommand(function_obj.commands[j], $(appender.find('.commands_list_div')[0]), 3, function_obj);
   }
 
+
+  $('.minimize_function_button').popup({
+    content : LocalizedStrings.getUI("tooltip_minimize"),
+    delay: {
+      show: 750,
+      hide: 0
+    }
+  });
 }
 
 
@@ -298,6 +332,10 @@ export function initVisualUI () {
     runCodeAssessment();
     is_iassign = true;
   });
+
+  $('.div_toggle_console').on('click', () => {
+    toggleConsole();
+  });
 }
 
 var is_iassign = false;
@@ -308,17 +346,104 @@ $( document ).ready(function() {
     renderFunction(program.functions[i]);
   }
 
-  $('.div_to_body div a').popup({
+  var time_show = 750;
+  $('.visual_coding_button').popup({
+    content : LocalizedStrings.getUI("tooltip_visual"),
     delay: {
-      show: 750,
+      show: time_show,
       hide: 0
+    }
+  });
+  $('.textual_coding_button').popup({
+    content : LocalizedStrings.getUI("tooltip_textual"),
+    delay: {
+      show: time_show,
+      hide: 0
+    }
+  });
+  $('.upload_file_button').popup({
+    content : LocalizedStrings.getUI("tooltip_upload"),
+    delay: {
+      show: time_show,
+      hide: 0
+    }
+  });
+  $('.download_file_button').popup({
+    content : LocalizedStrings.getUI("tooltip_download"),
+    delay: {
+      show: time_show,
+      hide: 0
+    }
+  });
+  $('.undo_button').popup({
+    content : LocalizedStrings.getUI("tooltip_undo"),
+    delay: {
+      show: time_show,
+      hide: 0
+    }
+  });
+  $('.redo_button').popup({
+    content : LocalizedStrings.getUI("tooltip_redo"),
+    delay: {
+      show: time_show,
+      hide: 0
+    }
+  });
+  $('.run_button').popup({
+    content : LocalizedStrings.getUI("tooltip_run"),
+    delay: {
+      show: time_show,
+      hide: 0
+    }
+  });
+  $('.assessment_button').popup({
+    content : LocalizedStrings.getUI("tooltip_evaluate"),
+    delay: {
+      show: time_show,
+      hide: 0
+    }
+  });
+  $('.help_button').popup({
+    content : LocalizedStrings.getUI("tooltip_help"),
+    delay: {
+      show: time_show,
+      hide: 0
+    }
+  });
+  $('.add_global_button').popup({
+    content : LocalizedStrings.getUI("tooltip_add_global"),
+    delay: {
+      show: time_show,
+      hide: 0
+    }
+  });
+  $('.div_toggle_console').popup({
+    content : LocalizedStrings.getUI("tooltip_console"),
+    delay: {
+      show: time_show,
+      hide: 0
+    }
+  });
+
+  Sortable.create(listWithHandle, {
+    handle: '.glyphicon-move',
+    animation: 100,
+    ghostClass: 'ghost',
+    group: 'functions_divs_drag',
+    onEnd: function (evt) {
+       updateSequenceFunction(evt.oldIndex, evt.newIndex);
     }
   });
 
 });
 
+function updateSequenceFunction (oldIndex, newIndex) {
+  program_obj.functions.splice(newIndex, 0, program_obj.functions.splice(oldIndex, 1)[0]);
+}
 
 function runCodeAssessment () {
+  toggleConsole(true);
+
   window.studentGrade = null;
   studentTemp = null;
   const strCode = CodeManagement.generate();
@@ -340,8 +465,9 @@ function runCodeAssessment () {
   
 }
 
-
 function runCode () {
+  toggleConsole(true);
+
   const strCode = CodeManagement.generate();
   if (strCode == null) {
     return;
@@ -356,17 +482,43 @@ function runCode () {
     const proc = new IVProgProcessor(data);
     proc.registerInput(domConsole);
     proc.registerOutput(domConsole);
-    
+    $("#ivprog-term").addClass('ivprog-term-active');
+
     proc.interpretAST().then( _ => {
       domConsole.info("Programa executado com sucesso!");
+      $("#ivprog-term").removeClass('ivprog-term-active');
     }).catch(err => {
       domConsole.err(err.message);
+      $("#ivprog-term").removeClass('ivprog-term-active');
     }) 
   } catch (error) {
     domConsole.err(error.message);
     console.log(error);
   }
   
+}
+
+function toggleConsole (is_running) {
+
+  if (is_running) {
+    $('.ivprog-term-div').css('display', 'block');
+    $('#ivprog-term').css('min-height', '160px');
+    $('#ivprog-term').css('margin-top', '-170px');
+    return;
+  }
+
+  if ($('#ivprog-term').css('min-height') == '160px') {
+    // esconder
+    $('.ivprog-term-div').css('display', 'none');
+    $('#ivprog-term').css('min-height', '0');
+    $('#ivprog-term').css('margin-top', '-30px');
+    $('#ivprog-term').css('padding', '5px');
+  } else {
+    // mostrar
+    $('.ivprog-term-div').css('display', 'block');
+    $('#ivprog-term').css('min-height', '160px');
+    $('#ivprog-term').css('margin-top', '-170px');
+  }
 }
 
 function waitToCloseConsole () {
@@ -387,12 +539,18 @@ function toggleTextualCoding () {
   $('.ivprog_textual_panel').css('display', 'block');
   $('.ivprog_textual_panel').removeClass('loading');
   $('.ivprog_textual_code').text(code);
+
+  $('.visual_coding_button').removeClass('active');
+  $('.textual_coding_button').addClass('active');
 }
 
 function toggleVisualCoding () {
   $('.ivprog_textual_panel').addClass('loading');
   $('.ivprog_textual_panel').css('display', 'none');
   $('.ivprog_visual_panel').css('display', 'block');
+
+  $('.textual_coding_button').removeClass('active');
+  $('.visual_coding_button').addClass('active');
 }
 
 function removeParameter (function_obj, parameter_obj, parameter_container) {
@@ -423,15 +581,19 @@ function renderParameter (function_obj, parameter_obj, function_container) {
 
   if (parameter_obj.dimensions > 0) {
     ret += '<div class="text">'+ LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI(parameter_obj.type);
+    if (parameter_obj.dimensions == 1) {
+      ret += ' [ ] ';
+    } else {
+      ret += ' [ ] [ ] ';
+    }
     ret += '</div>';
   } else {
     ret += '<div class="text">'+LocalizedStrings.getUI(parameter_obj.type)+'</div>';
   }
 
-  ret += '<i class="dropdown icon"></i>'
-    + '<div class="menu">';
+  ret += '<div class="menu">';
 
-
+  
   for (var tm in Types) {
       if (tm == Types.VOID.toUpperCase()) {
         continue;
@@ -450,29 +612,29 @@ function renderParameter (function_obj, parameter_obj, function_container) {
           + '<div class="item" data-text="'+ LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI(tm.toLowerCase())+' [ ] " data-type="'+tm+'" data-dimensions="1">[ ]</div>'
           + '<div class="item" data-text="'+ LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI(tm.toLowerCase())+' [ ] [ ] " data-type="'+tm+'" data-dimensions="2">[ ] [ ] </div>'
         +  '</div>'
-      + '</div>';
+      + '</div>'; 
   }
 
   ret += '</div></div>';
 
-  ret += '<span class="span_name_parameter label_enable_name_parameter">'+parameter_obj.name+'</span> <i class="icon small pencil alternate enable_edit_name_parameter label_enable_name_parameter"></i>';
+  ret += '<div class="parameter_div_edit"><span class="span_name_parameter label_enable_name_parameter">'+parameter_obj.name+'</span></div> ';
 
   ret += ' <i class="red icon times remove_parameter"></i></div>';
 
   ret = $(ret);
-
+  
   function_container.find('.container_parameters_list').append(ret);
 
   ret.find('.remove_parameter').on('click', function(e){
     removeParameter(function_obj, parameter_obj, ret);
   });
-
+  
   ret.find('.ui.dropdown.parameter_type').dropdown({
     onChange: function(value, text, $selectedItem) {
-      if ($($selectedItem).data('dimensions')) {
-        updateParameterType(parameter_obj, Types[$($selectedItem).data('type')], $($selectedItem).data('dimensions'));
+      if ($selectedItem.data('dimensions')) {
+        updateParameterType(parameter_obj, Types[$selectedItem.data('type')], $selectedItem.data('dimensions'));
       } else {
-        updateParameterType(parameter_obj, Types[$($selectedItem).data('type')]);
+        updateParameterType(parameter_obj, Types[$selectedItem.data('type')]);
       }
     }
   });
@@ -487,49 +649,55 @@ var opened_name_parameter = false;
 var opened_input_parameter = null;
 function enableNameParameterUpdate (parameter_obj, parent_node) {
   if (opened_name_parameter) {
-    $(opened_input_parameter).focus();
+    opened_input_parameter.focus();
     return;
   }
   opened_name_parameter = true;
+  parent_node = $(parent_node);
 
-  $(parent_node).find('.span_name_parameter').text('');
-  $( "<input type='text' class='width-dynamic input_name_function' autocomplete='off' autocorrect='off' autocapitalize='off' spellcheck='false' value='"+parameter_obj.name+"' />" ).insertBefore($(parent_node).find('.span_name_parameter'));
+  var input_field;
 
-  $('.width-dynamic').on('input', function() {
-    var inputWidth = $(this).textWidth()+10;
-    opened_input_parameter = this;
-    $(this).focus();
+  parent_node.find('.span_name_parameter').text('');
+  input_field = $( "<input type='text' class='width-dynamic input_name_function' autocomplete='off' autocorrect='off' autocapitalize='off' spellcheck='false' value='"+parameter_obj.name+"' />" );
+  input_field.insertBefore(parent_node.find('.span_name_parameter'));
 
-    var tmpStr = $(this).val();
-    $(this).val('');
-    $(this).val(tmpStr);
+  input_field.on('input', function() {
+    var inputWidth = input_field.textWidth()+10;
+    opened_input_parameter = input_field;
+    input_field.focus();
 
-    $(this).css({
+    var tmpStr = input_field.val();
+    input_field.val('');
+    input_field.val(tmpStr);
+
+    input_field.css({
         width: inputWidth
     })
   }).trigger('input');
 
-  $('.width-dynamic').focusout(function() {
+  input_field.focusout(function() {
     /// update array:
-    if ($(this).val().trim()) {
-      parameter_obj.name = $(this).val().trim();
-      $(parent_node).find('.span_name_parameter').text(parameter_obj.name);
+    if (input_field.val().trim()) {
+      parameter_obj.name = input_field.val().trim();
+      parent_node.find('.span_name_parameter').text(parameter_obj.name);
     }
-    $(this).remove();
+    input_field.off();
+    input_field.remove();
 
     /// update elements:
     opened_name_parameter = false;
     opened_input_parameter = false;
   });
 
-  $('.width-dynamic').on('keydown', function(e) {
+  input_field.on('keydown', function(e) {
     var code = e.keyCode || e.which;
     if(code == 13) {
-      if ($(this).val().trim()) {
-        parameter_obj.name = $(this).val().trim();
-        $(parent_node).find('.span_name_parameter').text(parameter_obj.name);
+      if (input_field.val().trim()) {
+        parameter_obj.name = input_field.val().trim();
+        parent_node.find('.span_name_parameter').text(parameter_obj.name);
       }
-      $(this).remove();
+      input_field.off();
+      input_field.remove();
 
       /// update elements:
       opened_name_parameter = false;
@@ -537,65 +705,79 @@ function enableNameParameterUpdate (parameter_obj, parent_node) {
 
     }
     if(code == 27) {
-      $(parent_node).find('.span_name_parameter').text(parameter_obj.name);
-
-      $(this).remove();
+      parent_node.find('.span_name_parameter').text(parameter_obj.name);
+      input_field.off();
+      input_field.remove();
 
       /// update elements:
       opened_name_parameter = false;
       opened_input_parameter = false;
     }
   });
-
+  input_field.select();
 }
 
 var opened_name_function = false;
 var opened_input = null;
-function enableNameFunctionUpdate(function_obj, parent_node) {
+var previousPadding = null;
+function enableNameFunctionUpdate (function_obj, parent_node) {
   if (opened_name_function) {
-    $(opened_input).focus();
+    opened_input.focus();
     return;
   }
+  parent_node = $(parent_node);
+  parent_node.find('.span_name_function').text('');
+  var input_field;
+  if (!previousPadding) {
+    previousPadding = parent_node.find('.span_name_function').css('padding-left');
+  }
+  parent_node.find('.span_name_function').css('padding-left', '0');
+  parent_node.find('.span_name_function').css('padding-right', '0');
+  
+  input_field = $( "<input type='text' class='width-dynamic input_name_function' autocomplete='off' autocorrect='off' autocapitalize='off' spellcheck='false' value='"+function_obj.name+"' />" );
+  input_field.insertBefore(parent_node.find('.span_name_function'));
 
-  $(parent_node).find('.span_name_function').text('');
-  $( "<input type='text' class='width-dynamic input_name_function' autocomplete='off' autocorrect='off' autocapitalize='off' spellcheck='false' value='"+function_obj.name+"' />" ).insertBefore($(parent_node).find('.span_name_function'));
+  input_field.on('input', function() {
+    var inputWidth = input_field.textWidth()+10;
+    opened_input = input_field;
+    input_field.focus();
 
-  $('.width-dynamic').on('input', function() {
-    var inputWidth = $(this).textWidth()+10;
-    opened_input = this;
-    $(this).focus();
+    var tmpStr = input_field.val();
+    input_field.val('');
+    input_field.val(tmpStr);
 
-    var tmpStr = $(this).val();
-    $(this).val('');
-    $(this).val(tmpStr);
-
-    $(this).css({
+    input_field.css({
         width: inputWidth
     })
   }).trigger('input');
 
-  $('.width-dynamic').focusout(function() {
+  input_field.focusout(function() {
     /// update array:
-    if ($(this).val().trim()) {
-      function_obj.name = $(this).val().trim();
+    if (input_field.val().trim()) {
+      function_obj.name = input_field.val().trim();
     }
-    $(this).remove();
-    $(parent_node).find('.span_name_function').text(function_obj.name);
+    input_field.off();
+    input_field.remove();
+    parent_node.find('.span_name_function').css('padding-left', previousPadding);
+    parent_node.find('.span_name_function').css('padding-right', previousPadding);
+    parent_node.find('.span_name_function').text(function_obj.name);
 
     /// update elements:
     opened_name_function = false;
     opened_input = false;
   });
 
-  $('.width-dynamic').on('keydown', function(e) {
+  input_field.on('keydown', function(e) {
     var code = e.keyCode || e.which;
     if(code == 13) {
-      if ($(this).val().trim()) {
-        function_obj.name = $(this).val().trim();
+      if (input_field.val().trim()) {
+        function_obj.name = input_field.val().trim();
       }
-      $(this).remove();
-
-      $(parent_node).find('.span_name_function').text(function_obj.name);
+      input_field.off();
+      input_field.remove();
+      parent_node.find('.span_name_function').css('padding-left', previousPadding);
+      parent_node.find('.span_name_function').css('padding-right', previousPadding);
+      parent_node.find('.span_name_function').text(function_obj.name);
 
       /// update elements:
       opened_name_function = false;
@@ -603,22 +785,45 @@ function enableNameFunctionUpdate(function_obj, parent_node) {
     }
     if(code == 27) {
 
-      $(this).remove();
-
-      $(parent_node).find('.span_name_function').text(function_obj.name);
+      input_field.off();
+      input_field.remove();
+      parent_node.find('.span_name_function').css('padding-left', previousPadding);
+      parent_node.find('.span_name_function').css('padding-right', previousPadding);
+      parent_node.find('.span_name_function').text(function_obj.name);
 
       /// update elements:
       opened_name_function = false;
       opened_input = false;
     }
   });
-
+  input_field.select();
 }
-
 
 /****************************************************
 //DOUGLAS
 *******************************************************/
+
+export function generateMenuButton(function_obj) {
+  var menu_button = '<button class="fluid ui container segment labeled icon button list-group-item menu-item" draggable="true" data-function="' + function_obj.name + '"><i class="list icon"></i> <span class="function_name">' + function_obj.name + '</span> (<span class="function_params"></span>) : <span class="function_return_type">' + LocalizedStrings.getUI(function_obj.return_type) + '</span></button>';
+  var params = "";
+  menu_button = $(menu_button);
+      
+  for (var j = 0; j < function_obj.parameters_list.length; j++) {
+    if (j > 0)
+      params += ',';
+    params += LocalizedStrings.getUI(function_obj.parameters_list[j].type);
+  }
+  menu_button
+    .data('fun',function_obj)
+    .on('dragstart', function(e) {
+      program_obj.dataTransfer = {type:"function",content:function_obj};
+      e.originalEvent.dataTransfer.setData("text",JSON.stringify({type:"function",content:function_obj}));
+      //evt.originalEvent.dataTransfer.setData("text",$(this).data('command'));
+    })
+    .find('.function_params').text(params)
+    .find('.function_return_type').text(function_obj.type);
+  return menu_button;
+}
 
 removeFunction = function(function_obj) {
   var index = program.functions.indexOf(function_obj);
@@ -644,7 +849,6 @@ renderFunction = function(function_obj) {
 
   appender += '<div class="ui small icon buttons add_var_top_button"><div class="ui icon button add_var_button_function"><i class="icon superscript"></i></div>';
 
-
   appender += '<div class="ui icon button dropdown menu_commands" ><i class="icon code"></i> <div class="menu"> ';
   appender += '<a class="item" data-command="'+Models.COMMAND_TYPES.reader+'"><i class="download icon"></i> ' +LocalizedStrings.getUI('text_read_var')+ '</a>'
         + '<a class="item" data-command="'+Models.COMMAND_TYPES.writer+'"><i class="upload icon"></i> '+LocalizedStrings.getUI('text_write_var')+'</a>'
@@ -665,30 +869,12 @@ renderFunction = function(function_obj) {
       appender += '<div class="function_name_div">  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ' + LocalizedStrings.getUI('void') + ' &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="span_name_function" >'+function_obj.name+'</span> </div> '
         + '( <div class="ui large labels parameters_list">';
   } else {
-      appender += '<div class="ui function_return"></div>';
+    appender += '<div class="ui function_return"></div>';
 
-      appender += '<div class="function_name_div"><span class="span_name_function name_function_updated">'+function_obj.name+'</span> <i class="icon small pencil alternate enable_edit_name_function name_function_updated"></i></div> '
-        + '( <i class="ui icon plus square outline add_parameter_button"></i> <div class="ui large labels parameters_list container_parameters_list">';
+    appender += '<div class="function_name_div function_name_div_updated"><span class="span_name_function name_function_updated">'+function_obj.name+'</span> </div> ' 
+      + ' <span class="parethesis_function"> ( </span> <i class="ui icon plus square outline add_parameter_button"></i> <div class="ui large labels parameters_list container_parameters_list">';
 
-      var menu_button = '<button class="fluid ui container segment labeled icon button list-group-item menu-item" draggable="true" data-function="' + function_obj.name + '"><i class="list icon"></i> <span class="function_name">' + function_obj.name + '</span> (<span class="function_params"></span>) : <span class="function_return_type"></span></button>';
-      var params = "";
-      menu_button = $(menu_button);
-      
-      for (var j = 0; j < function_obj.parameters_list.length; j++) {
-        if (j > 0)
-          params += ',';
-        params += function_obj.parameters_list[j].type;
-      }
-      menu_button
-        .data('fun',function_obj)
-        .on('dragstart', function(e) {
-          e.originalEvent.dataTransfer.setData("text",JSON.stringify({type:"function",content:function_obj}));
-          //evt.originalEvent.dataTransfer.setData("text",$(this).data('command'));
-        })
-        .find('.function_params').text(params)
-        .find('.function_return_type').text(function_obj.type);
-
-			$('.functions_labels').append(menu_button);
+			$('.functions_labels').append(generateMenuButton(function_obj));
       console.log("aqui");
       
       //var menu_button = $('.functions_labels > [data-function=' + function_obj.name + ']');
@@ -716,7 +902,6 @@ renderFunction = function(function_obj) {
   $('.all_functions').append(appender);
 
   appender.data('fun', function_obj);
-  console.log("----====----->");
   appender.find('.commands_list_div')
     .data('fun', function_obj)
     .attr('droppable',true)
@@ -741,12 +926,18 @@ renderFunction = function(function_obj) {
       console.log('ondrop ' + e.originalEvent.dataTransfer.getData("text"));
       console.log(e)
       $(e.target).removeClass('div-over')
-      var data = JSON.parse(e.originalEvent.dataTransfer.getData("text"));
+      //var data = JSON.parse(e.originalEvent.dataTransfer.getData("text"));
+      var data = program_obj.dataTransfer;
       if (data.type == 'command')
         CommandsManagement.prepareManageCommand(function_obj, $(e.target).closest('.function_div'), e, data.content);
+      if (data.type == 'var')
+        CommandsManagement.prepareManageCommand(function_obj, $(e.target).closest('.function_div'), e, "attribution", data.content);
       else {
+        if(!data.content.parameters_list)
+          data.content.parameters_list = [];
         CommandsManagement.prepareManageCommand(function_obj, $(e.target).closest('.function_div'), e, "functioncall", data.content);
       }
+      delete program_obj.dataTransfer;
     });
 
   renderFunctionReturn(function_obj, appender);
@@ -797,6 +988,15 @@ initVisualUI = function() {
     toggleTextualCoding();
   });
 
+  $('.assessment').on('click', () => {
+    runCodeAssessment();
+    is_iassign = true;
+  });
+
+  $('.div_toggle_console').on('click', () => {
+    toggleConsole();
+  });
+
   var commands = [
         {type: Models.COMMAND_TYPES.break, icon: "stop", text: LocalizedStrings.getUI('text_break')},
         {type: Models.COMMAND_TYPES.reader, icon: "download", text: LocalizedStrings.getUI('text_read_var')},
@@ -816,7 +1016,8 @@ initVisualUI = function() {
     command = $(command);
     command.on('dragstart', function(evt){
       //evt.originalEvent.dataTransfer.setData("text",$(this).data('command'));
-      evt.originalEvent.dataTransfer.setData("text",JSON.stringify({type:"command",content:$(this).data('command')}));
+      //evt.originalEvent.dataTransfer.setData("text",JSON.stringify({type:"command",content:$(this).data('command')}));
+      program_obj.dataTransfer = {type:"command",content:$(this).data('command')};
       console.log('dragstart')
       // $('.commands_list_div').attr('droppable',true)
       // .on('dragenter',function(e) {
@@ -860,8 +1061,171 @@ initVisualUI = function() {
     $('.list-commands').prepend(command);
   }
 
-}
+  var library = {
+    "math": {
+      functions_list: [
+        {
+          name: "sen",
+          parameters_list: [Types.REAL],
+          return_type: Types.REAL,
+          tip: LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI("Calcula o seno um valor."),
+        },
+        {
+          name: "sen",
+          parameters_list: [Types.INTEGER],
+          return_type: Types.REAL,
+          tip: LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI("Calcula o seno um valor.")
+        },
+        {
+          name: "cos",
+          parameters_list: [Types.REAL],
+          return_type: Types.REAL,
+          tip: LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI("Calcula o coseno um valor.")
+        },
+        {
+          name: "cos",
+          parameters_list: [Types.INTEGER],
+          return_type: Types.REAL,
+          tip: LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI("Calcula o coseno um valor.")
+        },
+        {
+          name: "tan",
+          parameters_list: [Types.REAL],
+          return_type: Types.REAL,
+          tip: LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI("Calcula o tangente um valor.")
+        },
+        {
+          name: "tan",
+          parameters_list: [Types.INTEGER],
+          return_type: Types.REAL,
+          tip: LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI("Calcula o tangente um valor.")
+        },
+        {
+          name: "raiz_quadrada",
+          parameters_list: [Types.REAL],
+          return_type: Types.REAL,
+          tip: LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI("Calcula a raiz quadrada um valor.")
+        },
+        {
+          name: "raiz_quadrada",
+          parameters_list: [Types.INTEGER],
+          return_type: Types.REAL,
+          tip: LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI("Calcula a raiz quadrada um valor.")
+        },
+        {
+          name: "pot",
+          parameters_list: [Types.REAL],
+          return_type: Types.REAL,
+          tip: LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI("Eleva a 2 um valor.")
+        },
+        {
+          name: "pot",
+          parameters_list: [Types.INTEGER],
+          return_type: Types.REAL,
+          tip: LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI("Eleva a 2 um valor.")
+        },
+        {
+          name: "log",
+          parameters_list: [Types.REAL],
+          return_type: Types.REAL,
+          tip: LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI("Logaritmo de um valor na base 10.")
+        },
+        {
+          name: "log",
+          parameters_list: [Types.INTEGER],
+          return_type: Types.REAL,
+          tip: LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI("Logaritmo de um valor na base 10.")
+        },
+        {
+          name: "modulo",
+          parameters_list: [Types.REAL],
+          return_type: Types.REAL,
+          tip: LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI("Obtém o valor absoluto de um número.")
+        },
+        {
+          name: "modulo",
+          parameters_list: [Types.INTEGER],
+          return_type: Types.INTEGER,
+          tip: LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI("Obtém o valor absoluto de um número.")
+        },
+        {
+          name: "trocar_sinal",
+          parameters_list: [Types.REAL],
+          return_type: Types.REAL,
+          tip: LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI("Inverte o sinal de um valor.")
+        },
+        {
+          name: "trocar_sinal",
+          parameters_list: [Types.INTEGER],
+          return_type: Types.INTEGER,
+          tip: LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI("Inverte o sinal de um valor.")
+        },
+        {
+          name: "inverter_valor",
+          parameters_list: [Types.REAL],
+          return_type: Types.REAL,
+          tip: LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI("Inverte um valor.")
+        },
+        {
+          name: "inverter_valor",
+          parameters_list: [Types.INTEGER],
+          return_type: Types.REAL,
+          tip: LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI("Inverte um valor.")
+        },
+        {
+          name: "maximo",
+          parameters_list: [Types.REAL], //vetor
+          return_type: Types.REAL,
+          tip: LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI("Retorna o valor máximo em uma série.")
+        },
+        {
+          name: "maximo",
+          parameters_list: [Types.INTEGER],
+          return_type: Types.INTEGER,
+          tip: LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI("Retorna o valor máximo em uma série.")
+        },
+        {
+          name: "minimo",
+          parameters_list: [Types.REAL], //vetor,
+          return_type: Types.REAL,
+          tip: LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI("Retorna o valor mínimo em uma série.")
+        },
+        {
+          name: "minimo",
+          parameters_list: [Types.INTEGER],
+          return_type: Types.INTEGER,
+          tip: LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI("Retorna o valor mínimo em uma série.")
+        }
+      ]
+    },
+    "text": {
+      functions_list: [
+        {
+          name: "subcadeia",
+          parameters_list: [Types.TEXT, Types.INTEGER, Types.INTEGER],
+          return_type: Types.TEXT,
+          tip: LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI("Retorna o valor mínimo em uma série.")
+        }
+      ]
+    }
+  }
 
+  var library_labels = $('.library_labels')
+  for (var key in library) {
+    var val = library[key];
+    for (var func in val.functions_list) {
+      var parameters_list = [];
+      for (var param in func.parameters_list) {
+        parameters_list.push(new Models.Variable(param, LocalizedStrings.getUI("new_parameter") + "_" + func.parameters_list.indexOf(param)));
+      }
+      var function_obj = new Models.Function(LocalizedStrings.getUI(func), func.return_type, 0, parameters_list, false, false, []);
+      library_labels.append(generateMenuButton(function_obj));
+      console.log(function_obj)
+    }
+  }
+
+}
+/*
 renderParameter = function(function_obj, parameter_obj, function_container) {
   var ret = "";
 
@@ -1002,29 +1366,31 @@ addParameter = function (function_obj, function_container) {
     function_obj.parameters_list = [];
   }
   var new_parameter = new Models.Variable(Types.INTEGER, LocalizedStrings.getUI("new_parameter") + "_" + counter_new_parameters);
+  new_parameter.function_obj = function_obj;
   function_obj.parameters_list.push(new_parameter);
   counter_new_parameters ++;
 
   renderParameter(function_obj, new_parameter, function_container);
 
-  var menu_button = $('.functions_labels > [data-function=' + function_obj.name + ']');
-  var params = "";
-  for (var j = 0; j < function_obj.parameters_list.length; j++) {
-    if (j > 0)
-      params += ',';
-    params += function_obj.parameters_list[j].type;
-  }
-  menu_button.find('.function_params').text(params);
+  //updateMenuButton(function_obj);
 }
+
+removeParameter = function (function_obj, parameter_obj, parameter_container) {
+  var index = function_obj.parameters_list.indexOf(parameter_obj);
+  if (index > -1) {
+    function_obj.parameters_list.splice(index, 1);
+  }
+  $(parameter_container).remove();
+}*/
 
 updateReturnType = function (function_obj, new_type, new_dimensions = 0) {
   function_obj.return_type = new_type;
   function_obj.return_dimensions = new_dimensions;
 
   var menu_button = $('.functions_labels > [data-function=' + function_obj.name + ']');
-  menu_button.find('.function_return_type').text(new_type);
+  menu_button.find('.function_return_type').text(LocalizedStrings.getUI(new_type));
 }
-
+/*
 updateParameterType = function (parameter_obj, new_type, new_dimensions = 0) {
   parameter_obj.type = new_type;
   parameter_obj.dimensions = new_dimensions;
@@ -1034,12 +1400,5 @@ updateParameterType = function (parameter_obj, new_type, new_dimensions = 0) {
     parameter_obj.columns = 2;
   }
 
-  var menu_button = $('.functions_labels > [data-function=' + function_obj.name + ']');
-  var params = "";
-  for (var j = 0; j < function_obj.parameters_list.length; j++) {
-    if (j > 0)
-      params += ',';
-    params += function_obj.parameters_list[j].type;
-  }
-  menu_button.find('.function_params').text(params);
-}
+  //updateMenuButton(parameter_obj.function_obj);
+}*/
