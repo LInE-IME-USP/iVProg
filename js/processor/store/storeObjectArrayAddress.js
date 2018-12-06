@@ -1,6 +1,7 @@
 import { StoreObject } from './storeObject';
 import { StoreObjectArray } from './storeObjectArray';
 import { CompoundType } from '../../typeSystem/compoundType';
+import { ProcessorErrorFactory } from '../error/processorErrorFactory';
 
 export class StoreObjectArrayAddress extends StoreObject {
 
@@ -22,8 +23,22 @@ export class StoreObjectArrayAddress extends StoreObject {
 
   get refValue () {
     const refLine = this.store.applyStore(this.refID).value[this.line];
+    if(!refLine) {
+      if(this.getArrayObject().isVector) {
+        throw ProcessorErrorFactory.vector_line_outbounds(this.refID, this.line, this.getArrayObject().lines);
+      } else {
+        throw ProcessorErrorFactory.matrix_line_outbounds(this.refID, this.line, this.getArrayObject().lines);
+      }
+    }
     if (this.column !== null) {
       const refColumn = refLine.value[this.column];
+      if(!refColumn) {
+        if(this.getArrayObject().isVector) {
+          throw ProcessorErrorFactory.vector_not_matrix(this.refID);
+        } else {
+          throw ProcessorErrorFactory.matrix_column_outbounds(this.refID, this.column, this.getArrayObject().columns);
+        }
+      }
       return refColumn;
     }
     return refLine;
