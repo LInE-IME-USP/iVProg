@@ -1,5 +1,5 @@
 #compiled files
-/build
+#/build
 
 # dependencies
 /node_modules
