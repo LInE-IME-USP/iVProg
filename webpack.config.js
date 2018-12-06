@@ -3,11 +3,12 @@ var webpack = require('webpack');
 module.exports = {
     entry: './js/main.js',
     mode: 'development',
-    watch: false,
+    watch: true,
     output: {
         path: path.resolve(__dirname, 'build'),
-        //chunkFilename: '[name].bundle.js',
-        filename: 'ivprog.bundle.js'
+        filename: 'ivprog.bundle.js',
+        library: 'ivprogCore',
+        libraryTarget: 'umd'
     },
     node: {
         fs: 'empty',
