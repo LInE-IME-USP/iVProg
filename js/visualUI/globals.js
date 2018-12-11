@@ -11,14 +11,19 @@ import '../semantic/semantic.min.js';
 
 var counter_new_globals = 0;
 
-export function addGlobal (program) {
+export function addGlobal (program, is_from_click = false) {
 
 	var new_global = new Models.Variable(Types.INTEGER, LocalizedStrings.getUI('new_global') + '_' + counter_new_globals, 1);
 	counter_new_globals ++;
 
 	program.addGlobal(new_global);
 
-	renderGlobal(new_global);
+	var newe = renderGlobal(new_global);
+
+	if (is_from_click) {
+		newe.css('display', 'none');
+		newe.fadeIn();
+	}
 
 }
 
@@ -419,14 +424,14 @@ function updateColumnsAndRowsText (global_container, global_var) {
 
 export function renderGlobal (global_var) {
 
-	var element = '<div class="ui label global_container"><div class="global_const">const: ';
+	var element = '<div class="ui label global_container pink"><div class="global_const">const: ';
 
 	element += '<i class="ui icon toggle '+(global_var.is_constant?"on":"off")+' alternate_constant"></i></div>';
  	
  	element += '<div class="ui dropdown global_type">';
 
   	if (global_var.dimensions > 0) {
-  		element += '<div class="text">'+ i18n('ui:vector') + ':' + LocalizedStrings.getUI(global_var.type);
+  		element += '<div class="text">'+ LocalizedStrings.getUI('vector')+ ':' + LocalizedStrings.getUI(global_var.type);
   		for (var i = 0; i < global_var.dimensions; i ++) {
   			element += ' [ <span class="dimensions_'+i+'"></span> ] ';
   		}
@@ -461,7 +466,7 @@ export function renderGlobal (global_var) {
 
 	element += '<div class="ui div_valor_var">'+global_var.value+'</div>';    
 
-	element += ' <i class="red icon times remove_global"></i></div>';
+	element += ' <i class="yellow inverted icon times remove_global"></i></div>';
 
 	var complete_element = $(element);
 
@@ -480,6 +485,8 @@ export function renderGlobal (global_var) {
 		complete_element.find('.dimensions_0').text(global_var.columns);
 		complete_element.find('.dimensions_1').text(global_var.rows);
 	}
+
+	return complete_element;
 }
 
 var opened_name_value_matrix_global_v = false;

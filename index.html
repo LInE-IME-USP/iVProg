@@ -8,6 +8,7 @@
     <meta http-equiv="expires" content="-1">
     <meta http-equiv="pragma" content="no-cache">
     <title></title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="js/semantic/semantic.min.css">
     <link rel="stylesheet" type="text/css" href="css/ivprog-visual-1.0.css">
     <link rel="stylesheet" type="text/css" href="css/ivprog-term.css">
@@ -32,33 +33,14 @@
 
     <div class="content height_100">
    
-    <div class="ui one column doubling stackable grid container">
-      <div class="column">
-        <div class="ui container main_title">
-          <h2>iVProg</h2>
-          <span>interactive coding</span>
-        </div>
-
-        <div class="ui container content_margin">
-          <div class="content_sub_margin">
-              <div class="blue ui ivprog_format buttons">
-                <button class="ui button active visual_coding_button">Visual</button>
-                <button class="ui button textual_coding_button">Textual</button>
-              </div>
-            </div>
-          </div>
-
-      </div>
-    </div>
-
-    <div class="ui container main_title only_in_frame" style="display: none;">
+    <div class="ui container main_title only_in_frame">
       <h2>iVProg</h2>
-      <span class="subtext">interactive coding</span>
+      <span class="subtext" style="display: inline;">interactive coding</span>
     </div>
 
     <div class="ui raised container segment div_to_body">
 
-      <div class="ui icon menu center aligned container" style="width: 438px; margin-top: -25px;">
+      <div class="ui icon menu center aligned container" style="width: 438px; margin-top: -20px;">
         <a class="item active visual_coding_button">
           <i class="window maximize outline icon"></i>
         </a>
@@ -91,8 +73,11 @@
       <div class="ui one column container segment ivprog_visual_panel loading">
 
         <div class="global_var">
-          
-          <div class="ui icon button add-globalVar-button add_global_button"><i class="icon superscript"></i></div>
+          <i class="icon plus circle purple add_global_button"></i>
+          <i class="icon circle white back"></i>
+
+          <div class="ui icon button add-globalVar-button add_global_button purple"><i class="icon superscript"></i>
+          </div>
 
           <div class="list_globals"></div>
 

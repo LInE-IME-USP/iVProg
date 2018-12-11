@@ -11,6 +11,7 @@ body {
   padding: 10px;
   padding-left: 6px;
   padding-right: 6px;
+  background-color: #1279c6;
 }
 
 .ivprog_visual_panel {
@@ -179,13 +180,14 @@ body {
 .ui.segment.ivprog_visual_panel {
 	padding: 3px;
 	margin-top: -5px;
-	background: #edf4ff;
+	background: white;
 }
 
 .ui.segment.function_div {
 	padding: 5px;
 	margin: 0;
 	margin-bottom: 5px;
+	background-color: #bddbff;
 }
 
 .ui.button.add_function_button,
@@ -475,7 +477,7 @@ div.function_name_div_updated:active,
     font-size: 150%;
 }
 
-.red.icon.times.remove_global,
+.yellow.icon.times.remove_global,
 .red.icon.times.remove_variable,
 .red.icon.times.remove_parameter {
 	float: right;
@@ -484,7 +486,7 @@ div.function_name_div_updated:active,
     opacity: 0;
 }
 
-.global_container:hover > .red.icon.times.remove_global, .variable_container:hover > .red.icon.times.remove_variable,
+.global_container:hover > .yellow.icon.times.remove_global, .variable_container:hover > .red.icon.times.remove_variable,
 .function_name_parameter:hover > .red.icon.times.remove_parameter {
 	opacity: 1;
 }
@@ -494,8 +496,9 @@ div.function_name_div_updated:active,
 }
 
 .ui.icon.button.add-globalVar-button.add_global_button {
-	padding: 8px;
-	margin-bottom: 4px;
+	padding: 7px;
+    margin-bottom: 4px;
+    padding-bottom: 9px;
 }
 .all_functions {
 	margin-top: -5px;
@@ -627,4 +630,56 @@ div.function_name_div_updated:active,
 }
 .ui.dropdown.menu_start_rendered .text i {
     padding-right: 8px;
+}
+
+* {
+	font-family: 'Roboto', sans-serif;
+}
+
+.add_global_button i {
+	font-size: 130%;
+}
+
+.global_var .circle.add_global_button, .global_var i.back {
+	position: absolute;
+    margin-top: 22px;
+    margin-left: 22px;
+}
+.global_var .circle.add_global_button {
+	z-index: 100;
+	color: #bf80d4!important;
+	cursor: pointer;
+	font-style: 120%;
+}
+.global_var i.back {
+	z-index: 99;
+	color: white !important;
+}
+
+
+.global_container .global_const, .global_container .global_type {
+	font-size: 114%;
+}
+.global_container .editing_name_var {
+	font-size: 108%;
+}
+.global_container .global_const i {
+	font-size: 120%;
+}
+.global_container .span_value_variable {
+    font-size: 110%;
+}
+.global_container .global_type, .global_container .editing_name_var, .global_container .span_value_variable {
+	background: black;
+	border-radius: 5px;
+	padding: 4px;
+	margin-left: 5px;
+	margin-right: 5px;
+}
+.global_container .global_type:hover, .global_container .editing_name_var:hover, .global_container .span_value_variable:hover {
+	background-color: #545353;
+}
+.yellow.icon.times.remove_global {
+	color: yellow;
+	font-size: 125%;
 }
