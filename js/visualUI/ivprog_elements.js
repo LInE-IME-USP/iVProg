@@ -249,7 +249,12 @@ export class Program {
     }, 1);
 
     WatchJS.watch(function_to_add.variables_list, function(){
-      AlgorithmManagement.renderAlgorithm();
+      if (window.insertContext) {
+        setTimeout(function(){ AlgorithmManagement.renderAlgorithm(); }, 300);
+        window.insertContext = false;
+      } else {
+        AlgorithmManagement.renderAlgorithm();
+      }
     }, 1);
 
     this.functions.push(function_to_add);

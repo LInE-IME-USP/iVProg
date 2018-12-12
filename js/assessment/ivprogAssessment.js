@@ -74,7 +74,7 @@ export class IVProgAssessment {
 
   partialEvaluateTestCase (prog, inputList, outputList, name) {
     let partial = (accumulator) => this.evaluateTestCase(prog, inputList, outputList, name, accumulator)
-    patrial = partial.bind(this);
+    partial = partial.bind(this);
     return partial;
   }
 

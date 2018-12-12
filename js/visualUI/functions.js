@@ -104,10 +104,15 @@ window.program_obj = program;
 window.generator = CodeManagement.generate;
 window.runCodeAssessment = runCodeAssessment;
 window.renderAlgorithm = AlgorithmManagement.renderAlgorithm;
+window.insertContext = false;
 
 WatchJS.watch(program.globals, function(){
-  //
-  setTimeout(function(){ AlgorithmManagement.renderAlgorithm(); }, 300);
+  if (window.insertContext) {
+    setTimeout(function(){ AlgorithmManagement.renderAlgorithm(); }, 300);
+    window.insertContext = false;
+  } else {
+    AlgorithmManagement.renderAlgorithm();
+  }
 }, 1);
 
 function addFunctionHandler () {
@@ -186,7 +191,8 @@ function addHandlers (function_obj, function_container) {
   });
 
   function_container.find('.add_var_button_function').on('click', function(e){
-    VariablesManagement.addVariable(function_obj, function_container);
+    window.insertContext = true;
+    VariablesManagement.addVariable(function_obj, function_container, true);
   });
 
   function_container.find('.remove_function_button').on('click', function(e){
@@ -275,11 +281,11 @@ export function renderFunction (function_obj) {
   appender += '</div> <span class="parethesis_function"> ) </span> </div>'
     + (function_obj.is_hidden ? ' <div class="function_area" style="display: none;"> ' : ' <div class="function_area"> ');
 
-  appender += '<div class="ui icon button add_var_button_function" style="float: left;"><i class="icon superscript"></i></div>';
+  appender += '<div class="ui add_var_context add_var_button_function" style="float: left;"><i class="icon plus circle purple"></i><i class="icon circle white back"></i><div class="ui icon button purple"><i class="icon superscript"></i></div></div>';
 
   appender += '<div class="ui top attached segment variables_list_div"></div>';
 
-  appender += '<div class="ui icon button dropdown menu_commands" style="float: left;" ><i class="icon code"></i> <div class="menu"> ';
+  appender += '<div class="ui inline_add_command"><i class="icon plus circle purple"></i><i class="icon circle white back"></i><div class="ui icon button dropdown menu_commands orange" style="float: left;" ><i class="icon code"></i> <div class="menu"> ';
   appender += '<a class="item" data-command="'+Models.COMMAND_TYPES.reader+'"><i class="download icon"></i> ' +LocalizedStrings.getUI('text_read_var')+ '</a>'
         + '<a class="item" data-command="'+Models.COMMAND_TYPES.writer+'"><i class="upload icon"></i> '+LocalizedStrings.getUI('text_write_var')+'</a>'
         + '<a class="item" data-command="'+Models.COMMAND_TYPES.comment+'"><i class="quote left icon"></i> '+LocalizedStrings.getUI('text_comment')+'</a>'
@@ -291,7 +297,7 @@ export function renderFunction (function_obj) {
         + '<a class="item" data-command="'+Models.COMMAND_TYPES.dowhiletrue+'"><i class="sync icon"></i> '+LocalizedStrings.getUI('text_dowhiletrue')+'</a>'
         + '<a class="item" data-command="'+Models.COMMAND_TYPES.switch+'"><i class="list icon"></i> '+LocalizedStrings.getUI('text_switch')+'</a>'
         + '<a class="item" data-command="'+Models.COMMAND_TYPES.return+'"><i class="reply icon"></i> '+LocalizedStrings.getUI('text_btn_return')+'</a>'
-        + '</div></div>';
+        + '</div></div></div>';
 
   appender += '<div class="ui bottom attached segment commands_list_div" id="function_drag_cmd_"></div>';
 
@@ -308,7 +314,6 @@ export function renderFunction (function_obj) {
 
   addHandlers(function_obj, appender);
 
-
   // Rendering parameters: 
   for (var j = 0; j < function_obj.parameters_list.length; j++) {
     renderParameter(function_obj, function_obj.parameters_list[j], appender);
@@ -318,13 +323,10 @@ export function renderFunction (function_obj) {
   for (var j = 0; j < function_obj.variables_list.length; j++) {
     VariablesManagement.renderVariable(appender, function_obj.variables_list[j], function_obj);
   }
-
   // Rendering commands:
   for (var j = 0; j < function_obj.commands.length; j++) {
     CommandsManagement.renderCommand(function_obj.commands[j], $(appender.find('.commands_list_div')[0]), 3, function_obj);
   }
-
-
   $('.minimize_function_button').popup({
     content : LocalizedStrings.getUI("tooltip_minimize"),
     delay: {
@@ -333,7 +335,6 @@ export function renderFunction (function_obj) {
     }
   });
 }
-
 
 export function initVisualUI () {
   // MUST USE CONST, LET, OR VAR !!!!!!
@@ -344,6 +345,7 @@ export function initVisualUI () {
     addFunctionHandler();
   });
   $('.add_global_button').on('click', () => {
+    window.insertContext = true;
     GlobalsManagement.addGlobal(program, true);
   });
 

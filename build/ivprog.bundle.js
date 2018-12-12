@@ -176,7 +176,7 @@ module.exports =
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// Generated from /tmp/tmp-17685YgeeKFidHl1/ivprog.g4 by ANTLR 4.7
+// Generated from /tmp/tmp-85364ifhdHrTFavt/ivprog.g4 by ANTLR 4.7
 // jshint ignore: start
 var antlr4 = __webpack_require__(2);
 
@@ -766,7 +766,7 @@ module.exports =
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// Generated from /tmp/tmp-1768TZ00cDNLA6fR/ivprog.g4 by ANTLR 4.7
+// Generated from /tmp/tmp-8536OBchj5po7IMG/ivprog.g4 by ANTLR 4.7
 // jshint ignore: start
 var antlr4 = __webpack_require__(2);
 
@@ -1420,7 +1420,7 @@ module.exports =
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// Generated from /tmp/tmp-1768o2OdeU2qvkzO/ivprog.g4 by ANTLR 4.7
+// Generated from /tmp/tmp-8536rtngVqZH47ZG/ivprog.g4 by ANTLR 4.7
 // jshint ignore: start
 var antlr4 = __webpack_require__(2);
 
@@ -3676,7 +3676,7 @@ var IVProgAssessment = exports.IVProgAssessment = function () {
       var partial = function partial(accumulator) {
         return _this2.evaluateTestCase(prog, inputList, outputList, name, accumulator);
       };
-      patrial = partial.bind(this);
+      partial = partial.bind(this);
       return partial;
     }
   }, {
@@ -21973,12 +21973,17 @@ window.program_obj = program;
 window.generator = CodeManagement.generate;
 window.runCodeAssessment = runCodeAssessment;
 window.renderAlgorithm = AlgorithmManagement.renderAlgorithm;
+window.insertContext = false;
 
 _melankeWatchjs2.default.watch(program.globals, function () {
-  //
-  setTimeout(function () {
+  if (window.insertContext) {
+    setTimeout(function () {
+      AlgorithmManagement.renderAlgorithm();
+    }, 300);
+    window.insertContext = false;
+  } else {
     AlgorithmManagement.renderAlgorithm();
-  }, 300);
+  }
 }, 1);
 
 function addFunctionHandler() {
@@ -22058,7 +22063,8 @@ function addHandlers(function_obj, function_container) {
   });
 
   function_container.find('.add_var_button_function').on('click', function (e) {
-    VariablesManagement.addVariable(function_obj, function_container);
+    window.insertContext = true;
+    VariablesManagement.addVariable(function_obj, function_container, true);
   });
 
   function_container.find('.remove_function_button').on('click', function (e) {
@@ -22134,12 +22140,12 @@ function renderFunction(function_obj) {
 
   appender += '</div> <span class="parethesis_function"> ) </span> </div>' + (function_obj.is_hidden ? ' <div class="function_area" style="display: none;"> ' : ' <div class="function_area"> ');
 
-  appender += '<div class="ui icon button add_var_button_function" style="float: left;"><i class="icon superscript"></i></div>';
+  appender += '<div class="ui add_var_context add_var_button_function" style="float: left;"><i class="icon plus circle purple"></i><i class="icon circle white back"></i><div class="ui icon button purple"><i class="icon superscript"></i></div></div>';
 
   appender += '<div class="ui top attached segment variables_list_div"></div>';
 
-  appender += '<div class="ui icon button dropdown menu_commands" style="float: left;" ><i class="icon code"></i> <div class="menu"> ';
-  appender += '<a class="item" data-command="' + Models.COMMAND_TYPES.reader + '"><i class="download icon"></i> ' + _localizedStringsService.LocalizedStrings.getUI('text_read_var') + '</a>' + '<a class="item" data-command="' + Models.COMMAND_TYPES.writer + '"><i class="upload icon"></i> ' + _localizedStringsService.LocalizedStrings.getUI('text_write_var') + '</a>' + '<a class="item" data-command="' + Models.COMMAND_TYPES.comment + '"><i class="quote left icon"></i> ' + _localizedStringsService.LocalizedStrings.getUI('text_comment') + '</a>' + '<a class="item" data-command="' + Models.COMMAND_TYPES.attribution + '"><i class="arrow left icon"></i> ' + _localizedStringsService.LocalizedStrings.getUI('text_attribution') + '</a>' + '<a class="item" data-command="' + Models.COMMAND_TYPES.functioncall + '"><i class="hand point right icon"></i> ' + _localizedStringsService.LocalizedStrings.getUI('text_functioncall') + '</a>' + '<a class="item" data-command="' + Models.COMMAND_TYPES.iftrue + '" ><i class="random icon"></i> ' + _localizedStringsService.LocalizedStrings.getUI('text_iftrue') + '</a>' + '<a class="item" data-command="' + Models.COMMAND_TYPES.repeatNtimes + '"><i class="sync icon"></i> ' + _localizedStringsService.LocalizedStrings.getUI('text_repeatNtimes') + '</a>' + '<a class="item" data-command="' + Models.COMMAND_TYPES.whiletrue + '"><i class="sync icon"></i> ' + _localizedStringsService.LocalizedStrings.getUI('text_whiletrue') + '</a>' + '<a class="item" data-command="' + Models.COMMAND_TYPES.dowhiletrue + '"><i class="sync icon"></i> ' + _localizedStringsService.LocalizedStrings.getUI('text_dowhiletrue') + '</a>' + '<a class="item" data-command="' + Models.COMMAND_TYPES.switch + '"><i class="list icon"></i> ' + _localizedStringsService.LocalizedStrings.getUI('text_switch') + '</a>' + '<a class="item" data-command="' + Models.COMMAND_TYPES.return + '"><i class="reply icon"></i> ' + _localizedStringsService.LocalizedStrings.getUI('text_btn_return') + '</a>' + '</div></div>';
+  appender += '<div class="ui inline_add_command"><i class="icon plus circle purple"></i><i class="icon circle white back"></i><div class="ui icon button dropdown menu_commands orange" style="float: left;" ><i class="icon code"></i> <div class="menu"> ';
+  appender += '<a class="item" data-command="' + Models.COMMAND_TYPES.reader + '"><i class="download icon"></i> ' + _localizedStringsService.LocalizedStrings.getUI('text_read_var') + '</a>' + '<a class="item" data-command="' + Models.COMMAND_TYPES.writer + '"><i class="upload icon"></i> ' + _localizedStringsService.LocalizedStrings.getUI('text_write_var') + '</a>' + '<a class="item" data-command="' + Models.COMMAND_TYPES.comment + '"><i class="quote left icon"></i> ' + _localizedStringsService.LocalizedStrings.getUI('text_comment') + '</a>' + '<a class="item" data-command="' + Models.COMMAND_TYPES.attribution + '"><i class="arrow left icon"></i> ' + _localizedStringsService.LocalizedStrings.getUI('text_attribution') + '</a>' + '<a class="item" data-command="' + Models.COMMAND_TYPES.functioncall + '"><i class="hand point right icon"></i> ' + _localizedStringsService.LocalizedStrings.getUI('text_functioncall') + '</a>' + '<a class="item" data-command="' + Models.COMMAND_TYPES.iftrue + '" ><i class="random icon"></i> ' + _localizedStringsService.LocalizedStrings.getUI('text_iftrue') + '</a>' + '<a class="item" data-command="' + Models.COMMAND_TYPES.repeatNtimes + '"><i class="sync icon"></i> ' + _localizedStringsService.LocalizedStrings.getUI('text_repeatNtimes') + '</a>' + '<a class="item" data-command="' + Models.COMMAND_TYPES.whiletrue + '"><i class="sync icon"></i> ' + _localizedStringsService.LocalizedStrings.getUI('text_whiletrue') + '</a>' + '<a class="item" data-command="' + Models.COMMAND_TYPES.dowhiletrue + '"><i class="sync icon"></i> ' + _localizedStringsService.LocalizedStrings.getUI('text_dowhiletrue') + '</a>' + '<a class="item" data-command="' + Models.COMMAND_TYPES.switch + '"><i class="list icon"></i> ' + _localizedStringsService.LocalizedStrings.getUI('text_switch') + '</a>' + '<a class="item" data-command="' + Models.COMMAND_TYPES.return + '"><i class="reply icon"></i> ' + _localizedStringsService.LocalizedStrings.getUI('text_btn_return') + '</a>' + '</div></div></div>';
 
   appender += '<div class="ui bottom attached segment commands_list_div" id="function_drag_cmd_"></div>';
 
@@ -22165,12 +22171,10 @@ function renderFunction(function_obj) {
   for (var j = 0; j < function_obj.variables_list.length; j++) {
     VariablesManagement.renderVariable(appender, function_obj.variables_list[j], function_obj);
   }
-
   // Rendering commands:
   for (var j = 0; j < function_obj.commands.length; j++) {
     CommandsManagement.renderCommand(function_obj.commands[j], (0, _jquery2.default)(appender.find('.commands_list_div')[0]), 3, function_obj);
   }
-
   (0, _jquery2.default)('.minimize_function_button').popup({
     content: _localizedStringsService.LocalizedStrings.getUI("tooltip_minimize"),
     delay: {
@@ -22189,6 +22193,7 @@ function initVisualUI() {
     addFunctionHandler();
   });
   (0, _jquery2.default)('.add_global_button').on('click', function () {
+    window.insertContext = true;
     GlobalsManagement.addGlobal(program, true);
   });
 
@@ -23919,7 +23924,14 @@ var Program = exports.Program = function () {
       }, 1);
 
       _melankeWatchjs2.default.watch(function_to_add.variables_list, function () {
-        AlgorithmManagement.renderAlgorithm();
+        if (window.insertContext) {
+          setTimeout(function () {
+            AlgorithmManagement.renderAlgorithm();
+          }, 300);
+          window.insertContext = false;
+        } else {
+          AlgorithmManagement.renderAlgorithm();
+        }
       }, 1);
 
       this.functions.push(function_to_add);
@@ -24006,6 +24018,8 @@ window.jQuery = _jquery2.default;
 var counter_new_variables = 0;
 
 function addVariable(function_obj, function_container) {
+	var is_in_click = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+
 	var new_var = new Models.Variable(_types.Types.INTEGER, _localizedStringsService.LocalizedStrings.getUI('new_variable') + '_' + counter_new_variables, 1);
 	if (function_obj.variables_list == null) {
 		function_obj.variables_list = [];
@@ -24014,7 +24028,12 @@ function addVariable(function_obj, function_container) {
 
 	counter_new_variables++;
 
-	renderVariable(function_container, new_var, function_obj);
+	var newe = renderVariable(function_container, new_var, function_obj);
+
+	if (is_in_click) {
+		newe.css('display', 'none');
+		newe.fadeIn();
+	}
 }
 
 function updateName(variable_obj, new_name) {
@@ -24077,7 +24096,7 @@ function addHandlers(variable_obj, variable_container) {
 
 function renderVariable(function_container, new_var, function_obj) {
 
-	var element = '<div class="ui label variable_container">';
+	var element = '<div class="ui label variable_container pink">';
 
 	element += '<div class="ui dropdown variable_type">';
 
@@ -24112,7 +24131,7 @@ function renderVariable(function_container, new_var, function_obj) {
 
 	element += ' <span class="character_equals"> = </span> <div class="ui div_valor_var">' + new_var.value + '</div>';
 
-	element += ' <i class="red icon times remove_variable"></i></div>';
+	element += ' <i class="yellow inverted icon times remove_variable"></i></div>';
 
 	element = (0, _jquery2.default)(element);
 
@@ -24123,6 +24142,8 @@ function renderVariable(function_container, new_var, function_obj) {
 	addHandlers(new_var, element);
 
 	renderValues(new_var, element);
+
+	return element;
 }
 
 function updateColumnsAndRowsText(variable_container, variable_var) {

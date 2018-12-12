@@ -153,7 +153,7 @@ body {
 .expression_operand_1, .expression_operand_2, .operator, .div_comment_text, .value_rendered, .parameters_function_called, .parameters_function_called div, .expression_elements,
 .expression_element, .var_rendered, .menu_add_item, .component_element, .component_element, .conditional_expression, .variable_attribution, .attribution_expression, .var_value_expression,
 .incrementation_field, .incrementation_variable, .first_operand, .operator, .second_operand, .variable_to_switch, .variable_case, .button_remove_case, .editing_name_var, .parameter_div_edit,
-.all_elements_write, .container_var_element_control {
+.all_elements_write, .container_var_element_control, .inline_add_command {
 	display: inline;
 }
 
@@ -440,8 +440,8 @@ div.function_name_div_updated {
 	margin-right: 3px;
 }
 
-.global_container .global_type:hover, .editing_name_var:hover, .global_container .span_value_variable:hover,
-.variable_container .variable_type:hover, .variable_container .span_name_variable:hover, .variable_container .span_value_variable:hover,
+.global_container .global_type:hover, .global_container .span_value_variable:hover,
+.variable_container .variable_type:hover, .variable_container .span_value_variable:hover,
 .ui.dropdown.function_return:hover, div.function_name_div_updated:hover,
 .ui.dropdown.parameter_type:hover, .parameter_div_edit:hover {
 	background: #848484;
@@ -478,7 +478,7 @@ div.function_name_div_updated:active,
 }
 
 .yellow.icon.times.remove_global,
-.red.icon.times.remove_variable,
+.yellow.icon.times.remove_variable,
 .red.icon.times.remove_parameter {
 	float: right;
     margin-right: -1px;
@@ -486,7 +486,7 @@ div.function_name_div_updated:active,
     opacity: 0;
 }
 
-.global_container:hover > .yellow.icon.times.remove_global, .variable_container:hover > .red.icon.times.remove_variable,
+.global_container:hover > .yellow.icon.times.remove_global, .variable_container:hover > .yellow.icon.times.remove_variable,
 .function_name_parameter:hover > .red.icon.times.remove_parameter {
 	opacity: 1;
 }
@@ -640,46 +640,92 @@ div.function_name_div_updated:active,
 	font-size: 130%;
 }
 
-.global_var .circle.add_global_button, .global_var i.back {
+.global_var .circle.add_global_button, .global_var i.back,
+.ui.add_var_context .icon.plus.circle, .ui.add_var_context .icon.circle.back,
+.inline_add_command .icon.plus.circle, .inline_add_command .icon.circle.back {
 	position: absolute;
     margin-top: 22px;
     margin-left: 22px;
 }
-.global_var .circle.add_global_button {
+.global_var .circle.add_global_button,
+.ui.add_var_context .icon.plus.circle,
+.inline_add_command .icon.plus.circle {
 	z-index: 100;
 	color: #bf80d4!important;
 	cursor: pointer;
 	font-style: 120%;
 }
-.global_var i.back {
+.global_var i.back,
+.ui.add_var_context .icon.circle.back,
+.inline_add_command .icon.circle.back {
 	z-index: 99;
 	color: white !important;
 }
+.ui.add_var_context{
+	margin-left: -4px;
+}
+.inline_add_command {
+	color: #ab0054 !important;
+}
 
+.ui.add_var_context .icon.superscript {
+	font-size: 110%;
+}
+.ui.add_var_context .ui.icon.button.purple {
+	padding: 8px;
+}
 
-.global_container .global_const, .global_container .global_type {
+.global_container .global_const, .global_container .global_type,
+.variable_container .variable_type {
 	font-size: 114%;
 }
-.global_container .editing_name_var {
+.global_container .editing_name_var,
+.variable_container .editing_name_var {
 	font-size: 108%;
 }
 .global_container .global_const i {
 	font-size: 120%;
 }
-.global_container .span_value_variable {
+.global_container .span_value_variable,
+.variable_container .span_value_variable {
     font-size: 110%;
 }
-.global_container .global_type, .global_container .editing_name_var, .global_container .span_value_variable {
+.global_container .global_type, .global_container .editing_name_var, .global_container .span_value_variable,
+.variable_container .variable_type,  .variable_container .span_value_variable, .variable_container .editing_name_var {
 	background: black;
 	border-radius: 5px;
 	padding: 4px;
 	margin-left: 5px;
 	margin-right: 5px;
 }
-.global_container .global_type:hover, .global_container .editing_name_var:hover, .global_container .span_value_variable:hover {
+.global_container .global_type:hover, .global_container .editing_name_var:hover, .global_container .span_value_variable:hover,
+.variable_container .variable_type:hover,  .variable_container .span_value_variable:hover, .variable_container .editing_name_var:hover {
 	background-color: #545353;
 }
-.yellow.icon.times.remove_global {
+.yellow.icon.times.remove_global,
+.yellow.icon.times.remove_variable {
 	color: yellow;
 	font-size: 125%;
 }
+.inline_add_command .icon.circle.back {
+	margin-top: 20px;
+    margin-left: 20px;
+}
+.inline_add_command .icon.plus.circle {
+	color: #ec9962 !important;
+	margin-top: 20px;
+    margin-left: 20px;
+}
+
+.ui.icon.button.dropdown.menu_commands {
+    float: left;
+    color: white;
+    margin-left: -4px;
+    padding: 8px;
+    margin-top: 0.3em;
+}
+
+.ui.dropdown.variable_type {
+	padding: 5px;
+}
+/*#ab0054*/

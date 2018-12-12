@@ -11,7 +11,7 @@ import '../semantic/semantic.min.js';
 
 var counter_new_variables = 0;
 
-export function addVariable (function_obj, function_container) {
+export function addVariable (function_obj, function_container, is_in_click = false) {
 	var new_var = new Models.Variable(Types.INTEGER, LocalizedStrings.getUI('new_variable') + '_' + counter_new_variables, 1);
 	if (function_obj.variables_list == null) {
 		function_obj.variables_list = [];
@@ -20,7 +20,12 @@ export function addVariable (function_obj, function_container) {
 
 	counter_new_variables ++;
 
-	renderVariable(function_container, new_var, function_obj);
+	var newe = renderVariable(function_container, new_var, function_obj);
+
+	if (is_in_click) {
+		newe.css('display', 'none');
+		newe.fadeIn();
+	}
 }
 
 function updateName (variable_obj, new_name) {
@@ -83,7 +88,7 @@ function addHandlers (variable_obj, variable_container) {
 
 export function renderVariable (function_container, new_var, function_obj) {
 
-	var element = '<div class="ui label variable_container">';
+	var element = '<div class="ui label variable_container pink">';
 
 	element += '<div class="ui dropdown variable_type">';
 
@@ -125,7 +130,7 @@ export function renderVariable (function_container, new_var, function_obj) {
 
 	element += ' <span class="character_equals"> = </span> <div class="ui div_valor_var">'+new_var.value+'</div>';    
 
-	element += ' <i class="red icon times remove_variable"></i></div>';
+	element += ' <i class="yellow inverted icon times remove_variable"></i></div>';
 
 	element = $(element);
 
@@ -136,6 +141,8 @@ export function renderVariable (function_container, new_var, function_obj) {
 	addHandlers(new_var, element);
 
 	renderValues(new_var, element);
+
+	return element;
 }
 
 function updateColumnsAndRowsText (variable_container, variable_var) {
