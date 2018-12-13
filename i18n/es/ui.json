@@ -14,7 +14,7 @@
   "integer": "integer",
   "real": "real",
   "program": "program",
-  "text": "text",
+  "text": "string",
   "text_start": "text",
   "boolean": "boolean",
   "true": "true",

@@ -12,7 +12,7 @@ export function createFloatingCommand () {
 }
 
 export function renderCommand (command, function_obj) {
-	var el = $('<div class="ui return command_container"> <i class="ui icon small reply"></i> <i class="ui icon times red button_remove_command"></i> <span class="span_command_spec"> '+LocalizedStrings.getUI('text_return')+' </span>  <div class="var_value_menu_div"></div></div>');
+	var el = $('<div class="ui return command_container"> <i class="ui icon small reply command_drag"></i> <i class="ui icon times red button_remove_command"></i> <span class="span_command_spec"> '+LocalizedStrings.getUI('text_return')+' </span>  <div class="var_value_menu_div"></div></div>');
 	el.data('command', command);
 
 	addHandlers(command, function_obj, el);
@@ -26,7 +26,7 @@ function addHandlers (command, function_obj, return_dom) {
 
 	return_dom.find('.button_remove_command').on('click', function() {
 		if (CommandsManagement.removeCommand(command, function_obj, return_dom)) {
-			return_dom.remove();
+			return_dom.fadeOut();
 		}
 	});
 }

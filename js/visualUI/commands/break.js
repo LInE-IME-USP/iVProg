@@ -21,7 +21,7 @@ function addHandlers (command, function_obj, break_dom) {
 
 	break_dom.find('.button_remove_command').on('click', function() {
 		if (CommandsManagement.removeCommand(command, function_obj, break_dom)) {
-			break_dom.remove();
+			break_dom.fadeOut();
 		}
 	});
 }

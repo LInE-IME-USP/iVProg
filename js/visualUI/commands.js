@@ -22,14 +22,6 @@ var has_element_created_draged = false;
 var which_element_is_draged = null;
 
 export function removeCommand (command, function_obj, dom_obj) {
-	console.log('debugging removeCommand');
-	console.log('command');
-	console.log(command);
-	console.log('function_obj');
-	console.log(function_obj);
-	console.log('dom_obj');
-	console.log(dom_obj);
-
 	if (function_obj.commands.indexOf(command) > -1) {
 		function_obj.commands.splice(function_obj.commands.indexOf(command), 1);
 		return true;
@@ -53,9 +45,6 @@ export function removeCommand (command, function_obj, dom_obj) {
 			}
 		}
 	} catch (err) {}
-
-	console.log('veja: ');
-	console.log(dom_obj.parent());
 
 	if (dom_obj.parent().data('switchcase')) {
 		console.log("o que encontrei: ");

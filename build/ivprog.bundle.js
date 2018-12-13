@@ -176,7 +176,7 @@ module.exports =
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// Generated from /tmp/tmp-3599k8bI6A2Zxbgf/ivprog.g4 by ANTLR 4.7
+// Generated from /tmp/tmp-2205VFRFBqKCnUxN/ivprog.g4 by ANTLR 4.7
 // jshint ignore: start
 var antlr4 = __webpack_require__(2);
 
@@ -766,7 +766,7 @@ module.exports =
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// Generated from /tmp/tmp-3599dRlq2LyCsP22/ivprog.g4 by ANTLR 4.7
+// Generated from /tmp/tmp-2205UuHrucay0369/ivprog.g4 by ANTLR 4.7
 // jshint ignore: start
 var antlr4 = __webpack_require__(2);
 
@@ -1420,7 +1420,7 @@ module.exports =
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// Generated from /tmp/tmp-3599DE70EXHYx5iE/ivprog.g4 by ANTLR 4.7
+// Generated from /tmp/tmp-2205R3VF7jNkk3no/ivprog.g4 by ANTLR 4.7
 // jshint ignore: start
 var antlr4 = __webpack_require__(2);
 
@@ -2003,7 +2003,7 @@ module.exports = {};
 /*! exports provided: function, btn_clear, btn_function, btn_arithmetic_plus, btn_arithmetic_minus, btn_arithmetic_multiplication, btn_arithmetic_division, btn_arithmetic_module, btn_break, btn_case, start, void, integer, real, program, text, text_start, boolean, true, false, variable, command, new_parameter, new_variable, new_global, new_function, vector, text_comment_start, text_comment_main, text_read_var, text_write_var, text_command_read, text_command_write, text_comment, text_attribution, text_if, text_else, text_break, text_for, text_code_while, text_code_do, text_command_do, text_code_switch, text_code_case, text_logic_expression, text_arithmetic_expression, text_iftrue, text_receives, text_repeatNtimes, text_return, text_btn_return, text_whiletrue, text_dowhiletrue, text_switch, text_functioncall, text_value, text_operator, text_parentheses, text_change, text_teacher_algorithm, text_teacher_algorithm_include, text_teacher_test_case, text_teacher_config, text_teacher_data_types, text_teacher_commands, text_teacher_functions, text_teacher_create_functions, text_teacher_create_movement_functions, text_teacher_test_case_input, text_teacher_test_case_output, text_teacher_test_case_actions, text_teacher_test_case_add, text_header_ivprog_functions, text_menu_functions_math, text_menu_functions_text, text_menu_functions_arrangement, text_menu_functions_conversion, tooltip_visual, tooltip_textual, tooltip_upload, tooltip_download, tooltip_undo, tooltip_redo, tooltip_run, tooltip_evaluate, tooltip_help, tooltip_add_global, tooltip_minimize, tooltip_console, var_menu_select_var, var_menu_select_all, var_menu_select_function, expression_menu_select, math, text_t, arrangement, conversion, $sin, $cos, $tan, $sqrt, $pow, $log, $abs, $negate, $invert, $max, $min, $substring, $length, $uppercase, $lowercase, $charAt, default */
 /***/ (function(module) {
 
-module.exports = {"function":"function","btn_clear":"Clear","btn_function":"Function","btn_arithmetic_plus":"Sum","btn_arithmetic_minus":"Minus","btn_arithmetic_multiplication":"Multiplication","btn_arithmetic_division":"Division","btn_arithmetic_module":"Module","btn_break":"Break","btn_case":"Case","start":"start","void":"void","integer":"integer","real":"real","program":"program","text":"text","text_start":"text","boolean":"boolean","true":"true","false":"false","variable":"Variable","command":"Command","new_parameter":"new_parameter","new_variable":"new_variable","new_global":"new_global","new_function":"new_function","vector":"vector","text_comment_start":"Initial comment of function...","text_comment_main":"This is the main function...","text_read_var":"Reading data","text_write_var":"Writing data","text_command_read":"read","text_command_write":"write","text_comment":"Comment","text_attribution":"Attribution","text_if":"if","text_else":"else","text_break":"break","text_for":"for","text_code_while":"while","text_code_do":"do","text_command_do":"do","text_code_switch":"switch","text_code_case":"case","text_logic_expression":"Logic Expression","text_arithmetic_expression":"Arithmetic Expression","text_iftrue":"If true then","text_receives":"receives","text_repeatNtimes":"Repeat N times","text_return":"return","text_btn_return":"Return","text_whiletrue":"While true","text_dowhiletrue":"Do while true","text_switch":"Switch","text_functioncall":"Function call","text_value":"Value","text_operator":"Operator","text_parentheses":"Parentheses","text_change":"Change","text_teacher_algorithm":"Algorithm","text_teacher_algorithm_include":"Include the following algorithm in exercise","text_teacher_test_case":"Test cases","text_teacher_config":"Settings","text_teacher_data_types":"Data types","text_teacher_commands":"Commands","text_teacher_functions":"Functions","text_teacher_create_functions":"Create new functions","text_teacher_create_movement_functions":"Move functions","text_teacher_test_case_input":"Input","text_teacher_test_case_output":"Output","text_teacher_test_case_actions":"Actions","text_teacher_test_case_add":"Add test cases","text_header_ivprog_functions":"iVProg Functions","text_menu_functions_math":"Mathematic","text_menu_functions_text":"Text","text_menu_functions_arrangement":"Arrangement","text_menu_functions_conversion":"Conversion","tooltip_visual":"Visual programming","tooltip_textual":"Textual programming","tooltip_upload":"Upload code file","tooltip_download":"Download code file","tooltip_undo":"Undo","tooltip_redo":"Redo","tooltip_run":"Run program","tooltip_evaluate":"Evaluate program","tooltip_help":"Help","tooltip_add_global":"Add global variable","tooltip_minimize":"Hidde function elements","tooltip_console":"Open/Close console","var_menu_select_var":"Select a var","var_menu_select_all":"Select","var_menu_select_function":"Select a function","expression_menu_select":"Select an expression","math":"Mathematic","text_t":"Text","arrangement":"Arrangement","conversion":"Conversion","$sin":"sin","$cos":"cos","$tan":"tan","$sqrt":"sqrt","$pow":"pow","$log":"log","$abs":"abs","$negate":"negate","$invert":"invert","$max":"maximum","$min":"minimum","$substring":"substring","$length":"length","$uppercase":"uppercase","$lowercase":"lowercase","$charAt":"char_at"};
+module.exports = {"function":"function","btn_clear":"Clear","btn_function":"Function","btn_arithmetic_plus":"Sum","btn_arithmetic_minus":"Minus","btn_arithmetic_multiplication":"Multiplication","btn_arithmetic_division":"Division","btn_arithmetic_module":"Module","btn_break":"Break","btn_case":"Case","start":"start","void":"void","integer":"integer","real":"real","program":"program","text":"string","text_start":"text","boolean":"boolean","true":"true","false":"false","variable":"Variable","command":"Command","new_parameter":"new_parameter","new_variable":"new_variable","new_global":"new_global","new_function":"new_function","vector":"vector","text_comment_start":"Initial comment of function...","text_comment_main":"This is the main function...","text_read_var":"Reading data","text_write_var":"Writing data","text_command_read":"read","text_command_write":"write","text_comment":"Comment","text_attribution":"Attribution","text_if":"if","text_else":"else","text_break":"break","text_for":"for","text_code_while":"while","text_code_do":"do","text_command_do":"do","text_code_switch":"switch","text_code_case":"case","text_logic_expression":"Logic Expression","text_arithmetic_expression":"Arithmetic Expression","text_iftrue":"If true then","text_receives":"receives","text_repeatNtimes":"Repeat N times","text_return":"return","text_btn_return":"Return","text_whiletrue":"While true","text_dowhiletrue":"Do while true","text_switch":"Switch","text_functioncall":"Function call","text_value":"Value","text_operator":"Operator","text_parentheses":"Parentheses","text_change":"Change","text_teacher_algorithm":"Algorithm","text_teacher_algorithm_include":"Include the following algorithm in exercise","text_teacher_test_case":"Test cases","text_teacher_config":"Settings","text_teacher_data_types":"Data types","text_teacher_commands":"Commands","text_teacher_functions":"Functions","text_teacher_create_functions":"Create new functions","text_teacher_create_movement_functions":"Move functions","text_teacher_test_case_input":"Input","text_teacher_test_case_output":"Output","text_teacher_test_case_actions":"Actions","text_teacher_test_case_add":"Add test cases","text_header_ivprog_functions":"iVProg Functions","text_menu_functions_math":"Mathematic","text_menu_functions_text":"Text","text_menu_functions_arrangement":"Arrangement","text_menu_functions_conversion":"Conversion","tooltip_visual":"Visual programming","tooltip_textual":"Textual programming","tooltip_upload":"Upload code file","tooltip_download":"Download code file","tooltip_undo":"Undo","tooltip_redo":"Redo","tooltip_run":"Run program","tooltip_evaluate":"Evaluate program","tooltip_help":"Help","tooltip_add_global":"Add global variable","tooltip_minimize":"Hidde function elements","tooltip_console":"Open/Close console","var_menu_select_var":"Select a var","var_menu_select_all":"Select","var_menu_select_function":"Select a function","expression_menu_select":"Select an expression","math":"Mathematic","text_t":"Text","arrangement":"Arrangement","conversion":"Conversion","$sin":"sin","$cos":"cos","$tan":"tan","$sqrt":"sqrt","$pow":"pow","$log":"log","$abs":"abs","$negate":"negate","$invert":"invert","$max":"maximum","$min":"minimum","$substring":"substring","$length":"length","$uppercase":"uppercase","$lowercase":"lowercase","$charAt":"char_at"};
 
 /***/ }),
 
@@ -17747,14 +17747,6 @@ var has_element_created_draged = false;
 var which_element_is_draged = null;
 
 function removeCommand(command, function_obj, dom_obj) {
-	console.log('debugging removeCommand');
-	console.log('command');
-	console.log(command);
-	console.log('function_obj');
-	console.log(function_obj);
-	console.log('dom_obj');
-	console.log(dom_obj);
-
 	if (function_obj.commands.indexOf(command) > -1) {
 		function_obj.commands.splice(function_obj.commands.indexOf(command), 1);
 		return true;
@@ -17776,9 +17768,6 @@ function removeCommand(command, function_obj, dom_obj) {
 			}
 		}
 	} catch (err) {}
-
-	console.log('veja: ');
-	console.log(dom_obj.parent());
 
 	if (dom_obj.parent().data('switchcase')) {
 		console.log("o que encontrei: ");
@@ -19167,7 +19156,7 @@ function addHandlers(command, function_obj, attribution_dom) {
 
 	attribution_dom.find('.button_remove_command').on('click', function () {
 		if (CommandsManagement.removeCommand(command, function_obj, attribution_dom)) {
-			attribution_dom.remove();
+			attribution_dom.fadeOut();
 		}
 	});
 
@@ -19280,7 +19269,7 @@ function addHandlers(command, function_obj, break_dom) {
 
 	break_dom.find('.button_remove_command').on('click', function () {
 		if (CommandsManagement.removeCommand(command, function_obj, break_dom)) {
-			break_dom.remove();
+			break_dom.fadeOut();
 		}
 	});
 }
@@ -19340,7 +19329,7 @@ function createFloatingCommand() {
 }
 
 function renderCommand(command, function_obj) {
-	var el = (0, _jquery2.default)('<div class="ui comment command_container"> <i class="ui icon small quote left"></i> <i class="ui icon times red button_remove_command"></i> <div class="var_value_menu_div"></div> <div class="div_comment_text">' + '</div> </div>');
+	var el = (0, _jquery2.default)('<div class="ui comment command_container"> <i class="ui icon small quote left command_drag"></i> <i class="ui icon times red button_remove_command"></i> <div class="var_value_menu_div"></div> <div class="div_comment_text">' + '</div> </div>');
 	el.data('command', command);
 
 	addHandlers(command, function_obj, el);
@@ -19358,7 +19347,7 @@ function addHandlers(command, function_obj, comment_dom) {
 
 	comment_dom.find('.button_remove_command').on('click', function () {
 		if (CommandsManagement.removeCommand(command, function_obj, comment_dom)) {
-			comment_dom.remove();
+			comment_dom.fadeOut();
 		}
 	});
 }
@@ -19814,7 +19803,7 @@ function addHandlers(command, function_obj, dowhiletrue_dom) {
 
 	dowhiletrue_dom.find('.button_remove_command').on('click', function () {
 		if (CommandsManagement.removeCommand(command, function_obj, dowhiletrue_dom)) {
-			dowhiletrue_dom.remove();
+			dowhiletrue_dom.fadeOut();
 		}
 	});
 }
@@ -19888,7 +19877,7 @@ function addHandlers(command, function_obj, functioncall_dom) {
 
 	functioncall_dom.find('.button_remove_command').on('click', function () {
 		if (CommandsManagement.removeCommand(command, function_obj, functioncall_dom)) {
-			functioncall_dom.remove();
+			functioncall_dom.fadeOut();
 		}
 	});
 }
@@ -19989,7 +19978,7 @@ function addHandlers(command, function_obj, iftrue_dom) {
 
 	iftrue_dom.find('.button_remove_command').on('click', function () {
 		if (CommandsManagement.removeCommand(command, function_obj, iftrue_dom)) {
-			iftrue_dom.remove();
+			iftrue_dom.fadeOut();
 		}
 	});
 }
@@ -20062,10 +20051,9 @@ function renderCommand(command, function_obj) {
 }
 
 function addHandlers(command, function_obj, reader_dom) {
-
 	reader_dom.find('.button_remove_command').on('click', function () {
 		if (CommandsManagement.removeCommand(command, function_obj, reader_dom)) {
-			reader_dom.remove();
+			reader_dom.fadeOut();
 		}
 	});
 }
@@ -20235,7 +20223,7 @@ function addHandlers(command, function_obj, repeatNtimes_dom) {
 
 	repeatNtimes_dom.find('.button_remove_command').on('click', function () {
 		if (CommandsManagement.removeCommand(command, function_obj, repeatNtimes_dom)) {
-			repeatNtimes_dom.remove();
+			repeatNtimes_dom.fadeOut();
 		}
 	});
 }
@@ -20327,7 +20315,7 @@ function createFloatingCommand() {
 }
 
 function renderCommand(command, function_obj) {
-	var el = (0, _jquery2.default)('<div class="ui return command_container"> <i class="ui icon small reply"></i> <i class="ui icon times red button_remove_command"></i> <span class="span_command_spec"> ' + _localizedStringsService.LocalizedStrings.getUI('text_return') + ' </span>  <div class="var_value_menu_div"></div></div>');
+	var el = (0, _jquery2.default)('<div class="ui return command_container"> <i class="ui icon small reply command_drag"></i> <i class="ui icon times red button_remove_command"></i> <span class="span_command_spec"> ' + _localizedStringsService.LocalizedStrings.getUI('text_return') + ' </span>  <div class="var_value_menu_div"></div></div>');
 	el.data('command', command);
 
 	addHandlers(command, function_obj, el);
@@ -20341,7 +20329,7 @@ function addHandlers(command, function_obj, return_dom) {
 
 	return_dom.find('.button_remove_command').on('click', function () {
 		if (CommandsManagement.removeCommand(command, function_obj, return_dom)) {
-			return_dom.remove();
+			return_dom.fadeOut();
 		}
 	});
 }
@@ -20461,7 +20449,7 @@ function addHandlers(command, function_obj, switch_dom) {
 
 	switch_dom.find('.button_remove_command').on('click', function () {
 		if (CommandsManagement.removeCommand(command, function_obj, switch_dom)) {
-			switch_dom.remove();
+			switch_dom.fadeOut();
 		}
 	});
 }
@@ -20527,15 +20515,6 @@ var VAR_OR_VALUE_TYPES = exports.VAR_OR_VALUE_TYPES = Object.freeze({ only_varia
 function renderMenu(command, ref_object, dom_object, function_obj) {
 	var size_field = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 2;
 	var expression_element = arguments[5];
-
-	console.log('\n\ndebugging: ');
-	console.log(command);
-	console.log(ref_object);
-	console.log(dom_object);
-	console.log(function_obj);
-	console.log(size_field);
-	console.log(expression_element);
-	console.log('fim\n\n');
 
 	// Verificar se o objeto atual trata-se de uma chamada de função e conferir se possui a quantidade correta de parâmetros
 	// Caso não possua, tem que adicionar as variáveis que servirão de parâmetros:
@@ -21701,7 +21680,7 @@ function addHandlers(command, function_obj, whiletrue_dom) {
 
 	whiletrue_dom.find('.button_remove_command').on('click', function () {
 		if (CommandsManagement.removeCommand(command, function_obj, whiletrue_dom)) {
-			whiletrue_dom.remove();
+			whiletrue_dom.fadeOut();
 		}
 	});
 }
@@ -21785,7 +21764,7 @@ function addHandlers(command, function_obj, writer_dom) {
 
 	writer_dom.find('.button_remove_command').on('click', function () {
 		if (CommandsManagement.removeCommand(command, function_obj, writer_dom)) {
-			writer_dom.remove();
+			writer_dom.fadeOut();
 		}
 	});
 }
@@ -21993,7 +21972,10 @@ function addFunctionHandler() {
 
   counter_new_functions++;
 
-  renderFunction(new_function);
+  var newe = renderFunction(new_function);
+
+  newe.css('display', 'none');
+  newe.fadeIn();
 }
 
 function addParameter(function_obj, function_container) {
@@ -22022,7 +22004,6 @@ function updateReturnType(function_obj, new_type) {
 }
 
 function removeFunction(function_obj) {
-
   var index = program.functions.indexOf(function_obj);
   if (index > -1) {
     program.functions.splice(index, 1);
@@ -22077,13 +22058,21 @@ function addHandlers(function_obj, function_container) {
 
   function_container.find('.remove_function_button').on('click', function (e) {
     removeFunction(function_obj);
-    function_container.slideUp(400);
+    function_container.fadeOut();
   });
 
   function_container.find('.minimize_function_button').on('click', function (e) {
     minimizeFunction(function_obj);
-    function_container.find(".function_area").toggle();
-    function_container.find(".add_var_top_button").toggle();
+    if (function_obj.is_hidden) {
+      function_container.find(".add_var_button_function").toggle();
+      function_container.find(".inline_add_command").toggle();
+      function_container.find(".function_area").slideToggle();
+    } else {
+      function_container.find(".function_area").slideToggle(function () {
+        function_container.find(".add_var_button_function").toggle();
+        function_container.find(".inline_add_command").toggle();
+      });
+    }
   });
 }
 
@@ -22155,7 +22144,7 @@ function renderFunction(function_obj) {
   appender += '<div class="ui inline_add_command"><i class="icon plus circle purple"></i><i class="icon circle white back"></i><div class="ui icon button dropdown menu_commands orange" style="float: left;" ><i class="icon code"></i> <div class="menu"> ';
   appender += '<a class="item" data-command="' + Models.COMMAND_TYPES.reader + '"><i class="download icon"></i> ' + _localizedStringsService.LocalizedStrings.getUI('text_read_var') + '</a>' + '<a class="item" data-command="' + Models.COMMAND_TYPES.writer + '"><i class="upload icon"></i> ' + _localizedStringsService.LocalizedStrings.getUI('text_write_var') + '</a>' + '<a class="item" data-command="' + Models.COMMAND_TYPES.comment + '"><i class="quote left icon"></i> ' + _localizedStringsService.LocalizedStrings.getUI('text_comment') + '</a>' + '<a class="item" data-command="' + Models.COMMAND_TYPES.attribution + '"><i class="arrow left icon"></i> ' + _localizedStringsService.LocalizedStrings.getUI('text_attribution') + '</a>' + '<a class="item" data-command="' + Models.COMMAND_TYPES.functioncall + '"><i class="hand point right icon"></i> ' + _localizedStringsService.LocalizedStrings.getUI('text_functioncall') + '</a>' + '<a class="item" data-command="' + Models.COMMAND_TYPES.iftrue + '" ><i class="random icon"></i> ' + _localizedStringsService.LocalizedStrings.getUI('text_iftrue') + '</a>' + '<a class="item" data-command="' + Models.COMMAND_TYPES.repeatNtimes + '"><i class="sync icon"></i> ' + _localizedStringsService.LocalizedStrings.getUI('text_repeatNtimes') + '</a>' + '<a class="item" data-command="' + Models.COMMAND_TYPES.whiletrue + '"><i class="sync icon"></i> ' + _localizedStringsService.LocalizedStrings.getUI('text_whiletrue') + '</a>' + '<a class="item" data-command="' + Models.COMMAND_TYPES.dowhiletrue + '"><i class="sync icon"></i> ' + _localizedStringsService.LocalizedStrings.getUI('text_dowhiletrue') + '</a>' + '<a class="item" data-command="' + Models.COMMAND_TYPES.switch + '"><i class="list icon"></i> ' + _localizedStringsService.LocalizedStrings.getUI('text_switch') + '</a>' + '<a class="item" data-command="' + Models.COMMAND_TYPES.return + '"><i class="reply icon"></i> ' + _localizedStringsService.LocalizedStrings.getUI('text_btn_return') + '</a>' + '</div></div></div>';
 
-  appender += '<div class="ui bottom attached segment commands_list_div" id="function_drag_cmd_"></div>';
+  appender += '<div class="ui bottom attached segment commands_list_div"></div>';
 
   appender += '</div></div>';
 
@@ -22201,7 +22190,17 @@ function renderFunction(function_obj) {
     }
   });
 
-  if (appender.find(".container_parameters_list")[0]) {
+  Sortable.create(appender.find(".commands_list_div")[0], {
+    handle: '.command_drag',
+    animation: 100,
+    ghostClass: 'ghost',
+    group: 'commands_drag_' + program.functions.indexOf(function_obj),
+    onEnd: function onEnd(evt) {
+      //updateSequenceLocals(evt.oldIndex, evt.newIndex, function_obj);
+    }
+  });
+
+  if (!function_obj.is_main) {
     Sortable.create(appender.find(".container_parameters_list")[0], {
       handle: '.ellipsis',
       animation: 100,
@@ -22212,6 +22211,7 @@ function renderFunction(function_obj) {
       }
     });
   }
+  return appender;
 }
 
 function initVisualUI() {

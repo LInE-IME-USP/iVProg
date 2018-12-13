@@ -122,7 +122,10 @@ function addFunctionHandler () {
 
 	counter_new_functions ++;
 
-  renderFunction(new_function);
+  var newe = renderFunction(new_function);
+
+  newe.css('display', 'none');
+  newe.fadeIn();
 }
 
 function addParameter (function_obj, function_container, is_from_click = false) {
@@ -147,7 +150,6 @@ function updateReturnType (function_obj, new_type, new_dimensions = 0) {
 }
 
 function removeFunction (function_obj) {
-  
   var index = program.functions.indexOf(function_obj);
   if (index > -1) {
     program.functions.splice(index, 1);
@@ -203,13 +205,22 @@ function addHandlers (function_obj, function_container) {
 
   function_container.find('.remove_function_button').on('click', function(e){
     removeFunction(function_obj);
-    function_container.slideUp(400);
+    function_container.fadeOut();
   });
 
   function_container.find('.minimize_function_button').on('click', function(e){
     minimizeFunction(function_obj);
-    function_container.find(".function_area").toggle();
-    function_container.find(".add_var_top_button").toggle();
+    if (function_obj.is_hidden) {
+      function_container.find(".add_var_button_function").toggle();
+      function_container.find(".inline_add_command").toggle();
+      function_container.find(".function_area").slideToggle();
+    } else {
+      function_container.find(".function_area").slideToggle(function(){
+        function_container.find(".add_var_button_function").toggle();
+        function_container.find(".inline_add_command").toggle();
+      });
+    }
+    
   });
 }
 
@@ -305,7 +316,7 @@ export function renderFunction (function_obj) {
         + '<a class="item" data-command="'+Models.COMMAND_TYPES.return+'"><i class="reply icon"></i> '+LocalizedStrings.getUI('text_btn_return')+'</a>'
         + '</div></div></div>';
 
-  appender += '<div class="ui bottom attached segment commands_list_div" id="function_drag_cmd_"></div>';
+  appender += '<div class="ui bottom attached segment commands_list_div"></div>';
 
   appender += '</div></div>';
 
@@ -351,7 +362,17 @@ export function renderFunction (function_obj) {
     }
   });
 
-  if (appender.find(".container_parameters_list")[0]) {
+  Sortable.create(appender.find(".commands_list_div")[0], {
+    handle: '.command_drag',
+    animation: 100,
+    ghostClass: 'ghost',
+    group: 'commands_drag_' + program.functions.indexOf(function_obj),
+    onEnd: function (evt) {
+       //updateSequenceLocals(evt.oldIndex, evt.newIndex, function_obj);
+    }
+  });
+
+  if (!function_obj.is_main) {
     Sortable.create(appender.find(".container_parameters_list")[0], {
       handle: '.ellipsis',
       animation: 100,
@@ -362,6 +383,7 @@ export function renderFunction (function_obj) {
       }
     });
   }
+  return appender;
 }
 
 export function initVisualUI () {

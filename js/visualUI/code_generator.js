@@ -35,9 +35,7 @@ export function generate () {
 	} else {
 		return code;
 	}
-
 }
-
 
 function functionsCode (function_obj) {
 	var ret = '\n\t' + LocalizedStrings.getUI('function') + ' ';

@@ -12,15 +12,6 @@ export const VAR_OR_VALUE_TYPES = Object.freeze({only_variable: 1, only_value: 2
 	value_and_function: 6, all: 7});
 
 export function renderMenu (command, ref_object, dom_object, function_obj, size_field = 2, expression_element) {
-	console.log('\n\ndebugging: ');
-	console.log(command);
-	console.log(ref_object);
-	console.log(dom_object);
-	console.log(function_obj);
-	console.log(size_field);
-	console.log(expression_element);
-	console.log('fim\n\n');
-
 	// Verificar se o objeto atual trata-se de uma chamada de função e conferir se possui a quantidade correta de parâmetros
 	// Caso não possua, tem que adicionar as variáveis que servirão de parâmetros:
 	if (ref_object.function_called) {

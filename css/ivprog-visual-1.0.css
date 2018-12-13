@@ -767,3 +767,13 @@ div.function_name_div_updated:active,
 .ui.label.function_name_parameter:hover > .ellipsis {
 	opacity: 1 !important;
 }
+
+.command_container {
+    background: #e9dede !important;
+	border: 2px solid #e76060 !important;
+    border-radius: 0.25em !important;
+}
+
+.command_drag {
+	cursor: move;
+}
