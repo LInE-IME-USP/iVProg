@@ -176,7 +176,7 @@ module.exports =
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// Generated from /tmp/tmp-85364ifhdHrTFavt/ivprog.g4 by ANTLR 4.7
+// Generated from /tmp/tmp-3599k8bI6A2Zxbgf/ivprog.g4 by ANTLR 4.7
 // jshint ignore: start
 var antlr4 = __webpack_require__(2);
 
@@ -766,7 +766,7 @@ module.exports =
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// Generated from /tmp/tmp-8536OBchj5po7IMG/ivprog.g4 by ANTLR 4.7
+// Generated from /tmp/tmp-3599dRlq2LyCsP22/ivprog.g4 by ANTLR 4.7
 // jshint ignore: start
 var antlr4 = __webpack_require__(2);
 
@@ -1420,7 +1420,7 @@ module.exports =
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// Generated from /tmp/tmp-8536rtngVqZH47ZG/ivprog.g4 by ANTLR 4.7
+// Generated from /tmp/tmp-3599DE70EXHYx5iE/ivprog.g4 by ANTLR 4.7
 // jshint ignore: start
 var antlr4 = __webpack_require__(2);
 
@@ -21997,6 +21997,8 @@ function addFunctionHandler() {
 }
 
 function addParameter(function_obj, function_container) {
+  var is_from_click = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+
   if (function_obj.parameters_list == null) {
     function_obj.parameters_list = [];
   }
@@ -22004,7 +22006,12 @@ function addParameter(function_obj, function_container) {
   function_obj.parameters_list.push(new_parameter);
   counter_new_parameters++;
 
-  renderParameter(function_obj, new_parameter, function_container);
+  var newe = renderParameter(function_obj, new_parameter, function_container);
+
+  if (is_from_click) {
+    newe.css('display', 'none');
+    newe.fadeIn();
+  }
 }
 
 function updateReturnType(function_obj, new_type) {
@@ -22043,7 +22050,8 @@ function addHandlers(function_obj, function_container) {
   });
 
   function_container.find(".add_parameter_button").on('click', function (e) {
-    addParameter(function_obj, function_container);
+    window.insertContext = true;
+    addParameter(function_obj, function_container, true);
   });
 
   function_container.find('.menu_commands').dropdown({
@@ -22182,6 +22190,28 @@ function renderFunction(function_obj) {
       hide: 0
     }
   });
+
+  Sortable.create(appender.find(".variables_list_div")[0], {
+    handle: '.ellipsis',
+    animation: 100,
+    ghostClass: 'ghost',
+    group: 'local_vars_drag_' + program.functions.indexOf(function_obj),
+    onEnd: function onEnd(evt) {
+      updateSequenceLocals(evt.oldIndex, evt.newIndex, function_obj);
+    }
+  });
+
+  if (appender.find(".container_parameters_list")[0]) {
+    Sortable.create(appender.find(".container_parameters_list")[0], {
+      handle: '.ellipsis',
+      animation: 100,
+      ghostClass: 'ghost',
+      group: 'parameters_drag_' + program.functions.indexOf(function_obj),
+      onEnd: function onEnd(evt) {
+        updateSequenceParameters(evt.oldIndex, evt.newIndex, function_obj);
+      }
+    });
+  }
 }
 
 function initVisualUI() {
@@ -22315,7 +22345,30 @@ var is_iassign = false;
       updateSequenceFunction(evt.oldIndex, evt.newIndex);
     }
   });
+
+  var listGlobalsHandle = document.getElementById("listGlobalsHandle");
+  Sortable.create(listGlobalsHandle, {
+    handle: '.ellipsis',
+    animation: 100,
+    ghostClass: 'ghost',
+    group: 'globals_divs_drag',
+    onEnd: function onEnd(evt) {
+      updateSequenceGlobals(evt.oldIndex, evt.newIndex);
+    }
+  });
 });
+
+function updateSequenceParameters(oldIndex, newIndex, function_obj) {
+  function_obj.parameters_list.splice(newIndex, 0, function_obj.parameters_list.splice(oldIndex, 1)[0]);
+}
+
+function updateSequenceLocals(oldIndex, newIndex, function_obj) {
+  function_obj.variables_list.splice(newIndex, 0, function_obj.variables_list.splice(oldIndex, 1)[0]);
+}
+
+function updateSequenceGlobals(oldIndex, newIndex) {
+  program_obj.globals.splice(newIndex, 0, program_obj.globals.splice(oldIndex, 1)[0]);
+}
 
 function updateSequenceFunction(oldIndex, newIndex) {
   program_obj.functions.splice(newIndex, 0, program_obj.functions.splice(oldIndex, 1)[0]);
@@ -22434,9 +22487,10 @@ function toggleVisualCoding() {
 function removeParameter(function_obj, parameter_obj, parameter_container) {
   var index = function_obj.parameters_list.indexOf(parameter_obj);
   if (index > -1) {
+    window.insertContext = true;
     function_obj.parameters_list.splice(index, 1);
   }
-  (0, _jquery2.default)(parameter_container).remove();
+  (0, _jquery2.default)(parameter_container).fadeOut();
 }
 
 function updateParameterType(parameter_obj, new_type) {
@@ -22454,7 +22508,7 @@ function updateParameterType(parameter_obj, new_type) {
 function renderParameter(function_obj, parameter_obj, function_container) {
   var ret = "";
 
-  ret += '<div class="ui label function_name_parameter">';
+  ret += '<div class="ui label function_name_parameter pink"><i class="ui icon ellipsis vertical inverted"></i>';
 
   ret += '<div class="ui dropdown parameter_type">';
 
@@ -22490,7 +22544,7 @@ function renderParameter(function_obj, parameter_obj, function_container) {
 
   ret += '<div class="parameter_div_edit"><span class="span_name_parameter label_enable_name_parameter">' + parameter_obj.name + '</span></div> ';
 
-  ret += ' <i class="red icon times remove_parameter"></i></div>';
+  ret += ' <i class="yellow inverted icon times remove_parameter"></i></div>';
 
   ret = (0, _jquery2.default)(ret);
 
@@ -22513,6 +22567,8 @@ function renderParameter(function_obj, parameter_obj, function_container) {
   ret.find('.label_enable_name_parameter').on('click', function (e) {
     enableNameParameterUpdate(parameter_obj, ret);
   });
+
+  return ret;
 }
 
 var opened_name_parameter = false;
@@ -22750,11 +22806,12 @@ function updateType(global_var, new_type) {
 function removeGlobal(global_var, global_container) {
 	var index = window.program_obj.globals.indexOf(global_var);
 	if (index > -1) {
+		window.insertContext = true;
 		window.program_obj.globals.splice(index, 1);
 	}
 	global_container.children().off();
 	global_container.off();
-	global_container.remove();
+	global_container.fadeOut();
 }
 
 function updateInitialValues(global_var) {
@@ -23115,7 +23172,7 @@ function updateColumnsAndRowsText(global_container, global_var) {
 
 function renderGlobal(global_var) {
 
-	var element = '<div class="ui label global_container pink"><div class="global_const">const: ';
+	var element = '<div class="ui label global_container pink"><i class="ui icon ellipsis vertical inverted"></i><div class="global_const">const: ';
 
 	element += '<i class="ui icon toggle ' + (global_var.is_constant ? "on" : "off") + ' alternate_constant"></i></div>';
 
@@ -23920,7 +23977,14 @@ var Program = exports.Program = function () {
     value: function addFunction(function_to_add) {
 
       _melankeWatchjs2.default.watch(function_to_add.parameters_list, function () {
-        AlgorithmManagement.renderAlgorithm();
+        if (window.insertContext) {
+          setTimeout(function () {
+            AlgorithmManagement.renderAlgorithm();
+          }, 300);
+          window.insertContext = false;
+        } else {
+          AlgorithmManagement.renderAlgorithm();
+        }
       }, 1);
 
       _melankeWatchjs2.default.watch(function_to_add.variables_list, function () {
@@ -24045,13 +24109,13 @@ function removeVariable(variable_obj, variable_container) {
 
 	var index = function_associated.variables_list.indexOf(variable_obj);
 	if (index > -1) {
-		//function_associated.variables_list[index] = null;
+		window.insertContext = true;
 		delete function_associated.variables_list[index];
 		function_associated.variables_list.splice(index, 1);
 	}
 	variable_container.children().off();
 	variable_container.off();
-	variable_container.remove();
+	variable_container.fadeOut();
 }
 
 function updateType(variable_obj, new_type) {
@@ -24096,7 +24160,7 @@ function addHandlers(variable_obj, variable_container) {
 
 function renderVariable(function_container, new_var, function_obj) {
 
-	var element = '<div class="ui label variable_container pink">';
+	var element = '<div class="ui label variable_container pink"><i class="ui icon ellipsis vertical inverted"></i>';
 
 	element += '<div class="ui dropdown variable_type">';
 

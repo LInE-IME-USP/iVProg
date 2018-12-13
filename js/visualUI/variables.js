@@ -37,13 +37,13 @@ function removeVariable (variable_obj, variable_container) {
 
 	var index = function_associated.variables_list.indexOf(variable_obj);
 	if (index > -1) {
-	  //function_associated.variables_list[index] = null;
+	  window.insertContext = true;
 	  delete function_associated.variables_list[index];
 	  function_associated.variables_list.splice(index, 1);
 	}
 	variable_container.children().off();
 	variable_container.off();
-	variable_container.remove();
+	variable_container.fadeOut();
 }
 
 function updateType (variable_obj, new_type, new_dimensions = 0) {
@@ -88,7 +88,7 @@ function addHandlers (variable_obj, variable_container) {
 
 export function renderVariable (function_container, new_var, function_obj) {
 
-	var element = '<div class="ui label variable_container pink">';
+	var element = '<div class="ui label variable_container pink"><i class="ui icon ellipsis vertical inverted"></i>';
 
 	element += '<div class="ui dropdown variable_type">';
 

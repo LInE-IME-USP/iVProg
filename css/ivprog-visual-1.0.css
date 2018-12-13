@@ -479,7 +479,7 @@ div.function_name_div_updated:active,
 
 .yellow.icon.times.remove_global,
 .yellow.icon.times.remove_variable,
-.red.icon.times.remove_parameter {
+.yellow.icon.times.remove_parameter {
 	float: right;
     margin-right: -1px;
     margin-left: 8px;
@@ -487,7 +487,7 @@ div.function_name_div_updated:active,
 }
 
 .global_container:hover > .yellow.icon.times.remove_global, .variable_container:hover > .yellow.icon.times.remove_variable,
-.function_name_parameter:hover > .red.icon.times.remove_parameter {
+.function_name_parameter:hover > .yellow.icon.times.remove_parameter {
 	opacity: 1;
 }
 
@@ -650,7 +650,7 @@ div.function_name_div_updated:active,
 .global_var .circle.add_global_button,
 .ui.add_var_context .icon.plus.circle,
 .inline_add_command .icon.plus.circle {
-	z-index: 100;
+	z-index: 10;
 	color: #bf80d4!important;
 	cursor: pointer;
 	font-style: 120%;
@@ -658,7 +658,7 @@ div.function_name_div_updated:active,
 .global_var i.back,
 .ui.add_var_context .icon.circle.back,
 .inline_add_command .icon.circle.back {
-	z-index: 99;
+	z-index: 9;
 	color: white !important;
 }
 .ui.add_var_context{
@@ -691,15 +691,18 @@ div.function_name_div_updated:active,
     font-size: 110%;
 }
 .global_container .global_type, .global_container .editing_name_var, .global_container .span_value_variable,
-.variable_container .variable_type,  .variable_container .span_value_variable, .variable_container .editing_name_var {
+.variable_container .variable_type,  .variable_container .span_value_variable, .variable_container .editing_name_var,
+.ui.dropdown.parameter_type, .parameter_div_edit {
 	background: black;
 	border-radius: 5px;
 	padding: 4px;
 	margin-left: 5px;
 	margin-right: 5px;
 }
+
 .global_container .global_type:hover, .global_container .editing_name_var:hover, .global_container .span_value_variable:hover,
-.variable_container .variable_type:hover,  .variable_container .span_value_variable:hover, .variable_container .editing_name_var:hover {
+.variable_container .variable_type:hover,  .variable_container .span_value_variable:hover, .variable_container .editing_name_var:hover,
+.ui.dropdown.parameter_type:hover, .parameter_div_edit:hover {
 	background-color: #545353;
 }
 .yellow.icon.times.remove_global,
@@ -728,4 +731,39 @@ div.function_name_div_updated:active,
 .ui.dropdown.variable_type {
 	padding: 5px;
 }
-/*#ab0054*/
+
+.global_var .global_container .ellipsis,
+.variable_container .ui.icon.ellipsis.vertical.inverted,
+.ui.label.function_name_parameter.pink .ui.icon.ellipsis.vertical.inverted {
+	position: relative;
+    margin-left: -3px;
+    margin-right: 4px;
+    opacity: 0;
+    cursor: move;
+    font-size: 120%;
+}
+
+.global_container:hover > .ellipsis,
+.variable_container:hover > .ui.icon.ellipsis.vertical.inverted {
+	opacity: 1;
+}
+
+.glyphicon.glyphicon-move.move_function i {
+	font-size: 130%;
+}
+
+.span_name_parameter.label_enable_name_parameter {
+	font-size: 94%;
+    font-weight: 700;
+}
+
+.ui.dropdown.parameter_type {
+	font-size: 96%;
+}
+.ui.label.function_name_parameter .ellipsis {
+	font-size: 96% !important;
+	margin-left: .05em !important;
+}
+.ui.label.function_name_parameter:hover > .ellipsis {
+	opacity: 1 !important;
+}

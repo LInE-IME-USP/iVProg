@@ -125,7 +125,7 @@ function addFunctionHandler () {
   renderFunction(new_function);
 }
 
-function addParameter (function_obj, function_container) {
+function addParameter (function_obj, function_container, is_from_click = false) {
   if (function_obj.parameters_list == null) {
     function_obj.parameters_list = [];
   }
@@ -133,7 +133,12 @@ function addParameter (function_obj, function_container) {
   function_obj.parameters_list.push(new_parameter);
   counter_new_parameters ++;
 
-  renderParameter(function_obj, new_parameter, function_container);
+  var newe = renderParameter(function_obj, new_parameter, function_container);
+
+  if (is_from_click) {
+    newe.css('display', 'none');
+    newe.fadeIn();
+  }
 }
 
 function updateReturnType (function_obj, new_type, new_dimensions = 0) {
@@ -170,7 +175,8 @@ function addHandlers (function_obj, function_container) {
   });
 
   function_container.find( ".add_parameter_button" ).on('click', function(e){
-    addParameter(function_obj, function_container);
+    window.insertContext = true;
+    addParameter(function_obj, function_container, true);
   });
 
   function_container.find('.menu_commands').dropdown({
@@ -334,6 +340,28 @@ export function renderFunction (function_obj) {
       hide: 0
     }
   });
+
+  Sortable.create(appender.find(".variables_list_div")[0], {
+    handle: '.ellipsis',
+    animation: 100,
+    ghostClass: 'ghost',
+    group: 'local_vars_drag_' + program.functions.indexOf(function_obj),
+    onEnd: function (evt) {
+       updateSequenceLocals(evt.oldIndex, evt.newIndex, function_obj);
+    }
+  });
+
+  if (appender.find(".container_parameters_list")[0]) {
+    Sortable.create(appender.find(".container_parameters_list")[0], {
+      handle: '.ellipsis',
+      animation: 100,
+      ghostClass: 'ghost',
+      group: 'parameters_drag_' + program.functions.indexOf(function_obj),
+      onEnd: function (evt) {
+         updateSequenceParameters(evt.oldIndex, evt.newIndex, function_obj);
+      }
+    });
+  }
 }
 
 export function initVisualUI () {
@@ -468,7 +496,30 @@ $( document ).ready(function() {
     }
   });
 
+  var listGlobalsHandle = document.getElementById("listGlobalsHandle");
+  Sortable.create(listGlobalsHandle, {
+    handle: '.ellipsis',
+    animation: 100,
+    ghostClass: 'ghost',
+    group: 'globals_divs_drag',
+    onEnd: function (evt) {
+       updateSequenceGlobals(evt.oldIndex, evt.newIndex);
+    }
+  });
+
 });
+
+function updateSequenceParameters (oldIndex, newIndex, function_obj) {
+  function_obj.parameters_list.splice(newIndex, 0, function_obj.parameters_list.splice(oldIndex, 1)[0]);
+}
+
+function updateSequenceLocals (oldIndex, newIndex, function_obj) {
+  function_obj.variables_list.splice(newIndex, 0, function_obj.variables_list.splice(oldIndex, 1)[0]);
+}
+
+function updateSequenceGlobals (oldIndex, newIndex) {
+  program_obj.globals.splice(newIndex, 0, program_obj.globals.splice(oldIndex, 1)[0]);
+}
 
 function updateSequenceFunction (oldIndex, newIndex) {
   program_obj.functions.splice(newIndex, 0, program_obj.functions.splice(oldIndex, 1)[0]);
@@ -589,9 +640,10 @@ function toggleVisualCoding () {
 function removeParameter (function_obj, parameter_obj, parameter_container) {
   var index = function_obj.parameters_list.indexOf(parameter_obj);
   if (index > -1) {
+    window.insertContext = true;
     function_obj.parameters_list.splice(index, 1);
   }
-  $(parameter_container).remove();
+  $(parameter_container).fadeOut();
 }
 
 function updateParameterType(parameter_obj, new_type, new_dimensions = 0) {
@@ -608,7 +660,7 @@ function updateParameterType(parameter_obj, new_type, new_dimensions = 0) {
 function renderParameter (function_obj, parameter_obj, function_container) {
   var ret = "";
 
-  ret += '<div class="ui label function_name_parameter">';
+  ret += '<div class="ui label function_name_parameter pink"><i class="ui icon ellipsis vertical inverted"></i>';
 
   ret += '<div class="ui dropdown parameter_type">';
 
@@ -652,7 +704,7 @@ function renderParameter (function_obj, parameter_obj, function_container) {
 
   ret += '<div class="parameter_div_edit"><span class="span_name_parameter label_enable_name_parameter">'+parameter_obj.name+'</span></div> ';
 
-  ret += ' <i class="red icon times remove_parameter"></i></div>';
+  ret += ' <i class="yellow inverted icon times remove_parameter"></i></div>';
 
   ret = $(ret);
   
@@ -676,6 +728,7 @@ function renderParameter (function_obj, parameter_obj, function_container) {
     enableNameParameterUpdate(parameter_obj, ret);
   });
 
+  return ret;
 }
 
 var opened_name_parameter = false;

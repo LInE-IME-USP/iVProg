@@ -50,11 +50,12 @@ function updateType (global_var, new_type, new_dimensions = 0) {
 function removeGlobal (global_var, global_container) {
 	var index = window.program_obj.globals.indexOf(global_var);
 	if (index > -1) {
+		window.insertContext = true;
 	  window.program_obj.globals.splice(index, 1);
 	}
 	global_container.children().off();
 	global_container.off();
-	global_container.remove();
+	global_container.fadeOut();
 }
 
 function updateInitialValues (global_var) {
@@ -424,7 +425,7 @@ function updateColumnsAndRowsText (global_container, global_var) {
 
 export function renderGlobal (global_var) {
 
-	var element = '<div class="ui label global_container pink"><div class="global_const">const: ';
+	var element = '<div class="ui label global_container pink"><i class="ui icon ellipsis vertical inverted"></i><div class="global_const">const: ';
 
 	element += '<i class="ui icon toggle '+(global_var.is_constant?"on":"off")+' alternate_constant"></i></div>';
  	

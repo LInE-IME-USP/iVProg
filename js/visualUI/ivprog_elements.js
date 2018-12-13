@@ -245,7 +245,12 @@ export class Program {
   addFunction (function_to_add) {
 
     WatchJS.watch(function_to_add.parameters_list, function(){
-      AlgorithmManagement.renderAlgorithm();
+      if (window.insertContext) {
+        setTimeout(function(){ AlgorithmManagement.renderAlgorithm(); }, 300);
+        window.insertContext = false;
+      } else {
+        AlgorithmManagement.renderAlgorithm();
+      }
     }, 1);
 
     WatchJS.watch(function_to_add.variables_list, function(){
