@@ -251,7 +251,7 @@ export class SemanticAnalyser {
             } else {
               throw ProcessorErrorFactory.vector_line_outbounds_full(id, literal.value.length, lines.values.toNumber(), literal.sourceInfo)
             }
-          } else if (line.value.isNeg()) {
+          } else if (lines.value.isNeg()) {
             throw ProcessorErrorFactory.array_dimension_not_positive_full(literal.sourceInfo);
           }
           
