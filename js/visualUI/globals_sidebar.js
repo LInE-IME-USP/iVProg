@@ -401,8 +401,30 @@ function addHandlers (global_container) {
 
 	global_container
 	.on('dragstart', function(e) {
-		e.originalEvent.dataTransfer.setData("text",JSON.stringify({type:"var",content:global_var}));
+		program_obj.dataTransfer = {type:"var",content:global_var};
 	})
+
+	global_container
+	.on('click', function (evt) {
+		$(this).trigger('dragstart');
+		if(window.ghostNode) {
+			$(window.ghostNode).remove();
+			$(document).off('mousemove');
+		}
+		window.ghostNode = $(this).clone();
+		ghostNode.outerWidth($(this).outerWidth());
+		ghostNode.draggable().appendTo('body');
+		ghostNode.css('position', 'absolute');
+		ghostNode.css('left', evt.pageX);
+		ghostNode.css('top', evt.pageY);
+		evt.type = 'drag';
+		evt.target = ghostNode[0];
+		ghostNode.trigger(evt);
+		$(document).on('mousemove', function (evt) {
+			ghostNode.css('left', evt.pageX);
+			ghostNode.css('top', evt.pageY);
+		});
+	});
 
 }
 
@@ -446,21 +468,21 @@ export function renderGlobal (global_var) {
   		element += '<div class="item ' + (global_var.type == tm.toLowerCase() ? ' selected ' : '') + '" data-type="'+tm+'" >'+LocalizedStrings.getUI(tm.toLowerCase())+'</div>';
 	}
 
-  	for (var tm in Types) {
-  		if (tm == Types.VOID.toUpperCase()) {
-  			continue;
-  		}
-  		element += '<div class="item">'
-	    	+ '<i class="dropdown icon"></i>'
-	    	+  LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI(tm.toLowerCase())
-	      	+  '<div class="menu">'
-		        + '<div class="item" data-text="'+ LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI(tm.toLowerCase())+' [ ] " data-type="'+tm+'" data-dimensions="1">[ ]</div>'
-		        + '<div class="item" data-text="'+ LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI(tm.toLowerCase())+' [ ] [ ] " data-type="'+tm+'" data-dimensions="2">[ ] [ ] </div>'
-	      	+  '</div>'
-	    	+ '</div>';	
-  	}
+	for (var tm in Types) {
+		if (tm == Types.VOID.toUpperCase()) {
+			continue;
+		}
+		element += '<div class="item">'
+			+ '<i class="dropdown icon"></i>'
+			+  LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI(tm.toLowerCase())
+				+  '<div class="menu">'
+					+ '<div class="item" data-text="'+ LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI(tm.toLowerCase())+' [ ] " data-type="'+tm+'" data-dimensions="1">[ ]</div>'
+					+ '<div class="item" data-text="'+ LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI(tm.toLowerCase())+' [ ] [ ] " data-type="'+tm+'" data-dimensions="2">[ ] [ ] </div>'
+				+  '</div>'
+			+ '</div>';	
+	}
 
-    element += '</div></div> <div class="editing_name_var"> <span class="span_name_variable enable_edit_name_parameter">'+global_var.name+'</span> </div> <span class="character_equals"> = </span> ';
+	element += '</div></div> <div class="editing_name_var"> <span class="span_name_variable enable_edit_name_parameter">'+global_var.name+'</span> </div> <span class="character_equals"> = </span> ';
 
 	element += '<div class="ui div_valor_var">'+global_var.value+'</div>';    
 
@@ -865,7 +887,7 @@ $.fn.textWidth = function(text, font) {
 
 renderGlobal = function (global_var) {
 
-	var element = '<div class="ui container segment global_container"><div class="global_const">const: ';
+	var element = '<div class="ui segment global_container" draggable="true"><div class="global_const">const: ';
 
 	element += '<i class="ui icon toggle '+(global_var.is_constant?"on":"off")+' alternate_constant"></i></div><span class="span_name_variable enable_edit_name_parameter">'+global_var.name+'</span> <i class="icon small pencil alternate enable_edit_name_parameter"></i>';
 
@@ -889,21 +911,21 @@ renderGlobal = function (global_var) {
   		element += '<div class="item ' + (global_var.type == tm.toLowerCase() ? ' selected ' : '') + '" data-type="'+tm+'" >'+LocalizedStrings.getUI(tm.toLowerCase())+'</div>';
 	}
 
-  	for (var tm in Types) {
-  		if (tm == Types.VOID.toUpperCase()) {
-  			continue;
-  		}
-  		element += '<div class="item">'
-	    	+ '<i class="dropdown icon"></i>'
-	    	+  LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI(tm.toLowerCase())
-	      	+  '<div class="menu">'
-		        + '<div class="item" data-text="'+ LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI(tm.toLowerCase())+' [ ] " data-type="'+tm+'" data-dimensions="1">[ ]</div>'
-		        + '<div class="item" data-text="'+ LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI(tm.toLowerCase())+' [ ] [ ] " data-type="'+tm+'" data-dimensions="2">[ ] [ ] </div>'
-	      	+  '</div>'
-	    	+ '</div>';
-  	}
+	for (var tm in Types) {
+		if (tm == Types.VOID.toUpperCase()) {
+			continue;
+		}
+		element += '<div class="item">'
+			+ '<i class="dropdown icon"></i>'
+			+  LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI(tm.toLowerCase())
+				+  '<div class="menu">'
+					+ '<div class="item" data-text="'+ LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI(tm.toLowerCase())+' [ ] " data-type="'+tm+'" data-dimensions="1">[ ]</div>'
+					+ '<div class="item" data-text="'+ LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI(tm.toLowerCase())+' [ ] [ ] " data-type="'+tm+'" data-dimensions="2">[ ] [ ] </div>'
+				+  '</div>'
+			+ '</div>';
+	}
 
-    element += '</div></div>  = ';
+	element += '</div></div>  = ';
 
 	element += '<div class="ui div_valor_var">'+global_var.value+'</div>';
 

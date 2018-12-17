@@ -136,7 +136,7 @@ export function createFloatingCommand (function_obj, function_container, command
 }
 
 // before_after_inside: 1 -> before, 2 -> after, 3 -> inside
-export function renderCommand (command, element_reference, before_after_inside, function_obj) {
+export function renderCommand (command, element_reference, before_after_inside, function_obj, function_called = null) {
 	var createdElement;
 	switch (command.type) {
 		case Models.COMMAND_TYPES.comment:
@@ -202,6 +202,15 @@ export function renderCommand (command, element_reference, before_after_inside, 
 			element_reference.append(createdElement);
 			break;
 	}
+	if (command.type == Models.COMMAND_TYPES.functioncall && function_called != null) {
+		var $div_items = createdElement.find('div.item');
+		for (var i = 0; i < $div_items.length; i++) {
+			if ($($div_items[i]).text().trim() == function_called.name) {
+				$($div_items[i]).trigger('click');
+				break;
+			}
+		}
+	}
 
 }
 
@@ -266,14 +275,23 @@ function preCreateCommand(command_type, function_called) {
 			return new Models.Attribution(new Models.VariableValueMenu(
 				VariableValueMenuManagement.VAR_OR_VALUE_TYPES.only_variable, null, null, null, false),[exp]);
 		}
+		return genericCreateCommand(command_type);
 		var varM = new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.only_function, null, null, null, false);
 		varM.function_called = function_called;
 		var parameters = [];
 		for (var i = 0; i < function_called.parameters_list.length; i++) {
 			parameters.push(new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.all, null, null, null, true));
 		}
-		var functionCall = new Models.FunctionCall(varM, parameters);
+		//var functionCall = new Models.FunctionCall(varM, parameters);
+		var functionCall = new Models.FunctionCall(varM, null);
 		return functionCall;
+	} else if (command_type == 'attribution') {
+		var var_menu = new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.all, null, null, null, true);
+		//var_menu.function_called = function_called;
+		var exp = new Models.ExpressionElement(Models.EXPRESSION_ELEMENTS.op_exp, [Models.ARITHMETIC_TYPES.none,var_menu]);
+		//exp.function_called = function_called;
+		return new Models.Attribution(new Models.VariableValueMenu(
+			VariableValueMenuManagement.VAR_OR_VALUE_TYPES.only_variable, function_called, null, null, false),[exp]);
 	}
 }
 
@@ -333,7 +351,7 @@ function manageCommand(function_obj, function_container, event, command_type, fu
 
 			el.data('fun').commands.push(new_cmd);
 
-			renderCommand(new_cmd, $(function_container).find('.commands_list_div'), 3, function_obj);
+			renderCommand(new_cmd, $(function_container).find('.commands_list_div'), 3, function_obj, function_called);
 
 		} else { // Entra nesse else, caso já existam outros comandos no bloco:
 
@@ -451,7 +469,7 @@ function insertCommandInBlockHierar(el, event, function_obj, command_type, hier_
 				var recentComand = preCreateCommand(command_type, function_called);
 				command_parent.commands_block.push(recentComand);
 
-				renderCommand(recentComand, el_jq.find('.block_commands'), 3, function_obj);
+				renderCommand(recentComand, el_jq.find('.block_commands'), 3, function_obj, function_called);
 			} else { // Se já tem algum comando no bloco:
 				findNearbyCommandToAddInBlockScope(el, event, el, function_obj, command_type, command_parent, function_called);
 			}
@@ -502,7 +520,7 @@ function findNearbyCommandToAddInBlockScope(el, event, node_list_commands, funct
 
 		command_parent.commands_block.push(recentComand);
 		//
-		renderCommand(recentComand, node_list_commands, 3, function_obj);
+		renderCommand(recentComand, node_list_commands, 3, function_obj, function_called);
 
 	} else {
 
@@ -512,7 +530,7 @@ function findNearbyCommandToAddInBlockScope(el, event, node_list_commands, funct
 			command_parent.commands_block.splice(index, 0, recentComand);
 		}
 
-		renderCommand(recentComand, elemento_menor_distancia, 1, function_obj);
+		renderCommand(recentComand, elemento_menor_distancia, 1, function_obj, function_called);
 	}
 }
 
@@ -620,7 +638,7 @@ function findBeforeOrAfterCommandToAddInsertBlock(el, event, function_obj, comma
 					var recentComand = preCreateCommand(command_type,function_called);
 						command_parent.commands_else.push(recentComand);
 
-					renderCommand(recentComand, el_jq, 3, function_obj);
+					renderCommand(recentComand, el_jq, 3, function_obj, function_called, function_called);
 				} else { // Se já tem algum comando no bloco:
 					findInBlockCorrectPlace(el_jq, event, function_obj, command_type, true, function_called);
 				}
@@ -644,7 +662,7 @@ function findBeforeOrAfterCommandToAddInsertBlock(el, event, function_obj, comma
 					var recentComand = preCreateCommand(command_type,function_called);
 					command_parent.commands_block.push(recentComand);
 
-					renderCommand(recentComand, el_jq, 3, function_obj);
+					renderCommand(recentComand, el_jq, 3, function_obj, function_called);
 				} else {
 					console.log('SSS5');
 					findInBlockCorrectPlace(el_jq, event, function_obj, command_type, false, function_called);
@@ -661,7 +679,7 @@ function findBeforeOrAfterCommandToAddInsertBlock(el, event, function_obj, comma
 				command_parent.commands_block.splice(index, 0, recentComand);
 			}
 
-			renderCommand(recentComand, el, 1, function_obj);
+			renderCommand(recentComand, el, 1, function_obj, function_called);
 		}
 
 
@@ -680,7 +698,7 @@ function findBeforeOrAfterCommandToAddInsertBlock(el, event, function_obj, comma
 					var recentComand = preCreateCommand(command_type,function_called);
 					command_parent.commands_else.push(recentComand);
 
-					renderCommand(recentComand, el_jq, 3, function_obj);
+					renderCommand(recentComand, el_jq, 3, function_obj, function_called);
 				} else { // Se já tem algum comando no bloco:
 					console.log('SSS2');
 					findInBlockCorrectPlace(el_jq, event, function_obj, command_type, true, function_called);
@@ -695,7 +713,7 @@ function findBeforeOrAfterCommandToAddInsertBlock(el, event, function_obj, comma
 				command_parent.commands_else.splice((index + 1), 0, recentComand);
 			}
 
-			renderCommand(recentComand, el, 2, function_obj);
+			renderCommand(recentComand, el, 2, function_obj, function_called);
 
 		} else {
 
@@ -707,7 +725,7 @@ function findBeforeOrAfterCommandToAddInsertBlock(el, event, function_obj, comma
 					var recentComand = preCreateCommand(command_type,function_called);
 					command_parent.commands_block.push(recentComand);
 					console.log('SSS6');
-					renderCommand(recentComand, el_jq, 3, function_obj);
+					renderCommand(recentComand, el_jq, 3, function_obj, function_called);
 				} else {
 					console.log('SSS7');
 					findInBlockCorrectPlace(el_jq, event, function_obj, command_type, false, function_called);
@@ -724,7 +742,7 @@ function findBeforeOrAfterCommandToAddInsertBlock(el, event, function_obj, comma
 				command_parent.commands_block.splice((index + 1), 0, recentComand);
 			}
 
-			renderCommand(recentComand, el, 2, function_obj);
+			renderCommand(recentComand, el, 2, function_obj, function_called);
 		}
 
 
@@ -747,7 +765,7 @@ function insertCommandInBlock(el, event, function_obj, command_type, function_ca
 
 			command_parent.commands_block.push(recentComand);
 
-			renderCommand(recentComand, el_jq.find('.block_commands'), 3, function_obj);
+			renderCommand(recentComand, el_jq.find('.block_commands'), 3, function_obj, function_called);
 		} else { // Se já tem algum comando no bloco:
 			findInBlockCorrectPlace(el, event, function_obj, command_type, false, function_called);
 		}
@@ -785,7 +803,7 @@ function insertCommandInBlock(el, event, function_obj, command_type, function_ca
 				var recentComand = preCreateCommand(command_type,function_called);
 				command_parent.commands_block.push(recentComand);
 
-				renderCommand(recentComand, el_jq.find('.commands_if'), 3, function_obj);
+				renderCommand(recentComand, el_jq.find('.commands_if'), 3, function_obj, function_called, function_called);
 			} else { // Se já tem algum comando no bloco:
 				findInBlockCorrectPlace(el_jq.find('.commands_if'), event, function_obj, command_type, false, function_called);
 			}
@@ -833,7 +851,7 @@ function addCommandToSwitchCase(event, function_obj, command_type) {
 
 		var recentComand = preCreateCommand(command_type,function_called);
 		which_case.commands_block.push(recentComand);
-		renderCommand(recentComand, case_div.find('.case_commands_block'), 3, function_obj);
+		renderCommand(recentComand, case_div.find('.case_commands_block'), 3, function_obj, function_called);
 	} else {
 		findInBlockCorrectPlaceInSwitchCase(which_case, case_div, event, function_obj, command_type, function_called);
 	}
@@ -874,7 +892,7 @@ function findInBlockCorrectPlaceInSwitchCase(which_case, case_div, event, functi
 
 		which_case.commands_block.push(recentComand);
 
-		renderCommand(recentComand, $(case_div.find('.case_commands_block')[0]), 3, function_obj);
+		renderCommand(recentComand, $(case_div.find('.case_commands_block')[0]), 3, function_obj, function_called);
 
 	} else {
 
@@ -884,7 +902,7 @@ function findInBlockCorrectPlaceInSwitchCase(which_case, case_div, event, functi
 
 		if (index > -1) {
 			which_case.commands_block.splice(index, 0, recentComand);
-			renderCommand(recentComand, elemento_menor_distancia, 1, function_obj);
+			renderCommand(recentComand, elemento_menor_distancia, 1, function_obj, function_called);
 		}
 	}
 }
@@ -934,13 +952,13 @@ function findInBlockCorrectPlace(el, event, function_obj, command_type, is_in_el
 			console.log("$(el_jq.find('.commands_else')[0]):: ");
 			console.log($(el_jq.find('.commands_else')[0]));
 
-			renderCommand(recentComand, el_jq, 3, function_obj);
+			renderCommand(recentComand, el_jq, 3, function_obj, function_called);
 
 		} else {
 			console.log('QQ16');
 			command_parent.commands_block.push(recentComand);
 
-			renderCommand(recentComand, $(el_jq.find('.block_commands')[0]), 3, function_obj);
+			renderCommand(recentComand, $(el_jq.find('.block_commands')[0]), 3, function_obj, function_called);
 		}
 
 	} else {
@@ -957,7 +975,7 @@ function findInBlockCorrectPlace(el, event, function_obj, command_type, is_in_el
 
 			if (index > -1) {
 				command_parent.commands_else.splice(index, 0, recentComand);
-				renderCommand(recentComand, elemento_menor_distancia, 1, function_obj);
+				renderCommand(recentComand, elemento_menor_distancia, 1, function_obj, function_called);
 			}
 
 		} else {
@@ -965,7 +983,7 @@ function findInBlockCorrectPlace(el, event, function_obj, command_type, is_in_el
 
 			if (index > -1) {
 				command_parent.commands_block.splice(index, 0, recentComand);
-				renderCommand(recentComand, elemento_menor_distancia, 1, function_obj);
+				renderCommand(recentComand, elemento_menor_distancia, 1, function_obj, function_called);
 			}
 
 		}
@@ -1008,7 +1026,7 @@ function findBeforeOrAfterCommandToAdd(el, event, function_obj, command_type, fu
 			function_obj.commands.splice(index, 0, recentComand);
 		}
 
-		renderCommand(recentComand, el, 1, function_obj);
+		renderCommand(recentComand, el, 1, function_obj, function_called);
 
 	} else {
 		var recentComand = preCreateCommand(command_type,function_called);
@@ -1019,7 +1037,7 @@ function findBeforeOrAfterCommandToAdd(el, event, function_obj, command_type, fu
 			function_obj.commands.splice((index + 1), 0, recentComand);
 		}
 
-		renderCommand(recentComand, el, 2, function_obj);
+		renderCommand(recentComand, el, 2, function_obj, function_called);
 	}
 }
 
@@ -1055,7 +1073,7 @@ function findNearbyCommandToAddInFunctionScope(el, event, node_list_commands, fu
 
 		function_obj.commands.push(recentComand);
 		//
-		renderCommand(recentComand, node_list_commands, 3, function_obj);
+		renderCommand(recentComand, node_list_commands, 3, function_obj, function_called);
 
 	} else {
 
@@ -1065,7 +1083,7 @@ function findNearbyCommandToAddInFunctionScope(el, event, node_list_commands, fu
 			function_obj.commands.splice(index, 0, recentComand);
 		}
 
-		renderCommand(recentComand, elemento_menor_distancia, 1, function_obj);
+		renderCommand(recentComand, elemento_menor_distancia, 1, function_obj, function_called);
 	}
 }
 

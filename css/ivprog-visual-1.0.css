@@ -383,7 +383,7 @@ div.buttons_manage_columns {
 .accordion {
 	margin: auto;
 }
-
+/*
 .global_container:hover, 
 .variable_container:hover {
 	border: 2px solid gray;
@@ -391,7 +391,7 @@ div.buttons_manage_columns {
 	padding-right: 8px;
 	padding-top: 5px;
 	padding-bottom: 4px;
-}
+}*/
 
 .ui.label.function_name_parameter:hover {
 	border: 2px solid gray;
@@ -402,9 +402,9 @@ div.buttons_manage_columns {
 	padding: 7px 8px 7px 8px;
 }
 
-.global_container:hover,  .variable_container:hover {
+/*.global_container:hover,  .variable_container:hover {
 	margin-bottom:  4px !important;
-}
+}*/
 
 .global_container .global_type, .editing_name_var, .global_container .span_value_variable,
 .variable_container .variable_type,  .variable_container .span_value_variable,
@@ -638,7 +638,12 @@ div.function_name_div_updated:active,
 	outline: dashed 2px blue;
 }
 
-button.ui.segment {
+button.ui.segment, .global_container.ui {
 	margin-bottom: 0.5em;
 	margin-top: 0.5em;
+}
+
+.global_container.ui {
+	padding-bottom: 0.5em;
+	padding-top: 0.5em;
 }

@@ -256,6 +256,10 @@ export class Program {
       AlgorithmManagement.renderAlgorithm();
     }, 1);
 
+    WatchJS.watch(function_to_add, "return_type", function(){
+      AlgorithmManagement.renderAlgorithm();
+    }, 1);
+
     this.functions.push(function_to_add);
   }
 

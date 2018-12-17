@@ -16,6 +16,8 @@ export function renderMenu (command, ref_object, dom_object, function_obj, size_
 
 	// Verificar se o objeto atual trata-se de uma chamada de função e conferir se possui a quantidade correta de parâmetros
 	// Caso não possua, tem que adicionar as variáveis que servirão de parâmetros:
+
+
 	if (ref_object.function_called) {
 		if (ref_object.function_called.parameters_list) {
 
@@ -676,7 +678,10 @@ function addHandlers (command, ref_object, dom_object, menu_var_or_value, functi
 	if (ref_object.variable_and_value != VAR_OR_VALUE_TYPES.only_value) {
 		menu_var_or_value.dropdown({
 		  onChange: function(value, text, $selectedItem) {
-		  	console.log('S7');
+				console.log('S7');
+				console.log(value);
+				console.log(text);
+				console.log($selectedItem);
 		  	dom_object.find('.var_name').remove();
 		     switch ($selectedItem.data('option')) {
 		     	case VAR_OR_VALUE_TYPES.only_function:
@@ -788,6 +793,7 @@ function openInputToFunction (command, ref_object, dom_object, menu_var_or_value
 		context_menu.dropdown({
 			onChange: function(value, text, $selectedItem) {
 				console.log('S8');
+				console.log($selectedItem);
 		     if ($selectedItem.data('clear')) {
 		     	console.log('PP7');
 		     	dom_object.text('');

@@ -2,19 +2,22 @@
 
 OK botar assinatura das funções funcao(tipo,tipo,tipo)
 
-blocos com funções específicas
+OK blocos com funções específicas
 
-corrigir bug da função
+OK corrigir bug da função
 
-trocar nos parâmetros da função tipo na frente e rótulo depois
+OK trocar nos parâmetros da função tipo na frente e rótulo depois
 
-clique pega clique solta
+OK clique pega clique solta
 
-tornar tipo como botão e não dropdown
+OK tornar tipo como botão e não dropdown
 
 (-) arraste de globais e solta uma atribuição
 
-comentário descritivo sobre a assinatura da função
+(dependo do igor) comentário descritivo sobre a assinatura da função 
 
-quando tiver retorno, atribuicao. Quando vazio, chamada de função
+OK quando tiver retorno, atribuicao. Quando vazio, chamada de função
 
+Não gera texto
+
+Não gera arquivo
