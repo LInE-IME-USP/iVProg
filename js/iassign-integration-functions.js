@@ -134,6 +134,43 @@ function prepareActivityToStudent (ilm_cont) {
         algorithm_in_ilm = ilm_cont.split('\n::algorithm::')[1].split('\n::logs::')[0];
         window.program_obj.functions = JSON.parse(algorithm_in_ilm).functions;
         window.program_obj.globals = JSON.parse(algorithm_in_ilm).globals;
+
+        window.watchW.watch(window.program_obj.globals, function(){
+          if (window.insertContext) {
+            setTimeout(function(){ renderAlgorithm(); }, 300);
+            window.insertContext = false;
+          } else {
+            renderAlgorithm();
+          }
+        }, 1);
+
+        for (var i = 0; i < window.program_obj.functions.length; i ++) {
+            window.watchW.watch(window.program_obj.functions[i].parameters_list, function(){
+              if (window.insertContext) {
+                setTimeout(function(){ renderAlgorithm(); }, 300);
+                window.insertContext = false;
+              } else {
+                renderAlgorithm();
+              }
+            }, 1);
+
+            window.watchW.watch(window.program_obj.functions[i].variables_list, function(){
+              if (window.insertContext) {
+                setTimeout(function(){ renderAlgorithm(); }, 300);
+                window.insertContext = false;
+              } else {
+                renderAlgorithm();
+              }
+            }, 1);
+        }
+        window.watchW.watch(window.program_obj.functions, function(){
+          if (window.insertContext) {
+            setTimeout(function(){ renderAlgorithm(); }, 300);
+            window.insertContext = false;
+          } else {
+            renderAlgorithm();
+          }
+        }, 1);
     }
     $('.assessment_button').removeClass('disabled');
     renderAlgorithm();
@@ -343,5 +380,31 @@ function inIframe () {
         return window.self !== window.top;
     } catch (e) {
         return true;
+    }
+}
+
+
+function full_screen() {
+     // check if user allows full screen of elements. This can be enabled or disabled in browser config. By default its enabled.
+    //its also used to check if browser supports full screen api.
+    if("fullscreenEnabled" in document || "webkitFullscreenEnabled" in document || "mozFullScreenEnabled" in document || "msFullscreenEnabled" in document) {
+        if(document.fullscreenEnabled || document.webkitFullscreenEnabled || document.mozFullScreenEnabled || document.msFullscreenEnabled) {
+            var element = document.getElementById("ui_main_div");
+            //requestFullscreen is used to display an element in full screen mode.
+            if("requestFullscreen" in element) {
+                element.requestFullscreen();
+            } 
+            else if ("webkitRequestFullscreen" in element) {
+                element.webkitRequestFullscreen();
+            } 
+            else if ("mozRequestFullScreen" in element) {
+                element.mozRequestFullScreen();
+            } 
+            else if ("msRequestFullscreen" in element) {
+                element.msRequestFullscreen();
+            }
+        }
+    } else {
+        $('.expand_button').addClass('disabled');
     }
 }

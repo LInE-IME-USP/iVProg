@@ -16,6 +16,8 @@ import { LanguageService } from '../services/languageService';
 var block_render = false;
 
 export function renderAlgorithm () {
+	console.log('rendering algorithm...');
+
 	if (block_render) {
 		return;
 	}

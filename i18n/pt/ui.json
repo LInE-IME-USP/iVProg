@@ -82,6 +82,8 @@
   "text_menu_functions_text":"Texto",
   "text_menu_functions_arrangement":"Arranjo",
   "text_menu_functions_conversion":"Conversão",
+  "text_none_variable":"Nenhuma variável declarada",
+  "text_none_variable_instruction":"Antes de utilizar uma variável, é necessário criá-la",
   "tooltip_visual": "Programação visual",
   "tooltip_textual": "Programação textual",
   "tooltip_upload": "Upload de código fonte",
@@ -118,5 +120,15 @@
   "$length": "comprimento",
   "$uppercase": "caixa_alta",
   "$lowercase": "caixa_baixa",
-  "$charAt": "texto_na_posicao"
+  "$charAt": "texto_na_posicao",
+  "$numElements": "total_de_elementos",
+  "$matrixLines": "total_de_linhas",
+  "$matrixColumns": "total_de_colunas",
+  "$isReal": "e_real",
+  "$isInt": "e_inteiro",
+  "$isBool": "e_logico",
+  "$castReal": "como_real",
+  "$castInt": "como_inteiro",
+  "$castBool": "como_logico",
+  "$castString": "como_cadeia"
 }

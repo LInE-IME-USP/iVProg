@@ -76,6 +76,8 @@
   "text_menu_functions_text":"Text",
   "text_menu_functions_arrangement":"Arrangement",
   "text_menu_functions_conversion":"Conversion",
+  "text_none_variable":"There is no declared variable",
+  "text_none_variable_instruction":"Create a new variable to use it",
   "tooltip_visual": "Visual programming",
   "tooltip_textual": "Textual programming",
   "tooltip_upload": "Upload code file",
@@ -116,5 +118,15 @@
   "$length": "length",
   "$uppercase": "uppercase",
   "$lowercase": "lowercase",
-  "$charAt": "char_at"
+  "$charAt": "char_at",
+  "$numElements": "total_of_elements",
+  "$matrixLines": "total_of_lines",
+  "$matrixColumns": "total_of_columns",
+  "$isReal": "is_real",
+  "$isInt": "is_integer",
+  "$isBool": "is_logic",
+  "$castReal": "to_real",
+  "$castInt": "to_integer",
+  "$castBool": "to_logic",
+  "$castString": "to_string"
 }

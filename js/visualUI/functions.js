@@ -105,8 +105,18 @@ window.generator = CodeManagement.generate;
 window.runCodeAssessment = runCodeAssessment;
 window.renderAlgorithm = AlgorithmManagement.renderAlgorithm;
 window.insertContext = false;
+window.watchW = WatchJS;
 
-WatchJS.watch(program.globals, function(){
+WatchJS.watch(window.program_obj.globals, function(){
+  if (window.insertContext) {
+    setTimeout(function(){ AlgorithmManagement.renderAlgorithm(); }, 300);
+    window.insertContext = false;
+  } else {
+    AlgorithmManagement.renderAlgorithm();
+  }
+}, 1);
+
+WatchJS.watch(window.program_obj.functions, function(){
   if (window.insertContext) {
     setTimeout(function(){ AlgorithmManagement.renderAlgorithm(); }, 300);
     window.insertContext = false;
@@ -121,6 +131,8 @@ function addFunctionHandler () {
 	program.addFunction(new_function);
 
 	counter_new_functions ++;
+
+  window.insertContext = true;
 
   var newe = renderFunction(new_function);
 
@@ -418,6 +430,9 @@ export function initVisualUI () {
 
   $('.div_toggle_console').on('click', () => {
     toggleConsole();
+  });
+  $('.expand_button').on('click', () => {
+    full_screen();
   });
 }
 

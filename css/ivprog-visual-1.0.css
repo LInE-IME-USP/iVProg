@@ -642,10 +642,8 @@ div.function_name_div_updated:active,
 
 .global_var .circle.add_global_button, .global_var i.back,
 .ui.add_var_context .icon.plus.circle, .ui.add_var_context .icon.circle.back,
-.inline_add_command .icon.plus.circle, .inline_add_command .icon.circle.back {
+.ui.inline_add_command .icon.plus.circle, .ui.inline_add_command .icon.circle.back {
 	position: absolute;
-    margin-top: 22px;
-    margin-left: 22px;
 }
 .global_var .circle.add_global_button,
 .ui.add_var_context .icon.plus.circle,
@@ -710,16 +708,18 @@ div.function_name_div_updated:active,
 	color: yellow;
 	font-size: 125%;
 }
-.inline_add_command .icon.circle.back {
-	margin-top: 20px;
-    margin-left: 20px;
-}
 .inline_add_command .icon.plus.circle {
 	color: #ec9962 !important;
-	margin-top: 20px;
-    margin-left: 20px;
 }
-
+.inline_add_command .icon.plus.circle, 
+.inline_add_command .icon.circle.back,
+.ui.add_var_context .icon.plus.circle, 
+.ui.add_var_context .icon.circle.back,
+.global_var .icon.plus.circle, 
+.global_var .icon.circle.back {
+	left: 1.8em !important;
+	margin-top: 1.5em !important;
+}
 .ui.icon.button.dropdown.menu_commands {
     float: left;
     color: white;
@@ -773,7 +773,14 @@ div.function_name_div_updated:active,
 	border: 2px solid #e76060 !important;
     border-radius: 0.25em !important;
 }
-
 .command_drag {
 	cursor: move;
+}
+.command_container.over_command_drag {
+	border: 3px dotted blue !important;
+	padding: 0.315em !important;
+}
+.commands_list_div.over_command_drag {
+	border: 3px dotted blue !important;
+	padding: 0.2em !important;
 }

@@ -109,7 +109,16 @@ export function createFloatingCommand (function_obj, function_container, command
 			break;
 	}
 
-	floatingObject.draggable().appendTo("body");
+	floatingObject.draggable({
+		drag: function(evt) {
+	        borderMouseDragCommand(function_obj, function_container, evt);
+	    },
+	    stop: function(evt) {
+	    	function_container.find('.over_command_drag').each(function( index ) {
+				$(this).removeClass('over_command_drag');
+			});
+	    }
+	}).appendTo("body");
 
 	floatingObject.mouseup(function(evt) {
 	  manageCommand(function_obj, function_container, evt, command_type);
@@ -121,6 +130,39 @@ export function createFloatingCommand (function_obj, function_container, command
 	floatingObject.css("left", mouse_event.pageX - 15);
 	floatingObject.css("top", mouse_event.pageY - 15);
 	floatingObject.trigger(mouse_event);
+}
+
+function borderMouseDragCommand (function_obj, function_container, evt) {
+
+	function_container.find('.over_command_drag').each(function( index ) {
+		$(this).removeClass('over_command_drag');
+	});
+
+	var prev = null;
+
+	function_container.find('.commands_list_div').each(function( index ) { 
+		prev = $(this);
+		var objLeft = prev.offset().left;
+        var objTop = prev.offset().top;
+        var objRight = objLeft + prev.width();
+        var objBottom = objTop + prev.height();
+        if (evt.pageX > objLeft && evt.pageX < objRight && evt.pageY > objTop && evt.pageY < objBottom) {
+        	prev.addClass("over_command_drag"); 
+        }
+	});
+
+	function_container.find('.command_container').each(function( index ) { 
+		var obj = $(this);
+		var objLeft = obj.offset().left;
+        var objTop = obj.offset().top;
+        var objRight = objLeft + obj.width();
+        var objBottom = objTop + obj.height();
+        if (evt.pageX > objLeft && evt.pageX < objRight && evt.pageY > objTop && evt.pageY < objBottom) {
+        	prev.removeClass('over_command_drag');
+        	obj.addClass("over_command_drag"); 
+        	return;
+        }
+	});
 }
 
 // before_after_inside: 1 -> before, 2 -> after, 3 -> inside
