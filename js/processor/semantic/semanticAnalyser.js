@@ -487,6 +487,7 @@ export class SemanticAnalyser {
     for (let i = 0; i < actualParametersList.length; i++) {
       const param = actualParametersList[i];
       const formalParam = fun.formalParameters[i];
+      const id = formalParam.id;
       if(formalParam.byRef) {
         if (!(param instanceof VariableLiteral || param instanceof ArrayAccess)) {
           throw ProcessorErrorFactory.invalid_parameter_type_full(id, param.toString(), param.sourceInfo);
