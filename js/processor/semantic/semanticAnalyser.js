@@ -251,7 +251,7 @@ export class SemanticAnalyser {
             } else {
               throw ProcessorErrorFactory.vector_line_outbounds_full(id, literal.value.length, lines.values.toNumber(), literal.sourceInfo)
             }
-          } else if (line.value.isNeg()) {
+          } else if (lines.value.isNeg()) {
             throw ProcessorErrorFactory.array_dimension_not_positive_full(literal.sourceInfo);
           }
           
@@ -487,6 +487,7 @@ export class SemanticAnalyser {
     for (let i = 0; i < actualParametersList.length; i++) {
       const param = actualParametersList[i];
       const formalParam = fun.formalParameters[i];
+      const id = formalParam.id;
       if(formalParam.byRef) {
         if (!(param instanceof VariableLiteral || param instanceof ArrayAccess)) {
           throw ProcessorErrorFactory.invalid_parameter_type_full(id, param.toString(), param.sourceInfo);

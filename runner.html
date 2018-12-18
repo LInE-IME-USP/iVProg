@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <link rel="stylesheet" type="text/css" href="css/ivprog-term.css">
+
+  <link rel="stylesheet" type="text/css" href="js/semantic/semantic.min.css">
+  <style>
+    .ivprog-io-output {
+      border: 1px solid gainsboro;
+      width: 80%;
+      height: 360px;
+      overflow-y: scroll;
+      background-color: black;
+      color: white;
+    }
+
+    .ivprog-io-input {
+      width: 80%;
+      margin-top: 10px;
+      border: 1.5px solid green;
+      height: 3rem;
+      color: black;
+      font-size: 12pt;
+    }
+  </style>
+  <title></title>
+</head>
+<body>
+    <div style="padding-top: 50px;content: ''"></div>
+  <div class="ui container grid">
+    
+    <div class="four wide column">
+      <div class="row">
+        <textarea class="ui form control" name="input" id="input" cols="100" rows="30">
+            programa {
+
+              const real C = 5.5
+             
+              funcao inicio() {
+
+               inteiro a = 8
+               se (a * C > 80) {
+                a = 0
+               } senao {
+                 a = -1
+               }
+              }
+             }
+        </textarea>
+      </div>
+      <div class="row">
+          <button class="ui button" id="btn">Run</button>
+      </div>
+    </div>
+    <div class="six wide column">
+      <div id="console">
+      </div>
+    </div>
+    <div class="six wide column">
+        <div style="overflow-y: scroll; height: 70%;">
+            <pre id="json-renderer" class="ui right floated"></pre>
+        </div>
+    </div>
+  </div>
+  
+  
+</body>
+
+<script src="js/jquery-3.3.1.min.js"></script>
+
+<script type="text/javascript" src="js/jquery.json-editor.min.js"></script>
+<script type="text/javascript" src="build/ivprog.bundle.js"></script>
+
+<script>
+  ivprogCore.runner();
+</script>
+</html>

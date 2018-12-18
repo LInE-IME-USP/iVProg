@@ -45,10 +45,14 @@ export class IVProgProcessor {
   }
 
   registerInput (input) {
+    if(this.input !== null)
+      this.input = null;
     this.input = input;
   }
 
   registerOutput (output) {
+    if(this.output !== null)
+      this.output = null;
     this.output = output;
   }
 
@@ -66,7 +70,22 @@ export class IVProgProcessor {
     }
   }
 
+  prepareState () {
+    if(this.stores !== null) {
+      for (let i = 0; i < this.stores.length; i++) {
+        delete this.stores[i];
+      }
+      this.stores = null;
+    }
+    if(this.globalStore !== null)
+      this.globalStore = null;
+    this.globalStore = new Store("$global");
+    this.stores = [this.globalStore];
+    this.context = [Context.BASE];
+  }
+
   interpretAST () {
+    this.prepareState();
     this.initGlobal();
     const mainFunc = this.findMainFunction();
     if(mainFunc === null) {
