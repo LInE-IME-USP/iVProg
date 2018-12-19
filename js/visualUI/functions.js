@@ -23,6 +23,7 @@ var counter_new_parameters = 0;
 let studentTemp = null;
 let domConsole = null;
 window.studentGrade = null;
+window.LocalizedStrings = LocalizedStrings;
 const program = new Models.Program();
 
 window.system_functions = [];

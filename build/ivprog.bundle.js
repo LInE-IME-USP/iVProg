@@ -176,7 +176,7 @@ module.exports =
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// Generated from /tmp/tmp-205156ZxvmnDALMe8/ivprog.g4 by ANTLR 4.7
+// Generated from /tmp/tmp-11007ADVk7icanN37/ivprog.g4 by ANTLR 4.7
 // jshint ignore: start
 var antlr4 = __webpack_require__(2);
 
@@ -767,7 +767,7 @@ module.exports =
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// Generated from /tmp/tmp-20515XHxqx1bWW1Ca/ivprog.g4 by ANTLR 4.7
+// Generated from /tmp/tmp-11007xoMahm4ejc3g/ivprog.g4 by ANTLR 4.7
 // jshint ignore: start
 var antlr4 = __webpack_require__(2);
 
@@ -1421,7 +1421,7 @@ module.exports =
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// Generated from /tmp/tmp-20515ql5l22IwasWA/ivprog.g4 by ANTLR 4.7
+// Generated from /tmp/tmp-11007TUYuCGDQUKBm/ivprog.g4 by ANTLR 4.7
 // jshint ignore: start
 var antlr4 = __webpack_require__(2);
 
@@ -22001,6 +22001,7 @@ var counter_new_parameters = 0;
 var studentTemp = null;
 var domConsole = null;
 window.studentGrade = null;
+window.LocalizedStrings = _localizedStringsService.LocalizedStrings;
 var program = new Models.Program();
 
 window.system_functions = [];

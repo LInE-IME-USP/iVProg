@@ -364,9 +364,15 @@ $( document ).ready(function() {
 
     if (inIframe()) {
         orderIcons();
+        orderWidth();
     }
 
 });
+
+function orderWidth() {
+    $('.ui.raised.container.segment.div_to_body').css('width', '100%');
+    $('.ui.one.column.container.segment.ivprog_visual_panel').css('width', '100%');
+}
 
 function orderIcons() {
     $('.ui.one.column.doubling.stackable.grid.container').css('display', 'none');

@@ -29,6 +29,7 @@ body {
 
 .main_title h2 {
 	margin: 0;
+	color: white;
 }
 .main_title span {
 	font-size: 80%;
@@ -783,4 +784,7 @@ div.function_name_div_updated:active,
 .commands_list_div.over_command_drag {
 	border: 3px dotted blue !important;
 	padding: 0.2em !important;
+}
+.ui.segment:first-child {
+	margin-top: 1em !important;
 }
