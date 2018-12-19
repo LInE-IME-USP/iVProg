@@ -788,3 +788,6 @@ div.function_name_div_updated:active,
 .ui.segment:first-child {
 	margin-top: 1em !important;
 }
+div.ui.checkbox.transition.visible {
+	margin-bottom: 1em;
+}

@@ -226,7 +226,9 @@ function prepareActivityCreation () {
     $('.main_title').remove();
     $('.ui.accordion').addClass('styled');
     
-    $('<div class="ui checkbox"><input type="checkbox" name="include_algo" class="include_algo" tabindex="0" class="hidden"><label>'+LocalizedStrings.getUI('text_teacher_algorithm_include')+'</label></div>').insertBefore('.content_margin');
+    $('<div class="content_margin"></div>').insertBefore($('.add_accordion').find('.content').find('.div_to_body'));
+
+    $('<div class="ui checkbox"><input type="checkbox" name="include_algo" class="include_algo" tabindex="0" class="hidden"><label>'+LocalizedStrings.getUI('text_teacher_algorithm_include')+'</label></div>').insertAfter('.content_margin');
     
     var cases_test_div = $('<div class="ui accordion styled"><div class="active title"><i class="dropdown icon"></i>'+LocalizedStrings.getUI('text_teacher_test_case')+'</div><div class="active content"></div></div>');
 
