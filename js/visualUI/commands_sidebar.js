@@ -202,10 +202,13 @@ export function renderCommand (command, element_reference, before_after_inside, 
 			element_reference.append(createdElement);
 			break;
 	}
-	if (command.type == Models.COMMAND_TYPES.functioncall && function_called != null) {
+	console.log("typeof")
+	console.log(typeof(function_called));
+	if ((command.type == Models.COMMAND_TYPES.functioncall || command.type == Models.COMMAND_TYPES.attribution) && function_called != null && function_called.type == 'function') {
 		var $div_items = createdElement.find('div.item');
 		for (var i = 0; i < $div_items.length; i++) {
-			if ($($div_items[i]).text().trim() == function_called.name) {
+			var flag = (function_called.identifier) ? LocalizedStrings.getUI(function_called.identifier) : function_called.name;
+			if ($($div_items[i]).text().trim() == flag) {
 				$($div_items[i]).trigger('click');
 				break;
 			}
@@ -267,16 +270,17 @@ function preCreateCommand(command_type, function_called) {
 		return genericCreateCommand(command_type);
 	else if (command_type == 'functioncall') {
 		if (function_called.return_type != Types.VOID) {
-			var var_menu = new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.all, null, null, null, true);
+			/*var var_menu = new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.all, null, null, null, true);
 			var_menu.function_called = function_called;
 			var exp = new Models.ExpressionElement(Models.EXPRESSION_ELEMENTS.op_exp, [Models.ARITHMETIC_TYPES.none, 
 				var_menu]);
 			exp.function_called = function_called;
 			return new Models.Attribution(new Models.VariableValueMenu(
-				VariableValueMenuManagement.VAR_OR_VALUE_TYPES.only_variable, null, null, null, false),[exp]);
+				VariableValueMenuManagement.VAR_OR_VALUE_TYPES.only_variable, null, null, null, false),[exp]);*/
+				command_type = 'attribution';
 		}
 		return genericCreateCommand(command_type);
-		var varM = new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.only_function, null, null, null, false);
+		/*var varM = new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.only_function, null, null, null, false);
 		varM.function_called = function_called;
 		var parameters = [];
 		for (var i = 0; i < function_called.parameters_list.length; i++) {
@@ -284,7 +288,7 @@ function preCreateCommand(command_type, function_called) {
 		}
 		//var functionCall = new Models.FunctionCall(varM, parameters);
 		var functionCall = new Models.FunctionCall(varM, null);
-		return functionCall;
+		return functionCall;*/
 	} else if (command_type == 'attribution') {
 		var var_menu = new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.all, null, null, null, true);
 		//var_menu.function_called = function_called;
@@ -476,7 +480,7 @@ function insertCommandInBlockHierar(el, event, function_obj, command_type, hier_
 
 		} else {
 			// QUANDO FOR BLOCO DO TIPO IF OU SWITCH/CASE:
-			addCommandToSwitchCase(event, function_obj, command_type);
+			addCommandToSwitchCase(event, function_obj, command_type, function_called);
 		}
 
 	} else {
@@ -828,7 +832,7 @@ function insertCommandInBlock(el, event, function_obj, command_type, function_ca
 	}
 }
 
-function addCommandToSwitchCase(event, function_obj, command_type) {
+function addCommandToSwitchCase(event, function_obj, command_type, function_called) {
 
 	var el = $(document.elementFromPoint(event.clientX, event.clientY));
 

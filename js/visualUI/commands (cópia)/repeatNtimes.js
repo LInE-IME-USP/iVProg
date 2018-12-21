@@ -126,7 +126,7 @@ function addHandlers (command, function_obj, repeatNtimes_dom) {
 
 	repeatNtimes_dom.find('.button_remove_command').on('click', function() {
 		if (CommandsManagement.removeCommand(command, function_obj, repeatNtimes_dom)) {
-			repeatNtimes_dom.fadeOut();
+			repeatNtimes_dom.remove();
 		}
 	});
 }

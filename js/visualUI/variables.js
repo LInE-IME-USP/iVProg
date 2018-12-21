@@ -11,7 +11,7 @@ import '../semantic/semantic.min.js';
 
 var counter_new_variables = 0;
 
-export function addVariable (function_obj, function_container) {
+export function addVariable (function_obj, function_container, is_in_click = false) {
 	var new_var = new Models.Variable(Types.INTEGER, LocalizedStrings.getUI('new_variable') + '_' + counter_new_variables, 1);
 	if (function_obj.variables_list == null) {
 		function_obj.variables_list = [];
@@ -20,7 +20,12 @@ export function addVariable (function_obj, function_container) {
 
 	counter_new_variables ++;
 
-	renderVariable(function_container, new_var, function_obj);
+	var newe = renderVariable(function_container, new_var, function_obj);
+
+	if (is_in_click) {
+		newe.css('display', 'none');
+		newe.fadeIn();
+	}
 }
 
 function updateName (variable_obj, new_name) {
@@ -28,13 +33,17 @@ function updateName (variable_obj, new_name) {
 }
 
 function removeVariable (variable_obj, variable_container) {
-	var function_associated = $(variable_container).data('associatedFunction');
+	var function_associated = variable_container.data('associatedFunction');
 
 	var index = function_associated.variables_list.indexOf(variable_obj);
 	if (index > -1) {
+	  window.insertContext = true;
+	  delete function_associated.variables_list[index];
 	  function_associated.variables_list.splice(index, 1);
 	}
-	$(variable_container).remove();
+	variable_container.children().off();
+	variable_container.off();
+	variable_container.fadeOut();
 }
 
 function updateType (variable_obj, new_type, new_dimensions = 0) {
@@ -52,25 +61,25 @@ function updateType (variable_obj, new_type, new_dimensions = 0) {
 function addHandlers (variable_obj, variable_container) {
 
 	// Manage variable name: 
-	$( variable_container ).find( ".enable_edit_name_variable" ).on('click', function(e){
+	variable_container.find( ".enable_edit_name_variable" ).on('click', function(e){
 		enableNameUpdate(variable_obj, variable_container);
 	});
 
 	// Menu to change type:
-	$( variable_container ).find('.ui.dropdown.variable_type').dropdown({
+	variable_container.find('.ui.dropdown.variable_type').dropdown({
 	    onChange: function(value, text, $selectedItem) {
-	    	if ($($selectedItem).data('dimensions')) {
-	    		updateType(variable_obj, Types[$($selectedItem).data('type')], $($selectedItem).data('dimensions'));
+	    	if ($selectedItem.data('dimensions')) {
+	    		updateType(variable_obj, Types[$selectedItem.data('type')], $selectedItem.data('dimensions'));
 	    	} else {
-	    		updateType(variable_obj, Types[$($selectedItem).data('type')]);
+	    		updateType(variable_obj, Types[$selectedItem.data('type')]);
 	    	}
 
 	    	renderValues(variable_obj, variable_container);
 	    }
 	});
 
-	// Remove global: 
-	$( variable_container ).find( ".remove_variable" ).on('click', function(e){
+	// Remove variable: 
+	variable_container.find( ".remove_variable" ).on('click', function(e){
 		removeVariable(variable_obj, variable_container);
 	});
 
@@ -79,7 +88,7 @@ function addHandlers (variable_obj, variable_container) {
 
 export function renderVariable (function_container, new_var, function_obj) {
 
-	var element = '<div class="ui label variable_container">';
+	var element = '<div class="ui label variable_container pink"><i class="ui icon ellipsis vertical inverted"></i>';
 
 	element += '<div class="ui dropdown variable_type">';
 
@@ -92,7 +101,7 @@ export function renderVariable (function_container, new_var, function_obj) {
   	} else {
   		element += '<div class="text">' + LocalizedStrings.getUI(new_var.type.toLowerCase()) + '</div>';
   	}
-	element += '<i class="dropdown icon"></i><div class="menu">';
+	element += '<div class="menu">';
 
 	for (var tm in Types) {
   		if (tm == Types.VOID.toUpperCase()) {
@@ -106,7 +115,7 @@ export function renderVariable (function_container, new_var, function_obj) {
   			continue;
   		}
   		element += '<div class="item">'
-	    	+ '<i class="dropdown icon"></i>'
+  			+ '<i class="dropdown icon"></i>'
 	    	+  LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI(tm.toLowerCase())
 	      	+  '<div class="menu">'
 		        + '<div class="item" data-text="'+ LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI(tm.toLowerCase())+' [ ] " data-type="'+tm+'" data-dimensions="1">[ ]</div>'
@@ -117,21 +126,37 @@ export function renderVariable (function_container, new_var, function_obj) {
 
     element += '</div></div> ';
 
-    element += '<span class="span_name_variable enable_edit_name_variable">'+new_var.name+'</span> <i class="icon small pencil alternate enable_edit_name_variable"></i>';
+    element += '<div class="editing_name_var"><span class="span_name_variable enable_edit_name_variable">'+new_var.name+'</span> </div>';
 
-	element += ' = <div class="ui div_valor_var">'+new_var.value+'</div>';    
+	element += ' <span class="character_equals"> = </span> <div class="ui div_valor_var">'+new_var.value+'</div>';    
 
-	element += ' <i class="red icon times remove_variable"></i></div>';
+	element += ' <i class="yellow inverted icon times remove_variable"></i></div>';
 
 	element = $(element);
 
-	$(element).data('associatedFunction', function_obj);
+	element.data('associatedFunction', function_obj);
 
-	$(function_container).find('.variables_list_div').append(element);
+	function_container.find('.variables_list_div').append(element);
 
 	addHandlers(new_var, element);
 
 	renderValues(new_var, element);
+
+	return element;
+}
+
+function updateColumnsAndRowsText (variable_container, variable_var) {
+	var prev = variable_container.find('.text').text().split('[');
+	if (prev.length == 2) {
+		var ff = prev[0] + '[ ' + variable_var.columns + ' ] ';
+		variable_container.find('.text').empty();
+		variable_container.find('.text').text(ff);
+	}
+	if (prev.length == 3) {
+		var ff = prev[0] + '[ ' + variable_var.columns + ' ] [ ' + variable_var.rows + ' ] ';
+		variable_container.find('.text').empty();
+		variable_container.find('.text').text(ff);
+	}
 }
 
 function renderValues (new_var, variable_container) {
@@ -141,12 +166,12 @@ function renderValues (new_var, variable_container) {
 
 	if (new_var.dimensions == 0) {
 		if (new_var.type == Types.REAL) {
-			ret += '<div class="created_div_valor_var"><span class="span_value_variable simple_var">'+new_var.value.toFixed(1)+'</span> <i class="icon small pencil alternate enable_edit_name_function simple_var"></i></div> ';
+			ret += '<div class="created_div_valor_var"><span class="span_value_variable simple_var">'+new_var.value.toFixed(1)+'</span> </div> ';
 		} else {
 			if (new_var.type == Types.BOOLEAN) {
-				ret += '<div class="created_div_valor_var"><span class="span_value_variable boolean_simple_type">'+new_var.value+'</span> <i class="icon small pencil alternate enable_edit_name_function boolean_simple_type"></i></div> ';
+				ret += '<div class="created_div_valor_var"><span class="span_value_variable boolean_simple_type">'+LocalizedStrings.getUI(new_var.value)+'</span> </div> ';
 			} else {
-				ret += '<div class="created_div_valor_var"><span class="span_value_variable simple_var">'+new_var.value+'</span> <i class="icon small pencil alternate enable_edit_name_function simple_var"></i></div> ';
+				ret += '<div class="created_div_valor_var"><span class="span_value_variable simple_var">'+new_var.value+'</span> </div> ';
 			}
 		}
 	} else {
@@ -161,7 +186,7 @@ function renderValues (new_var, variable_container) {
 			} else {
 				for (var k = 0; k < new_var.columns; k++) {
 					if (new_var.type == Types.BOOLEAN) {
-						ret += '<td><span class="span_value_variable boolean_vector_var" data-index="'+k+'">'+new_var.value[k]+'</span></td>';
+						ret += '<td><span class="span_value_variable boolean_vector_var" data-index="'+k+'">'+LocalizedStrings.getUI(new_var.value[k])+'</span></td>';
 					} else {
 						ret += '<td><span class="span_value_variable vector_var" data-index="'+k+'">'+new_var.value[k]+'</span>'+'</td>';
 					}
@@ -189,7 +214,7 @@ function renderValues (new_var, variable_container) {
     				ret += '<tr>';
     				for (var k = 0; k < new_var.columns; k++) {
     					if (new_var.type == Types.BOOLEAN) { 
-    						ret += '<td><span class="span_value_variable boolean_matrix_var" data-index="'+k+'" data-row="'+l+'">'+new_var.value[l][k]+'</span></td>';
+    						ret += '<td><span class="span_value_variable boolean_matrix_var" data-index="'+k+'" data-row="'+l+'">'+LocalizedStrings.getUI(new_var.value[l][k])+'</span></td>';
     					} else {
     						ret += '<td><span class="span_value_variable matrix_var" data-index="'+k+'" data-row="'+l+'">'+new_var.value[l][k]+'</span></td>';
     					}
@@ -267,11 +292,13 @@ function renderValues (new_var, variable_container) {
 	});
 	$( variable_container ).find( ".div_valor_var" ).append(ret);
 
+	updateColumnsAndRowsText(variable_container, new_var);
+
 }
 
 function alternateBooleanMatrixValue (var_obj, row, index, value_container) {
 	var_obj.value[row][index] = !var_obj.value[row][index];
-	$(value_container).find('.span_value_variable').text(var_obj.value[row][index]);
+	$(value_container).find('.span_value_variable').text(LocalizedStrings.getUI(var_obj.value[row][index]));
 }
 
 function addLineMatrix (var_obj) {
@@ -383,12 +410,12 @@ function removeColumnVector (var_obj) {
 
 function alternateBooleanValue (var_obj, value_container) {
 	var_obj.value = !var_obj.value;
-	$(value_container).find('.span_value_variable').text(var_obj.value);
+	$(value_container).find('.span_value_variable').text(LocalizedStrings.getUI(var_obj.value));
 }
 
 function alternateBooleanVectorValue (var_obj, index, value_container) {
 	var_obj.value[index] = !var_obj.value[index];
-	$(value_container).find('.span_value_variable').text(var_obj.value[index]);
+	$(value_container).find('.span_value_variable').text(LocalizedStrings.getUI(var_obj.value[index]));
 }
 
 function updateInitialValues (variable_obj) {
@@ -446,152 +473,197 @@ var opened_name_value_vector_global_ = false;
 var opened_input_value_vector_global_ = null;
 function enableVectorValueUpdate (var_obj, index, parent_node) {
 	if (opened_name_value_vector_global_) {
-		$(opened_input_value_vector_global_).focus();
+		opened_input_value_vector_global_.focus();
 		return;
 	}
+	parent_node = $(parent_node);
 	opened_name_value_vector_global_ = true;
 
-	$(parent_node).find('.span_value_variable').text('');
+	parent_node.find('.span_value_variable').text('');
+
+	var input_field;
 
 	if (var_obj.type == Types.REAL) {
-		$( "<input type='text' class='width-dynamic input_name_function' autocomplete='off' autocorrect='off' autocapitalize='off' spellcheck='false' value='"
-			+ var_obj.value[index].toFixed(1) + "' />" ).insertBefore($(parent_node).find('.span_value_variable'));
+		input_field = $( "<input type='text' class='width-dynamic input_name_function' autocomplete='off' autocorrect='off' autocapitalize='off' spellcheck='false' value='"
+			+ var_obj.value[index].toFixed(1) + "' />" );
+		input_field.insertBefore(parent_node.find('.span_value_variable'));
 	} else {
-		$( "<input type='text' class='width-dynamic input_name_function' autocomplete='off' autocorrect='off' autocapitalize='off' spellcheck='false' value='"
-			+ var_obj.value[index] + "' />" ).insertBefore($(parent_node).find('.span_value_variable'));
+		input_field = $( "<input type='text' class='width-dynamic input_name_function' autocomplete='off' autocorrect='off' autocapitalize='off' spellcheck='false' value='"
+			+ var_obj.value[index] + "' />" );
+		input_field.insertBefore(parent_node.find('.span_value_variable'));
 	}
 
-	$('.width-dynamic').on('input', function() {
-	    var inputWidth = $(this).textWidth()+10;
-	    opened_input_value_vector_global_ = this;
-	    $(this).focus();
+	input_field.on('input', function() {
+	    var inputWidth = input_field.textWidth()+10;
+	    opened_input_value_vector_global_ = input_field;
+	    input_field.focus();
 
-	    var tmpStr = $(this).val();
-		$(this).val('');
-		$(this).val(tmpStr);
+	    var tmpStr = input_field.val();
+		input_field.val('');
+		input_field.val(tmpStr);
 
-	    $(this).css({
+	    input_field.css({
 	        width: inputWidth
 	    })
 	}).trigger('input');
 
-	$('.width-dynamic').focusout(function() {
+	input_field.focusout(function() {
 		/// update array:
-		if ($(this).val().trim()) {
+		if (input_field.val().trim()) {
 			if (var_obj.type == Types.REAL) {
-				var_obj.value[index] = parseFloat($(this).val().trim());
+				var_obj.value[index] = parseFloat(input_field.val().trim());
 
-				$(parent_node).find('.span_value_variable').text(var_obj.value[index].toFixed(1));
+				parent_node.find('.span_value_variable').text(var_obj.value[index].toFixed(1));
 			} else {
 
 				if (var_obj.type == Types.INTEGER) {
-					var_obj.value[index] = parseInt($(this).val().trim());
+					var_obj.value[index] = parseInt(input_field.val().trim());
 				} else {
-					var_obj.value[index] = $(this).val().trim();
+					var_obj.value[index] = input_field.val().trim();
 				}
 
-				$(parent_node).find('.span_value_variable').text(var_obj.value[index]);
+				parent_node.find('.span_value_variable').text(var_obj.value[index]);
 
 			}
+		} else {
+			if (var_obj.type == Types.REAL) {
+				parent_node.find('.span_value_variable').text(var_obj.value[index].toFixed(1));
+			} else {
+				parent_node.find('.span_value_variable').text(var_obj.value[index]);
+			}
 		}
-		$(this).remove();
+		if (var_obj.type == Types.TEXT) {
+			var_obj.value[index] = input_field.val();
+			parent_node.find('.span_value_variable').text(var_obj.value[index]);
+		}
+		input_field.off();
+		input_field.remove();
 
 		/// update elements:
 		opened_name_value_vector_global_ = false;
 		opened_input_value_vector_global_ = false;
 	});
 
-	$('.width-dynamic').on('keydown', function(e) {
+	input_field.on('keydown', function(e) {
 		var code = e.keyCode || e.which;
 		if(code == 13) {
-			if ($(this).val().trim()) {
+			if (input_field.val().trim()) {
 				if (var_obj.type == Types.REAL) {
-					var_obj.value[index] = parseFloat($(this).val().trim());
+					var_obj.value[index] = parseFloat(input_field.val().trim());
 
-					$(parent_node).find('.span_value_variable').text(var_obj.value[index].toFixed(1));
+					parent_node.find('.span_value_variable').text(var_obj.value[index].toFixed(1));
 				} else {
 
 					if (var_obj.type == Types.INTEGER) {
-						var_obj.value[index] = parseInt($(this).val().trim());
+						var_obj.value[index] = parseInt(input_field.val().trim());
 					} else {
-						var_obj.value[index] = $(this).val().trim();
+						var_obj.value[index] = input_field.val().trim();
 					}
 
-					$(parent_node).find('.span_value_variable').text(var_obj.value[index]);
+					parent_node.find('.span_value_variable').text(var_obj.value[index]);
 
 				}
+			} else {
+				if (var_obj.type == Types.REAL) {
+					parent_node.find('.span_value_variable').text(var_obj.value[index].toFixed(1));
+				} else {
+					parent_node.find('.span_value_variable').text(var_obj.value[index]);
+				}
 			}
-			$(this).remove();
+			if (var_obj.type == Types.TEXT) {
+				var_obj.value[index] = input_field.val();
+				parent_node.find('.span_value_variable').text(var_obj.value[index]);
+			}
+			input_field.off();
+			input_field.remove();
 
 			/// update elements:
 			opened_name_value_vector_global_ = false;
 			opened_input_value_vector_global_ = false;
 		}
 		if(code == 27) {
-			if (global_var.type == Types.REAL) {
-				$(parent_node).find('.span_value_variable').text(var_obj.value[index].toFixed(1));
+			if (var_obj.type == Types.REAL) {
+				parent_node.find('.span_value_variable').text(var_obj.value[index].toFixed(1));
 			} else {
-				$(parent_node).find('.span_value_variable').text(var_obj.value[index]);
+				parent_node.find('.span_value_variable').text(var_obj.value[index]);
 			}
-
-			$(this).remove();
+			input_field.off();
+			input_field.remove();
 
 			/// update elements:
 			opened_name_value_vector_global_ = false;
 			opened_input_value_vector_global_ = false;
 		}
 	});
+
+	input_field.select();
 }
 
 var opened_name_value_global_var = false;
 var opened_input_value_global_ar = null;
 function enableValueUpdate (var_obj, parent_node) {
 	if (opened_name_value_global_var) {
-		$(opened_input_value_global_ar).focus();
+		opened_input_value_global_ar.focus();
 		return;
 	}
+	parent_node = $(parent_node);
 	opened_name_value_global_var = true;
 
-	$(parent_node).find('.span_value_variable').text('');
+	var input_field;
+
+	parent_node.find('.span_value_variable').text('');
 	if (var_obj.type == Types.REAL) {
-		$( "<input type='text' class='width-dynamic input_name_function' autocomplete='off' autocorrect='off' autocapitalize='off' spellcheck='false' value='"
-			+ var_obj.value.toFixed(1) + "' />" ).insertBefore($(parent_node).find('.span_value_variable'));
+		input_field = $( "<input type='text' class='width-dynamic input_name_function' autocomplete='off' autocorrect='off' autocapitalize='off' spellcheck='false' value='"
+			+ var_obj.value.toFixed(1) + "' />" );
+		input_field.insertBefore(parent_node.find('.span_value_variable'));
 	} else {
-		$( "<input type='text' class='width-dynamic input_name_function' autocomplete='off' autocorrect='off' autocapitalize='off' spellcheck='false' value='"
-			+ var_obj.value + "' />" ).insertBefore($(parent_node).find('.span_value_variable'));
+		input_field = $( "<input type='text' class='width-dynamic input_name_function' autocomplete='off' autocorrect='off' autocapitalize='off' spellcheck='false' value='"
+			+ var_obj.value + "' />" );
+		input_field.insertBefore(parent_node.find('.span_value_variable'));
 	}
 
-	$('.width-dynamic').on('input', function() {
-	    var inputWidth = $(this).textWidth()+10;
-	    opened_input_value_global_ar = this;
-	    $(this).focus();
+	input_field.on('input', function() {
+	    var inputWidth = input_field.textWidth()+10;
+	    opened_input_value_global_ar = input_field;
+	    input_field.focus();
 
-	    var tmpStr = $(this).val();
-		$(this).val('');
-		$(this).val(tmpStr);
+	    var tmpStr = input_field.val();
+		input_field.val('');
+		input_field.val(tmpStr);
 
-	    $(this).css({
+	    input_field.css({
 	        width: inputWidth
 	    })
 	}).trigger('input');
 
-	$('.width-dynamic').focusout(function() {
+	input_field.focusout(function() {
 		/// update array:
-		if ($(this).val().trim()) {
+		if (input_field.val().trim()) {
 			if (var_obj.type == Types.REAL) {
-				var_obj.value = parseFloat($(this).val().trim());
-				$(parent_node).find('.span_value_variable').text(var_obj.value.toFixed(1));
+				var_obj.value = parseFloat(input_field.val().trim());
+				parent_node.find('.span_value_variable').text(var_obj.value.toFixed(1));
 			} else{
 				if (var_obj.type == Types.INTEGER) {
-					var_obj.value = parseInt($(this).val().trim());
+					var_obj.value = parseInt(input_field.val().trim());
 				} else {
-					var_obj.value = $(this).val().trim();
+					var_obj.value = input_field.val().trim();
 				}
-				$(parent_node).find('.span_value_variable').text(var_obj.value);
+				parent_node.find('.span_value_variable').text(var_obj.value);
 				
 			}
+		} else {
+			if (var_obj.type == Types.REAL) {
+				parent_node.find('.span_value_variable').text(var_obj.value.toFixed(1));
+			} else {
+				parent_node.find('.span_value_variable').text(var_obj.value);
+			}
 		}
-		$(this).remove();
+		if (var_obj.type == Types.TEXT) {
+			var_obj.value = input_field.val();
+			parent_node.find('.span_value_variable').text(var_obj.value);
+		}
+		input_field.off();
+		input_field.remove();
 
 		/// update elements:
 		opened_name_value_global_var = false;
@@ -599,23 +671,34 @@ function enableValueUpdate (var_obj, parent_node) {
 
 	});
 
-	$('.width-dynamic').on('keydown', function(e) {
+	input_field.on('keydown', function(e) {
 		var code = e.keyCode || e.which;
 		if(code == 13) {
-			if ($(this).val().trim()) {
+			if (input_field.val().trim()) {
 				if (var_obj.type == Types.REAL) {
-					var_obj.value = parseFloat($(this).val().trim());
-					$(parent_node).find('.span_value_variable').text(var_obj.value.toFixed(1));
+					var_obj.value = parseFloat(input_field.val().trim());
+					parent_node.find('.span_value_variable').text(var_obj.value.toFixed(1));
 				} else{
 					if (var_obj.type == Types.INTEGER) {
-						var_obj.value = parseInt($(this).val().trim());
+						var_obj.value = parseInt(input_field.val().trim());
 					} else {
-						var_obj.value = $(this).val().trim();
+						var_obj.value = input_field.val().trim();
 					}
-					$(parent_node).find('.span_value_variable').text(var_obj.value);
+					parent_node.find('.span_value_variable').text(var_obj.value);
+				}
+			} else {
+				if (var_obj.type == Types.REAL) {
+					parent_node.find('.span_value_variable').text(var_obj.value.toFixed(1));
+				} else {
+					parent_node.find('.span_value_variable').text(var_obj.value);
 				}
 			}
-			$(this).remove();
+			if (var_obj.type == Types.TEXT) {
+				var_obj.value = input_field.val();
+				parent_node.find('.span_value_variable').text(var_obj.value);
+			}
+			input_field.off();
+			input_field.remove();
 
 			/// update elements:
 			opened_name_value_global_var = false;
@@ -624,18 +707,20 @@ function enableValueUpdate (var_obj, parent_node) {
 		}
 		if(code == 27) {
 			if (var_obj.type == Types.REAL) {
-				$(parent_node).find('.span_value_variable').text(var_obj.value.toFixed(1));
+				parent_node.find('.span_value_variable').text(var_obj.value.toFixed(1));
 			} else{
-				$(parent_node).find('.span_value_variable').text(var_obj.value);
+				parent_node.find('.span_value_variable').text(var_obj.value);
 			}
-
-			$(this).remove();
+			input_field.off();
+			input_field.remove();
 
 			/// update elements:
 			opened_name_value_global_var = false;
 			opened_input_value_global_ar = false;
 		}
 	});
+
+	input_field.select();
 }
 
 var opened_name_global = false;
@@ -643,49 +728,59 @@ var opened_input_global = null;
 function enableNameUpdate (variable_obj, variable_container) {
 
 	if (opened_name_global) {
-		$(opened_input_global).focus();
+		opened_input_global.focus();
 		return;
 	}
 	opened_name_global = true;
 
-	$( variable_container ).find('.span_name_variable').text('');
-	$( "<input type='text' class='width-dynamic input_name_function' autocomplete='off' autocorrect='off' autocapitalize='off' spellcheck='false' value='"+variable_obj.name+"' />" ).insertBefore($(variable_container).find('.span_name_variable'));
+	variable_container.find('.span_name_variable').text('');
 
-	$('.width-dynamic').on('input', function() {
-	    var inputWidth = $(this).textWidth()+10;
-	    opened_input_global = this;
-	    $(this).focus();
+	var input_name;
 
-	    var tmpStr = $(this).val();
-		$(this).val('');
-		$(this).val(tmpStr);
+	input_name = $( "<input type='text' class='width-dynamic input_name_function' autocomplete='off' autocorrect='off' autocapitalize='off' spellcheck='false' value='"+variable_obj.name+"' />" );
+	input_name.insertBefore(variable_container.find('.span_name_variable'));
 
-	    $(this).css({
+	input_name.on('input', function() {
+	    var inputWidth = input_name.textWidth()+10;
+	    opened_input_global = input_name;
+	    input_name.focus();
+
+	    var tmpStr = input_name.val();
+		input_name.val('');
+		input_name.val(tmpStr);
+
+	    input_name.css({
 	        width: inputWidth
 	    })
 	}).trigger('input');
 
-	$('.width-dynamic').focusout(function() {
+	input_name.focusout(function() {
 		/// update array:
-		if ($(this).val().trim()) {
-			updateName(variable_obj, $(this).val().trim());
-			$(variable_container).find('.span_name_variable').text(variable_obj.name);
+		if (input_name.val().trim().length > 0) {
+			updateName(variable_obj, input_name.val().trim());
+			variable_container.find('.span_name_variable').text(variable_obj.name);
+		} else {
+			variable_container.find('.span_name_variable').text(variable_obj.name);
 		}
-		$(this).remove();
+		input_name.off();
+		input_name.remove();
 
 		/// update elements:
 		opened_name_global = false;
 		opened_input_global = false;
 	});
 
-	$('.width-dynamic').on('keydown', function(e) {
+	input_name.on('keydown', function(e) {
 		var code = e.keyCode || e.which;
 		if(code == 13) {
-			if ($(this).val().trim()) {
-				updateName(variable_obj, $(this).val().trim());
-				$(variable_container).find('.span_name_variable').text(variable_obj.name);
+			if (input_name.val().trim().length > 0) {
+				updateName(variable_obj, input_name.val().trim());
+				variable_container.find('.span_name_variable').text(variable_obj.name);
+			} else {
+				variable_container.find('.span_name_variable').text(variable_obj.name);
 			}
-			$(this).remove();
+			input_name.off();
+			input_name.remove();
 
 			/// update elements:
 			opened_name_global = false;
@@ -693,15 +788,17 @@ function enableNameUpdate (variable_obj, variable_container) {
 		}
 		if(code == 27) {
 
-			$(variable_container).find('.span_name_variable').text(variable_obj.name);
-
-			$(this).remove();
+			variable_container.find('.span_name_variable').text(variable_obj.name);
+			input_name.off();
+			input_name.remove();
 
 			/// update elements:
 			opened_name_global = false;
 			opened_input_global = false;
 		}
 	});
+
+	input_name.select();
 	
 }
 
@@ -710,76 +807,103 @@ var opened_name_value_matrix_global_v = false;
 var opened_input_value_matrix_global_v = null;
 function enableMatrixValueUpdate (var_obj, row, index, parent_node) {
 	if (opened_name_value_matrix_global_v) {
-		$(opened_input_value_matrix_global_v).focus();
+		opened_input_value_matrix_global_v.focus();
 		return;
 	}
+	parent_node = $(parent_node);
 	opened_name_value_matrix_global_v = true;
 
-	$(parent_node).find('.span_value_variable').text('');
+	parent_node.find('.span_value_variable').text('');
+
+	var input_field;
 
 	if (var_obj.type == Types.REAL) {
-		$( "<input type='text' class='width-dynamic input_name_function' autocomplete='off' autocorrect='off' autocapitalize='off' spellcheck='false' value='"
-			+ var_obj.value[row][index].toFixed(1) + "' />" ).insertBefore($(parent_node).find('.span_value_variable'));
+		input_field = $( "<input type='text' class='width-dynamic input_name_function' autocomplete='off' autocorrect='off' autocapitalize='off' spellcheck='false' value='"
+			+ var_obj.value[row][index].toFixed(1) + "' />" );
+		input_field.insertBefore(parent_node.find('.span_value_variable'));
 	} else {
-		$( "<input type='text' class='width-dynamic input_name_function' autocomplete='off' autocorrect='off' autocapitalize='off' spellcheck='false' value='"
-			+ var_obj.value[row][index] + "' />" ).insertBefore($(parent_node).find('.span_value_variable'));
+		input_field = $( "<input type='text' class='width-dynamic input_name_function' autocomplete='off' autocorrect='off' autocapitalize='off' spellcheck='false' value='"
+			+ var_obj.value[row][index] + "' />" );
+		input_field.insertBefore(parent_node.find('.span_value_variable'));
 	}
 
-	$('.width-dynamic').on('input', function() {
-	    var inputWidth = $(this).textWidth()+10;
-	    opened_input_value_matrix_global_v = this;
-	    $(this).focus();
+	input_field.on('input', function() {
+	    var inputWidth = input_field.textWidth()+10;
+	    opened_input_value_matrix_global_v = input_field;
+	    input_field.focus();
 
-	    var tmpStr = $(this).val();
-		$(this).val('');
-		$(this).val(tmpStr);
+	    var tmpStr = input_field.val();
+		input_field.val('');
+		input_field.val(tmpStr);
 
-	    $(this).css({
+	    input_field.css({
 	        width: inputWidth
 	    })
 	}).trigger('input');
 
-	$('.width-dynamic').focusout(function() {
+	input_field.focusout(function() {
 		/// update array:
-		if ($(this).val().trim()) {
+		if (input_field.val().trim()) {
 			if (var_obj.type == Types.REAL) {
-				var_obj.value[row][index] = parseFloat($(this).val().trim());
+				var_obj.value[row][index] = parseFloat(input_field.val().trim());
 
-				$(parent_node).find('.span_value_variable').text(var_obj.value[row][index].toFixed(1));
+				parent_node.find('.span_value_variable').text(var_obj.value[row][index].toFixed(1));
 			} else {
 				if (var_obj.type == Types.INTEGER) {
-					var_obj.value[row][index] = parseInt($(this).val().trim());
+					var_obj.value[row][index] = parseInt(input_field.val().trim());
 				} else {
-					var_obj.value[row][index] = $(this).val().trim();
+					var_obj.value[row][index] = input_field.val().trim();
 				}
-				$(parent_node).find('.span_value_variable').text(var_obj.value[row][index]);
+				parent_node.find('.span_value_variable').text(var_obj.value[row][index]);
+			}
+		} else {
+			if (var_obj.type == Types.REAL) {
+				parent_node.find('.span_value_variable').text(var_obj.value[row][index].toFixed(1));
+			} else {
+				parent_node.find('.span_value_variable').text(var_obj.value[row][index]);
 			}
 		}
-		$(this).remove();
+		if (var_obj.type == Types.TEXT) {
+			var_obj.value[row][index] = input_field.val();
+			parent_node.find('.span_value_variable').text(var_obj.value[row][index]);
+		}
+		input_field.off();
+		input_field.remove();
 
 		/// update elements:
 		opened_name_value_matrix_global_v = false;
 		opened_input_value_matrix_global_v = false;
 	});
 
-	$('.width-dynamic').on('keydown', function(e) {
+	input_field.on('keydown', function(e) {
 		var code = e.keyCode || e.which;
 		if(code == 13) {
-			if ($(this).val().trim()) {
+			if (input_field.val().trim()) {
 				if (var_obj.type == Types.REAL) {
-					var_obj.value[row][index] = parseFloat($(this).val().trim());
+					var_obj.value[row][index] = parseFloat(input_field.val().trim());
 
-					$(parent_node).find('.span_value_variable').text(var_obj.value[row][index].toFixed(1));
+					parent_node.find('.span_value_variable').text(var_obj.value[row][index].toFixed(1));
 				} else {
 					if (var_obj.type == Types.INTEGER) {
-						var_obj.value[row][index] = parseInt($(this).val().trim());
+						var_obj.value[row][index] = parseInt(input_field.val().trim());
 					} else {
-						var_obj.value[row][index] = $(this).val().trim();
+						var_obj.value[row][index] = input_field.val().trim();
 					}
-					$(parent_node).find('.span_value_variable').text(var_obj.value[row][index]);
+					parent_node.find('.span_value_variable').text(var_obj.value[row][index]);
+				}
+			} else {
+				if (var_obj.type == Types.REAL) {
+					parent_node.find('.span_value_variable').text(var_obj.value[row][index].toFixed(1));
+				} else {
+					parent_node.find('.span_value_variable').text(var_obj.value[row][index]);
 				}
 			}
-			$(this).remove();
+			if (var_obj.type == Types.TEXT) {
+				var_obj.value[row][index] = input_field.val();
+				parent_node.find('.span_value_variable').text(var_obj.value[row][index]);
+			}
+			input_field.off();
+			input_field.remove();
 
 			/// update elements:
 			opened_name_value_matrix_global_v = false;
@@ -787,16 +911,18 @@ function enableMatrixValueUpdate (var_obj, row, index, parent_node) {
 		}
 		if(code == 27) {
 			if (var_obj.type == Types.REAL) {
-				$(parent_node).find('.span_value_variable').text(var_obj.value[row][index].toFixed(1));
+				parent_node.find('.span_value_variable').text(var_obj.value[row][index].toFixed(1));
 			} else {
-				$(parent_node).find('.span_value_variable').text(var_obj.value[row][index]);
+				parent_node.find('.span_value_variable').text(var_obj.value[row][index]);
 			}
-
-			$(this).remove();
+			input_field.off();
+			input_field.remove();
 
 			/// update elements:
 			opened_name_value_matrix_global_v = false;
 			opened_input_value_matrix_global_v = false;
 		}
 	});
+
+	input_field.select();
 }

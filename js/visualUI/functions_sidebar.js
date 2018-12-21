@@ -26,6 +26,7 @@ window.studentGrade = null;
 const program = new Models.Program();
 
 window.system_functions = [];
+// Adding math functions:
 window.system_functions.push(new Models.SystemFunction('$sin', Types.REAL, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
   null, Models.SYSTEM_FUNCTIONS_CATEGORIES.math));
 window.system_functions.push(new Models.SystemFunction('$cos', Types.REAL, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
@@ -48,6 +49,40 @@ window.system_functions.push(new Models.SystemFunction('$max', Types.REAL, 0, [n
   null, Models.SYSTEM_FUNCTIONS_CATEGORIES.math));
 window.system_functions.push(new Models.SystemFunction('$min', Types.REAL, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
   null, Models.SYSTEM_FUNCTIONS_CATEGORIES.math));
+// Adding text functions:
+window.system_functions.push(new Models.SystemFunction('$substring', Types.TEXT, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true),
+new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true), new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
+  null, Models.SYSTEM_FUNCTIONS_CATEGORIES.text));
+window.system_functions.push(new Models.SystemFunction('$length', Types.INTEGER, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
+  null, Models.SYSTEM_FUNCTIONS_CATEGORIES.text));
+window.system_functions.push(new Models.SystemFunction('$uppercase', Types.TEXT, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
+  null, Models.SYSTEM_FUNCTIONS_CATEGORIES.text));
+window.system_functions.push(new Models.SystemFunction('$lowercase', Types.TEXT, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
+  null, Models.SYSTEM_FUNCTIONS_CATEGORIES.text));
+window.system_functions.push(new Models.SystemFunction('$charAt', Types.TEXT, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true), new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
+  null, Models.SYSTEM_FUNCTIONS_CATEGORIES.text));
+// Adding arrangement functions:
+window.system_functions.push(new Models.SystemFunction('$numElements', Types.INTEGER, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
+  null, Models.SYSTEM_FUNCTIONS_CATEGORIES.arrangement));
+window.system_functions.push(new Models.SystemFunction('$matrixLines', Types.INTEGER, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
+  null, Models.SYSTEM_FUNCTIONS_CATEGORIES.arrangement));
+window.system_functions.push(new Models.SystemFunction('$matrixColumns', Types.INTEGER, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
+  null, Models.SYSTEM_FUNCTIONS_CATEGORIES.arrangement));
+// Adding conversion functions:
+window.system_functions.push(new Models.SystemFunction('$isReal', Types.BOOLEAN, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
+  null, Models.SYSTEM_FUNCTIONS_CATEGORIES.conversion));
+window.system_functions.push(new Models.SystemFunction('$isInt', Types.BOOLEAN, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
+  null, Models.SYSTEM_FUNCTIONS_CATEGORIES.conversion));
+window.system_functions.push(new Models.SystemFunction('$isBool', Types.BOOLEAN, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
+  null, Models.SYSTEM_FUNCTIONS_CATEGORIES.conversion));
+window.system_functions.push(new Models.SystemFunction('$castReal', Types.REAL, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
+  null, Models.SYSTEM_FUNCTIONS_CATEGORIES.conversion));
+window.system_functions.push(new Models.SystemFunction('$castInt', Types.INTEGER, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
+  null, Models.SYSTEM_FUNCTIONS_CATEGORIES.conversion));
+window.system_functions.push(new Models.SystemFunction('$castBool', Types.BOOLEAN, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
+  null, Models.SYSTEM_FUNCTIONS_CATEGORIES.conversion));
+window.system_functions.push(new Models.SystemFunction('$castString', Types.TEXT, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
+  null, Models.SYSTEM_FUNCTIONS_CATEGORIES.conversion));
 /*const variable1 = new Models.Variable(Types.INTEGER, "a", 1);
 const parameter1 = new Models.Variable(Types.INTEGER, "par_1", 1);
 const command1 = new Models.Comment(new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.only_value, "Testing rendering commands"));
@@ -69,9 +104,25 @@ window.program_obj = program;
 window.generator = CodeManagement.generate;
 window.runCodeAssessment = runCodeAssessment;
 window.renderAlgorithm = AlgorithmManagement.renderAlgorithm;
+window.insertContext = false;
+window.watchW = WatchJS;
 
-WatchJS.watch(program.globals, function () {
-  AlgorithmManagement.renderAlgorithm();
+WatchJS.watch(window.program_obj.globals, function () {
+  if (window.insertContext) {
+    setTimeout(function () { AlgorithmManagement.renderAlgorithm(); }, 300);
+    window.insertContext = false;
+  } else {
+    AlgorithmManagement.renderAlgorithm();
+  }
+}, 1);
+
+WatchJS.watch(window.program_obj.functions, function () {
+  if (window.insertContext) {
+    setTimeout(function () { AlgorithmManagement.renderAlgorithm(); }, 300);
+    window.insertContext = false;
+  } else {
+    AlgorithmManagement.renderAlgorithm();
+  }
 }, 1);
 
 function addFunctionHandler() {
@@ -81,10 +132,15 @@ function addFunctionHandler() {
 
   counter_new_functions++;
 
-  renderFunction(new_function);
+  window.insertContext = true;
+
+  var newe = renderFunction(new_function);
+
+  newe.css('display', 'none');
+  newe.fadeIn();
 }
 
-function addParameter(function_obj, function_container) {
+function addParameter(function_obj, function_container, is_from_click = false) {
   if (function_obj.parameters_list == null) {
     function_obj.parameters_list = [];
   }
@@ -92,7 +148,12 @@ function addParameter(function_obj, function_container) {
   function_obj.parameters_list.push(new_parameter);
   counter_new_parameters++;
 
-  renderParameter(function_obj, new_parameter, function_container);
+  var newe = renderParameter(function_obj, new_parameter, function_container);
+
+  if (is_from_click) {
+    newe.css('display', 'none');
+    newe.fadeIn();
+  }
 }
 
 function updateReturnType(function_obj, new_type, new_dimensions = 0) {
@@ -101,7 +162,6 @@ function updateReturnType(function_obj, new_type, new_dimensions = 0) {
 }
 
 function removeFunction(function_obj) {
-
   var index = program.functions.indexOf(function_obj);
   if (index > -1) {
     program.functions.splice(index, 1);
@@ -129,7 +189,8 @@ function addHandlers(function_obj, function_container) {
   });
 
   function_container.find(".add_parameter_button").on('click', function (e) {
-    addParameter(function_obj, function_container);
+    window.insertContext = true;
+    addParameter(function_obj, function_container, true);
   });
 
   function_container.find('.menu_commands').dropdown({
@@ -150,18 +211,28 @@ function addHandlers(function_obj, function_container) {
   });
 
   function_container.find('.add_var_button_function').on('click', function (e) {
-    VariablesManagement.addVariable(function_obj, function_container);
+    window.insertContext = true;
+    VariablesManagement.addVariable(function_obj, function_container, true);
   });
 
   function_container.find('.remove_function_button').on('click', function (e) {
     removeFunction(function_obj);
-    function_container.slideUp(400);
+    function_container.fadeOut();
   });
 
   function_container.find('.minimize_function_button').on('click', function (e) {
     minimizeFunction(function_obj);
-    function_container.find(".function_area").toggle();
-    function_container.find(".add_var_top_button").toggle();
+    if (function_obj.is_hidden) {
+      function_container.find(".add_var_button_function").toggle();
+      function_container.find(".inline_add_command").toggle();
+      function_container.find(".function_area").slideToggle();
+    } else {
+      function_container.find(".function_area").slideToggle(function () {
+        function_container.find(".add_var_button_function").toggle();
+        function_container.find(".inline_add_command").toggle();
+      });
+    }
+
   });
 }
 
@@ -224,9 +295,31 @@ export function renderFunction(function_obj) {
   appender += (function_obj.is_main ? '<div class="div_start_minimize_v"> </div>' : '<button class="ui icon button large remove_function_button"><i class="red icon times"></i></button>')
     + '<button class="ui icon button tiny minimize_function_button"><i class="icon window minimize"></i></button>';
 
-  appender += '<div class="ui small icon buttons add_var_top_button"><div class="ui icon button add_var_button_function"><i class="icon superscript"></i></div>';
+  appender += '<div class="function_signature_div">' + LocalizedStrings.getUI("function") + ' ';
 
-  appender += '<div class="ui icon button dropdown menu_commands" ><i class="icon code"></i> <div class="menu"> ';
+  if (function_obj.is_main) {
+    appender += '<div class="function_name_div">  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ' + LocalizedStrings.getUI('void') + ' &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="span_name_function" >' + function_obj.name + '</span> </div> '
+      + ' <span class="parethesis_function">( </span> <div class="ui large labels parameters_list">';
+  } else {
+    appender += '<div class="ui function_return"></div>';
+
+    appender += '<div class="function_name_div function_name_div_updated"><span class="span_name_function name_function_updated">' + function_obj.name + '</span> </div> '
+      + ' <span class="parethesis_function"> ( </span> <i class="ui icon plus square outline add_parameter_button"></i> <div class="ui large labels parameters_list container_parameters_list">';
+    var menu_func = generateMenuButton(function_obj);
+    /*menu_func.css("display","none")
+    $('.functions_labels').append(menu_func);
+    menu_func.fadeIn();*/
+    $('.functions_labels').append(menu_func);
+  }
+
+  appender += '</div> <span class="parethesis_function"> ) </span> </div>'
+    + (function_obj.is_hidden ? ' <div class="function_area" style="display: none;"> ' : ' <div class="function_area"> ');
+
+  appender += '<div class="ui add_var_context add_var_button_function" style="float: left;"><i class="icon plus circle purple"></i><i class="icon circle white back"></i><div class="ui icon button purple"><i class="icon superscript"></i></div></div>';
+
+  appender += '<div class="ui top attached segment variables_list_div"></div>';
+
+  appender += '<div class="ui inline_add_command"><i class="icon plus circle purple"></i><i class="icon circle white back"></i><div class="ui icon button dropdown menu_commands orange" style="float: left;" ><i class="icon code"></i> <div class="menu"> ';
   appender += '<a class="item" data-command="' + Models.COMMAND_TYPES.reader + '"><i class="download icon"></i> ' + LocalizedStrings.getUI('text_read_var') + '</a>'
     + '<a class="item" data-command="' + Models.COMMAND_TYPES.writer + '"><i class="upload icon"></i> ' + LocalizedStrings.getUI('text_write_var') + '</a>'
     + '<a class="item" data-command="' + Models.COMMAND_TYPES.comment + '"><i class="quote left icon"></i> ' + LocalizedStrings.getUI('text_comment') + '</a>'
@@ -240,45 +333,87 @@ export function renderFunction(function_obj) {
     + '<a class="item" data-command="' + Models.COMMAND_TYPES.return + '"><i class="reply icon"></i> ' + LocalizedStrings.getUI('text_btn_return') + '</a>'
     + '</div></div></div>';
 
-  appender += '<div class="function_signature_div">' + LocalizedStrings.getUI("function") + ' ';
+  appender += '<div class="ui bottom attached segment commands_list_div"></div>';
 
-  if (function_obj.is_main) {
-    appender += '<div class="function_name_div">  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ' + LocalizedStrings.getUI('void') + ' &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="span_name_function" >' + function_obj.name + '</span> </div> '
-      + ' <span class="parethesis_function">( </span> <div class="ui large labels parameters_list">';
-  } else {
-    appender += '<div class="ui function_return"></div>';
-
-    appender += '<div class="function_name_div function_name_div_updated"><span class="span_name_function name_function_updated">' + function_obj.name + '</span> </div> '
-      + ' <span class="parethesis_function"> ( </span> <i class="ui icon plus square outline add_parameter_button"></i> <div class="ui large labels parameters_list container_parameters_list">';
-  }
-
-  appender += '</div> <span class="parethesis_function"> ) </span> </div>'
-    + (function_obj.is_hidden ? ' <div class="function_area" style="display: none;"> ' : ' <div class="function_area"> ')
-
-    + '<div class="ui top attached segment variables_list_div">'
-    + '</div>'
-
-    + '<div class="ui bottom attached segment commands_list_div" id="function_drag_cmd_">';
-
-  appender += '</div>';
-
-  appender += '<div class="function_close_div"></div>'
-    + '</div>'
-    + '</div>';
+  appender += '</div></div>';
 
   appender = $(appender);
 
   $('.all_functions').append(appender);
 
   appender.data('fun', function_obj);
-  appender.find('.commands_list_div').data('fun', function_obj);
+  appender.find('.commands_list_div')
+    .data('fun', function_obj)
+    .attr('droppable', true)
+    .on('dragenter', function (e) {
+      e.preventDefault();
+      console.log('dragenter');
+      console.log(e.target)
+      $(e.target).addClass('div-over')
+      //e.stopPropagation();
+    }).on('dragover', function (e) {
+      e.preventDefault();
+    })
+    .on('dragleave', function (e) {
+      e.preventDefault();
+      //e.stopPropagation();
+      console.log("dragleave")
+      $(e.target).removeClass('div-over')
+      console.log(e.target)
+    })
+    .on('drop', function (e, bundle) {
+      e.preventDefault();
+      if (bundle) {
+        e.clientX = bundle.clientX;
+        e.clientY = bundle.clientY;
+      }
+      //console.log('ondrop ' + e.originalEvent.dataTransfer.getData("text"));
+      console.log(e)
+      $(e.target).removeClass('div-over')
+      //var data = JSON.parse(e.originalEvent.dataTransfer.getData("text"));
+      var data = program_obj.dataTransfer;
+      if (data.type == 'command')
+        CommandsManagement.prepareManageCommand(function_obj, $(e.target).closest('.function_div'), e, data.content);
+      else if (data.type == 'var')
+        CommandsManagement.prepareManageCommand(function_obj, $(e.target).closest('.function_div'), e, "attribution", data.content);
+      else {
+        if (!data.content.parameters_list)
+          data.content.parameters_list = [];
+        CommandsManagement.prepareManageCommand(function_obj, $(e.target).closest('.function_div'), e, "functioncall", data.content);
+      }
+      //program_obj.dataTransfer;
+    }).on('click', function (e) {
+      if (window.ghostNode) {
+        console.log("drop click");
+        $(document).off('mousemove').off('mousedown').off('keyup');
+        $(window.ghostNode).remove();
+        delete window.ghostNode;
+        $(this).trigger('drop', [e]);
+        $('.div-over').removeClass('div-over');
+      }
+    })
+    .on('mouseover', function (evt) {
+      if (window.ghostNode) {
+        evt.type = 'dragenter';
+        //$(this).trigger('dragenter');
+        console.log('mouseover');
+        $(this).trigger(evt);
+      }
+    })
+    .on('mouseout', function (evt) {
+      //$(this).trigger('dragleave');
+      if (window.ghostNode) {
+        evt.type = 'dragleave';
+        console.log('mouseout');
+        $(this).trigger(evt);
+      }
+    });
 
   renderFunctionReturn(function_obj, appender);
 
   addHandlers(function_obj, appender);
 
-
-  // Rendering parameters: 
+  // Rendering parameters:
   for (var j = 0; j < function_obj.parameters_list.length; j++) {
     renderParameter(function_obj, function_obj.parameters_list[j], appender);
   }
@@ -287,13 +422,10 @@ export function renderFunction(function_obj) {
   for (var j = 0; j < function_obj.variables_list.length; j++) {
     VariablesManagement.renderVariable(appender, function_obj.variables_list[j], function_obj);
   }
-
   // Rendering commands:
   for (var j = 0; j < function_obj.commands.length; j++) {
     CommandsManagement.renderCommand(function_obj.commands[j], $(appender.find('.commands_list_div')[0]), 3, function_obj);
   }
-
-
   $('.minimize_function_button').popup({
     content: LocalizedStrings.getUI("tooltip_minimize"),
     delay: {
@@ -301,8 +433,40 @@ export function renderFunction(function_obj) {
       hide: 0
     }
   });
-}
 
+  Sortable.create(appender.find(".variables_list_div")[0], {
+    handle: '.ellipsis',
+    animation: 100,
+    ghostClass: 'ghost',
+    group: 'local_vars_drag_' + program.functions.indexOf(function_obj),
+    onEnd: function (evt) {
+      updateSequenceLocals(evt.oldIndex, evt.newIndex, function_obj);
+    }
+  });
+
+  Sortable.create(appender.find(".commands_list_div")[0], {
+    handle: '.command_drag',
+    animation: 100,
+    ghostClass: 'ghost',
+    group: 'commands_drag_' + program.functions.indexOf(function_obj),
+    onEnd: function (evt) {
+      //updateSequenceLocals(evt.oldIndex, evt.newIndex, function_obj);
+    }
+  });
+
+  if (!function_obj.is_main) {
+    Sortable.create(appender.find(".container_parameters_list")[0], {
+      handle: '.ellipsis',
+      animation: 100,
+      ghostClass: 'ghost',
+      group: 'parameters_drag_' + program.functions.indexOf(function_obj),
+      onEnd: function (evt) {
+        updateSequenceParameters(evt.oldIndex, evt.newIndex, function_obj);
+      }
+    });
+  }
+  return appender;
+}
 
 export function initVisualUI() {
   // MUST USE CONST, LET, OR VAR !!!!!!
@@ -313,7 +477,8 @@ export function initVisualUI() {
     addFunctionHandler();
   });
   $('.add_global_button').on('click', () => {
-    GlobalsManagement.addGlobal(program);
+    window.insertContext = true;
+    GlobalsManagement.addGlobal(program, true);
   });
 
   $('.run_button').on('click', () => {
@@ -335,6 +500,9 @@ export function initVisualUI() {
 
   $('.div_toggle_console').on('click', () => {
     toggleConsole();
+  });
+  $('.expand_button').on('click', () => {
+    full_screen();
   });
 }
 
@@ -435,7 +603,30 @@ $(document).ready(function () {
     }
   });
 
+  var listGlobalsHandle = document.getElementById("listGlobalsHandle");
+  Sortable.create(listGlobalsHandle, {
+    handle: '.ellipsis',
+    animation: 100,
+    ghostClass: 'ghost',
+    group: 'globals_divs_drag',
+    onEnd: function (evt) {
+      updateSequenceGlobals(evt.oldIndex, evt.newIndex);
+    }
+  });
+
 });
+
+function updateSequenceParameters(oldIndex, newIndex, function_obj) {
+  function_obj.parameters_list.splice(newIndex, 0, function_obj.parameters_list.splice(oldIndex, 1)[0]);
+}
+
+function updateSequenceLocals(oldIndex, newIndex, function_obj) {
+  function_obj.variables_list.splice(newIndex, 0, function_obj.variables_list.splice(oldIndex, 1)[0]);
+}
+
+function updateSequenceGlobals(oldIndex, newIndex) {
+  program_obj.globals.splice(newIndex, 0, program_obj.globals.splice(oldIndex, 1)[0]);
+}
 
 function updateSequenceFunction(oldIndex, newIndex) {
   program_obj.functions.splice(newIndex, 0, program_obj.functions.splice(oldIndex, 1)[0]);
@@ -542,6 +733,7 @@ function toggleTextualCoding() {
 
   $('.visual_coding_button').removeClass('active');
   $('.textual_coding_button').addClass('active');
+  $('.tabs').addClass('loading')
 }
 
 function toggleVisualCoding() {
@@ -551,14 +743,17 @@ function toggleVisualCoding() {
 
   $('.textual_coding_button').removeClass('active');
   $('.visual_coding_button').addClass('active');
+  $('.menu .item').tab();
+  $('.tabs').removeClass('loading')
 }
 
 function removeParameter(function_obj, parameter_obj, parameter_container) {
   var index = function_obj.parameters_list.indexOf(parameter_obj);
   if (index > -1) {
+    window.insertContext = true;
     function_obj.parameters_list.splice(index, 1);
   }
-  $(parameter_container).remove();
+  $(parameter_container).fadeOut();
 }
 
 function updateParameterType(parameter_obj, new_type, new_dimensions = 0) {
@@ -575,7 +770,7 @@ function updateParameterType(parameter_obj, new_type, new_dimensions = 0) {
 function renderParameter(function_obj, parameter_obj, function_container) {
   var ret = "";
 
-  ret += '<div class="ui label function_name_parameter">';
+  ret += '<div class="ui label function_name_parameter pink"><i class="ui icon ellipsis vertical inverted"></i>';
 
   ret += '<div class="ui dropdown parameter_type">';
 
@@ -619,7 +814,7 @@ function renderParameter(function_obj, parameter_obj, function_container) {
 
   ret += '<div class="parameter_div_edit"><span class="span_name_parameter label_enable_name_parameter">' + parameter_obj.name + '</span></div> ';
 
-  ret += ' <i class="red icon times remove_parameter"></i></div>';
+  ret += ' <i class="yellow inverted icon times remove_parameter"></i></div>';
 
   ret = $(ret);
 
@@ -643,6 +838,7 @@ function renderParameter(function_obj, parameter_obj, function_container) {
     enableNameParameterUpdate(parameter_obj, ret);
   });
 
+  return ret;
 }
 
 var opened_name_parameter = false;
@@ -797,6 +993,7 @@ function enableNameFunctionUpdate(function_obj, parent_node) {
     }
   });
   input_field.select();
+
 }
 
 /****************************************************
@@ -805,10 +1002,10 @@ function enableNameFunctionUpdate(function_obj, parent_node) {
 
 export function generateMenuButton(function_obj) {
   if (function_obj.identifier) {
-    var identifier = LocalizedStrings.getUI(system_functions[0].identifier);
-    var menu_button = '<button class="fluid ui container segment labeled icon button list-group-item menu-item" draggable="true" data-function="' + identifier + '"><i class="list icon"></i> <span class="function_name">' + identifier + '</span> (<span class="function_params"></span>) : <span class="function_return_type">' + LocalizedStrings.getUI(function_obj.return_type) + '</span></button>';
+    var identifier = LocalizedStrings.getUI(function_obj.identifier);
+    var menu_button = '<button class="fluid ui container segment labeled icon button list-group-item menu-item" draggable="true" data-function="' + identifier + '"><i class="code icon"></i> <span class="function_name">' + identifier + '</span> (<span class="function_params"></span>) : <span class="function_return_type">' + LocalizedStrings.getUI(function_obj.return_type) + '</span></button>';
   } else {
-    var menu_button = '<button class="fluid ui container segment labeled icon button list-group-item menu-item" draggable="true" data-function="' + function_obj.name + '"><i class="list icon"></i> <span class="function_name">' + function_obj.name + '</span> (<span class="function_params"></span>) : <span class="function_return_type">' + LocalizedStrings.getUI(function_obj.return_type) + '</span></button>';
+    var menu_button = '<button class="fluid ui container segment labeled icon button list-group-item menu-item" draggable="true" data-function="' + function_obj.name + '"><i class="code icon"></i> <span class="function_name">' + function_obj.name + '</span> (<span class="function_params"></span>) : <span class="function_return_type">' + LocalizedStrings.getUI(function_obj.return_type) + '</span></button>';
   }
   var params = "";
   menu_button = $(menu_button);
@@ -835,7 +1032,7 @@ export function generateMenuButton(function_obj) {
   menu_button
     .on('click', function (evt) {
       $(this).trigger('dragstart');
-      if(window.ghostNode) {
+      if (window.ghostNode) {
         $(window.ghostNode).remove();
         $(document).off('mousemove');
       }
@@ -852,6 +1049,29 @@ export function generateMenuButton(function_obj) {
         ghostNode.css('left', evt.pageX);
         ghostNode.css('top', evt.pageY);
       });
+      $(document).on('mousedown', function (evt) {
+        console.log("length ===");
+        console.log($(evt.target).closest(".commands_list_div"))
+        if ($(evt.target).closest(".commands_list_div").length <= 0) {
+          if (window.ghostNode) {
+            console.log("drop click");
+            $('.div-over').removeClass('div-over');
+            $(window.ghostNode).remove();
+            delete window.ghostNode;
+            $(document).off('mousemove').off('mousedown').off('keyup');
+          }
+        }
+      });
+      $(document).keyup(function (e) {
+        console.log("KeyUp")
+        if (e.key === "Escape") {
+          console.log("escape");
+          $('.div-over').removeClass('div-over');
+          $(window.ghostNode).remove();
+          delete window.ghostNode;
+          $(document).off('mousemove').off('mousedown').off('keyup');
+        }
+      });
     });
   return menu_button;
 }
@@ -865,164 +1085,164 @@ removeFunction = function (function_obj) {
   $('.functions_labels > [data-function=' + function_obj.name + ']').remove();
 }
 
-renderFunction = function (function_obj) {
+// renderFunction = function (function_obj) {
 
-  var appender = '<div class="ui secondary segment function_div list-group-item">';
+//   var appender = '<div class="ui secondary segment function_div list-group-item">';
 
-  if (function_obj.function_comment) {
-    //appender += renderComment(function_obj.function_comment, sequence, true, -1);
-  }
+//   if (function_obj.function_comment) {
+//     //appender += renderComment(function_obj.function_comment, sequence, true, -1);
+//   }
 
-  appender += '<span class="glyphicon glyphicon-move move_function" aria-hidden="true"><i class="icon sort alternate vertical"></i></span>';
+//   appender += '<span class="glyphicon glyphicon-move move_function" aria-hidden="true"><i class="icon sort alternate vertical"></i></span>';
 
-  appender += (function_obj.is_main ? '<div class="div_start_minimize_v"> </div>' : '<button class="ui icon button large remove_function_button"><i class="red icon times"></i></button>')
-    + '<button class="ui icon button tiny minimize_function_button"><i class="icon window minimize"></i></button>';
+//   appender += (function_obj.is_main ? '<div class="div_start_minimize_v"> </div>' : '<button class="ui icon button large remove_function_button"><i class="red icon times"></i></button>')
+//     + '<button class="ui icon button tiny minimize_function_button"><i class="icon window minimize"></i></button>';
 
-  appender += '<div class="ui small icon buttons add_var_top_button"><div class="ui icon button add_var_button_function"><i class="icon superscript"></i></div>';
+//   appender += '<div class="ui small icon buttons add_var_top_button"><div class="ui icon button add_var_button_function"><i class="icon superscript"></i></div>';
 
-  appender += '<div class="ui icon button dropdown menu_commands" ><i class="icon code"></i> <div class="menu"> ';
-  appender += '<a class="item" data-command="' + Models.COMMAND_TYPES.reader + '"><i class="download icon"></i> ' + LocalizedStrings.getUI('text_read_var') + '</a>'
-    + '<a class="item" data-command="' + Models.COMMAND_TYPES.writer + '"><i class="upload icon"></i> ' + LocalizedStrings.getUI('text_write_var') + '</a>'
-    + '<a class="item" data-command="' + Models.COMMAND_TYPES.comment + '"><i class="quote left icon"></i> ' + LocalizedStrings.getUI('text_comment') + '</a>'
-    + '<a class="item" data-command="' + Models.COMMAND_TYPES.attribution + '"><i class="arrow left icon"></i> ' + LocalizedStrings.getUI('text_attribution') + '</a>'
-    + '<a class="item" data-command="' + Models.COMMAND_TYPES.functioncall + '"><i class="hand point right icon"></i> ' + LocalizedStrings.getUI('text_functioncall') + '</a>'
-    + '<a class="item" data-command="' + Models.COMMAND_TYPES.iftrue + '" ><i class="random icon"></i> ' + LocalizedStrings.getUI('text_iftrue') + '</a>'
-    + '<a class="item" data-command="' + Models.COMMAND_TYPES.repeatNtimes + '"><i class="sync icon"></i> ' + LocalizedStrings.getUI('text_repeatNtimes') + '</a>'
-    + '<a class="item" data-command="' + Models.COMMAND_TYPES.whiletrue + '"><i class="sync icon"></i> ' + LocalizedStrings.getUI('text_whiletrue') + '</a>'
-    + '<a class="item" data-command="' + Models.COMMAND_TYPES.dowhiletrue + '"><i class="sync icon"></i> ' + LocalizedStrings.getUI('text_dowhiletrue') + '</a>'
-    + '<a class="item" data-command="' + Models.COMMAND_TYPES.switch + '"><i class="list icon"></i> ' + LocalizedStrings.getUI('text_switch') + '</a>'
-    + '<a class="item" data-command="' + Models.COMMAND_TYPES.return + '"><i class="reply icon"></i> ' + LocalizedStrings.getUI('text_btn_return') + '</a>'
-    + '</div></div></div>';
+//   appender += '<div class="ui icon button dropdown menu_commands" ><i class="icon code"></i> <div class="menu"> ';
+//   appender += '<a class="item" data-command="' + Models.COMMAND_TYPES.reader + '"><i class="download icon"></i> ' + LocalizedStrings.getUI('text_read_var') + '</a>'
+//     + '<a class="item" data-command="' + Models.COMMAND_TYPES.writer + '"><i class="upload icon"></i> ' + LocalizedStrings.getUI('text_write_var') + '</a>'
+//     + '<a class="item" data-command="' + Models.COMMAND_TYPES.comment + '"><i class="quote left icon"></i> ' + LocalizedStrings.getUI('text_comment') + '</a>'
+//     + '<a class="item" data-command="' + Models.COMMAND_TYPES.attribution + '"><i class="arrow left icon"></i> ' + LocalizedStrings.getUI('text_attribution') + '</a>'
+//     + '<a class="item" data-command="' + Models.COMMAND_TYPES.functioncall + '"><i class="hand point right icon"></i> ' + LocalizedStrings.getUI('text_functioncall') + '</a>'
+//     + '<a class="item" data-command="' + Models.COMMAND_TYPES.iftrue + '" ><i class="random icon"></i> ' + LocalizedStrings.getUI('text_iftrue') + '</a>'
+//     + '<a class="item" data-command="' + Models.COMMAND_TYPES.repeatNtimes + '"><i class="sync icon"></i> ' + LocalizedStrings.getUI('text_repeatNtimes') + '</a>'
+//     + '<a class="item" data-command="' + Models.COMMAND_TYPES.whiletrue + '"><i class="sync icon"></i> ' + LocalizedStrings.getUI('text_whiletrue') + '</a>'
+//     + '<a class="item" data-command="' + Models.COMMAND_TYPES.dowhiletrue + '"><i class="sync icon"></i> ' + LocalizedStrings.getUI('text_dowhiletrue') + '</a>'
+//     + '<a class="item" data-command="' + Models.COMMAND_TYPES.switch + '"><i class="list icon"></i> ' + LocalizedStrings.getUI('text_switch') + '</a>'
+//     + '<a class="item" data-command="' + Models.COMMAND_TYPES.return + '"><i class="reply icon"></i> ' + LocalizedStrings.getUI('text_btn_return') + '</a>'
+//     + '</div></div></div>';
 
-  appender += '<div class="function_signature_div">' + LocalizedStrings.getUI("function") + ' ';
+//   appender += '<div class="function_signature_div">' + LocalizedStrings.getUI("function") + ' ';
 
-  if (function_obj.is_main) {
-    appender += '<div class="function_name_div">  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ' + LocalizedStrings.getUI('void') + ' &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="span_name_function" >' + function_obj.name + '</span> </div> '
-      + '( <div class="ui large labels parameters_list">';
-  } else {
-    appender += '<div class="ui function_return"></div>';
+//   if (function_obj.is_main) {
+//     appender += '<div class="function_name_div">  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ' + LocalizedStrings.getUI('void') + ' &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="span_name_function" >' + function_obj.name + '</span> </div> '
+//       + '( <div class="ui large labels parameters_list">';
+//   } else {
+//     appender += '<div class="ui function_return"></div>';
 
-    appender += '<div class="function_name_div function_name_div_updated"><span class="span_name_function name_function_updated">' + function_obj.name + '</span> </div> '
-      + ' <span class="parethesis_function"> ( </span> <i class="ui icon plus square outline add_parameter_button"></i> <div class="ui large labels parameters_list container_parameters_list">';
+//     appender += '<div class="function_name_div function_name_div_updated"><span class="span_name_function name_function_updated">' + function_obj.name + '</span> </div> '
+//       + ' <span class="parethesis_function"> ( </span> <i class="ui icon plus square outline add_parameter_button"></i> <div class="ui large labels parameters_list container_parameters_list">';
 
-    $('.functions_labels').append(generateMenuButton(function_obj));
-    console.log("aqui");
+//     $('.functions_labels').append(generateMenuButton(function_obj));
+//     console.log("aqui");
 
-    //var menu_button = $('.functions_labels > [data-function=' + function_obj.name + ']');
-    //var params = "";
-    //menu_button
+//     //var menu_button = $('.functions_labels > [data-function=' + function_obj.name + ']');
+//     //var params = "";
+//     //menu_button
 
-  }
+//   }
 
-  appender += '</div> ) </div>'
-    + (function_obj.is_hidden ? ' <div class="function_area" style="display: none;"> ' : ' <div class="function_area"> ')
+//   appender += '</div> ) </div>'
+//     + (function_obj.is_hidden ? ' <div class="function_area" style="display: none;"> ' : ' <div class="function_area"> ')
 
-    + '<div class="ui top attached segment variables_list_div">'
-    /*+ renderVariables(function_obj, sequence)*/
-    + '</div>'
-    + '<div class="ui bottom attached segment commands_list_div" id="function_drag_cmd_">';
+//     + '<div class="ui top attached segment variables_list_div">'
+//     /*+ renderVariables(function_obj, sequence)*/
+//     + '</div>'
+//     + '<div class="ui bottom attached segment commands_list_div" id="function_drag_cmd_">';
 
-  appender += '</div>';
+//   appender += '</div>';
 
-  appender += '<div class="function_close_div"></div>'
-    + '</div>'
-    + '</div>';
+//   appender += '<div class="function_close_div"></div>'
+//     + '</div>'
+//     + '</div>';
 
-  appender = $(appender);
+//   appender = $(appender);
 
-  $('.all_functions').append(appender);
+//   $('.all_functions').append(appender);
 
-  appender.data('fun', function_obj);
-  appender.find('.commands_list_div')
-    .data('fun', function_obj)
-    .attr('droppable', true)
-    .on('dragenter', function (e) {
-      e.preventDefault();
-      console.log('dragenter');
-      console.log(e.target)
-      $(e.target).addClass('div-over')
-      //e.stopPropagation();
-    }).on('dragover', function (e) {
-      e.preventDefault();
-    })
-    .on('dragleave', function (e) {
-      e.preventDefault();
-      //e.stopPropagation();
-      console.log("dragleave")
-      $(e.target).removeClass('div-over')
-      console.log(e.target)
-    })
-    .on('drop', function (e, bundle) {
-      e.preventDefault();
-      if (bundle) {
-        e.clientX = bundle.clientX;
-        e.clientY = bundle.clientY;
-      }
-      //console.log('ondrop ' + e.originalEvent.dataTransfer.getData("text"));
-      console.log(e)
-      $(e.target).removeClass('div-over')
-      //var data = JSON.parse(e.originalEvent.dataTransfer.getData("text"));
-      var data = program_obj.dataTransfer;
-      if (data.type == 'command')
-        CommandsManagement.prepareManageCommand(function_obj, $(e.target).closest('.function_div'), e, data.content);
-      else if (data.type == 'var')
-        CommandsManagement.prepareManageCommand(function_obj, $(e.target).closest('.function_div'), e, "attribution", data.content);
-      else {
-        if (!data.content.parameters_list)
-          data.content.parameters_list = [];
-        CommandsManagement.prepareManageCommand(function_obj, $(e.target).closest('.function_div'), e, "functioncall", data.content);
-      }
-      //program_obj.dataTransfer;
-    }).on('click', function (e) {
-      if (window.ghostNode) {
-        console.log("drop click");
-        $(document).off('mousemove');
-        $(window.ghostNode).remove();
-        $(this).trigger('drop', [e]);
-        $('.div-over').removeClass('div-over');
-        delete window.ghostNode;
-      }
-    })
-    .on('mouseover', function (evt) {
-      if (window.ghostNode) {
-        evt.type = 'dragenter';
-        //$(this).trigger('dragenter');
-        console.log('mouseover');
-        $(this).trigger(evt);
-      }
-    })
-    .on('mouseout', function (evt) {
-      //$(this).trigger('dragleave');
-      if (window.ghostNode) {
-        evt.type = 'dragleave';
-        console.log('mouseout');
-        $(this).trigger(evt);
-      }
-    });
+//   appender.data('fun', function_obj);
+//   appender.find('.commands_list_div')
+//     .data('fun', function_obj)
+//     .attr('droppable', true)
+//     .on('dragenter', function (e) {
+//       e.preventDefault();
+//       console.log('dragenter');
+//       console.log(e.target)
+//       $(e.target).addClass('div-over')
+//       //e.stopPropagation();
+//     }).on('dragover', function (e) {
+//       e.preventDefault();
+//     })
+//     .on('dragleave', function (e) {
+//       e.preventDefault();
+//       //e.stopPropagation();
+//       console.log("dragleave")
+//       $(e.target).removeClass('div-over')
+//       console.log(e.target)
+//     })
+//     .on('drop', function (e, bundle) {
+//       e.preventDefault();
+//       if (bundle) {
+//         e.clientX = bundle.clientX;
+//         e.clientY = bundle.clientY;
+//       }
+//       //console.log('ondrop ' + e.originalEvent.dataTransfer.getData("text"));
+//       console.log(e)
+//       $(e.target).removeClass('div-over')
+//       //var data = JSON.parse(e.originalEvent.dataTransfer.getData("text"));
+//       var data = program_obj.dataTransfer;
+//       if (data.type == 'command')
+//         CommandsManagement.prepareManageCommand(function_obj, $(e.target).closest('.function_div'), e, data.content);
+//       else if (data.type == 'var')
+//         CommandsManagement.prepareManageCommand(function_obj, $(e.target).closest('.function_div'), e, "attribution", data.content);
+//       else {
+//         if (!data.content.parameters_list)
+//           data.content.parameters_list = [];
+//         CommandsManagement.prepareManageCommand(function_obj, $(e.target).closest('.function_div'), e, "functioncall", data.content);
+//       }
+//       //program_obj.dataTransfer;
+//     }).on('click', function (e) {
+//       if (window.ghostNode) {
+//         console.log("drop click");
+//         $(document).off('mousemove').off('mousedown').off('keyup');
+//         $(window.ghostNode).remove();
+//         delete window.ghostNode;
+//         $(this).trigger('drop', [e]);
+//         $('.div-over').removeClass('div-over');
+//       }
+//     })
+//     .on('mouseover', function (evt) {
+//       if (window.ghostNode) {
+//         evt.type = 'dragenter';
+//         //$(this).trigger('dragenter');
+//         console.log('mouseover');
+//         $(this).trigger(evt);
+//       }
+//     })
+//     .on('mouseout', function (evt) {
+//       //$(this).trigger('dragleave');
+//       if (window.ghostNode) {
+//         evt.type = 'dragleave';
+//         console.log('mouseout');
+//         $(this).trigger(evt);
+//       }
+//     });
 
-  renderFunctionReturn(function_obj, appender);
+//   renderFunctionReturn(function_obj, appender);
 
-  addHandlers(function_obj, appender);
+//   addHandlers(function_obj, appender);
 
-  // Rendering parameters:
-  for (var j = 0; j < function_obj.parameters_list.length; j++) {
-    renderParameter(function_obj, function_obj.parameters_list[j], appender);
-  }
+//   // Rendering parameters:
+//   for (var j = 0; j < function_obj.parameters_list.length; j++) {
+//     renderParameter(function_obj, function_obj.parameters_list[j], appender);
+//   }
 
-  // Rendering variables:
-  for (var j = 0; j < function_obj.variables_list.length; j++) {
-    VariablesManagement.renderVariable(appender, function_obj.variables_list[j], function_obj);
-  }
+//   // Rendering variables:
+//   for (var j = 0; j < function_obj.variables_list.length; j++) {
+//     VariablesManagement.renderVariable(appender, function_obj.variables_list[j], function_obj);
+//   }
 
-  // Rendering commands:
-  for (var j = 0; j < function_obj.commands.length; j++) {
-    CommandsManagement.renderCommand(function_obj.commands[j], $(appender.find('.commands_list_div')[0]), 3, function_obj);
-  }
-  console.log('kk')
-  console.log($($('.function_div')[0]).data('fun'))
-  console.log(appender.data('fun'))
+//   // Rendering commands:
+//   for (var j = 0; j < function_obj.commands.length; j++) {
+//     CommandsManagement.renderCommand(function_obj.commands[j], $(appender.find('.commands_list_div')[0]), 3, function_obj);
+//   }
+//   console.log('kk')
+//   console.log($($('.function_div')[0]).data('fun'))
+//   console.log(appender.data('fun'))
 
-}
+// }
 
 initVisualUI = function () {
   // MUST USE CONST, LET, OR VAR !!!!!!
@@ -1058,20 +1278,21 @@ initVisualUI = function () {
   });
 
   var commands = [
-    { type: Models.COMMAND_TYPES.break, icon: "stop", text: LocalizedStrings.getUI('text_break') },
     { type: Models.COMMAND_TYPES.reader, icon: "download", text: LocalizedStrings.getUI('text_read_var') },
     { type: Models.COMMAND_TYPES.writer, icon: "upload", text: LocalizedStrings.getUI('text_write_var') },
     { type: Models.COMMAND_TYPES.comment, icon: "quote left", text: LocalizedStrings.getUI('text_comment') },
     { type: Models.COMMAND_TYPES.attribution, icon: "arrow left", text: LocalizedStrings.getUI('text_attribution') },
-    //{type: Models.COMMAND_TYPES.functioncall, icon: "hand point right", text: LocalizedStrings.getUI('text_functioncall')},
     { type: Models.COMMAND_TYPES.iftrue, icon: "random", text: LocalizedStrings.getUI('text_iftrue') },
     { type: Models.COMMAND_TYPES.repeatNtimes, icon: "sync", text: LocalizedStrings.getUI('text_repeatNtimes') },
     { type: Models.COMMAND_TYPES.whiletrue, icon: "sync", text: LocalizedStrings.getUI('text_whiletrue') },
     { type: Models.COMMAND_TYPES.dowhiletrue, icon: "sync", text: LocalizedStrings.getUI('text_dowhiletrue') },
-    { type: Models.COMMAND_TYPES.switch, icon: "list", text: LocalizedStrings.getUI('text_switch') }
+    { type: Models.COMMAND_TYPES.switch, icon: "list", text: LocalizedStrings.getUI('text_switch') },
+    { type: Models.COMMAND_TYPES.return, icon: "reply", text: LocalizedStrings.getUI('text_btn_return') },
+    //{ type: Models.COMMAND_TYPES.break, icon: "stop", text: LocalizedStrings.getUI('text_break') },
+    //{type: Models.COMMAND_TYPES.functioncall, icon: "hand point right", text: LocalizedStrings.getUI('text_functioncall')},
   ];
 
-  for (var i = 0; i < commands.length; i++) {
+  for (var i = commands.length-1; i >= 0; i--) {
     var command = '<button class="fluid ui container segment labeled icon button list-group-item menu-item" draggable="true"  data-command="' + commands[i].type + '"><i class="' + commands[i].icon + ' icon"></i> ' + commands[i].text + '</button>';
     command = $(command);
     command.on('dragstart', function (evt) {
@@ -1084,7 +1305,7 @@ initVisualUI = function () {
     });
     command.on('click', function (evt) {
       $(this).trigger('dragstart');
-      if(window.ghostNode) {
+      if (window.ghostNode) {
         $(window.ghostNode).remove();
         $(document).off('mousemove');
       }
@@ -1100,6 +1321,29 @@ initVisualUI = function () {
       $(document).on('mousemove', function (evt) {
         ghostNode.css('left', evt.pageX);
         ghostNode.css('top', evt.pageY);
+      });
+      $(document).on('mousedown', function (evt) {
+        console.log("length ===");
+        console.log($(evt.target).closest(".commands_list_div"))
+        if ($(evt.target).closest(".commands_list_div").length <= 0) {
+          if (window.ghostNode) {
+            console.log("drop click");
+            $('.div-over').removeClass('div-over');
+            $(window.ghostNode).remove();
+            delete window.ghostNode;
+            $(document).off('mousemove').off('mousedown').off('keyup');
+          }
+        }
+      });
+      $(document).keyup(function (e) {
+        console.log("KeyUp")
+        if (e.key === "Escape") {
+          console.log("escape");
+          $('.div-over').removeClass('div-over');
+          $(window.ghostNode).remove();
+          delete window.ghostNode;
+          $(document).off('mousemove').off('mousedown').off('keyup');
+        }
       });
     });
     $('.list-commands').prepend(command);
@@ -1133,6 +1377,8 @@ initVisualUI = function () {
   }
 
   $('.accordion').accordion();
+
+
 
 }
 /*

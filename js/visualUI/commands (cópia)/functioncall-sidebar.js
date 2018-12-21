@@ -1,6 +1,6 @@
 import $ from 'jquery';
 import { Types } from '../types';
-import * as Models from '../ivprog_elements';
+import * as Models from '../ivprog_elements_sidebar';
 import { LocalizedStrings } from '../../services/localizedStringsService';
 import * as GlobalsManagement from '../globals';
 import * as VariablesManagement from '../variables';
@@ -15,6 +15,10 @@ export function renderCommand (command, function_obj) {
 	var el = $('<div class="ui functioncall command_container"> <i class="hand point right icon command_drag"></i> <i class="ui icon times red button_remove_command"></i> <div class="var_value_menu_div"></div> </div>');
 	el.data('command', command);
 
+	if (command.function_called) {
+		console.log("command.function_called");
+	}
+
 	VariableValueMenu.renderMenu(command, command.function_called, el.find('.var_value_menu_div'), function_obj);
 
 	addHandlers(command, function_obj, el);
@@ -26,7 +30,7 @@ function addHandlers (command, function_obj, functioncall_dom) {
 
 	functioncall_dom.find('.button_remove_command').on('click', function() {
 		if (CommandsManagement.removeCommand(command, function_obj, functioncall_dom)) {
-			functioncall_dom.fadeOut();
+			functioncall_dom.remove();
 		}
 	});
 }

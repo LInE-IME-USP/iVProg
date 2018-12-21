@@ -12,10 +12,18 @@ export const VAR_OR_VALUE_TYPES = Object.freeze({only_variable: 1, only_value: 2
 	value_and_function: 6, all: 7});
 
 export function renderMenu (command, ref_object, dom_object, function_obj, size_field = 2, expression_element) {
+	var menu_var_or_value = '<div class="ui dropdown menu_var_or_value_dom" data-algo="12"><div class="text"></div><i class="dropdown icon"></i><div class="menu">';
+
 	// Verificar se o objeto atual trata-se de uma chamada de função e conferir se possui a quantidade correta de parâmetros
 	// Caso não possua, tem que adicionar as variáveis que servirão de parâmetros:
+
+
 	if (ref_object.function_called) {
 		if (ref_object.function_called.parameters_list) {
+
+			if (!ref_object.parameters_list) {
+				ref_object.parameters_list = [];
+			}
 
 			while (ref_object.function_called.parameters_list.length != ref_object.parameters_list.length) {
 				if (ref_object.parameters_list.length > ref_object.function_called.parameters_list.length) {
@@ -27,13 +35,11 @@ export function renderMenu (command, ref_object, dom_object, function_obj, size_
 		}
 	}
 
-	var menu_var_or_value = '<div class="ui dropdown menu_var_or_value_dom" data-algo="12"><div class="text"></div><i class="dropdown icon"></i><div class="menu">';
-
 	if (ref_object.variable_and_value == VAR_OR_VALUE_TYPES.only_variable) {
 
 		menu_var_or_value = '<div class="ui dropdown menu_var_or_value_dom"><div class="text"></div><i class="dropdown icon"></i><div class="menu menu_only_vars">';
 		menu_var_or_value += '</div>';
-	}
+	} 
 
 	if ((ref_object.variable_and_value == VAR_OR_VALUE_TYPES.variable_and_function) || (ref_object.variable_and_value == VAR_OR_VALUE_TYPES.variable_and_value_opt) || (ref_object.variable_and_value == VAR_OR_VALUE_TYPES.all)) {
 		
@@ -91,36 +97,17 @@ export function renderMenu (command, ref_object, dom_object, function_obj, size_
 	addIVProgFunctionsToMenu(function_obj, menu_var_or_value, ref_object, expression_element);
 
     if (ref_object.content || ref_object.function_called) {
-    	if (ref_object.content) {
-    		// Verificar se a variável ainda existe:
-    		var variable_fun = isVarInProgram(ref_object.content, function_obj);
-    		if (variable_fun) {
-    			ref_object.content = variable_fun;
-    			renderPreviousContent(function_obj, menu_var_or_value, ref_object, dom_object, command, expression_element);
-	    	} else {
-	    		if (ref_object.content && ref_object.content.type) {
-	    			ref_object.content = null;
-	    			appendSelectText(ref_object, menu_var_or_value);
-	    		} else {
-	    			renderPreviousContent(function_obj, menu_var_or_value, ref_object, dom_object, command, expression_element);
-	    		}
-	    	}
-    	} else if (ref_object.function_called) {
-    		// Verificar se a função ainda existe:
-    		var ret_function = isFunctionInProgram(ref_object.function_called);
-    		if (ret_function) {
-    			ref_object.function_called = ret_function;
-    			renderPreviousContent(function_obj, menu_var_or_value, ref_object, dom_object, command, expression_element);
-    		} else {
+    	// Verificar se a variável ainda existe:
+    	if (isVarInProgram(ref_object.content, function_obj)) {
+    		renderPreviousContent(function_obj, menu_var_or_value, ref_object, dom_object, command, expression_element);
+    	} else {
+    		if (ref_object.content && ref_object.content.type) {
     			ref_object.content = null;
-		     	ref_object.row = null;
-		     	ref_object.column = null;
-		     	delete ref_object.function_called;
-		     	delete ref_object.parameters_list;
     			appendSelectText(ref_object, menu_var_or_value);
+    		} else {
+    			renderPreviousContent(function_obj, menu_var_or_value, ref_object, dom_object, command, expression_element);
     		}
     	}
-
     } else {
     	appendSelectText(ref_object, menu_var_or_value);
     }
@@ -144,37 +131,20 @@ function appendSelectText (ref_object, menu_var_or_value) {
 	}
 }
 
-function isFunctionInProgram (function_called_obj) {
-	if (function_called_obj.name) {
-		if (window.program_obj.functions) {
-			for (var i = 0; i < window.program_obj.functions.length; i++) {
-				if (window.program_obj.functions[i] == function_called_obj) {
-					return window.program_obj.functions[i];
-				}
-			}
-			for (var i = 0; i < window.program_obj.functions.length; i++) {
-				if (window.program_obj.functions[i].name == function_called_obj.name) {
-					return window.program_obj.functions[i];
-				}
-			}
-		}
-	} else if (function_called_obj.identifier) {
-		for (var i = 0; i < window.system_functions.length; i++) {
-			if (window.system_functions[i].identifier == function_called_obj.identifier) {
-				return window.system_functions[i];
+function isVarInProgram (var_obj, function_obj) {
+	// Verify in globals:
+	if (window.program_obj.globals) {
+		for (var i = 0; i < window.program_obj.globals.length; i++) {
+			if (window.program_obj.globals[i] == var_obj) {
+				return true;
 			}
 		}
 	}
-	
-	return null;
-}
-
-function isVarInProgram (var_obj, function_obj) {
 	// Verify in locals:
 	if (function_obj.variables_list) {
 		for (var i = 0; i < function_obj.variables_list.length; i++) {
 			if (function_obj.variables_list[i] == var_obj) {
-				return function_obj.variables_list[i];
+				return true;
 			}
 		}
 	}
@@ -182,45 +152,11 @@ function isVarInProgram (var_obj, function_obj) {
 	if (function_obj.parameters_list) {
 		for (var i = 0; i < function_obj.parameters_list.length; i++) {
 			if (function_obj.parameters_list[i] == var_obj) {
-				return function_obj.parameters_list[i];
+				return true;
 			}
 		}
 	}
-	// Verify in globals:
-	if (window.program_obj.globals) {
-		for (var i = 0; i < window.program_obj.globals.length; i++) {
-			if (window.program_obj.globals[i] == var_obj) {
-				return window.program_obj.globals[i];
-			}
-		}
-	}
-
-	// If not found, verify if the reference was lost
-	if (var_obj) {
-		if (function_obj.variables_list) {
-			for (var i = 0; i < function_obj.variables_list.length; i++) {
-				if (function_obj.variables_list[i].name == var_obj.name) {
-					return function_obj.variables_list[i];
-				}
-			}
-		}
-		if (function_obj.parameters_list) {
-			for (var i = 0; i < function_obj.parameters_list.length; i++) {
-				if (function_obj.parameters_list[i].name == var_obj.name) {
-					return function_obj.parameters_list[i];
-				}
-			}
-		}
-		if (window.program_obj.globals) {
-			for (var i = 0; i < window.program_obj.globals.length; i++) {
-				if (window.program_obj.globals[i].name == var_obj.name) {
-					return window.program_obj.globals[i];
-				}
-			}
-		}
-	}
-
-	return null;
+	return false;
 }
 
 export function refreshMenu (menu_var_or_value_dom) {
@@ -257,10 +193,8 @@ function variableValueMenuCode (command, variable_obj, dom_object, function_obj,
 	
 	if (variable_obj.content || variable_obj.function_called) {
     	// Verificar se a variável ainda existe:
-    	var var_fun = isVarInProgram(variable_obj.content, function_obj);
-
-    	if (var_fun) {
-	    	variable_obj.content = var_fun;
+    	if (isVarInProgram(variable_obj.content, function_obj)) {
+    		
     	} else {
     		if (variable_obj.content && variable_obj.content.type) {
     			variable_obj.content = null;
@@ -362,8 +296,11 @@ function variableValueMenuCode (command, variable_obj, dom_object, function_obj,
 
 			dom_object.append(parameters_menu);
 
+			console.log("\nvariable_obj:");
+			console.log(variable_obj);
+
 			for (var j = 0; j < variable_obj.function_called.parameters_list.length; j++) {
-				renderMenu(command, variable_obj.parameters_list[j], parameters_menu.find('.parameter_'+j), function_obj, 2, expression_element);
+				renderMenu(command, new Models.VariableValueMenu(VAR_OR_VALUE_TYPES.all, null, null, null, true), parameters_menu.find('.parameter_'+j), function_obj, 2, expression_element);
 			}
 
 
@@ -679,15 +616,6 @@ function addIVProgFunctionsToMenu (function_obj, menu_var_or_value, ref_object, 
 			case Models.SYSTEM_FUNCTIONS_CATEGORIES.math:
 				sub_menu.find('.menu_math_functions').append(t);
 				break;
-			case Models.SYSTEM_FUNCTIONS_CATEGORIES.text:
-				sub_menu.find('.menu_text_functions').append(t);
-				break;
-			case Models.SYSTEM_FUNCTIONS_CATEGORIES.arrangement:
-				sub_menu.find('.menu_arrangement_functions').append(t);
-				break;
-			case Models.SYSTEM_FUNCTIONS_CATEGORIES.conversion:
-				sub_menu.find('.menu_conversion_functions').append(t);
-				break;
 		}	
 	}
 }
@@ -707,7 +635,6 @@ function addVariablesToMenu (function_obj, menu_var_or_value, ref_object, expres
 
 	var sub_menu = menu_var_or_value.find('.menu_only_vars');
 	sub_menu.text('');
-	var is_there = false;
 
 	if (window.program_obj.globals) {
 
@@ -716,7 +643,6 @@ function addVariablesToMenu (function_obj, menu_var_or_value, ref_object, expres
 				var temp = $('<div class="item" data-option="'+VAR_OR_VALUE_TYPES.only_variable+'">' + window.program_obj.globals[i].name + ' </div>');
 				temp.data('variable_reference', window.program_obj.globals[i]);
 				sub_menu.append(temp);
-				is_there = true;
 			}
 		} else {
 			for (var i = 0; i < window.program_obj.globals.length; i++) {
@@ -724,7 +650,6 @@ function addVariablesToMenu (function_obj, menu_var_or_value, ref_object, expres
 					var temp = $('<div class="item" data-option="'+VAR_OR_VALUE_TYPES.only_variable+'">' + window.program_obj.globals[i].name + ' </div>');
 					temp.data('variable_reference', window.program_obj.globals[i]);
 					sub_menu.append(temp);
-					is_there = true;
 				}
 			}
 		}
@@ -735,7 +660,6 @@ function addVariablesToMenu (function_obj, menu_var_or_value, ref_object, expres
 			var temp = $('<div class="item" data-option="'+VAR_OR_VALUE_TYPES.only_variable+'">' + function_obj.parameters_list[i].name + ' </div>');
 			temp.data('variable_reference', function_obj.parameters_list[i]);
 			sub_menu.append(temp);
-			is_there = true;
 		}
 	}
 
@@ -744,12 +668,7 @@ function addVariablesToMenu (function_obj, menu_var_or_value, ref_object, expres
 			var temp = $('<div class="item" data-option="'+VAR_OR_VALUE_TYPES.only_variable+'">' + function_obj.variables_list[i].name + ' </div>');
 			temp.data('variable_reference', function_obj.variables_list[i]);
 			sub_menu.append(temp);
-			is_there = true;
 		}
-	}
-	if (!is_there) {
-		sub_menu.append($('<div class="header">'+LocalizedStrings.getUI('text_none_variable')+'</div>'));
-		sub_menu.append($('<div class="item disabled">'+LocalizedStrings.getUI('text_none_variable_instruction')+'</div>'));
 	}
 
 }
@@ -759,7 +678,10 @@ function addHandlers (command, ref_object, dom_object, menu_var_or_value, functi
 	if (ref_object.variable_and_value != VAR_OR_VALUE_TYPES.only_value) {
 		menu_var_or_value.dropdown({
 		  onChange: function(value, text, $selectedItem) {
-		  	console.log('S7');
+				console.log('S7');
+				console.log(value);
+				console.log(text);
+				console.log($selectedItem);
 		  	dom_object.find('.var_name').remove();
 		     switch ($selectedItem.data('option')) {
 		     	case VAR_OR_VALUE_TYPES.only_function:
@@ -871,6 +793,7 @@ function openInputToFunction (command, ref_object, dom_object, menu_var_or_value
 		context_menu.dropdown({
 			onChange: function(value, text, $selectedItem) {
 				console.log('S8');
+				console.log($selectedItem);
 		     if ($selectedItem.data('clear')) {
 		     	console.log('PP7');
 		     	dom_object.text('');

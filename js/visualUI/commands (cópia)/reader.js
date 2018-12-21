@@ -25,9 +25,10 @@ export function renderCommand (command, function_obj) {
 }
 
 function addHandlers (command, function_obj, reader_dom) {
+
 	reader_dom.find('.button_remove_command').on('click', function() {
 		if (CommandsManagement.removeCommand(command, function_obj, reader_dom)) {
-			reader_dom.fadeOut();
+			reader_dom.remove();
 		}
 	});
 }

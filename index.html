@@ -1,187 +1,204 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title></title>
-    <link rel="stylesheet" type="text/css" href="js/semantic/semantic.min.css">
-    <link rel="stylesheet" type="text/css" href="css/ivprog-visual-1.0.css">
-    <link rel="stylesheet" type="text/css" href="css/ivprog-term.css">
-    <script src="js/jquery-3.3.1.min.js"></script>
 
-    <script src="build/ivprog.bundle.js"></script>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta http-equiv="cache-control" content="no-cache">
+  <meta http-equiv="cache-control" content="no-store">
+  <meta http-equiv="cache-control" content="max-age=0">
+  <meta http-equiv="expires" content="-1">
+  <meta http-equiv="pragma" content="no-cache">
+  <title></title>
+  <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="js/semantic/semantic.min.css">
+  <link rel="stylesheet" type="text/css" href="css/ivprog-visual-1.0.css">
+  <link rel="stylesheet" type="text/css" href="css/ivprog-term.css">
+  <script src="js/jquery-3.3.1.min.js"></script>
+  <script src="js/iassign-integration-functions.js"></script>
+  <script src="build/ivprog.bundle.js"></script>
+  <script src="js/semantic/semantic.min.js"></script>
+  <script src="js/semantic/semantic-buttons.js"></script>
 
-    <script src="js/iassign-integration-functions.js"></script>
-    <script src="i18n/i18n-engine.js"></script>
+  <script src="js/jquery-ui.js"></script>
+  <script src="js/Sortable.js"></script>
+  <script src="i18n/i18n-engine.js"></script>
 
-    <script src="js/jquery-ui.js"></script>
-    <script src="js/Sortable.js"></script>
+</head>
 
-  </head>
-  <body>
+<body>
 
-    <div class="ui one column doubling stackable grid container">
-      <div class="column">
-        <div class="ui container main_title">
+  <div class="ui one column doubling stackable grid container">
+    <div class="column">
+      <!-- <div class="ui container main_title">
+        <h2>iVProg</h2>
+        <span>interactive coding</span>
+      </div>
+
+
+
+      <div class="ui container content_margin">
+        <div class="content_sub_margin">
+          <div class="blue ui ivprog_format buttons">
+            <button class="ui button active visual_coding_button">Visual</button>
+            <button class="ui button textual_coding_button">Textual</button>
+          </div>
+
+          <a class="ivprog_format_info">
+            <i class="circular inverted some-wrapping-div teal info icon small label ivprog_format_info popup"></i>
+          </a>
+          <div class="ui custom popup">
+            Choice how you prefer to develop. If disabled, teacher doesn't allow this change. <a href="#">See
+              documentation about it.</a>
+          </div>
+        </div>
+      </div> -->
+
+
+    </div>
+
+  </div>
+
+  <div class="ui equal height stretched centered grid general-grid">
+    <div class="four wide column">
+      <div class="ui raised container segment div_to_menu div_to_body tabs">
+
+        <div class="ui top attached tabular menu">
+          <a class="item" data-tab="variaveis">Vari&aacute;veis</a>
+          <a class="item active" data-tab="comandos">Comandos</a>
+          <a class="item" data-tab="funcoes">Fun&ccedil;&otilde;es</a>
+        </div>
+        <div class="ui bottom attached tab segment ivprog_tab" data-tab="variaveis">
+          <div class="ui one column container segment ivprog_tab menu_segment">
+            <div class="global_var">
+                <i class="icon plus circle purple add_global_button"></i>
+                <i class="icon circle white back"></i>
+                <div class="ui icon button add-globalVar-button add_global_button purple"><i class="icon superscript"></i></div>
+            </div>
+            <div class="ui container list_globals list-group" id="listGlobalsHandle"></div>
+          </div>
+        </div>
+        <div class="ui bottom attached tab segment ivprog_tab active" data-tab="comandos">
+          <div class="ui one column container segment ivprog_tab menu_segment">
+            <!--mudar-->
+            <!-- <div class="ui teal small labeled icon button add_function_button" draggable="true">
+                  <data class="i18n" value="Function">Function</data>
+                  <i class="add icon"></i>
+                  </div> -->
+
+            <div class="ui container list-group list-commands">
+            </div>
+
+          </div>
+        </div>
+        <div class="ui bottom attached tab segment ivprog_tab" data-tab="funcoes">
+          <div class="ui one column container segment menu_segment ">
+            <!--mudar-->
+            <!-- <div class="ui teal small labeled icon button add_function_button" draggable="true">
+                  <data class="i18n" value="Function">Function</data>
+                  <i class="add icon"></i>
+                  </div> -->
+
+            <div class="ui container list-group functions_labels">
+            </div>
+
+          </div>
+          <div class="ui one column container segment ivprog_tab">
+            <div class="ui container list-group library_labels">
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div class="ten wide column">
+      <div class="ui raised container segment div_to_body">
+        <div class="ui container main_title only_in_frame">
           <h2>iVProg</h2>
-          <span>interactive coding</span>
+        </div>
+        <div class="ui icon menu center aligned container" style="width: 438px; margin-top: -20px;">
+          <a class="item active visual_coding_button">
+            <i class="window maximize outline icon"></i>
+          </a>
+          <a class="item textual_coding_button">
+            <i class="code icon"></i>
+          </a>
+          <a class="item upload_file_button disabled">
+            <i class="upload icon"></i>
+          </a>
+          <a class="item download_file_button disabled">
+            <i class="download icon"></i>
+          </a>
+          <a class="item undo_button disabled">
+            <i class="undo icon"></i>
+          </a>
+          <a class="item redo_button disabled">
+            <i class="redo icon"></i>
+          </a>
+          <a class="item run_button">
+            <i class="play icon"></i>
+          </a>
+          <a class="item assessment assessment_button">
+            <i class="check icon"></i>
+          </a>
+          <!--<a class="item expand_button">
+            <i class="expand arrows alternate icon"></i>
+          </a>-->
+          <a class="item help_button">
+            <i class="help icon"></i>
+          </a>
         </div>
 
+        <div class="ui one column container segment ivprog_visual_panel loading">
 
 
-        <div class="ui container content_margin">
-          <div class="content_sub_margin">
-              <div class="blue ui ivprog_format buttons">
-                <button class="ui button active visual_coding_button">Visual</button>
-                <button class="ui button textual_coding_button">Textual</button>
-              </div>
+          <div class="all_functions list-group" id="listWithHandle">
 
-              <a class="ivprog_format_info">
-                <i class="circular inverted some-wrapping-div teal info icon small label ivprog_format_info popup"></i>
-              </a>
-              <div class="ui custom popup">
-                Choice how you prefer to develop. If disabled, teacher doesn't allow this change. <a href="#">See documentation about it.</a>
-              </div>
-            </div>
           </div>
 
 
-      </div>
-
-    </div>
-
-    <div class="ui equal height stretched  centered grid">
-      <div class="five wide column">
-        <div class="ui raised container segment div_to_menu">
-
-          <div class="ui top attached tabular menu">
-            <a class="item" data-tab="variaveis">Vari&aacute;veis</a>
-            <a class="item active" data-tab="comandos">Comandos</a>
-            <a class="item" data-tab="funcoes">Fun&ccedil;&otilde;es</a>
+          <div class="ui teal small labeled icon button add_function_button">
+            <data class="i18n" value="ui:btn_function">Function</data>
+            <i class="add icon"></i>
           </div>
-          <div class="ui bottom attached tab segment" data-tab="variaveis">
-            <div class="ui one column container segment ivprog_visual_panel loading">
-              <div class="global_var">
-                <div class="ui icon button add-globalVar-button add_global_button"><i class="icon superscript"></i></div>
-              </div>
-              <div class="ui container list_globals list-group"></div>
-            </div>
-          </div>
-          <div class="ui bottom attached tab segment active" data-tab="comandos">
-            <div class="ui one column container segment ivprog_visual_panel loading">
-                <!--mudar-->
-                <!-- <div class="ui teal small labeled icon button add_function_button" draggable="true">
-                  <data class="i18n" value="Function">Function</data>
-                  <i class="add icon"></i>
-                  </div> -->
-
-              <div class="ui container list-group list-commands">
-              </div>
-
-            </div>
-          </div>
-          <div class="ui bottom attached tab segment" data-tab="funcoes">
-            <div class="ui one column container segment ivprog_visual_panel loading">
-                <!--mudar-->
-                <!-- <div class="ui teal small labeled icon button add_function_button" draggable="true">
-                  <data class="i18n" value="Function">Function</data>
-                  <i class="add icon"></i>
-                  </div> -->
-
-              <div class="ui container list-group functions_labels">
-              </div>
-
-            </div>
-            <div class="ui one column container segment ivprog_visual_panel loading">
-              <div class="ui container list-group library_labels">
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-      <div class="ten wide column">
-        <div class="ui raised container segment div_to_body">
-
-      <div class="ui icon menu center aligned container" style="width: 438px; margin-top: -10px;">
-        <a class="item">
-          <i class="file icon"></i>
-        </a>
-        <a class="item">
-          <i class="save icon"></i>
-        </a>
-        <a class="item">
-          <i class="upload icon"></i>
-        </a>
-        <a class="item">
-          <i class="download icon"></i>
-        </a>
-        <a class="item undo_button disabled">
-          <i class="undo icon"></i>
-        </a>
-        <a class="item">
-          <i class="redo icon"></i>
-        </a>
-        <a class="item run_button">
-          <i class="play icon"></i>
-        </a>
-        <a class="item">
-          <i class="stop icon"></i>
-        </a>
-        <a class="item">
-          <i class="help icon"></i>
-        </a>
-      </div>
-
-      <div class="ui one column container segment ivprog_visual_panel loading">
-        <div class="program_signature"><data class="i18n" value="ui:program">program</data> { </div>
-
-
-
-        <div class="all_functions list-group" id="listWithHandle">
+          <div class="program_final"></div>
 
         </div>
 
 
-        <div class="ui teal small labeled icon button add_function_button">
-          <data class="i18n" value="ui:btn_function">Function</data>
-          <i class="add icon"></i>
+        <div class="ui one column container segment ivprog_textual_panel loading" style="display: none;">
+          <textarea class="ivprog_textual_code" readonly></textarea>
         </div>
-        <div class="program_final">}</div>
 
-      </div>
-
-
-      <div class="ui one column container segment ivprog_textual_panel loading" style="display: none;">
-        <textarea class="ivprog_textual_code" disabled></textarea>
-      </div>
-      <div id='ivprog-term' class="six column wide" style="display: none">
-      </div>
-
-    </div>
+        <div id='ivprog-term' class="six column wide">
+          <div class="div_toggle_console"><i class="inverted terminal icon green button_toggle_console"></i></div>
+        </div>
       </div>
     </div>
+  </div>
 
 
 
 
-    <script>
-      $(document).ready(() => {
-        ivprogCore.initVisualUI();
+  <script>
+    $(document).ready(() => {
+      ivprogCore.initVisualUI();
 
-        $('.menu .item')
-          .tab();    ;
-/*
-        document.querySelectorAll('.button.menu-item').forEach(function(element, index, array) {
-          element.addEventListener('dragstart', function(e) {
-              console.log(this);
+      $('.menu .item')
+        .tab();
+      /*
+              document.querySelectorAll('.button.menu-item').forEach(function(element, index, array) {
+                element.addEventListener('dragstart', function(e) {
+                    console.log(this);
+      
+                }, false);
+              });*/
+    });
+  </script>
 
-          }, false);
-        });*/
-      });
-    </script>
 
+  <script src="js/semantic/semantic.min.js"></script>
+  <script src="js/semantic/semantic-buttons.js"></script>
 
-    <script src="js/semantic/semantic.min.js"></script>
-    <script src="js/semantic/semantic-buttons.js"></script>
+</body>
 
-  </body>
 </html>

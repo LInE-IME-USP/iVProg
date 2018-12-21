@@ -6,5 +6,5 @@ export default {
   $ioLib: "ES",
   $strLib: "Texto",
   $arrayLib: "Arranjo",
-  $langLib: "IV"
+  $langLib: "Conversion"
 }
