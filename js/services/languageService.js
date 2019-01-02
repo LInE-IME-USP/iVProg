@@ -2,12 +2,12 @@ import Lexers from './../../grammar/';
 import line_i18n from 'line-i18n';
 
 // This is for LanguageService with localStorage
-// const DEFAULT_LANG = "pt";
+const DEFAULT_LANG = "pt";
 
 class LanguageServiceExtended extends line_i18n.LanguageServiceNoLS {
 
   constructor () {
-    super(iLMparameters.lang);
+    super(DEFAULT_LANG);
   }
 
   getCurrentLexer () {

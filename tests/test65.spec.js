@@ -10,7 +10,7 @@ describe('Non initialized vector/matrix', function () {
 
     funcao inicio() {
       inteiro a[16] = {1,8,3,5,7,4,2,1,8,3,5,7,-4,2,10,-1}
-      inteiro tam = numero_elementos(a) - 1
+      inteiro tam = total_de_elementos(a) - 1
       inteiro i
       a = mergeSort(a, 0, tam)
       para(i = 0; i< tam; i = i + 1) {
@@ -36,8 +36,8 @@ describe('Non initialized vector/matrix', function () {
     }
   
     funcao inteiro[] merge(inteiro p1[], inteiro p2[]) {
-      inteiro lenp1 = numero_elementos(p1)
-      inteiro lenp2 = numero_elementos(p2)
+      inteiro lenp1 = total_de_elementos(p1)
+      inteiro lenp2 = total_de_elementos(p2)
       inteiro sizeF = lenp1 + lenp2
       inteiro f[sizeF]
       inteiro i = 0, a = 0, b =0

@@ -3,26 +3,21 @@ import { IVProgProcessor} from './../js/processor/ivprogProcessor'
 import { SemanticAnalyser } from "./../js/processor/semantic/semanticAnalyser";
 import { LanguageService } from '../js/services/languageService';
 
-describe('Tangent of 90° angles', function () {
+describe('A valid matrix declaration', function () {
 
   let input = `programa {
 
     funcao inicio() {
-      escreva(Matematica.tangente(90))
+      real v[4][2] = {{1,1},{1,1},{1,1},{1,1}}
     }
   }`;
 
   const lexer = LanguageService.getCurrentLexer();
 
-  it(`should throw an exception`, function (done) {
+  it(`should not throw a semantic exception`, function () {
     const parser = new IVProgParser(input, lexer);
     const semantic = new SemanticAnalyser(parser.parseTree());
-    const exec = new IVProgProcessor(semantic.analyseTree());
-    exec.interpretAST().then(_ => {
-      done("No error thrown");
-    }).catch( _ => {
-      expect(1).toEqual(1);
-      done();
-    });
+    const fun = semantic.analyseTree.bind(semantic);
+    expect(fun).not.toThrow();
   });
 });
