@@ -25,7 +25,7 @@ export class ArrayLiteral extends Literal {
     if (!(element instanceof ArrayLiteral)){
       return null;
     } else {
-      return element.value[0].value.length;
+      return element.value[0].length;
     }
   }
 

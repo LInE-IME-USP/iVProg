@@ -86,21 +86,20 @@ export class IVProgProcessor {
 
   interpretAST () {
     this.prepareState();
-    this.initGlobal();
-    const mainFunc = this.findMainFunction();
-    if(mainFunc === null) {
-      throw ProcessorErrorFactory.main_missing();
-    }
-    return this.runFunction(mainFunc, [], this.globalStore);
+    return this.initGlobal().then( _ => {
+      const mainFunc = this.findMainFunction();
+      if(mainFunc === null) {
+        throw ProcessorErrorFactory.main_missing();
+      }
+      return this.runFunction(mainFunc, [], this.globalStore);
+    });
   }
 
   initGlobal () {
     if(!this.checkContext(Context.BASE)) {
       throw ProcessorErrorFactory.invalid_global_var();
     }
-    this.ast.global.forEach(decl => {
-      this.executeCommand(this.globalStore, decl).then(sto => this.globalStore = sto);
-    });
+    return this.executeCommands(this.globalStore, this.ast.global);
   }
 
   findMainFunction () {

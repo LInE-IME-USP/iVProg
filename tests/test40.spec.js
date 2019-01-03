@@ -5,8 +5,12 @@ import { LanguageService } from '../js/services/languageService';
 
 describe('The LanguageService', function () {
 
-  beforeEach( () => {
-    localStorage.setItem('ivprog.lang', 'en');  
+  beforeAll( () => {
+    
+  });
+
+  afterAll(function () {
+    
   });
 
   const code = `program {
@@ -18,7 +22,7 @@ describe('The LanguageService', function () {
   }`;
 
   const output = new OutputTest();
-  localStorage.setItem('ivprog.lang', 'en');
+  LanguageService.setLang('en');
   const lexer = LanguageService.getCurrentLexer();
 
   it(`should provide the appropriate lexer`, function (done) {
@@ -27,7 +31,7 @@ describe('The LanguageService', function () {
     exec.registerOutput(output);
     exec.interpretAST().then(sto => {
       expect(output.list).toEqual(['8.01']);
-      localStorage.removeItem('ivprog.lang');
+      LanguageService.setLang('pt');
       done();
     }).catch( err => done(err));
   });
