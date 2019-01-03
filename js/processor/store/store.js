@@ -18,7 +18,6 @@ export class Store {
       if (this.nextStore !== null) {
         return this.nextStore.applyStore(id);
       } else {
-        // TODO: better error message
         throw new Error(`Variable ${id} not found.`);
       }
     }
