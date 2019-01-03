@@ -55,6 +55,7 @@ export class SemanticAnalyser {
   }
 
   findFunction (name) {
+    console.log(name);
     if(name.match(/^\$.+$/)) {
       const fun = LanguageDefinedFunction.getFunction(name);
       if(!!!fun) {
@@ -237,29 +238,28 @@ export class SemanticAnalyser {
   }
 
   evaluateArrayLiteral (id, lines, columns, type, literal) {
-    if (literal instanceof ArrayLiteral) {
+    /* if (literal instanceof ArrayLiteral) {
+      const dimType = this.evaluateExpressionType(lines);
+      if (!dimType.isCompatible(Types.INTEGER)) {
+        throw ProcessorErrorFactory.array_dimension_not_int_full(literal.sourceInfo);
+      }
+      if ((lines instanceof IntLiteral)) {
+        if (!lines.value.eq(literal.value.length)) {
+          if(type.dimensions > 1) {
+            throw ProcessorErrorFactory.matrix_line_outbounds_full(id, literal.value.length, lines.value.toNumber(), literal.sourceInfo)
+          } else {
+            throw ProcessorErrorFactory.vector_line_outbounds_full(id, literal.value.length, lines.value.toNumber(), literal.sourceInfo)
+          }
+        } else if (lines.value.isNeg()) {
+          throw ProcessorErrorFactory.array_dimension_not_positive_full(literal.sourceInfo);
+        }
+      }
       if (columns === null) {
         // it's a vector...
-        const dimType = this.evaluateExpressionType(lines);
-        if (!dimType.isCompatible(Types.INTEGER)) {
-          throw ProcessorErrorFactory.array_dimension_not_int_full(literal.sourceInfo);
-        }
-        if ((lines instanceof IntLiteral)) {
-          if (!lines.value.eq(literal.value.length)) {
-            if(type.dimensions > 1) {
-              throw ProcessorErrorFactory.matrix_line_outbounds_full(id, literal.value.length, lines.values.toNumber(), literal.sourceInfo)
-            } else {
-              throw ProcessorErrorFactory.vector_line_outbounds_full(id, literal.value.length, lines.values.toNumber(), literal.sourceInfo)
-            }
-          } else if (lines.value.isNeg()) {
-            throw ProcessorErrorFactory.array_dimension_not_positive_full(literal.sourceInfo);
-          }
-          
-        }
         literal.value.reduce((last, next) => {
           const eType = this.evaluateExpressionType(next);
           if (!last.canAccept(eType)) {
-            const strInfo = last.stringInfo();invalid
+            const strInfo = last.stringInfo();
             const info = strInfo[0];
             const strExp = literal.toString();
             throw ProcessorErrorFactory.incompatible_types_array_full(strExp,info.type, info.dim, literal.sourceInfo);
@@ -273,20 +273,20 @@ export class SemanticAnalyser {
           throw ProcessorErrorFactory.array_dimension_not_int_full(literal.sourceInfo);
         }
         if ((columns instanceof IntLiteral)) {
-          if (!columns.value.eq(literal.value.length)) {
+          const columnValue = literal.value[0].value.length;
+          if (!columns.value.eq(columnValue)) {
             if(type.dimensions > 1) {
-              throw ProcessorErrorFactory.matrix_column_outbounds_full(id, literal.value.length, columns.values.toNumber(), literal.sourceInfo)
+              throw ProcessorErrorFactory.matrix_column_outbounds_full(id, literal.value.length, columns.value.toNumber(), literal.sourceInfo)
             } else {
               throw ProcessorErrorFactory.invalid_matrix_access_full(id, literal.sourceInfo);
             }
           } else if (columns.value.isNeg()) {
             throw ProcessorErrorFactory.array_dimension_not_positive_full(literal.sourceInfo);
           }
-          
-        }
-        for (let i = 0; i < columns; i++) {
-          const anotherArray = literal.value[i];
-          this.evaluateArrayLiteral(id, lines, null, type, anotherArray)
+          for (let i = 0; i < columns; i++) {
+            const anotherArray = literal.value[i];
+            this.evaluateArrayLiteral(id, columns, null, type, anotherArray)
+          }
         }
       }
 
@@ -306,7 +306,8 @@ export class SemanticAnalyser {
         throw ProcessorErrorFactory.incompatible_types_array_full(strExp,info.type, info.dim, literal.sourceInfo);
       }
       return true;
-    }
+    } */
+    return true;
   }
 
   assertFunction (fun) {
