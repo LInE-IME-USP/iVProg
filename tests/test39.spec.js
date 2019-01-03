@@ -1,10 +1,8 @@
 import { LanguageService } from './../js/services/languageService';
 describe('LanguageService.getLang() ', function () {
-  beforeEach(() => {
-    localStorage.setItem('ivprog.lang', 'pt_br');
-  });
-  it("should return the value associated to the key ivprog.lang, inside localStorage", function () {
+  LanguageService.setLang('pt_br');
+  it("should return the value passed as parameter to LanguageService.setLang()", function () {
     expect(LanguageService.getLang()).toEqual('pt_br');
   });
-  afterEach(() => localStorage.removeItem('ivprog.lang'));
+  afterEach(() => LanguageService.setLang('pt'));
 });

@@ -1,5 +1,4 @@
 import { IVProgParser } from './../js/ast/ivprogParser';
-import { IVProgProcessor} from './../js/processor/ivprogProcessor'
 import { SemanticAnalyser } from "./../js/processor/semantic/semanticAnalyser";
 import { LanguageService } from '../js/services/languageService';
 

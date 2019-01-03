@@ -4,6 +4,7 @@ class ConfigObject {
     this.loopTimeout = 5000;
     this.decimalPlaces = 5;
     this.intConvertRoundMode = 2;
+    this.default_lang = 'pt';
   }
 
   setConfig (opts) {
