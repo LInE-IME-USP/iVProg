@@ -84,6 +84,7 @@
   "text_menu_functions_conversion":"Conversão",
   "text_none_variable":"Nenhuma variável declarada",
   "text_none_variable_instruction":"Antes de utilizar uma variável, é necessário criá-la",
+  "text_ivprog_description":"Programação Visual interativa na Internet",
   "tooltip_visual": "Programação visual",
   "tooltip_textual": "Programação textual",
   "tooltip_upload": "Upload de código fonte",
@@ -130,5 +131,6 @@
   "$castReal": "como_real",
   "$castInt": "como_inteiro",
   "$castBool": "como_logico",
-  "$castString": "como_cadeia"
+  "$castString": "como_cadeia",
+  "text_ivprog_version":"Versão 2018_12_19 Build 13_18"
 }

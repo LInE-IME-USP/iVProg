@@ -78,6 +78,7 @@
   "text_menu_functions_conversion":"Conversion",
   "text_none_variable":"There is no declared variable",
   "text_none_variable_instruction":"Create a new variable to use it",
+  "text_ivprog_description":"Interactive Visual Programming on the Internet",
   "tooltip_visual": "Visual programming",
   "tooltip_textual": "Textual programming",
   "tooltip_upload": "Upload code file",
@@ -123,5 +124,6 @@
   "$castReal": "to_real",
   "$castInt": "to_integer",
   "$castBool": "to_logic",
-  "$castString": "to_string"
+  "$castString": "to_string",
+  "text_ivprog_version":"Version 2018_12_19 Build 13_18"
 }

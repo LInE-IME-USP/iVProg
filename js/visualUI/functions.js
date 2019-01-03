@@ -63,11 +63,11 @@ window.system_functions.push(new Models.SystemFunction('$lowercase', Types.TEXT,
 window.system_functions.push(new Models.SystemFunction('$charAt', Types.TEXT, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true), new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
   null, Models.SYSTEM_FUNCTIONS_CATEGORIES.text));
 // Adding arrangement functions:
-window.system_functions.push(new Models.SystemFunction('$numElements', Types.INTEGER, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
+window.system_functions.push(new Models.SystemFunction('$numElements', Types.INTEGER, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.variable_and_function, null, null, null, true, 1)],
   null, Models.SYSTEM_FUNCTIONS_CATEGORIES.arrangement));
-window.system_functions.push(new Models.SystemFunction('$matrixLines', Types.INTEGER, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
+window.system_functions.push(new Models.SystemFunction('$matrixLines', Types.INTEGER, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.variable_and_function, null, null, null, true, 2)],
   null, Models.SYSTEM_FUNCTIONS_CATEGORIES.arrangement));
-window.system_functions.push(new Models.SystemFunction('$matrixColumns', Types.INTEGER, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
+window.system_functions.push(new Models.SystemFunction('$matrixColumns', Types.INTEGER, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.variable_and_function, null, null, null, true, 2)],
   null, Models.SYSTEM_FUNCTIONS_CATEGORIES.arrangement));
 // Adding conversion functions:
 window.system_functions.push(new Models.SystemFunction('$isReal', Types.BOOLEAN, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
@@ -94,7 +94,7 @@ const sumFunction = new Models.Function("soma", Types.INTEGER, 0, [parameter1], 
 program.addFunction(sumFunction);
 */
 
-console.log('       ___           ___                    ________          \n      /   /         /   /                  /   ____/  \n     /   /         /   /                  /   /        \n    /   /         /   /  ______    ___   /   /__         \n   /   /         /   /  /      \\  /  /  /   ___/      \n  /   /______   /   /  /   /\\   \\/  /  /   /      \n /          /  /   /  /   /  \\     /  /   /____     \n/__________/  /___/  /___/    \\___/  /________/       ');
+console.log('       ___           ___                    ________          \n      /   /         /   /                  /   ____/  \n     /   /         /   /                  /   /        \n    /   /         /   /  ______    ___   /   /__         \n   /   /         /   /  /      \\  /  /  /   ___/      \n  /   /______   /   /  /   /\\   \\/  /  /   /      \n /          /  /   /  /   /  \\     /  /   /____     \n/__________/  /___/  /___/    \\___/  /________/       \n\n Laboratório de Informática na Educação\n http://line.ime.usp.br');
 
 const mainFunction = new Models.Function(LocalizedStrings.getUI("start"), Types.VOID, 0, [], true, false);
 mainFunction.function_comment = new Models.Comment(LocalizedStrings.getUI('text_comment_main'));
@@ -124,7 +124,7 @@ WatchJS.watch(window.program_obj.functions, function(){
   } else {
     AlgorithmManagement.renderAlgorithm();
   }
-}, 1);
+}, 0);
 
 function addFunctionHandler () {
 
@@ -182,7 +182,8 @@ function addHandlers (function_obj, function_container) {
         } else {
           updateReturnType(function_obj, Types[$selectedItem.data('type')]);
         }
-      }
+      },
+      selectOnKeydown: false
   });
 
   function_container.find( ".name_function_updated" ).on('click', function(e){
@@ -435,6 +436,7 @@ export function initVisualUI () {
   $('.expand_button').on('click', () => {
     full_screen();
   });
+  $('.main_title h2').prop('title', LocalizedStrings.getUI('text_ivprog_description'));
 }
 
 var is_iassign = false;
@@ -503,7 +505,7 @@ $( document ).ready(function() {
     }
   });
   $('.help_button').popup({
-    content : LocalizedStrings.getUI("tooltip_help"),
+    content : LocalizedStrings.getUI("tooltip_help") + ' - ' + LocalizedStrings.getUI("text_ivprog_version"),
     delay: {
       show: time_show,
       hide: 0
@@ -759,7 +761,8 @@ function renderParameter (function_obj, parameter_obj, function_container) {
       } else {
         updateParameterType(parameter_obj, Types[$selectedItem.data('type')]);
       }
-    }
+    },
+    selectOnKeydown: false
   });
 
   ret.find('.label_enable_name_parameter').on('click', function(e){

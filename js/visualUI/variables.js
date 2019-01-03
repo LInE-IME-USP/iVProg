@@ -75,7 +75,8 @@ function addHandlers (variable_obj, variable_container) {
 	    	}
 
 	    	renderValues(variable_obj, variable_container);
-	    }
+	    },
+	    selectOnKeydown: false
 	});
 
 	// Remove variable: 

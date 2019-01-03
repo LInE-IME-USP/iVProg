@@ -176,7 +176,7 @@ module.exports =
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// Generated from /tmp/tmp-3417pRptzVtsQAPm/ivprog.g4 by ANTLR 4.7
+// Generated from /tmp/tmp-655H36fzjvaBXr9/ivprog.g4 by ANTLR 4.7
 // jshint ignore: start
 var antlr4 = __webpack_require__(2);
 
@@ -767,7 +767,7 @@ module.exports =
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// Generated from /tmp/tmp-3417Yy87YlUWLZeI/ivprog.g4 by ANTLR 4.7
+// Generated from /tmp/tmp-655yGAPGqt6k3x8/ivprog.g4 by ANTLR 4.7
 // jshint ignore: start
 var antlr4 = __webpack_require__(2);
 
@@ -1421,7 +1421,7 @@ module.exports =
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// Generated from /tmp/tmp-3417ZzpSKjvYshMW/ivprog.g4 by ANTLR 4.7
+// Generated from /tmp/tmp-655AxQV7kPCtRl0/ivprog.g4 by ANTLR 4.7
 // jshint ignore: start
 var antlr4 = __webpack_require__(2);
 
@@ -2001,10 +2001,10 @@ module.exports = {};
 /*!*************************!*\
   !*** ./i18n/en/ui.json ***!
   \*************************/
-/*! exports provided: function, btn_clear, btn_function, btn_arithmetic_plus, btn_arithmetic_minus, btn_arithmetic_multiplication, btn_arithmetic_division, btn_arithmetic_module, btn_break, btn_case, start, void, integer, real, program, text, text_start, boolean, true, false, variable, command, new_parameter, new_variable, new_global, new_function, vector, text_comment_start, text_comment_main, text_read_var, text_write_var, text_command_read, text_command_write, text_comment, text_attribution, text_if, text_else, text_break, text_for, text_code_while, text_code_do, text_command_do, text_code_switch, text_code_case, text_logic_expression, text_arithmetic_expression, text_iftrue, text_receives, text_repeatNtimes, text_return, text_btn_return, text_whiletrue, text_dowhiletrue, text_switch, text_functioncall, text_value, text_operator, text_parentheses, text_change, text_teacher_algorithm, text_teacher_algorithm_include, text_teacher_test_case, text_teacher_config, text_teacher_data_types, text_teacher_commands, text_teacher_functions, text_teacher_create_functions, text_teacher_create_movement_functions, text_teacher_test_case_input, text_teacher_test_case_output, text_teacher_test_case_actions, text_teacher_test_case_add, text_header_ivprog_functions, text_menu_functions_math, text_menu_functions_text, text_menu_functions_arrangement, text_menu_functions_conversion, text_none_variable, text_none_variable_instruction, tooltip_visual, tooltip_textual, tooltip_upload, tooltip_download, tooltip_undo, tooltip_redo, tooltip_run, tooltip_evaluate, tooltip_help, tooltip_add_global, tooltip_minimize, tooltip_console, var_menu_select_var, var_menu_select_all, var_menu_select_function, expression_menu_select, math, text_t, arrangement, conversion, $sin, $cos, $tan, $sqrt, $pow, $log, $abs, $negate, $invert, $max, $min, $substring, $length, $uppercase, $lowercase, $charAt, $numElements, $matrixLines, $matrixColumns, $isReal, $isInt, $isBool, $castReal, $castInt, $castBool, $castString, default */
+/*! exports provided: function, btn_clear, btn_function, btn_arithmetic_plus, btn_arithmetic_minus, btn_arithmetic_multiplication, btn_arithmetic_division, btn_arithmetic_module, btn_break, btn_case, start, void, integer, real, program, text, text_start, boolean, true, false, variable, command, new_parameter, new_variable, new_global, new_function, vector, text_comment_start, text_comment_main, text_read_var, text_write_var, text_command_read, text_command_write, text_comment, text_attribution, text_if, text_else, text_break, text_for, text_code_while, text_code_do, text_command_do, text_code_switch, text_code_case, text_logic_expression, text_arithmetic_expression, text_iftrue, text_receives, text_repeatNtimes, text_return, text_btn_return, text_whiletrue, text_dowhiletrue, text_switch, text_functioncall, text_value, text_operator, text_parentheses, text_change, text_teacher_algorithm, text_teacher_algorithm_include, text_teacher_test_case, text_teacher_config, text_teacher_data_types, text_teacher_commands, text_teacher_functions, text_teacher_create_functions, text_teacher_create_movement_functions, text_teacher_test_case_input, text_teacher_test_case_output, text_teacher_test_case_actions, text_teacher_test_case_add, text_header_ivprog_functions, text_menu_functions_math, text_menu_functions_text, text_menu_functions_arrangement, text_menu_functions_conversion, text_none_variable, text_none_variable_instruction, text_ivprog_description, tooltip_visual, tooltip_textual, tooltip_upload, tooltip_download, tooltip_undo, tooltip_redo, tooltip_run, tooltip_evaluate, tooltip_help, tooltip_add_global, tooltip_minimize, tooltip_console, var_menu_select_var, var_menu_select_all, var_menu_select_function, expression_menu_select, math, text_t, arrangement, conversion, $sin, $cos, $tan, $sqrt, $pow, $log, $abs, $negate, $invert, $max, $min, $substring, $length, $uppercase, $lowercase, $charAt, $numElements, $matrixLines, $matrixColumns, $isReal, $isInt, $isBool, $castReal, $castInt, $castBool, $castString, text_ivprog_version, default */
 /***/ (function(module) {
 
-module.exports = {"function":"function","btn_clear":"Clear","btn_function":"Function","btn_arithmetic_plus":"Sum","btn_arithmetic_minus":"Minus","btn_arithmetic_multiplication":"Multiplication","btn_arithmetic_division":"Division","btn_arithmetic_module":"Module","btn_break":"Break","btn_case":"Case","start":"start","void":"void","integer":"integer","real":"real","program":"program","text":"string","text_start":"text","boolean":"boolean","true":"true","false":"false","variable":"Variable","command":"Command","new_parameter":"new_parameter","new_variable":"new_variable","new_global":"new_global","new_function":"new_function","vector":"vector","text_comment_start":"Initial comment of function...","text_comment_main":"This is the main function...","text_read_var":"Reading data","text_write_var":"Writing data","text_command_read":"read","text_command_write":"write","text_comment":"Comment","text_attribution":"Attribution","text_if":"if","text_else":"else","text_break":"break","text_for":"for","text_code_while":"while","text_code_do":"do","text_command_do":"do","text_code_switch":"switch","text_code_case":"case","text_logic_expression":"Logic Expression","text_arithmetic_expression":"Arithmetic Expression","text_iftrue":"If true then","text_receives":"receives","text_repeatNtimes":"Repeat N times","text_return":"return","text_btn_return":"Return","text_whiletrue":"While true","text_dowhiletrue":"Do while true","text_switch":"Switch","text_functioncall":"Function call","text_value":"Value","text_operator":"Operator","text_parentheses":"Parentheses","text_change":"Change","text_teacher_algorithm":"Algorithm","text_teacher_algorithm_include":"Include the following algorithm in exercise","text_teacher_test_case":"Test cases","text_teacher_config":"Settings","text_teacher_data_types":"Data types","text_teacher_commands":"Commands","text_teacher_functions":"Functions","text_teacher_create_functions":"Create new functions","text_teacher_create_movement_functions":"Move functions","text_teacher_test_case_input":"Input","text_teacher_test_case_output":"Output","text_teacher_test_case_actions":"Actions","text_teacher_test_case_add":"Add test cases","text_header_ivprog_functions":"iVProg Functions","text_menu_functions_math":"Mathematic","text_menu_functions_text":"Text","text_menu_functions_arrangement":"Arrangement","text_menu_functions_conversion":"Conversion","text_none_variable":"There is no declared variable","text_none_variable_instruction":"Create a new variable to use it","tooltip_visual":"Visual programming","tooltip_textual":"Textual programming","tooltip_upload":"Upload code file","tooltip_download":"Download code file","tooltip_undo":"Undo","tooltip_redo":"Redo","tooltip_run":"Run program","tooltip_evaluate":"Evaluate program","tooltip_help":"Help","tooltip_add_global":"Add global variable","tooltip_minimize":"Hidde function elements","tooltip_console":"Open/Close console","var_menu_select_var":"Select a var","var_menu_select_all":"Select","var_menu_select_function":"Select a function","expression_menu_select":"Select an expression","math":"Mathematic","text_t":"Text","arrangement":"Arrangement","conversion":"Conversion","$sin":"sin","$cos":"cos","$tan":"tan","$sqrt":"sqrt","$pow":"pow","$log":"log","$abs":"abs","$negate":"negate","$invert":"invert","$max":"maximum","$min":"minimum","$substring":"substring","$length":"length","$uppercase":"uppercase","$lowercase":"lowercase","$charAt":"char_at","$numElements":"total_of_elements","$matrixLines":"total_of_lines","$matrixColumns":"total_of_columns","$isReal":"is_real","$isInt":"is_integer","$isBool":"is_logic","$castReal":"to_real","$castInt":"to_integer","$castBool":"to_logic","$castString":"to_string"};
+module.exports = {"function":"function","btn_clear":"Clear","btn_function":"Function","btn_arithmetic_plus":"Sum","btn_arithmetic_minus":"Minus","btn_arithmetic_multiplication":"Multiplication","btn_arithmetic_division":"Division","btn_arithmetic_module":"Module","btn_break":"Break","btn_case":"Case","start":"start","void":"void","integer":"integer","real":"real","program":"program","text":"string","text_start":"text","boolean":"boolean","true":"true","false":"false","variable":"Variable","command":"Command","new_parameter":"new_parameter","new_variable":"new_variable","new_global":"new_global","new_function":"new_function","vector":"vector","text_comment_start":"Initial comment of function...","text_comment_main":"This is the main function...","text_read_var":"Reading data","text_write_var":"Writing data","text_command_read":"read","text_command_write":"write","text_comment":"Comment","text_attribution":"Attribution","text_if":"if","text_else":"else","text_break":"break","text_for":"for","text_code_while":"while","text_code_do":"do","text_command_do":"do","text_code_switch":"switch","text_code_case":"case","text_logic_expression":"Logic Expression","text_arithmetic_expression":"Arithmetic Expression","text_iftrue":"If true then","text_receives":"receives","text_repeatNtimes":"Repeat N times","text_return":"return","text_btn_return":"Return","text_whiletrue":"While true","text_dowhiletrue":"Do while true","text_switch":"Switch","text_functioncall":"Function call","text_value":"Value","text_operator":"Operator","text_parentheses":"Parentheses","text_change":"Change","text_teacher_algorithm":"Algorithm","text_teacher_algorithm_include":"Include the following algorithm in exercise","text_teacher_test_case":"Test cases","text_teacher_config":"Settings","text_teacher_data_types":"Data types","text_teacher_commands":"Commands","text_teacher_functions":"Functions","text_teacher_create_functions":"Create new functions","text_teacher_create_movement_functions":"Move functions","text_teacher_test_case_input":"Input","text_teacher_test_case_output":"Output","text_teacher_test_case_actions":"Actions","text_teacher_test_case_add":"Add test cases","text_header_ivprog_functions":"iVProg Functions","text_menu_functions_math":"Mathematic","text_menu_functions_text":"Text","text_menu_functions_arrangement":"Arrangement","text_menu_functions_conversion":"Conversion","text_none_variable":"There is no declared variable","text_none_variable_instruction":"Create a new variable to use it","text_ivprog_description":"Interactive Visual Programming on the Internet","tooltip_visual":"Visual programming","tooltip_textual":"Textual programming","tooltip_upload":"Upload code file","tooltip_download":"Download code file","tooltip_undo":"Undo","tooltip_redo":"Redo","tooltip_run":"Run program","tooltip_evaluate":"Evaluate program","tooltip_help":"Help","tooltip_add_global":"Add global variable","tooltip_minimize":"Hidde function elements","tooltip_console":"Open/Close console","var_menu_select_var":"Select a var","var_menu_select_all":"Select","var_menu_select_function":"Select a function","expression_menu_select":"Select an expression","math":"Mathematic","text_t":"Text","arrangement":"Arrangement","conversion":"Conversion","$sin":"sin","$cos":"cos","$tan":"tan","$sqrt":"sqrt","$pow":"pow","$log":"log","$abs":"abs","$negate":"negate","$invert":"invert","$max":"maximum","$min":"minimum","$substring":"substring","$length":"length","$uppercase":"uppercase","$lowercase":"lowercase","$charAt":"char_at","$numElements":"total_of_elements","$matrixLines":"total_of_lines","$matrixColumns":"total_of_columns","$isReal":"is_real","$isInt":"is_integer","$isBool":"is_logic","$castReal":"to_real","$castInt":"to_integer","$castBool":"to_logic","$castString":"to_string","text_ivprog_version":"Version 2018_12_19 Build 13_18"};
 
 /***/ }),
 
@@ -2070,10 +2070,10 @@ module.exports = {};
 /*!*************************!*\
   !*** ./i18n/es/ui.json ***!
   \*************************/
-/*! exports provided: function, btn_clear, btn_function, btn_arithmetic_plus, btn_arithmetic_minus, btn_arithmetic_multiplication, btn_arithmetic_division, btn_arithmetic_module, btn_break, btn_case, start, void, integer, real, program, text, text_start, boolean, true, false, variable, command, new_parameter, new_variable, new_global, new_function, vector, text_comment_start, text_comment_main, text_read_var, text_write_var, text_command_read, text_command_write, text_comment, text_attribution, text_if, text_break, text_else, text_return, text_btn_return, text_for, text_code_while, text_code_do, text_command_do, text_code_switch, text_code_case, text_logic_expression, text_arithmetic_expression, text_iftrue, text_repeatNtimes, text_receives, text_whiletrue, text_dowhiletrue, text_switch, text_functioncall, text_value, text_operator, text_parentheses, text_change, text_teacher_algorithm, text_teacher_algorithm_include, text_teacher_test_case, text_teacher_config, text_teacher_data_types, text_teacher_commands, text_teacher_functions, text_teacher_create_functions, text_teacher_create_movement_functions, text_teacher_test_case_input, text_teacher_test_case_output, text_teacher_test_case_actions, text_teacher_test_case_add, text_header_ivprog_functions, text_menu_functions_math, text_menu_functions_text, text_menu_functions_arrangement, text_menu_functions_conversion, text_none_variable, text_none_variable_instruction, tooltip_visual, tooltip_textual, tooltip_upload, tooltip_download, tooltip_undo, tooltip_redo, tooltip_run, tooltip_evaluate, tooltip_help, tooltip_add_global, tooltip_minimize, tooltip_console, var_menu_select_var, var_menu_select_all, var_menu_select_function, expression_menu_select, $sin, math, arrangement, conversion, text_t, $cos, $tan, $sqrt, $pow, $log, $abs, $negate, $invert, $max, $min, $substring, $length, $uppercase, $lowercase, $charAt, $numElements, $matrixLines, $matrixColumns, $isReal, $isInt, $isBool, $castReal, $castInt, $castBool, $castString, default */
+/*! exports provided: function, btn_clear, btn_function, btn_arithmetic_plus, btn_arithmetic_minus, btn_arithmetic_multiplication, btn_arithmetic_division, btn_arithmetic_module, btn_break, btn_case, start, void, integer, real, program, text, text_start, boolean, true, false, variable, command, new_parameter, new_variable, new_global, new_function, vector, text_comment_start, text_comment_main, text_read_var, text_write_var, text_command_read, text_command_write, text_comment, text_attribution, text_if, text_break, text_else, text_return, text_btn_return, text_for, text_code_while, text_code_do, text_command_do, text_code_switch, text_code_case, text_logic_expression, text_arithmetic_expression, text_iftrue, text_repeatNtimes, text_receives, text_whiletrue, text_dowhiletrue, text_switch, text_functioncall, text_value, text_operator, text_parentheses, text_change, text_teacher_algorithm, text_teacher_algorithm_include, text_teacher_test_case, text_teacher_config, text_teacher_data_types, text_teacher_commands, text_teacher_functions, text_teacher_create_functions, text_teacher_create_movement_functions, text_teacher_test_case_input, text_teacher_test_case_output, text_teacher_test_case_actions, text_teacher_test_case_add, text_header_ivprog_functions, text_menu_functions_math, text_menu_functions_text, text_menu_functions_arrangement, text_menu_functions_conversion, text_none_variable, text_none_variable_instruction, text_ivprog_description, tooltip_visual, tooltip_textual, tooltip_upload, tooltip_download, tooltip_undo, tooltip_redo, tooltip_run, tooltip_evaluate, tooltip_help, tooltip_add_global, tooltip_minimize, tooltip_console, var_menu_select_var, var_menu_select_all, var_menu_select_function, expression_menu_select, $sin, math, arrangement, conversion, text_t, $cos, $tan, $sqrt, $pow, $log, $abs, $negate, $invert, $max, $min, $substring, $length, $uppercase, $lowercase, $charAt, $numElements, $matrixLines, $matrixColumns, $isReal, $isInt, $isBool, $castReal, $castInt, $castBool, $castString, text_ivprog_version, default */
 /***/ (function(module) {
 
-module.exports = {"function":"function","btn_clear":"Clear","btn_function":"Function","btn_arithmetic_plus":"Sum","btn_arithmetic_minus":"Minus","btn_arithmetic_multiplication":"Multiplication","btn_arithmetic_division":"Division","btn_arithmetic_module":"Module","btn_break":"Break","btn_case":"Case","start":"start","void":"void","integer":"integer","real":"real","program":"program","text":"Text","text_start":"text","boolean":"boolean","true":"true","false":"false","variable":"Variable","command":"Command","new_parameter":"new_parameter","new_variable":"new_variable","new_global":"new_global","new_function":"new_function","vector":"vector","text_comment_start":"Initial comment of function...","text_comment_main":"This is the main function...","text_read_var":"Reading data","text_write_var":"Writing data","text_command_read":"read","text_command_write":"write","text_comment":"Comment","text_attribution":"Attribution","text_if":"if","text_break":"break","text_else":"else","text_return":"return","text_btn_return":"Return","text_for":"for","text_code_while":"while","text_code_do":"do","text_command_do":"do","text_code_switch":"switch","text_code_case":"case","text_logic_expression":"Logic Expression","text_arithmetic_expression":"Arithmetic Expression","text_iftrue":"If true then","text_repeatNtimes":"Repeat N times","text_receives":"receives","text_whiletrue":"While true","text_dowhiletrue":"Do while true","text_switch":"Switch","text_functioncall":"Function call","text_value":"Value","text_operator":"Operator","text_parentheses":"Parentheses","text_change":"Change","text_teacher_algorithm":"Algorithm","text_teacher_algorithm_include":"Include the following algorithm in exercise","text_teacher_test_case":"Test cases","text_teacher_config":"Settings","text_teacher_data_types":"Data types","text_teacher_commands":"Commands","text_teacher_functions":"Functions","text_teacher_create_functions":"Create new functions","text_teacher_create_movement_functions":"Move functions","text_teacher_test_case_input":"Input","text_teacher_test_case_output":"Output","text_teacher_test_case_actions":"Actions","text_teacher_test_case_add":"Add test cases","text_header_ivprog_functions":"iVProg Functions","text_menu_functions_math":"Mathematics","text_menu_functions_text":"Text","text_menu_functions_arrangement":"Arrangement","text_menu_functions_conversion":"Conversion","text_none_variable":"There is no declared variable","text_none_variable_instruction":"Create a new variable to use it","tooltip_visual":"Visual programming","tooltip_textual":"Textual programming","tooltip_upload":"Upload code file","tooltip_download":"Download code file","tooltip_undo":"Undo","tooltip_redo":"Redo","tooltip_run":"Run program","tooltip_evaluate":"Evaluate program","tooltip_help":"Help","tooltip_add_global":"Add global variable","tooltip_minimize":"Hidde function elements","tooltip_console":"Open/Close console","var_menu_select_var":"Select a var","var_menu_select_all":"Select","var_menu_select_function":"Select a function","expression_menu_select":"Select an expression","$sin":"sin","math":"Mathematic","arrangement":"Arrangement","conversion":"Conversion","text_t":"Text","$cos":"cos","$tan":"tan","$sqrt":"sqrt","$pow":"pow","$log":"log","$abs":"abs","$negate":"negate","$invert":"invert","$max":"maximum","$min":"minimum","$substring":"substring","$length":"length","$uppercase":"uppercase","$lowercase":"lowercase","$charAt":"char_at","$numElements":"total_of_elements","$matrixLines":"total_of_lines","$matrixColumns":"total_of_columns","$isReal":"is_real","$isInt":"is_integer","$isBool":"is_logic","$castReal":"to_real","$castInt":"to_integer","$castBool":"to_logic","$castString":"to_string"};
+module.exports = {"function":"function","btn_clear":"Clear","btn_function":"Function","btn_arithmetic_plus":"Sum","btn_arithmetic_minus":"Minus","btn_arithmetic_multiplication":"Multiplication","btn_arithmetic_division":"Division","btn_arithmetic_module":"Module","btn_break":"Break","btn_case":"Case","start":"start","void":"void","integer":"integer","real":"real","program":"program","text":"Text","text_start":"text","boolean":"boolean","true":"true","false":"false","variable":"Variable","command":"Command","new_parameter":"new_parameter","new_variable":"new_variable","new_global":"new_global","new_function":"new_function","vector":"vector","text_comment_start":"Initial comment of function...","text_comment_main":"This is the main function...","text_read_var":"Reading data","text_write_var":"Writing data","text_command_read":"read","text_command_write":"write","text_comment":"Comment","text_attribution":"Attribution","text_if":"if","text_break":"break","text_else":"else","text_return":"return","text_btn_return":"Return","text_for":"for","text_code_while":"while","text_code_do":"do","text_command_do":"do","text_code_switch":"switch","text_code_case":"case","text_logic_expression":"Logic Expression","text_arithmetic_expression":"Arithmetic Expression","text_iftrue":"If true then","text_repeatNtimes":"Repeat N times","text_receives":"receives","text_whiletrue":"While true","text_dowhiletrue":"Do while true","text_switch":"Switch","text_functioncall":"Function call","text_value":"Value","text_operator":"Operator","text_parentheses":"Parentheses","text_change":"Change","text_teacher_algorithm":"Algorithm","text_teacher_algorithm_include":"Include the following algorithm in exercise","text_teacher_test_case":"Test cases","text_teacher_config":"Settings","text_teacher_data_types":"Data types","text_teacher_commands":"Commands","text_teacher_functions":"Functions","text_teacher_create_functions":"Create new functions","text_teacher_create_movement_functions":"Move functions","text_teacher_test_case_input":"Input","text_teacher_test_case_output":"Output","text_teacher_test_case_actions":"Actions","text_teacher_test_case_add":"Add test cases","text_header_ivprog_functions":"iVProg Functions","text_menu_functions_math":"Mathematics","text_menu_functions_text":"Text","text_menu_functions_arrangement":"Arrangement","text_menu_functions_conversion":"Conversion","text_none_variable":"There is no declared variable","text_none_variable_instruction":"Create a new variable to use it","text_ivprog_description":"Interactive Visual Programming on the Internet","tooltip_visual":"Visual programming","tooltip_textual":"Textual programming","tooltip_upload":"Upload code file","tooltip_download":"Download code file","tooltip_undo":"Undo","tooltip_redo":"Redo","tooltip_run":"Run program","tooltip_evaluate":"Evaluate program","tooltip_help":"Help","tooltip_add_global":"Add global variable","tooltip_minimize":"Hidde function elements","tooltip_console":"Open/Close console","var_menu_select_var":"Select a var","var_menu_select_all":"Select","var_menu_select_function":"Select a function","expression_menu_select":"Select an expression","$sin":"sin","math":"Mathematic","arrangement":"Arrangement","conversion":"Conversion","text_t":"Text","$cos":"cos","$tan":"tan","$sqrt":"sqrt","$pow":"pow","$log":"log","$abs":"abs","$negate":"negate","$invert":"invert","$max":"maximum","$min":"minimum","$substring":"substring","$length":"length","$uppercase":"uppercase","$lowercase":"lowercase","$charAt":"char_at","$numElements":"total_of_elements","$matrixLines":"total_of_lines","$matrixColumns":"total_of_columns","$isReal":"is_real","$isInt":"is_integer","$isBool":"is_logic","$castReal":"to_real","$castInt":"to_integer","$castBool":"to_logic","$castString":"to_string","text_ivprog_version":"Version 2018_12_19 Build 13_18"};
 
 /***/ }),
 
@@ -2175,10 +2175,10 @@ module.exports = {};
 /*!*************************!*\
   !*** ./i18n/pt/ui.json ***!
   \*************************/
-/*! exports provided: function, btn_clear, btn_function, btn_arithmetic_plus, btn_arithmetic_minus, btn_arithmetic_multiplication, btn_arithmetic_division, btn_arithmetic_module, btn_break, btn_case, start, void, integer, and, or, not, real, program, text, text_start, boolean, true, false, variable, command, new_parameter, new_variable, new_global, new_function, vector, text_comment_start, text_comment_main, text_read_var, text_write_var, text_command_read, text_command_write, text_return, text_btn_return, text_comment, join_or, matrix_string, vector_string, text_attribution, text_if, text_break, text_else, text_for, text_code_while, text_code_do, text_command_do, text_code_switch, text_code_case, text_logic_expression, text_arithmetic_expression, text_iftrue, text_repeatNtimes, text_receives, text_whiletrue, text_dowhiletrue, text_switch, text_functioncall, text_value, text_operator, text_parentheses, text_change, text_teacher_algorithm, text_teacher_algorithm_include, text_teacher_test_case, text_teacher_config, text_teacher_data_types, text_teacher_commands, text_teacher_functions, text_teacher_create_functions, text_teacher_create_movement_functions, text_teacher_test_case_input, text_teacher_test_case_output, text_teacher_test_case_actions, text_teacher_test_case_add, text_header_ivprog_functions, text_menu_functions_math, text_menu_functions_text, text_menu_functions_arrangement, text_menu_functions_conversion, text_none_variable, text_none_variable_instruction, tooltip_visual, tooltip_textual, tooltip_upload, tooltip_download, tooltip_undo, tooltip_redo, tooltip_run, tooltip_evaluate, tooltip_help, tooltip_add_global, tooltip_minimize, tooltip_console, var_menu_select_var, var_menu_select_all, var_menu_select_function, expression_menu_select, $sin, math, text_t, arrangement, conversion, $cos, $tan, $sqrt, $pow, $log, $abs, $negate, $invert, $max, $min, $substring, $length, $uppercase, $lowercase, $charAt, $numElements, $matrixLines, $matrixColumns, $isReal, $isInt, $isBool, $castReal, $castInt, $castBool, $castString, default */
+/*! exports provided: function, btn_clear, btn_function, btn_arithmetic_plus, btn_arithmetic_minus, btn_arithmetic_multiplication, btn_arithmetic_division, btn_arithmetic_module, btn_break, btn_case, start, void, integer, and, or, not, real, program, text, text_start, boolean, true, false, variable, command, new_parameter, new_variable, new_global, new_function, vector, text_comment_start, text_comment_main, text_read_var, text_write_var, text_command_read, text_command_write, text_return, text_btn_return, text_comment, join_or, matrix_string, vector_string, text_attribution, text_if, text_break, text_else, text_for, text_code_while, text_code_do, text_command_do, text_code_switch, text_code_case, text_logic_expression, text_arithmetic_expression, text_iftrue, text_repeatNtimes, text_receives, text_whiletrue, text_dowhiletrue, text_switch, text_functioncall, text_value, text_operator, text_parentheses, text_change, text_teacher_algorithm, text_teacher_algorithm_include, text_teacher_test_case, text_teacher_config, text_teacher_data_types, text_teacher_commands, text_teacher_functions, text_teacher_create_functions, text_teacher_create_movement_functions, text_teacher_test_case_input, text_teacher_test_case_output, text_teacher_test_case_actions, text_teacher_test_case_add, text_header_ivprog_functions, text_menu_functions_math, text_menu_functions_text, text_menu_functions_arrangement, text_menu_functions_conversion, text_none_variable, text_none_variable_instruction, text_ivprog_description, tooltip_visual, tooltip_textual, tooltip_upload, tooltip_download, tooltip_undo, tooltip_redo, tooltip_run, tooltip_evaluate, tooltip_help, tooltip_add_global, tooltip_minimize, tooltip_console, var_menu_select_var, var_menu_select_all, var_menu_select_function, expression_menu_select, $sin, math, text_t, arrangement, conversion, $cos, $tan, $sqrt, $pow, $log, $abs, $negate, $invert, $max, $min, $substring, $length, $uppercase, $lowercase, $charAt, $numElements, $matrixLines, $matrixColumns, $isReal, $isInt, $isBool, $castReal, $castInt, $castBool, $castString, text_ivprog_version, default */
 /***/ (function(module) {
 
-module.exports = {"function":"funcao","btn_clear":"Limpar","btn_function":"Função","btn_arithmetic_plus":"Adição","btn_arithmetic_minus":"Subtração","btn_arithmetic_multiplication":"Multiplicação","btn_arithmetic_division":"Divisão","btn_arithmetic_module":"Módulo","btn_break":"Pare","btn_case":"Caso","start":"inicio","void":"vazio","integer":"inteiro","and":"E","or":"OU","not":"nao","real":"real","program":"programa","text":"cadeia","text_start":"texto","boolean":"logico","true":"verdadeiro","false":"falso","variable":"Variável","command":"Comando","new_parameter":"novo_parametro","new_variable":"nova_variavel","new_global":"nova_global","new_function":"nova_funcao","vector":"vetor","text_comment_start":"Comentário inicial da função...","text_comment_main":"Esta é a função principal...","text_read_var":"Leitura de dados","text_write_var":"Escrita de dados","text_command_read":"leia","text_command_write":"escreva","text_return":"retorne","text_btn_return":"Retorno","text_comment":"Comentário","join_or":"ou","matrix_string":"matriz de $0","vector_string":"vetor de $0","text_attribution":"Atribuição","text_if":"se","text_break":"pare","text_else":"senao","text_for":"para","text_code_while":"enquanto","text_code_do":"faca","text_command_do":"faça","text_code_switch":"escolha","text_code_case":"caso","text_logic_expression":"Expressão Lógica","text_arithmetic_expression":"Expressão Aritmética","text_iftrue":"Se verdadeiro então","text_repeatNtimes":"Repita N vezes","text_receives":"recebe","text_whiletrue":"Enquanto verdadeiro","text_dowhiletrue":"Faça enquanto verdadeiro","text_switch":"Escolha","text_functioncall":"Chamada de função","text_value":"Valor","text_operator":"Operador","text_parentheses":"Parênteses","text_change":"Alterar","text_teacher_algorithm":"Algoritmo","text_teacher_algorithm_include":"Incluir o algoritmo abaixo no exercício","text_teacher_test_case":"Casos de teste","text_teacher_config":"Configurações","text_teacher_data_types":"Tipos de dados","text_teacher_commands":"Comandos","text_teacher_functions":"Funções","text_teacher_create_functions":"Criar novas funções","text_teacher_create_movement_functions":"Movimentar funções","text_teacher_test_case_input":"Entrada","text_teacher_test_case_output":"Saída","text_teacher_test_case_actions":"Ações","text_teacher_test_case_add":"Adicionar caso de teste","text_header_ivprog_functions":"Funções do iVProg","text_menu_functions_math":"Matemática","text_menu_functions_text":"Texto","text_menu_functions_arrangement":"Arranjo","text_menu_functions_conversion":"Conversão","text_none_variable":"Nenhuma variável declarada","text_none_variable_instruction":"Antes de utilizar uma variável, é necessário criá-la","tooltip_visual":"Programação visual","tooltip_textual":"Programação textual","tooltip_upload":"Upload de código fonte","tooltip_download":"Download do código fonte","tooltip_undo":"Desfazer","tooltip_redo":"Refazer","tooltip_run":"Executar o programa","tooltip_evaluate":"Avaliar o programa","tooltip_help":"Ajuda","tooltip_add_global":"Adicionar variável global","tooltip_minimize":"Ocultar os elementos da função","tooltip_console":"Abrir/fechar o terminal","var_menu_select_var":"Selecione uma variável","var_menu_select_all":"Selecione","var_menu_select_function":"Selecione uma função","expression_menu_select":"Selecione uma expressão","$sin":"seno","math":"Matematica","text_t":"Texto","arrangement":"Arranjo","conversion":"Conversao","$cos":"cosseno","$tan":"tangente","$sqrt":"raiz_quadrada","$pow":"potencia","$log":"logaritmo","$abs":"modulo","$negate":"trocar_sinal","$invert":"inverter_valor","$max":"maximo","$min":"minimo","$substring":"subcadeia","$length":"comprimento","$uppercase":"caixa_alta","$lowercase":"caixa_baixa","$charAt":"texto_na_posicao","$numElements":"total_de_elementos","$matrixLines":"total_de_linhas","$matrixColumns":"total_de_colunas","$isReal":"e_real","$isInt":"e_inteiro","$isBool":"e_logico","$castReal":"como_real","$castInt":"como_inteiro","$castBool":"como_logico","$castString":"como_cadeia"};
+module.exports = {"function":"funcao","btn_clear":"Limpar","btn_function":"Função","btn_arithmetic_plus":"Adição","btn_arithmetic_minus":"Subtração","btn_arithmetic_multiplication":"Multiplicação","btn_arithmetic_division":"Divisão","btn_arithmetic_module":"Módulo","btn_break":"Pare","btn_case":"Caso","start":"inicio","void":"vazio","integer":"inteiro","and":"E","or":"OU","not":"nao","real":"real","program":"programa","text":"cadeia","text_start":"texto","boolean":"logico","true":"verdadeiro","false":"falso","variable":"Variável","command":"Comando","new_parameter":"novo_parametro","new_variable":"nova_variavel","new_global":"nova_global","new_function":"nova_funcao","vector":"vetor","text_comment_start":"Comentário inicial da função...","text_comment_main":"Esta é a função principal...","text_read_var":"Leitura de dados","text_write_var":"Escrita de dados","text_command_read":"leia","text_command_write":"escreva","text_return":"retorne","text_btn_return":"Retorno","text_comment":"Comentário","join_or":"ou","matrix_string":"matriz de $0","vector_string":"vetor de $0","text_attribution":"Atribuição","text_if":"se","text_break":"pare","text_else":"senao","text_for":"para","text_code_while":"enquanto","text_code_do":"faca","text_command_do":"faça","text_code_switch":"escolha","text_code_case":"caso","text_logic_expression":"Expressão Lógica","text_arithmetic_expression":"Expressão Aritmética","text_iftrue":"Se verdadeiro então","text_repeatNtimes":"Repita N vezes","text_receives":"recebe","text_whiletrue":"Enquanto verdadeiro","text_dowhiletrue":"Faça enquanto verdadeiro","text_switch":"Escolha","text_functioncall":"Chamada de função","text_value":"Valor","text_operator":"Operador","text_parentheses":"Parênteses","text_change":"Alterar","text_teacher_algorithm":"Algoritmo","text_teacher_algorithm_include":"Incluir o algoritmo abaixo no exercício","text_teacher_test_case":"Casos de teste","text_teacher_config":"Configurações","text_teacher_data_types":"Tipos de dados","text_teacher_commands":"Comandos","text_teacher_functions":"Funções","text_teacher_create_functions":"Criar novas funções","text_teacher_create_movement_functions":"Movimentar funções","text_teacher_test_case_input":"Entrada","text_teacher_test_case_output":"Saída","text_teacher_test_case_actions":"Ações","text_teacher_test_case_add":"Adicionar caso de teste","text_header_ivprog_functions":"Funções do iVProg","text_menu_functions_math":"Matemática","text_menu_functions_text":"Texto","text_menu_functions_arrangement":"Arranjo","text_menu_functions_conversion":"Conversão","text_none_variable":"Nenhuma variável declarada","text_none_variable_instruction":"Antes de utilizar uma variável, é necessário criá-la","text_ivprog_description":"Programação Visual interativa na Internet","tooltip_visual":"Programação visual","tooltip_textual":"Programação textual","tooltip_upload":"Upload de código fonte","tooltip_download":"Download do código fonte","tooltip_undo":"Desfazer","tooltip_redo":"Refazer","tooltip_run":"Executar o programa","tooltip_evaluate":"Avaliar o programa","tooltip_help":"Ajuda","tooltip_add_global":"Adicionar variável global","tooltip_minimize":"Ocultar os elementos da função","tooltip_console":"Abrir/fechar o terminal","var_menu_select_var":"Selecione uma variável","var_menu_select_all":"Selecione","var_menu_select_function":"Selecione uma função","expression_menu_select":"Selecione uma expressão","$sin":"seno","math":"Matematica","text_t":"Texto","arrangement":"Arranjo","conversion":"Conversao","$cos":"cosseno","$tan":"tangente","$sqrt":"raiz_quadrada","$pow":"potencia","$log":"logaritmo","$abs":"modulo","$negate":"trocar_sinal","$invert":"inverter_valor","$max":"maximo","$min":"minimo","$substring":"subcadeia","$length":"comprimento","$uppercase":"caixa_alta","$lowercase":"caixa_baixa","$charAt":"texto_na_posicao","$numElements":"total_de_elementos","$matrixLines":"total_de_linhas","$matrixColumns":"total_de_colunas","$isReal":"e_real","$isInt":"e_inteiro","$isBool":"e_logico","$castReal":"como_real","$castInt":"como_inteiro","$castBool":"como_logico","$castString":"como_cadeia","text_ivprog_version":"Versão 2018_12_19 Build 13_18"};
 
 /***/ }),
 
@@ -16688,20 +16688,23 @@ function functionsCode(function_obj) {
 	}
 
 	for (var j = 0; j < function_obj.commands.length; j++) {
-		//try {
-		ret += commandsCode(function_obj.commands[j]);
-		/*} catch (err) {
-  		has_error = true;
-  		console.error(err.message);
-  		var todos = $('body').find('.command_container');
-  	for (var i = 0; i < todos.length; i++) {
-  			if ($(todos[i]).data('command') == function_obj.commands[j]) {
-  			$( todos[i] ).prepend( ' <i class="ui icon red exclamation triangle error_icon"></i> ' );
-  			break;
-  		}
-  	}
-  	
-  }*/
+		try {
+			ret += commandsCode(function_obj.commands[j]);
+		} catch (err) {
+
+			has_error = true;
+
+			console.error(err.message);
+
+			var todos = (0, _jquery2.default)('body').find('.command_container');
+
+			for (var i = 0; i < todos.length; i++) {
+				if ((0, _jquery2.default)(todos[i]).data('command') == function_obj.commands[j]) {
+					(0, _jquery2.default)(todos[i]).prepend(' <i class="ui icon red exclamation triangle error_icon"></i> ');
+					break;
+				}
+			}
+		}
 	}
 
 	ret += '\n\t}';
@@ -17200,7 +17203,6 @@ function readersCode(command_obj, indentation) {
 }
 
 function variableValueMenuCode(variable_obj) {
-
 	var ret = '';
 	if (variable_obj.function_called) {
 
@@ -17224,11 +17226,11 @@ function variableValueMenuCode(variable_obj) {
 
 		ret += variable_obj.content.name;
 
-		if (variable_obj.content.dimensions == 1) {
+		if (variable_obj.content.dimensions == 1 && variable_obj.dimensions != 1) {
 			ret += ' [ ' + variableValueMenuCode(variable_obj.column) + ' ] ';
 		}
 
-		if (variable_obj.content.dimensions == 2) {
+		if (variable_obj.content.dimensions == 2 && variable_obj.dimensions != 2) {
 			ret += ' [ ' + variableValueMenuCode(variable_obj.row) + ' ] ';
 			ret += ' [ ' + variableValueMenuCode(variable_obj.column) + ' ] ';
 		}
@@ -17959,6 +17961,13 @@ function renderCommand(command, element_reference, before_after_inside, function
 			element_reference.append(createdElement);
 			break;
 	}
+
+	createdElement.find('.button_remove_command').mouseover(function () {
+		createdElement.css({ 'opacity': '.8' });
+	});
+	createdElement.find('.button_remove_command').mouseout(function () {
+		createdElement.css({ 'opacity': '1' });
+	});
 }
 
 function genericCreateCommand(command_type) {
@@ -20875,7 +20884,8 @@ function variableValueMenuCode(command, variable_obj, dom_object, function_obj, 
 					if ($selectedItem.data('exp')) {
 						AttribuitionsManagement.manageExpressionElements(command, variable_obj, dom_object, menu_var_or_value, function_obj, $selectedItem, expression_element);
 					}
-				}
+				},
+				selectOnKeydown: false
 			});
 		} else {
 
@@ -20943,14 +20953,15 @@ function variableValueMenuCode(command, variable_obj, dom_object, function_obj, 
 					if ($selectedItem.data('exp')) {
 						AttribuitionsManagement.manageExpressionElements(command, variable_obj, dom_object, menu_var_or_value, function_obj, $selectedItem, expression_element);
 					}
-				}
+				},
+				selectOnKeydown: false
 			});
 		}
 	} else if (variable_obj.content.type) {
 
 		var variable_render = "";
 
-		if (variable_obj.content.dimensions == 1) {
+		if (variable_obj.content.dimensions == 1 && variable_obj.dimensions != 1) {
 
 			variable_render = '<div class="variable_rendered"> <span class="var_name">' + variable_obj.content.name + '</span>';
 
@@ -20999,7 +21010,8 @@ function variableValueMenuCode(command, variable_obj, dom_object, function_obj, 
 					if ($selectedItem.data('exp')) {
 						AttribuitionsManagement.manageExpressionElements(command, variable_obj, dom_object, menu_var_or_value, function_obj, $selectedItem, expression_element);
 					}
-				}
+				},
+				selectOnKeydown: false
 			});
 
 			if (!variable_obj.column) {
@@ -21007,7 +21019,7 @@ function variableValueMenuCode(command, variable_obj, dom_object, function_obj, 
 			}
 
 			variableValueMenuCode(command, variable_obj.column, (0, _jquery2.default)(variable_render.find('.column_container')), function_obj, menu_var_or_value, expression_element);
-		} else if (variable_obj.content.dimensions == 2) {
+		} else if (variable_obj.content.dimensions == 2 && variable_obj.dimensions != 2) {
 
 			variable_render = '<div class="variable_rendered"> <span class="var_name">' + variable_obj.content.name + '</span>';
 
@@ -21057,7 +21069,8 @@ function variableValueMenuCode(command, variable_obj, dom_object, function_obj, 
 					if ($selectedItem.data('exp')) {
 						AttribuitionsManagement.manageExpressionElements(command, variable_obj, dom_object, menu_var_or_value, function_obj, $selectedItem, expression_element);
 					}
-				}
+				},
+				selectOnKeydown: false
 			});
 
 			if (!variable_obj.column) {
@@ -21119,7 +21132,8 @@ function variableValueMenuCode(command, variable_obj, dom_object, function_obj, 
 					if ($selectedItem.data('exp')) {
 						AttribuitionsManagement.manageExpressionElements(command, variable_obj, dom_object, menu_var_or_value, function_obj, $selectedItem, expression_element);
 					}
-				}
+				},
+				selectOnKeydown: false
 			});
 		}
 	} else {
@@ -21175,7 +21189,8 @@ function variableValueMenuCode(command, variable_obj, dom_object, function_obj, 
 				if ($selectedItem.data('exp')) {
 					AttribuitionsManagement.manageExpressionElements(command, variable_obj, dom_object, menu_var_or_value, function_obj, $selectedItem, expression_element);
 				}
-			}
+			},
+			selectOnKeydown: false
 		});
 
 		variable_render.on('click', function (e) {
@@ -21311,7 +21326,8 @@ function addHandlers(command, ref_object, dom_object, menu_var_or_value, functio
 				if (command.type == Models.COMMAND_TYPES.repeatNtimes) {
 					RepeatNTimesManagement.manageExpressionElements(command, ref_object, dom_object, menu_var_or_value, function_obj, $selectedItem, expression_element);
 				}
-			}
+			},
+			selectOnKeydown: false
 		});
 	}
 
@@ -21370,7 +21386,12 @@ function openInputToFunction(command, ref_object, dom_object, menu_var_or_value,
 		dom_object.append(parameters_menu);
 
 		for (var j = 0; j < function_selected.parameters_list.length; j++) {
-			var temp = new Models.VariableValueMenu(VAR_OR_VALUE_TYPES.all, null, null, null, true);
+			var temp;
+			if (function_selected.parameters_list[j].dimensions > 0) {
+				temp = new Models.VariableValueMenu(VAR_OR_VALUE_TYPES.variable_and_function, null, null, null, true, function_selected.parameters_list[j].dimensions);
+			} else {
+				temp = new Models.VariableValueMenu(VAR_OR_VALUE_TYPES.all, null, null, null, true);
+			}
 			ref_object.parameters_list.push(temp);
 			renderMenu(command, temp, parameters_menu.find('.parameter_' + j), function_obj, 2, expression_element);
 		}
@@ -21412,7 +21433,8 @@ function openInputToFunction(command, ref_object, dom_object, menu_var_or_value,
 				if ($selectedItem.data('exp')) {
 					AttribuitionsManagement.manageExpressionElements(command, ref_object, dom_object, menu_var_or_value, function_obj, $selectedItem, expression_element);
 				}
-			}
+			},
+			selectOnKeydown: false
 		});
 	} else {
 		menu_var_or_value.find('.text').text(' ');
@@ -21469,7 +21491,8 @@ function openInputToFunction(command, ref_object, dom_object, menu_var_or_value,
 				if ($selectedItem.data('exp')) {
 					AttribuitionsManagement.manageExpressionElements(command, ref_object, dom_object, menu_var_or_value, function_obj, $selectedItem, expression_element);
 				}
-			}
+			},
+			selectOnKeydown: false
 		});
 	}
 
@@ -21487,10 +21510,10 @@ function openInputToVariable(command, ref_object, dom_object, menu_var_or_value,
 
 	var variable_render = '<div class="variable_rendered"> <span class="var_name">' + variable_selected.name + '</span>';
 
-	if (variable_selected.dimensions == 1) {
+	if (variable_selected.dimensions == 1 && ref_object.dimensions != 1) {
 		variable_render += ' <span>[ </span> <div class="column_container"></div> <span> ]</span>';
 	}
-	if (variable_selected.dimensions == 2) {
+	if (variable_selected.dimensions == 2 && ref_object.dimensions != 2) {
 		variable_render += ' <span>[ </span> <div class="row_container"></div> <span> ]</span> ';
 		variable_render += ' <span>[ </span> <div class="column_container"></div> <span> ]</span>';
 	}
@@ -21501,11 +21524,11 @@ function openInputToVariable(command, ref_object, dom_object, menu_var_or_value,
 
 	dom_object.append(variable_render);
 
-	if (variable_selected.dimensions == 1) {
+	if (variable_selected.dimensions == 1 && ref_object.dimensions != 1) {
 		ref_object.column = new Models.VariableValueMenu(VAR_OR_VALUE_TYPES.all, null, null, null, true);
 		renderMenu(command, ref_object.column, variable_render.find('.column_container'), function_obj, 2, expression_element);
 	}
-	if (variable_selected.dimensions == 2) {
+	if (variable_selected.dimensions == 2 && ref_object.dimensions != 2) {
 		ref_object.row = new Models.VariableValueMenu(VAR_OR_VALUE_TYPES.all, null, null, null, true);
 		renderMenu(command, ref_object.row, variable_render.find('.row_container'), function_obj, 2, expression_element);
 
@@ -21557,7 +21580,8 @@ function openInputToVariable(command, ref_object, dom_object, menu_var_or_value,
 			if (command.type == Models.COMMAND_TYPES.repeatNtimes) {
 				RepeatNTimesManagement.manageClearExpressionElements(command, ref_object, dom_object, menu_var_or_value, function_obj, $selectedItem, expression_element);
 			}
-		}
+		},
+		selectOnKeydown: false
 	});
 
 	if (command.type == Models.COMMAND_TYPES.attribution) {
@@ -21626,7 +21650,8 @@ function openInputToValue(command, ref_object, dom_object, menu_var_or_value, fu
 			if ($selectedItem.data('exp')) {
 				AttribuitionsManagement.manageExpressionElements(command, ref_object, dom_object, menu_var_or_value, function_obj, $selectedItem, expression_element);
 			}
-		}
+		},
+		selectOnKeydown: false
 	});
 
 	dom_object.find('.width-dynamic-minus').focusout(function () {
@@ -22024,9 +22049,9 @@ window.system_functions.push(new Models.SystemFunction('$uppercase', _types.Type
 window.system_functions.push(new Models.SystemFunction('$lowercase', _types.Types.TEXT, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)], null, Models.SYSTEM_FUNCTIONS_CATEGORIES.text));
 window.system_functions.push(new Models.SystemFunction('$charAt', _types.Types.TEXT, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true), new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)], null, Models.SYSTEM_FUNCTIONS_CATEGORIES.text));
 // Adding arrangement functions:
-window.system_functions.push(new Models.SystemFunction('$numElements', _types.Types.INTEGER, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)], null, Models.SYSTEM_FUNCTIONS_CATEGORIES.arrangement));
-window.system_functions.push(new Models.SystemFunction('$matrixLines', _types.Types.INTEGER, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)], null, Models.SYSTEM_FUNCTIONS_CATEGORIES.arrangement));
-window.system_functions.push(new Models.SystemFunction('$matrixColumns', _types.Types.INTEGER, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)], null, Models.SYSTEM_FUNCTIONS_CATEGORIES.arrangement));
+window.system_functions.push(new Models.SystemFunction('$numElements', _types.Types.INTEGER, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.variable_and_function, null, null, null, true, 1)], null, Models.SYSTEM_FUNCTIONS_CATEGORIES.arrangement));
+window.system_functions.push(new Models.SystemFunction('$matrixLines', _types.Types.INTEGER, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.variable_and_function, null, null, null, true, 2)], null, Models.SYSTEM_FUNCTIONS_CATEGORIES.arrangement));
+window.system_functions.push(new Models.SystemFunction('$matrixColumns', _types.Types.INTEGER, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.variable_and_function, null, null, null, true, 2)], null, Models.SYSTEM_FUNCTIONS_CATEGORIES.arrangement));
 // Adding conversion functions:
 window.system_functions.push(new Models.SystemFunction('$isReal', _types.Types.BOOLEAN, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)], null, Models.SYSTEM_FUNCTIONS_CATEGORIES.conversion));
 window.system_functions.push(new Models.SystemFunction('$isInt', _types.Types.BOOLEAN, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)], null, Models.SYSTEM_FUNCTIONS_CATEGORIES.conversion));
@@ -22045,7 +22070,7 @@ const sumFunction = new Models.Function("soma", Types.INTEGER, 0, [parameter1], 
 program.addFunction(sumFunction);
 */
 
-console.log('       ___           ___                    ________          \n      /   /         /   /                  /   ____/  \n     /   /         /   /                  /   /        \n    /   /         /   /  ______    ___   /   /__         \n   /   /         /   /  /      \\  /  /  /   ___/      \n  /   /______   /   /  /   /\\   \\/  /  /   /      \n /          /  /   /  /   /  \\     /  /   /____     \n/__________/  /___/  /___/    \\___/  /________/       ');
+console.log('       ___           ___                    ________          \n      /   /         /   /                  /   ____/  \n     /   /         /   /                  /   /        \n    /   /         /   /  ______    ___   /   /__         \n   /   /         /   /  /      \\  /  /  /   ___/      \n  /   /______   /   /  /   /\\   \\/  /  /   /      \n /          /  /   /  /   /  \\     /  /   /____     \n/__________/  /___/  /___/    \\___/  /________/       \n\n Laboratório de Informática na Educação\n http://line.ime.usp.br');
 
 var mainFunction = new Models.Function(_localizedStringsService.LocalizedStrings.getUI("start"), _types.Types.VOID, 0, [], true, false);
 mainFunction.function_comment = new Models.Comment(_localizedStringsService.LocalizedStrings.getUI('text_comment_main'));
@@ -22079,7 +22104,7 @@ _melankeWatchjs2.default.watch(window.program_obj.functions, function () {
   } else {
     AlgorithmManagement.renderAlgorithm();
   }
-}, 1);
+}, 0);
 
 function addFunctionHandler() {
 
@@ -22141,7 +22166,8 @@ function addHandlers(function_obj, function_container) {
       } else {
         updateReturnType(function_obj, _types.Types[$selectedItem.data('type')]);
       }
-    }
+    },
+    selectOnKeydown: false
   });
 
   function_container.find(".name_function_updated").on('click', function (e) {
@@ -22368,6 +22394,7 @@ function initVisualUI() {
   (0, _jquery2.default)('.expand_button').on('click', function () {
     full_screen();
   });
+  (0, _jquery2.default)('.main_title h2').prop('title', _localizedStringsService.LocalizedStrings.getUI('text_ivprog_description'));
 }
 
 var is_iassign = false;
@@ -22436,7 +22463,7 @@ var is_iassign = false;
     }
   });
   (0, _jquery2.default)('.help_button').popup({
-    content: _localizedStringsService.LocalizedStrings.getUI("tooltip_help"),
+    content: _localizedStringsService.LocalizedStrings.getUI("tooltip_help") + ' - ' + _localizedStringsService.LocalizedStrings.getUI("text_ivprog_version"),
     delay: {
       show: time_show,
       hide: 0
@@ -22682,7 +22709,8 @@ function renderParameter(function_obj, parameter_obj, function_container) {
       } else {
         updateParameterType(parameter_obj, _types.Types[$selectedItem.data('type')]);
       }
-    }
+    },
+    selectOnKeydown: false
   });
 
   ret.find('.label_enable_name_parameter').on('click', function (e) {
@@ -23268,7 +23296,8 @@ function addHandlers(global_container) {
 			}
 
 			renderValues(global_var, global_container);
-		}
+		},
+		selectOnKeydown: false
 	});
 
 	// Remove global: 
@@ -24063,6 +24092,7 @@ var VariableValueMenu = exports.VariableValueMenu = function VariableValueMenu()
   var row = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
   var column = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
   var include_constant = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : true;
+  var dimensions = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : 0;
 
   _classCallCheck(this, VariableValueMenu);
 
@@ -24072,6 +24102,7 @@ var VariableValueMenu = exports.VariableValueMenu = function VariableValueMenu()
   this.row = row;
   this.column = column;
   this.include_constant = include_constant;
+  this.dimensions = dimensions;
 };
 
 var FunctionCallMenu = exports.FunctionCallMenu = function FunctionCallMenu() {
@@ -24270,7 +24301,8 @@ function addHandlers(variable_obj, variable_container) {
 			}
 
 			renderValues(variable_obj, variable_container);
-		}
+		},
+		selectOnKeydown: false
 	});
 
 	// Remove variable: 

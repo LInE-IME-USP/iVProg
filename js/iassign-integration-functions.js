@@ -115,13 +115,80 @@ function getiLMContent () {
     // O parâmetro "iLM_PARAM_Assignment" fornece o URL do endereço que deve ser
     // requisitado via AJAX para a captura dos dados da atividade
     $.get(iLMparameters.iLM_PARAM_Assignment, function (data) {
+        // Aluno está trabalhando em alguma atividade:
         if (iLMparameters.iLM_PARAM_SendAnswer == 'false') {
             previousContent = data;
             prepareActivityToStudent(data);
-        } else {
-
+        } else { // Professor está editando uma atividade:
+            previousContent = data;
+            prepareActivityToEdit(data);
         }
     });
+}
+
+function prepareActivityToEdit (ilm_cont) {
+    var content = JSON.parse(ilm_cont.split('\n::algorithm::')[0]);
+    testCases = content.testcases;
+    settingsDataTypes = content.settings_data_types;
+    settingsCommands = content.settings_commands;
+    settingsFunctions = content.settings_functions;
+
+    for (var i = 0; i < testCases.length; i++) {
+        addTestCase(testCases[i]);
+    }
+
+    if (ilm_cont.split('\n::algorithm::')[1]) {
+        algorithm_in_ilm = ilm_cont.split('\n::algorithm::')[1].split('\n::logs::')[0];
+        $("input[name='include_algo']").prop('checked', true);
+        includePreviousAlgorithm();
+        renderAlgorithm();
+    }
+}
+
+function includePreviousAlgorithm () {
+    window.program_obj.functions = JSON.parse(algorithm_in_ilm).functions;
+    window.program_obj.globals = JSON.parse(algorithm_in_ilm).globals;
+
+    window.watchW.watch(window.program_obj.globals, function(){
+      if (window.insertContext) {
+        setTimeout(function(){ renderAlgorithm(); }, 300);
+        window.insertContext = false;
+      } else {
+        renderAlgorithm();
+      }
+    }, 1);
+
+    for (var i = 0; i < window.program_obj.functions.length; i ++) {
+        window.watchW.watch(window.program_obj.functions[i].parameters_list, function(){
+          if (window.insertContext) {
+            setTimeout(function(){ renderAlgorithm(); }, 300);
+            window.insertContext = false;
+          } else {
+            renderAlgorithm();
+          }
+        }, 1);
+
+        window.watchW.watch(window.program_obj.functions[i].variables_list, function(){
+          if (window.insertContext) {
+            setTimeout(function(){ renderAlgorithm(); }, 300);
+            window.insertContext = false;
+          } else {
+            renderAlgorithm();
+          }
+        }, 1);
+
+        if (window.program_obj.functions[i].is_main) {
+            window.program_obj.functions[i].name = LocalizedStrings.getUI("start");
+        }
+    }
+    window.watchW.watch(window.program_obj.functions, function(){
+      if (window.insertContext) {
+        setTimeout(function(){ renderAlgorithm(); }, 300);
+        window.insertContext = false;
+      } else {
+        renderAlgorithm();
+      }
+    }, 1);
 }
 
 function prepareActivityToStudent (ilm_cont) {
@@ -130,47 +197,10 @@ function prepareActivityToStudent (ilm_cont) {
     settingsDataTypes = content.settings_data_types;
     settingsCommands = content.settings_commands;
     settingsFunctions = content.settings_functions;
+
     if (ilm_cont.split('\n::algorithm::')[1]) {
         algorithm_in_ilm = ilm_cont.split('\n::algorithm::')[1].split('\n::logs::')[0];
-        window.program_obj.functions = JSON.parse(algorithm_in_ilm).functions;
-        window.program_obj.globals = JSON.parse(algorithm_in_ilm).globals;
-
-        window.watchW.watch(window.program_obj.globals, function(){
-          if (window.insertContext) {
-            setTimeout(function(){ renderAlgorithm(); }, 300);
-            window.insertContext = false;
-          } else {
-            renderAlgorithm();
-          }
-        }, 1);
-
-        for (var i = 0; i < window.program_obj.functions.length; i ++) {
-            window.watchW.watch(window.program_obj.functions[i].parameters_list, function(){
-              if (window.insertContext) {
-                setTimeout(function(){ renderAlgorithm(); }, 300);
-                window.insertContext = false;
-              } else {
-                renderAlgorithm();
-              }
-            }, 1);
-
-            window.watchW.watch(window.program_obj.functions[i].variables_list, function(){
-              if (window.insertContext) {
-                setTimeout(function(){ renderAlgorithm(); }, 300);
-                window.insertContext = false;
-              } else {
-                renderAlgorithm();
-              }
-            }, 1);
-        }
-        window.watchW.watch(window.program_obj.functions, function(){
-          if (window.insertContext) {
-            setTimeout(function(){ renderAlgorithm(); }, 300);
-            window.insertContext = false;
-          } else {
-            renderAlgorithm();
-          }
-        }, 1);
+        includePreviousAlgorithm();
     }
     $('.assessment_button').removeClass('disabled');
     renderAlgorithm();
@@ -207,6 +237,12 @@ $(document).ready(function() {
         // Caso não esteja em modo de resolução de atividade, a visualização no momento
         // é para a elaboração de atividade:
         //$('.elaboracao').css("display","block");
+
+        // Se possuir o parâmetro iLMparameters.iLM_PARAM_Assignment, o professor
+        // está editando uma atividade:
+        if (iLMparameters.iLM_PARAM_Assignment) {
+            getiLMContent();
+        }
     }
 
     if (!testCases) {
@@ -264,8 +300,35 @@ function prepareTableTestCases (div_el) {
 
 var hist = false;
 
-function addTestCase () {
-    var new_row = $('<tr><td class="counter"></td><td class="expandingArea"><textarea rows="1" name="input" class="text_area_input"></textarea></td><td class="expandingArea"><textarea rows="1" name="output" class="text_area_output"></textarea></td><td class="btn_actions"><div class="ui button_remove_case"><i class="red icon times large"></i></div></td></tr>');
+function addTestCase (test_case = null) {
+    var new_row = null;
+    if (test_case) {
+        var text_row = '';
+
+        text_row += '<tr><td class="counter"></td><td class="expandingArea"><textarea rows="'+test_case.input.length+'" name="input" class="text_area_input">';
+
+        for (var i = 0; i < test_case.input.length; i ++) {
+            text_row += test_case.input[i];
+            if ((i + 1) < test_case.input.length) {
+                text_row += '\n';
+            }
+        }
+        
+        text_row += '</textarea></td><td class="expandingArea"><textarea rows="'+test_case.output.length+'" name="output" class="text_area_output">';
+
+        for (var i = 0; i < test_case.output.length; i ++) {
+            text_row += test_case.output[i];
+            if ((i + 1) < test_case.output.length) {
+                text_row += '\n';
+            }
+        }
+
+        text_row += '</textarea></td><td class="btn_actions"><div class="ui button_remove_case"><i class="red icon times large"></i></div></td></tr>';
+
+        new_row = $(text_row);
+    } else {
+        new_row = $('<tr><td class="counter"></td><td class="expandingArea"><textarea rows="1" name="input" class="text_area_input"></textarea></td><td class="expandingArea"><textarea rows="1" name="output" class="text_area_output"></textarea></td><td class="btn_actions"><div class="ui button_remove_case"><i class="red icon times large"></i></div></td></tr>');
+    }
     $('.content_cases').append(new_row);
 
     new_row.find('.button_remove_case').click(function(e) {
@@ -273,7 +336,7 @@ function addTestCase () {
         updateTestCaseCounter();
     });
 
-    $('textarea').on('input', function(e) {
+    new_row.find('textarea').on('input', function(e) {
         var lines = $(this).val().split('\n').length;
         $(this).attr('rows', lines);
     });
@@ -287,10 +350,12 @@ function addTestCase () {
             addTestCase();
         }
      });
-     if (!hist) {
-        $( ".content_cases tr:last" ).find('.text_area_input').focus();
-     } else {
-        hist = false;
+     if (test_case == null) {
+        if (!hist) {
+            $( ".content_cases tr:last" ).find('.text_area_input').focus();
+         } else {
+            hist = false;
+         }
      }
 }
 
@@ -393,7 +458,7 @@ function inIframe () {
 
 
 function full_screen() {
-     // check if user allows full screen of elements. This can be enabled or disabled in browser config. By default its enabled.
+    // check if user allows full screen of elements. This can be enabled or disabled in browser config. By default its enabled.
     //its also used to check if browser supports full screen api.
     if("fullscreenEnabled" in document || "webkitFullscreenEnabled" in document || "mozFullScreenEnabled" in document || "msFullscreenEnabled" in document) {
         if(document.fullscreenEnabled || document.webkitFullscreenEnabled || document.mozFullScreenEnabled || document.msFullscreenEnabled) {

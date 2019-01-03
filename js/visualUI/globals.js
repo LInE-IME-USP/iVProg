@@ -399,7 +399,8 @@ function addHandlers (global_container) {
 
 	    	renderValues(global_var, global_container);
 
-	    }
+	    },
+	    selectOnKeydown: false
 	});
 
 	// Remove global: 

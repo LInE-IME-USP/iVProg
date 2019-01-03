@@ -83,24 +83,24 @@ function functionsCode (function_obj) {
 	}
 
 	for (var j = 0; j < function_obj.commands.length; j++) {
-		//try {
+		try {
 			ret += commandsCode(function_obj.commands[j]);
-		/*} catch (err) {
+		} catch (err) {
 
 			has_error = true;
 
 			console.error(err.message);
 
 			var todos = $('body').find('.command_container');
-			for (var i = 0; i < todos.length; i++) {
 
+			for (var i = 0; i < todos.length; i++) {
 				if ($(todos[i]).data('command') == function_obj.commands[j]) {
 					$( todos[i] ).prepend( ' <i class="ui icon red exclamation triangle error_icon"></i> ' );
 					break;
 				}
 			}
 			
-		}*/
+		}
 		
 	}
 
@@ -609,7 +609,6 @@ function readersCode (command_obj, indentation) {
 }
 
 function variableValueMenuCode (variable_obj) {
-
 	var ret = '';
 	if (variable_obj.function_called) {
 
@@ -633,11 +632,11 @@ function variableValueMenuCode (variable_obj) {
 
 		ret += variable_obj.content.name;
 
-		if (variable_obj.content.dimensions == 1) {
+		if (variable_obj.content.dimensions == 1 && variable_obj.dimensions != 1) {
 			ret += ' [ ' + variableValueMenuCode(variable_obj.column) + ' ] ';
 		}
 
-		if (variable_obj.content.dimensions == 2) {
+		if (variable_obj.content.dimensions == 2 && variable_obj.dimensions != 2) {
 			ret += ' [ ' + variableValueMenuCode(variable_obj.row) + ' ] ';
 			ret += ' [ ' + variableValueMenuCode(variable_obj.column) + ' ] ';
 		}

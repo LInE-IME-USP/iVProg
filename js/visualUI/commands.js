@@ -233,6 +233,13 @@ export function renderCommand (command, element_reference, before_after_inside, 
 			break;
 	}
 
+	createdElement.find('.button_remove_command').mouseover(function() {
+    	createdElement.css({'opacity':'.8'});
+	});
+	createdElement.find('.button_remove_command').mouseout(function() { 
+    	createdElement.css({'opacity':'1'});
+	});
+
 }
 
 export function genericCreateCommand (command_type) {
