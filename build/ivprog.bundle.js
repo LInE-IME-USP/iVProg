@@ -176,7 +176,7 @@ module.exports =
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// Generated from /tmp/tmp-655H36fzjvaBXr9/ivprog.g4 by ANTLR 4.7
+// Generated from /tmp/tmp-14980BV3U4g1OiU91/ivprog.g4 by ANTLR 4.7
 // jshint ignore: start
 var antlr4 = __webpack_require__(2);
 
@@ -767,7 +767,7 @@ module.exports =
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// Generated from /tmp/tmp-655yGAPGqt6k3x8/ivprog.g4 by ANTLR 4.7
+// Generated from /tmp/tmp-14980zJZMIS28tCQu/ivprog.g4 by ANTLR 4.7
 // jshint ignore: start
 var antlr4 = __webpack_require__(2);
 
@@ -1421,7 +1421,7 @@ module.exports =
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// Generated from /tmp/tmp-655AxQV7kPCtRl0/ivprog.g4 by ANTLR 4.7
+// Generated from /tmp/tmp-14980WDmIUoYoSaz7/ivprog.g4 by ANTLR 4.7
 // jshint ignore: start
 var antlr4 = __webpack_require__(2);
 
@@ -2001,10 +2001,10 @@ module.exports = {};
 /*!*************************!*\
   !*** ./i18n/en/ui.json ***!
   \*************************/
-/*! exports provided: function, btn_clear, btn_function, btn_arithmetic_plus, btn_arithmetic_minus, btn_arithmetic_multiplication, btn_arithmetic_division, btn_arithmetic_module, btn_break, btn_case, start, void, integer, real, program, text, text_start, boolean, true, false, variable, command, new_parameter, new_variable, new_global, new_function, vector, text_comment_start, text_comment_main, text_read_var, text_write_var, text_command_read, text_command_write, text_comment, text_attribution, text_if, text_else, text_break, text_for, text_code_while, text_code_do, text_command_do, text_code_switch, text_code_case, text_logic_expression, text_arithmetic_expression, text_iftrue, text_receives, text_repeatNtimes, text_return, text_btn_return, text_whiletrue, text_dowhiletrue, text_switch, text_functioncall, text_value, text_operator, text_parentheses, text_change, text_teacher_algorithm, text_teacher_algorithm_include, text_teacher_test_case, text_teacher_config, text_teacher_data_types, text_teacher_commands, text_teacher_functions, text_teacher_create_functions, text_teacher_create_movement_functions, text_teacher_test_case_input, text_teacher_test_case_output, text_teacher_test_case_actions, text_teacher_test_case_add, text_header_ivprog_functions, text_menu_functions_math, text_menu_functions_text, text_menu_functions_arrangement, text_menu_functions_conversion, text_none_variable, text_none_variable_instruction, text_ivprog_description, tooltip_visual, tooltip_textual, tooltip_upload, tooltip_download, tooltip_undo, tooltip_redo, tooltip_run, tooltip_evaluate, tooltip_help, tooltip_add_global, tooltip_minimize, tooltip_console, var_menu_select_var, var_menu_select_all, var_menu_select_function, expression_menu_select, math, text_t, arrangement, conversion, $sin, $cos, $tan, $sqrt, $pow, $log, $abs, $negate, $invert, $max, $min, $substring, $length, $uppercase, $lowercase, $charAt, $numElements, $matrixLines, $matrixColumns, $isReal, $isInt, $isBool, $castReal, $castInt, $castBool, $castString, text_ivprog_version, default */
+/*! exports provided: function, btn_clear, btn_function, btn_arithmetic_plus, btn_arithmetic_minus, btn_arithmetic_multiplication, btn_arithmetic_division, btn_arithmetic_module, btn_break, btn_case, start, void, integer, real, program, text, text_start, boolean, true, false, variable, command, new_parameter, new_variable, new_global, new_function, vector, text_comment_start, text_comment_main, text_read_var, text_write_var, text_command_read, text_command_write, text_comment, text_attribution, text_if, text_else, text_break, text_for, text_code_while, text_code_do, text_command_do, text_code_switch, text_code_case, text_logic_expression, text_arithmetic_expression, text_iftrue, text_receives, text_repeatNtimes, text_return, text_btn_return, text_whiletrue, text_dowhiletrue, text_switch, text_functioncall, text_value, text_operator, text_parentheses, text_change, text_teacher_algorithm, text_teacher_algorithm_include, text_teacher_test_case, text_teacher_config, text_teacher_data_types, text_teacher_commands, text_teacher_functions, text_teacher_create_functions, text_teacher_create_movement_functions, text_teacher_test_case_input, text_teacher_test_case_output, text_teacher_test_case_actions, text_teacher_test_case_add, text_header_ivprog_functions, text_menu_functions_math, text_menu_functions_text, text_menu_functions_arrangement, text_menu_functions_conversion, text_none_variable, text_none_variable_instruction, text_ivprog_description, tooltip_visual, tooltip_textual, tooltip_upload, tooltip_download, tooltip_undo, tooltip_redo, tooltip_run, tooltip_evaluate, tooltip_help, tooltip_add_global, tooltip_minimize, tooltip_console, var_menu_select_var, var_menu_select_all, var_menu_select_function, expression_menu_select, math, text_t, inform_valid_name, inform_valid_content, inform_valid_expression, arrangement, conversion, $sin, $cos, $tan, $sqrt, $pow, $log, $abs, $negate, $invert, $max, $min, $substring, $length, $uppercase, $lowercase, $charAt, $numElements, $matrixLines, $matrixColumns, $isReal, $isInt, $isBool, $castReal, $castInt, $castBool, $castString, text_ivprog_version, default */
 /***/ (function(module) {
 
-module.exports = {"function":"function","btn_clear":"Clear","btn_function":"Function","btn_arithmetic_plus":"Sum","btn_arithmetic_minus":"Minus","btn_arithmetic_multiplication":"Multiplication","btn_arithmetic_division":"Division","btn_arithmetic_module":"Module","btn_break":"Break","btn_case":"Case","start":"start","void":"void","integer":"integer","real":"real","program":"program","text":"string","text_start":"text","boolean":"boolean","true":"true","false":"false","variable":"Variable","command":"Command","new_parameter":"new_parameter","new_variable":"new_variable","new_global":"new_global","new_function":"new_function","vector":"vector","text_comment_start":"Initial comment of function...","text_comment_main":"This is the main function...","text_read_var":"Reading data","text_write_var":"Writing data","text_command_read":"read","text_command_write":"write","text_comment":"Comment","text_attribution":"Attribution","text_if":"if","text_else":"else","text_break":"break","text_for":"for","text_code_while":"while","text_code_do":"do","text_command_do":"do","text_code_switch":"switch","text_code_case":"case","text_logic_expression":"Logic Expression","text_arithmetic_expression":"Arithmetic Expression","text_iftrue":"If true then","text_receives":"receives","text_repeatNtimes":"Repeat N times","text_return":"return","text_btn_return":"Return","text_whiletrue":"While true","text_dowhiletrue":"Do while true","text_switch":"Switch","text_functioncall":"Function call","text_value":"Value","text_operator":"Operator","text_parentheses":"Parentheses","text_change":"Change","text_teacher_algorithm":"Algorithm","text_teacher_algorithm_include":"Include the following algorithm in exercise","text_teacher_test_case":"Test cases","text_teacher_config":"Settings","text_teacher_data_types":"Data types","text_teacher_commands":"Commands","text_teacher_functions":"Functions","text_teacher_create_functions":"Create new functions","text_teacher_create_movement_functions":"Move functions","text_teacher_test_case_input":"Input","text_teacher_test_case_output":"Output","text_teacher_test_case_actions":"Actions","text_teacher_test_case_add":"Add test cases","text_header_ivprog_functions":"iVProg Functions","text_menu_functions_math":"Mathematic","text_menu_functions_text":"Text","text_menu_functions_arrangement":"Arrangement","text_menu_functions_conversion":"Conversion","text_none_variable":"There is no declared variable","text_none_variable_instruction":"Create a new variable to use it","text_ivprog_description":"Interactive Visual Programming on the Internet","tooltip_visual":"Visual programming","tooltip_textual":"Textual programming","tooltip_upload":"Upload code file","tooltip_download":"Download code file","tooltip_undo":"Undo","tooltip_redo":"Redo","tooltip_run":"Run program","tooltip_evaluate":"Evaluate program","tooltip_help":"Help","tooltip_add_global":"Add global variable","tooltip_minimize":"Hidde function elements","tooltip_console":"Open/Close console","var_menu_select_var":"Select a var","var_menu_select_all":"Select","var_menu_select_function":"Select a function","expression_menu_select":"Select an expression","math":"Mathematic","text_t":"Text","arrangement":"Arrangement","conversion":"Conversion","$sin":"sin","$cos":"cos","$tan":"tan","$sqrt":"sqrt","$pow":"pow","$log":"log","$abs":"abs","$negate":"negate","$invert":"invert","$max":"maximum","$min":"minimum","$substring":"substring","$length":"length","$uppercase":"uppercase","$lowercase":"lowercase","$charAt":"char_at","$numElements":"total_of_elements","$matrixLines":"total_of_lines","$matrixColumns":"total_of_columns","$isReal":"is_real","$isInt":"is_integer","$isBool":"is_logic","$castReal":"to_real","$castInt":"to_integer","$castBool":"to_logic","$castString":"to_string","text_ivprog_version":"Version 2018_12_19 Build 13_18"};
+module.exports = {"function":"function","btn_clear":"Clear","btn_function":"Function","btn_arithmetic_plus":"Sum","btn_arithmetic_minus":"Minus","btn_arithmetic_multiplication":"Multiplication","btn_arithmetic_division":"Division","btn_arithmetic_module":"Module","btn_break":"Break","btn_case":"Case","start":"start","void":"void","integer":"integer","real":"real","program":"program","text":"string","text_start":"text","boolean":"boolean","true":"true","false":"false","variable":"Variable","command":"Command","new_parameter":"new_parameter","new_variable":"new_variable","new_global":"new_global","new_function":"new_function","vector":"vector","text_comment_start":"Initial comment of function...","text_comment_main":"This is the main function...","text_read_var":"Reading data","text_write_var":"Writing data","text_command_read":"read","text_command_write":"write","text_comment":"Comment","text_attribution":"Attribution","text_if":"if","text_else":"else","text_break":"break","text_for":"for","text_code_while":"while","text_code_do":"do","text_command_do":"do","text_code_switch":"switch","text_code_case":"case","text_logic_expression":"Logic Expression","text_arithmetic_expression":"Relational Expression","text_iftrue":"If true then","text_receives":"receives","text_repeatNtimes":"Repeat N times","text_return":"return","text_btn_return":"Return","text_whiletrue":"While true","text_dowhiletrue":"Do while true","text_switch":"Switch","text_functioncall":"Function call","text_value":"Value","text_operator":"Operator","text_parentheses":"Parentheses","text_change":"Change","text_teacher_algorithm":"Algorithm","text_teacher_algorithm_include":"Include the following algorithm in exercise","text_teacher_test_case":"Test cases","text_teacher_config":"Settings","text_teacher_data_types":"Data types","text_teacher_commands":"Commands","text_teacher_functions":"Functions","text_teacher_create_functions":"Create new functions","text_teacher_create_movement_functions":"Move functions","text_teacher_test_case_input":"Input","text_teacher_test_case_output":"Output","text_teacher_test_case_actions":"Actions","text_teacher_test_case_add":"Add test cases","text_header_ivprog_functions":"iVProg Functions","text_menu_functions_math":"Mathematic","text_menu_functions_text":"Text","text_menu_functions_arrangement":"Arrangement","text_menu_functions_conversion":"Conversion","text_none_variable":"There is no declared variable","text_none_variable_instruction":"Create a new variable to use it","text_ivprog_description":"Interactive Visual Programming on the Internet","tooltip_visual":"Visual programming","tooltip_textual":"Textual programming","tooltip_upload":"Upload code file","tooltip_download":"Download code file","tooltip_undo":"Undo","tooltip_redo":"Redo","tooltip_run":"Run program","tooltip_evaluate":"Evaluate program","tooltip_help":"Help","tooltip_add_global":"Add global variable","tooltip_minimize":"Hidde function elements","tooltip_console":"Open/Close console","var_menu_select_var":"Select a var","var_menu_select_all":"Select","var_menu_select_function":"Select a function","expression_menu_select":"Construct any logical condition","math":"Mathematic","text_t":"Text","inform_valid_name":"Inform a valid name!","inform_valid_content":"Enter some content!","inform_valid_expression":"Construct the logical condition!","arrangement":"Arrangement","conversion":"Conversion","$sin":"sin","$cos":"cos","$tan":"tan","$sqrt":"sqrt","$pow":"pow","$log":"log","$abs":"abs","$negate":"negate","$invert":"invert","$max":"maximum","$min":"minimum","$substring":"substring","$length":"length","$uppercase":"uppercase","$lowercase":"lowercase","$charAt":"char_at","$numElements":"total_of_elements","$matrixLines":"total_of_lines","$matrixColumns":"total_of_columns","$isReal":"is_real","$isInt":"is_integer","$isBool":"is_logic","$castReal":"to_real","$castInt":"to_integer","$castBool":"to_logic","$castString":"to_string","text_ivprog_version":"Version 2018_12_19 Build 13_18"};
 
 /***/ }),
 
@@ -2070,10 +2070,10 @@ module.exports = {};
 /*!*************************!*\
   !*** ./i18n/es/ui.json ***!
   \*************************/
-/*! exports provided: function, btn_clear, btn_function, btn_arithmetic_plus, btn_arithmetic_minus, btn_arithmetic_multiplication, btn_arithmetic_division, btn_arithmetic_module, btn_break, btn_case, start, void, integer, real, program, text, text_start, boolean, true, false, variable, command, new_parameter, new_variable, new_global, new_function, vector, text_comment_start, text_comment_main, text_read_var, text_write_var, text_command_read, text_command_write, text_comment, text_attribution, text_if, text_break, text_else, text_return, text_btn_return, text_for, text_code_while, text_code_do, text_command_do, text_code_switch, text_code_case, text_logic_expression, text_arithmetic_expression, text_iftrue, text_repeatNtimes, text_receives, text_whiletrue, text_dowhiletrue, text_switch, text_functioncall, text_value, text_operator, text_parentheses, text_change, text_teacher_algorithm, text_teacher_algorithm_include, text_teacher_test_case, text_teacher_config, text_teacher_data_types, text_teacher_commands, text_teacher_functions, text_teacher_create_functions, text_teacher_create_movement_functions, text_teacher_test_case_input, text_teacher_test_case_output, text_teacher_test_case_actions, text_teacher_test_case_add, text_header_ivprog_functions, text_menu_functions_math, text_menu_functions_text, text_menu_functions_arrangement, text_menu_functions_conversion, text_none_variable, text_none_variable_instruction, text_ivprog_description, tooltip_visual, tooltip_textual, tooltip_upload, tooltip_download, tooltip_undo, tooltip_redo, tooltip_run, tooltip_evaluate, tooltip_help, tooltip_add_global, tooltip_minimize, tooltip_console, var_menu_select_var, var_menu_select_all, var_menu_select_function, expression_menu_select, $sin, math, arrangement, conversion, text_t, $cos, $tan, $sqrt, $pow, $log, $abs, $negate, $invert, $max, $min, $substring, $length, $uppercase, $lowercase, $charAt, $numElements, $matrixLines, $matrixColumns, $isReal, $isInt, $isBool, $castReal, $castInt, $castBool, $castString, text_ivprog_version, default */
+/*! exports provided: function, btn_clear, btn_function, btn_arithmetic_plus, btn_arithmetic_minus, btn_arithmetic_multiplication, btn_arithmetic_division, btn_arithmetic_module, btn_break, btn_case, start, void, integer, real, program, text, text_start, boolean, true, false, variable, command, new_parameter, new_variable, new_global, new_function, vector, text_comment_start, text_comment_main, text_read_var, text_write_var, text_command_read, text_command_write, text_comment, text_attribution, text_if, text_break, text_else, text_return, text_btn_return, text_for, text_code_while, text_code_do, text_command_do, text_code_switch, text_code_case, text_logic_expression, text_arithmetic_expression, text_iftrue, text_repeatNtimes, text_receives, text_whiletrue, text_dowhiletrue, text_switch, text_functioncall, text_value, text_operator, text_parentheses, text_change, text_teacher_algorithm, text_teacher_algorithm_include, text_teacher_test_case, text_teacher_config, text_teacher_data_types, text_teacher_commands, text_teacher_functions, text_teacher_create_functions, text_teacher_create_movement_functions, text_teacher_test_case_input, text_teacher_test_case_output, text_teacher_test_case_actions, text_teacher_test_case_add, text_header_ivprog_functions, text_menu_functions_math, text_menu_functions_text, text_menu_functions_arrangement, text_menu_functions_conversion, text_none_variable, text_none_variable_instruction, text_ivprog_description, tooltip_visual, tooltip_textual, tooltip_upload, tooltip_download, tooltip_undo, tooltip_redo, tooltip_run, tooltip_evaluate, tooltip_help, tooltip_add_global, tooltip_minimize, tooltip_console, var_menu_select_var, var_menu_select_all, var_menu_select_function, expression_menu_select, $sin, math, arrangement, conversion, inform_valid_name, inform_valid_content, inform_valid_expression, text_t, $cos, $tan, $sqrt, $pow, $log, $abs, $negate, $invert, $max, $min, $substring, $length, $uppercase, $lowercase, $charAt, $numElements, $matrixLines, $matrixColumns, $isReal, $isInt, $isBool, $castReal, $castInt, $castBool, $castString, text_ivprog_version, default */
 /***/ (function(module) {
 
-module.exports = {"function":"function","btn_clear":"Clear","btn_function":"Function","btn_arithmetic_plus":"Sum","btn_arithmetic_minus":"Minus","btn_arithmetic_multiplication":"Multiplication","btn_arithmetic_division":"Division","btn_arithmetic_module":"Module","btn_break":"Break","btn_case":"Case","start":"start","void":"void","integer":"integer","real":"real","program":"program","text":"Text","text_start":"text","boolean":"boolean","true":"true","false":"false","variable":"Variable","command":"Command","new_parameter":"new_parameter","new_variable":"new_variable","new_global":"new_global","new_function":"new_function","vector":"vector","text_comment_start":"Initial comment of function...","text_comment_main":"This is the main function...","text_read_var":"Reading data","text_write_var":"Writing data","text_command_read":"read","text_command_write":"write","text_comment":"Comment","text_attribution":"Attribution","text_if":"if","text_break":"break","text_else":"else","text_return":"return","text_btn_return":"Return","text_for":"for","text_code_while":"while","text_code_do":"do","text_command_do":"do","text_code_switch":"switch","text_code_case":"case","text_logic_expression":"Logic Expression","text_arithmetic_expression":"Arithmetic Expression","text_iftrue":"If true then","text_repeatNtimes":"Repeat N times","text_receives":"receives","text_whiletrue":"While true","text_dowhiletrue":"Do while true","text_switch":"Switch","text_functioncall":"Function call","text_value":"Value","text_operator":"Operator","text_parentheses":"Parentheses","text_change":"Change","text_teacher_algorithm":"Algorithm","text_teacher_algorithm_include":"Include the following algorithm in exercise","text_teacher_test_case":"Test cases","text_teacher_config":"Settings","text_teacher_data_types":"Data types","text_teacher_commands":"Commands","text_teacher_functions":"Functions","text_teacher_create_functions":"Create new functions","text_teacher_create_movement_functions":"Move functions","text_teacher_test_case_input":"Input","text_teacher_test_case_output":"Output","text_teacher_test_case_actions":"Actions","text_teacher_test_case_add":"Add test cases","text_header_ivprog_functions":"iVProg Functions","text_menu_functions_math":"Mathematics","text_menu_functions_text":"Text","text_menu_functions_arrangement":"Arrangement","text_menu_functions_conversion":"Conversion","text_none_variable":"There is no declared variable","text_none_variable_instruction":"Create a new variable to use it","text_ivprog_description":"Interactive Visual Programming on the Internet","tooltip_visual":"Visual programming","tooltip_textual":"Textual programming","tooltip_upload":"Upload code file","tooltip_download":"Download code file","tooltip_undo":"Undo","tooltip_redo":"Redo","tooltip_run":"Run program","tooltip_evaluate":"Evaluate program","tooltip_help":"Help","tooltip_add_global":"Add global variable","tooltip_minimize":"Hidde function elements","tooltip_console":"Open/Close console","var_menu_select_var":"Select a var","var_menu_select_all":"Select","var_menu_select_function":"Select a function","expression_menu_select":"Select an expression","$sin":"sin","math":"Mathematic","arrangement":"Arrangement","conversion":"Conversion","text_t":"Text","$cos":"cos","$tan":"tan","$sqrt":"sqrt","$pow":"pow","$log":"log","$abs":"abs","$negate":"negate","$invert":"invert","$max":"maximum","$min":"minimum","$substring":"substring","$length":"length","$uppercase":"uppercase","$lowercase":"lowercase","$charAt":"char_at","$numElements":"total_of_elements","$matrixLines":"total_of_lines","$matrixColumns":"total_of_columns","$isReal":"is_real","$isInt":"is_integer","$isBool":"is_logic","$castReal":"to_real","$castInt":"to_integer","$castBool":"to_logic","$castString":"to_string","text_ivprog_version":"Version 2018_12_19 Build 13_18"};
+module.exports = {"function":"function","btn_clear":"Clear","btn_function":"Function","btn_arithmetic_plus":"Sum","btn_arithmetic_minus":"Minus","btn_arithmetic_multiplication":"Multiplication","btn_arithmetic_division":"Division","btn_arithmetic_module":"Module","btn_break":"Break","btn_case":"Case","start":"start","void":"void","integer":"integer","real":"real","program":"program","text":"Text","text_start":"text","boolean":"boolean","true":"true","false":"false","variable":"Variable","command":"Command","new_parameter":"new_parameter","new_variable":"new_variable","new_global":"new_global","new_function":"new_function","vector":"vector","text_comment_start":"Initial comment of function...","text_comment_main":"This is the main function...","text_read_var":"Reading data","text_write_var":"Writing data","text_command_read":"read","text_command_write":"write","text_comment":"Comment","text_attribution":"Attribution","text_if":"if","text_break":"break","text_else":"else","text_return":"return","text_btn_return":"Return","text_for":"for","text_code_while":"while","text_code_do":"do","text_command_do":"do","text_code_switch":"switch","text_code_case":"case","text_logic_expression":"Logic Expression","text_arithmetic_expression":"Relational Expression","text_iftrue":"If true then","text_repeatNtimes":"Repeat N times","text_receives":"receives","text_whiletrue":"While true","text_dowhiletrue":"Do while true","text_switch":"Switch","text_functioncall":"Function call","text_value":"Value","text_operator":"Operator","text_parentheses":"Parentheses","text_change":"Change","text_teacher_algorithm":"Algorithm","text_teacher_algorithm_include":"Include the following algorithm in exercise","text_teacher_test_case":"Test cases","text_teacher_config":"Settings","text_teacher_data_types":"Data types","text_teacher_commands":"Commands","text_teacher_functions":"Functions","text_teacher_create_functions":"Create new functions","text_teacher_create_movement_functions":"Move functions","text_teacher_test_case_input":"Input","text_teacher_test_case_output":"Output","text_teacher_test_case_actions":"Actions","text_teacher_test_case_add":"Add test cases","text_header_ivprog_functions":"iVProg Functions","text_menu_functions_math":"Mathematics","text_menu_functions_text":"Text","text_menu_functions_arrangement":"Arrangement","text_menu_functions_conversion":"Conversion","text_none_variable":"There is no declared variable","text_none_variable_instruction":"Create a new variable to use it","text_ivprog_description":"Interactive Visual Programming on the Internet","tooltip_visual":"Visual programming","tooltip_textual":"Textual programming","tooltip_upload":"Upload code file","tooltip_download":"Download code file","tooltip_undo":"Undo","tooltip_redo":"Redo","tooltip_run":"Run program","tooltip_evaluate":"Evaluate program","tooltip_help":"Help","tooltip_add_global":"Add global variable","tooltip_minimize":"Hidde function elements","tooltip_console":"Open/Close console","var_menu_select_var":"Select a var","var_menu_select_all":"Select","var_menu_select_function":"Select a function","expression_menu_select":"Construct any logical condition","$sin":"sin","math":"Mathematic","arrangement":"Arrangement","conversion":"Conversion","inform_valid_name":"Inform a valid name!","inform_valid_content":"Enter some content!","inform_valid_expression":"Construct the logical condition!","text_t":"Text","$cos":"cos","$tan":"tan","$sqrt":"sqrt","$pow":"pow","$log":"log","$abs":"abs","$negate":"negate","$invert":"invert","$max":"maximum","$min":"minimum","$substring":"substring","$length":"length","$uppercase":"uppercase","$lowercase":"lowercase","$charAt":"char_at","$numElements":"total_of_elements","$matrixLines":"total_of_lines","$matrixColumns":"total_of_columns","$isReal":"is_real","$isInt":"is_integer","$isBool":"is_logic","$castReal":"to_real","$castInt":"to_integer","$castBool":"to_logic","$castString":"to_string","text_ivprog_version":"Version 2018_12_19 Build 13_18"};
 
 /***/ }),
 
@@ -2175,10 +2175,10 @@ module.exports = {};
 /*!*************************!*\
   !*** ./i18n/pt/ui.json ***!
   \*************************/
-/*! exports provided: function, btn_clear, btn_function, btn_arithmetic_plus, btn_arithmetic_minus, btn_arithmetic_multiplication, btn_arithmetic_division, btn_arithmetic_module, btn_break, btn_case, start, void, integer, and, or, not, real, program, text, text_start, boolean, true, false, variable, command, new_parameter, new_variable, new_global, new_function, vector, text_comment_start, text_comment_main, text_read_var, text_write_var, text_command_read, text_command_write, text_return, text_btn_return, text_comment, join_or, matrix_string, vector_string, text_attribution, text_if, text_break, text_else, text_for, text_code_while, text_code_do, text_command_do, text_code_switch, text_code_case, text_logic_expression, text_arithmetic_expression, text_iftrue, text_repeatNtimes, text_receives, text_whiletrue, text_dowhiletrue, text_switch, text_functioncall, text_value, text_operator, text_parentheses, text_change, text_teacher_algorithm, text_teacher_algorithm_include, text_teacher_test_case, text_teacher_config, text_teacher_data_types, text_teacher_commands, text_teacher_functions, text_teacher_create_functions, text_teacher_create_movement_functions, text_teacher_test_case_input, text_teacher_test_case_output, text_teacher_test_case_actions, text_teacher_test_case_add, text_header_ivprog_functions, text_menu_functions_math, text_menu_functions_text, text_menu_functions_arrangement, text_menu_functions_conversion, text_none_variable, text_none_variable_instruction, text_ivprog_description, tooltip_visual, tooltip_textual, tooltip_upload, tooltip_download, tooltip_undo, tooltip_redo, tooltip_run, tooltip_evaluate, tooltip_help, tooltip_add_global, tooltip_minimize, tooltip_console, var_menu_select_var, var_menu_select_all, var_menu_select_function, expression_menu_select, $sin, math, text_t, arrangement, conversion, $cos, $tan, $sqrt, $pow, $log, $abs, $negate, $invert, $max, $min, $substring, $length, $uppercase, $lowercase, $charAt, $numElements, $matrixLines, $matrixColumns, $isReal, $isInt, $isBool, $castReal, $castInt, $castBool, $castString, text_ivprog_version, default */
+/*! exports provided: function, btn_clear, btn_function, btn_arithmetic_plus, btn_arithmetic_minus, btn_arithmetic_multiplication, btn_arithmetic_division, btn_arithmetic_module, btn_break, btn_case, start, void, integer, and, or, not, real, program, text, text_start, boolean, true, false, variable, command, new_parameter, new_variable, new_global, new_function, vector, text_comment_start, text_comment_main, text_read_var, text_write_var, text_command_read, text_command_write, text_return, text_btn_return, text_comment, join_or, matrix_string, vector_string, text_attribution, text_if, text_break, text_else, text_for, text_code_while, text_code_do, text_command_do, text_code_switch, text_code_case, text_logic_expression, text_arithmetic_expression, text_iftrue, text_repeatNtimes, text_receives, text_whiletrue, text_dowhiletrue, text_switch, text_functioncall, text_value, text_operator, text_parentheses, text_change, text_teacher_algorithm, text_teacher_algorithm_include, text_teacher_test_case, text_teacher_config, text_teacher_data_types, text_teacher_commands, text_teacher_functions, text_teacher_create_functions, text_teacher_create_movement_functions, text_teacher_test_case_input, text_teacher_test_case_output, text_teacher_test_case_actions, text_teacher_test_case_add, text_header_ivprog_functions, text_menu_functions_math, text_menu_functions_text, text_menu_functions_arrangement, text_menu_functions_conversion, text_none_variable, text_none_variable_instruction, text_ivprog_description, tooltip_visual, tooltip_textual, tooltip_upload, tooltip_download, tooltip_undo, tooltip_redo, tooltip_run, tooltip_evaluate, tooltip_help, tooltip_add_global, tooltip_minimize, tooltip_console, var_menu_select_var, var_menu_select_all, var_menu_select_function, expression_menu_select, $sin, math, text_t, inform_valid_name, inform_valid_content, inform_valid_expression, arrangement, conversion, $cos, $tan, $sqrt, $pow, $log, $abs, $negate, $invert, $max, $min, $substring, $length, $uppercase, $lowercase, $charAt, $numElements, $matrixLines, $matrixColumns, $isReal, $isInt, $isBool, $castReal, $castInt, $castBool, $castString, text_ivprog_version, default */
 /***/ (function(module) {
 
-module.exports = {"function":"funcao","btn_clear":"Limpar","btn_function":"Função","btn_arithmetic_plus":"Adição","btn_arithmetic_minus":"Subtração","btn_arithmetic_multiplication":"Multiplicação","btn_arithmetic_division":"Divisão","btn_arithmetic_module":"Módulo","btn_break":"Pare","btn_case":"Caso","start":"inicio","void":"vazio","integer":"inteiro","and":"E","or":"OU","not":"nao","real":"real","program":"programa","text":"cadeia","text_start":"texto","boolean":"logico","true":"verdadeiro","false":"falso","variable":"Variável","command":"Comando","new_parameter":"novo_parametro","new_variable":"nova_variavel","new_global":"nova_global","new_function":"nova_funcao","vector":"vetor","text_comment_start":"Comentário inicial da função...","text_comment_main":"Esta é a função principal...","text_read_var":"Leitura de dados","text_write_var":"Escrita de dados","text_command_read":"leia","text_command_write":"escreva","text_return":"retorne","text_btn_return":"Retorno","text_comment":"Comentário","join_or":"ou","matrix_string":"matriz de $0","vector_string":"vetor de $0","text_attribution":"Atribuição","text_if":"se","text_break":"pare","text_else":"senao","text_for":"para","text_code_while":"enquanto","text_code_do":"faca","text_command_do":"faça","text_code_switch":"escolha","text_code_case":"caso","text_logic_expression":"Expressão Lógica","text_arithmetic_expression":"Expressão Aritmética","text_iftrue":"Se verdadeiro então","text_repeatNtimes":"Repita N vezes","text_receives":"recebe","text_whiletrue":"Enquanto verdadeiro","text_dowhiletrue":"Faça enquanto verdadeiro","text_switch":"Escolha","text_functioncall":"Chamada de função","text_value":"Valor","text_operator":"Operador","text_parentheses":"Parênteses","text_change":"Alterar","text_teacher_algorithm":"Algoritmo","text_teacher_algorithm_include":"Incluir o algoritmo abaixo no exercício","text_teacher_test_case":"Casos de teste","text_teacher_config":"Configurações","text_teacher_data_types":"Tipos de dados","text_teacher_commands":"Comandos","text_teacher_functions":"Funções","text_teacher_create_functions":"Criar novas funções","text_teacher_create_movement_functions":"Movimentar funções","text_teacher_test_case_input":"Entrada","text_teacher_test_case_output":"Saída","text_teacher_test_case_actions":"Ações","text_teacher_test_case_add":"Adicionar caso de teste","text_header_ivprog_functions":"Funções do iVProg","text_menu_functions_math":"Matemática","text_menu_functions_text":"Texto","text_menu_functions_arrangement":"Arranjo","text_menu_functions_conversion":"Conversão","text_none_variable":"Nenhuma variável declarada","text_none_variable_instruction":"Antes de utilizar uma variável, é necessário criá-la","text_ivprog_description":"Programação Visual interativa na Internet","tooltip_visual":"Programação visual","tooltip_textual":"Programação textual","tooltip_upload":"Upload de código fonte","tooltip_download":"Download do código fonte","tooltip_undo":"Desfazer","tooltip_redo":"Refazer","tooltip_run":"Executar o programa","tooltip_evaluate":"Avaliar o programa","tooltip_help":"Ajuda","tooltip_add_global":"Adicionar variável global","tooltip_minimize":"Ocultar os elementos da função","tooltip_console":"Abrir/fechar o terminal","var_menu_select_var":"Selecione uma variável","var_menu_select_all":"Selecione","var_menu_select_function":"Selecione uma função","expression_menu_select":"Selecione uma expressão","$sin":"seno","math":"Matematica","text_t":"Texto","arrangement":"Arranjo","conversion":"Conversao","$cos":"cosseno","$tan":"tangente","$sqrt":"raiz_quadrada","$pow":"potencia","$log":"logaritmo","$abs":"modulo","$negate":"trocar_sinal","$invert":"inverter_valor","$max":"maximo","$min":"minimo","$substring":"subcadeia","$length":"comprimento","$uppercase":"caixa_alta","$lowercase":"caixa_baixa","$charAt":"texto_na_posicao","$numElements":"total_de_elementos","$matrixLines":"total_de_linhas","$matrixColumns":"total_de_colunas","$isReal":"e_real","$isInt":"e_inteiro","$isBool":"e_logico","$castReal":"como_real","$castInt":"como_inteiro","$castBool":"como_logico","$castString":"como_cadeia","text_ivprog_version":"Versão 2018_12_19 Build 13_18"};
+module.exports = {"function":"funcao","btn_clear":"Limpar","btn_function":"Função","btn_arithmetic_plus":"Adição","btn_arithmetic_minus":"Subtração","btn_arithmetic_multiplication":"Multiplicação","btn_arithmetic_division":"Divisão","btn_arithmetic_module":"Módulo","btn_break":"Pare","btn_case":"Caso","start":"inicio","void":"vazio","integer":"inteiro","and":"E","or":"OU","not":"nao","real":"real","program":"programa","text":"cadeia","text_start":"texto","boolean":"logico","true":"verdadeiro","false":"falso","variable":"Variável","command":"Comando","new_parameter":"novo_parametro","new_variable":"nova_variavel","new_global":"nova_global","new_function":"nova_funcao","vector":"vetor","text_comment_start":"Comentário inicial da função...","text_comment_main":"Esta é a função principal...","text_read_var":"Leitura de dados","text_write_var":"Escrita de dados","text_command_read":"leia","text_command_write":"escreva","text_return":"retorne","text_btn_return":"Retorno","text_comment":"Comentário","join_or":"ou","matrix_string":"matriz de $0","vector_string":"vetor de $0","text_attribution":"Atribuição","text_if":"se","text_break":"pare","text_else":"senao","text_for":"para","text_code_while":"enquanto","text_code_do":"faca","text_command_do":"faça","text_code_switch":"escolha","text_code_case":"caso","text_logic_expression":"Expressão Lógica","text_arithmetic_expression":"Expressão Relacional","text_iftrue":"Se verdadeiro então","text_repeatNtimes":"Repita N vezes","text_receives":"recebe","text_whiletrue":"Enquanto verdadeiro","text_dowhiletrue":"Faça enquanto verdadeiro","text_switch":"Escolha","text_functioncall":"Chamada de função","text_value":"Valor","text_operator":"Operador","text_parentheses":"Parênteses","text_change":"Alterar","text_teacher_algorithm":"Algoritmo","text_teacher_algorithm_include":"Incluir o algoritmo abaixo no exercício","text_teacher_test_case":"Casos de teste","text_teacher_config":"Configurações","text_teacher_data_types":"Tipos de dados","text_teacher_commands":"Comandos","text_teacher_functions":"Funções","text_teacher_create_functions":"Criar novas funções","text_teacher_create_movement_functions":"Movimentar funções","text_teacher_test_case_input":"Entrada","text_teacher_test_case_output":"Saída","text_teacher_test_case_actions":"Ações","text_teacher_test_case_add":"Adicionar caso de teste","text_header_ivprog_functions":"Funções do iVProg","text_menu_functions_math":"Matemática","text_menu_functions_text":"Texto","text_menu_functions_arrangement":"Arranjo","text_menu_functions_conversion":"Conversão","text_none_variable":"Nenhuma variável declarada","text_none_variable_instruction":"Antes de utilizar uma variável, é necessário criá-la","text_ivprog_description":"Programação Visual interativa na Internet","tooltip_visual":"Programação visual","tooltip_textual":"Programação textual","tooltip_upload":"Upload de código fonte","tooltip_download":"Download do código fonte","tooltip_undo":"Desfazer","tooltip_redo":"Refazer","tooltip_run":"Executar o programa","tooltip_evaluate":"Avaliar o programa","tooltip_help":"Ajuda","tooltip_add_global":"Adicionar variável global","tooltip_minimize":"Ocultar os elementos da função","tooltip_console":"Abrir/fechar o terminal","var_menu_select_var":"Selecione uma variável","var_menu_select_all":"Selecione","var_menu_select_function":"Selecione uma função","expression_menu_select":"Construir uma expressão lógica","$sin":"seno","math":"Matematica","text_t":"Texto","inform_valid_name":"Informe um nome válido!","inform_valid_content":"Informe o conteúdo!","inform_valid_expression":"Construa uma expressão lógica!","arrangement":"Arranjo","conversion":"Conversao","$cos":"cosseno","$tan":"tangente","$sqrt":"raiz_quadrada","$pow":"potencia","$log":"logaritmo","$abs":"modulo","$negate":"trocar_sinal","$invert":"inverter_valor","$max":"maximo","$min":"minimo","$substring":"subcadeia","$length":"comprimento","$uppercase":"caixa_alta","$lowercase":"caixa_baixa","$charAt":"texto_na_posicao","$numElements":"total_de_elementos","$matrixLines":"total_de_linhas","$matrixColumns":"total_de_colunas","$isReal":"e_real","$isInt":"e_inteiro","$isBool":"e_logico","$castReal":"como_real","$castInt":"como_inteiro","$castBool":"como_logico","$castString":"como_cadeia","text_ivprog_version":"Versão 2018_12_19 Build 13_18"};
 
 /***/ }),
 
@@ -4829,7 +4829,7 @@ var ArrayLiteral = exports.ArrayLiteral = function (_Literal) {
       if (!(element instanceof ArrayLiteral)) {
         return null;
       } else {
-        return element.value[0].value.length;
+        return element.value[0].length;
       }
     }
   }, {
@@ -8165,27 +8165,24 @@ var IVProgProcessor = exports.IVProgProcessor = function () {
   }, {
     key: 'interpretAST',
     value: function interpretAST() {
+      var _this = this;
+
       this.prepareState();
-      this.initGlobal();
-      var mainFunc = this.findMainFunction();
-      if (mainFunc === null) {
-        throw _processorErrorFactory.ProcessorErrorFactory.main_missing();
-      }
-      return this.runFunction(mainFunc, [], this.globalStore);
+      return this.initGlobal().then(function (_) {
+        var mainFunc = _this.findMainFunction();
+        if (mainFunc === null) {
+          throw _processorErrorFactory.ProcessorErrorFactory.main_missing();
+        }
+        return _this.runFunction(mainFunc, [], _this.globalStore);
+      });
     }
   }, {
     key: 'initGlobal',
     value: function initGlobal() {
-      var _this = this;
-
       if (!this.checkContext(_context.Context.BASE)) {
         throw _processorErrorFactory.ProcessorErrorFactory.invalid_global_var();
       }
-      this.ast.global.forEach(function (decl) {
-        _this.executeCommand(_this.globalStore, decl).then(function (sto) {
-          return _this.globalStore = sto;
-        });
-      });
+      return this.executeCommands(this.globalStore, this.ast.global);
     }
   }, {
     key: 'findMainFunction',
@@ -9995,6 +9992,7 @@ var SemanticAnalyser = exports.SemanticAnalyser = function () {
   }, {
     key: 'findFunction',
     value: function findFunction(name) {
+      console.log(name);
       if (name.match(/^\$.+$/)) {
         var fun = _definedFunctions.LanguageDefinedFunction.getFunction(name);
         if (!!!fun) {
@@ -10186,92 +10184,91 @@ var SemanticAnalyser = exports.SemanticAnalyser = function () {
   }, {
     key: 'evaluateArrayLiteral',
     value: function evaluateArrayLiteral(id, lines, columns, type, literal) {
-      var _this = this;
-
-      if (literal instanceof _expressions.ArrayLiteral) {
+      /* if (literal instanceof ArrayLiteral) {
+        const dimType = this.evaluateExpressionType(lines);
+        if (!dimType.isCompatible(Types.INTEGER)) {
+          throw ProcessorErrorFactory.array_dimension_not_int_full(literal.sourceInfo);
+        }
+        if ((lines instanceof IntLiteral)) {
+          if (!lines.value.eq(literal.value.length)) {
+            if(type.dimensions > 1) {
+              throw ProcessorErrorFactory.matrix_line_outbounds_full(id, literal.value.length, lines.value.toNumber(), literal.sourceInfo)
+            } else {
+              throw ProcessorErrorFactory.vector_line_outbounds_full(id, literal.value.length, lines.value.toNumber(), literal.sourceInfo)
+            }
+          } else if (lines.value.isNeg()) {
+            throw ProcessorErrorFactory.array_dimension_not_positive_full(literal.sourceInfo);
+          }
+        }
         if (columns === null) {
           // it's a vector...
-          var dimType = this.evaluateExpressionType(lines);
-          if (!dimType.isCompatible(_types.Types.INTEGER)) {
-            throw _processorErrorFactory.ProcessorErrorFactory.array_dimension_not_int_full(literal.sourceInfo);
-          }
-          if (lines instanceof _expressions.IntLiteral) {
-            if (!lines.value.eq(literal.value.length)) {
-              if (type.dimensions > 1) {
-                throw _processorErrorFactory.ProcessorErrorFactory.matrix_line_outbounds_full(id, literal.value.length, lines.values.toNumber(), literal.sourceInfo);
-              } else {
-                throw _processorErrorFactory.ProcessorErrorFactory.vector_line_outbounds_full(id, literal.value.length, lines.values.toNumber(), literal.sourceInfo);
-              }
-            } else if (lines.value.isNeg()) {
-              throw _processorErrorFactory.ProcessorErrorFactory.array_dimension_not_positive_full(literal.sourceInfo);
-            }
-          }
-          literal.value.reduce(function (last, next) {
-            var eType = _this.evaluateExpressionType(next);
+          literal.value.reduce((last, next) => {
+            const eType = this.evaluateExpressionType(next);
             if (!last.canAccept(eType)) {
-              var strInfo = last.stringInfo();invalid;
-              var info = strInfo[0];
-              var strExp = literal.toString();
-              throw _processorErrorFactory.ProcessorErrorFactory.incompatible_types_array_full(strExp, info.type, info.dim, literal.sourceInfo);
+              const strInfo = last.stringInfo();
+              const info = strInfo[0];
+              const strExp = literal.toString();
+              throw ProcessorErrorFactory.incompatible_types_array_full(strExp,info.type, info.dim, literal.sourceInfo);
             }
             return last;
           }, type);
           return true;
         } else {
-          var _dimType = this.evaluateExpressionType(columns);
-          if (!_dimType.isCompatible(_types.Types.INTEGER)) {
-            throw _processorErrorFactory.ProcessorErrorFactory.array_dimension_not_int_full(literal.sourceInfo);
+          const dimType = this.evaluateExpressionType(columns);
+          if (!dimType.isCompatible(Types.INTEGER)) {
+            throw ProcessorErrorFactory.array_dimension_not_int_full(literal.sourceInfo);
           }
-          if (columns instanceof _expressions.IntLiteral) {
-            if (!columns.value.eq(literal.value.length)) {
-              if (type.dimensions > 1) {
-                throw _processorErrorFactory.ProcessorErrorFactory.matrix_column_outbounds_full(id, literal.value.length, columns.values.toNumber(), literal.sourceInfo);
+          if ((columns instanceof IntLiteral)) {
+            const columnValue = literal.value[0].value.length;
+            if (!columns.value.eq(columnValue)) {
+              if(type.dimensions > 1) {
+                throw ProcessorErrorFactory.matrix_column_outbounds_full(id, literal.value.length, columns.value.toNumber(), literal.sourceInfo)
               } else {
-                throw _processorErrorFactory.ProcessorErrorFactory.invalid_matrix_access_full(id, literal.sourceInfo);
+                throw ProcessorErrorFactory.invalid_matrix_access_full(id, literal.sourceInfo);
               }
             } else if (columns.value.isNeg()) {
-              throw _processorErrorFactory.ProcessorErrorFactory.array_dimension_not_positive_full(literal.sourceInfo);
+              throw ProcessorErrorFactory.array_dimension_not_positive_full(literal.sourceInfo);
+            }
+            for (let i = 0; i < columns; i++) {
+              const anotherArray = literal.value[i];
+              this.evaluateArrayLiteral(id, columns, null, type, anotherArray)
             }
           }
-          for (var i = 0; i < columns; i++) {
-            var anotherArray = literal.value[i];
-            this.evaluateArrayLiteral(id, lines, null, type, anotherArray);
-          }
         }
-      } else {
-
-        var resultType = this.evaluateExpressionType(literal);
-        if (!(resultType instanceof _compoundType.CompoundType)) {
-          var strInfo = type.stringInfo();
-          var info = strInfo[0];
-          var strExp = literal.toString();
-          throw _processorErrorFactory.ProcessorErrorFactory.incompatible_types_array_full(strExp, info.type, info.dim, literal.sourceInfo);
+       } else {
+         const resultType = this.evaluateExpressionType(literal);
+        if (!(resultType instanceof CompoundType)) {
+          const strInfo = type.stringInfo();
+          const info = strInfo[0];
+          const strExp = literal.toString();
+          throw ProcessorErrorFactory.incompatible_types_array_full(strExp,info.type, info.dim, literal.sourceInfo);
         }
         if (!type.isCompatible(resultType)) {
-          var _strInfo = type.stringInfo();
-          var _info2 = _strInfo[0];
-          var _strExp = literal.toString();
-          throw _processorErrorFactory.ProcessorErrorFactory.incompatible_types_array_full(_strExp, _info2.type, _info2.dim, literal.sourceInfo);
+          const strInfo = type.stringInfo();
+          const info = strInfo[0];
+          const strExp = literal.toString();
+          throw ProcessorErrorFactory.incompatible_types_array_full(strExp,info.type, info.dim, literal.sourceInfo);
         }
         return true;
-      }
+      } */
+      return true;
     }
   }, {
     key: 'assertFunction',
     value: function assertFunction(fun) {
-      var _this2 = this;
+      var _this = this;
 
       this.pushMap();
       this.currentFunction = fun;
       fun.formalParameters.forEach(function (formalParam) {
         if (formalParam.type instanceof _compoundType.CompoundType) {
           if (formalParam.type.dimensions > 1) {
-            _this2.insertSymbol(formalParam.id, { id: formalParam.id, lines: -1, columns: -1, type: formalParam.type });
+            _this.insertSymbol(formalParam.id, { id: formalParam.id, lines: -1, columns: -1, type: formalParam.type });
           } else {
-            _this2.insertSymbol(formalParam.id, { id: formalParam.id, lines: -1, columns: null, type: formalParam.type });
+            _this.insertSymbol(formalParam.id, { id: formalParam.id, lines: -1, columns: null, type: formalParam.type });
           }
         } else {
-          _this2.insertSymbol(formalParam.id, { id: formalParam.id, type: formalParam.type });
+          _this.insertSymbol(formalParam.id, { id: formalParam.id, type: formalParam.type });
         }
       });
       this.assertDeclarations(fun.variablesDeclarations);
@@ -10285,10 +10282,10 @@ var SemanticAnalyser = exports.SemanticAnalyser = function () {
   }, {
     key: 'assertReturn',
     value: function assertReturn(fun, optional) {
-      var _this3 = this;
+      var _this2 = this;
 
       return fun.commands.reduce(function (last, next) {
-        return _this3.checkCommand(fun.returnType, next, optional) || last;
+        return _this2.checkCommand(fun.returnType, next, optional) || last;
       }, optional);
     }
   }, {
@@ -10369,16 +10366,16 @@ var SemanticAnalyser = exports.SemanticAnalyser = function () {
         if (_exp instanceof _expressions.ArrayLiteral) {
           if (!(_typeInfo.type instanceof _compoundType.CompoundType)) {
             var stringInfo = _typeInfo.type.stringInfo();
-            var _info3 = stringInfo[0];
-            throw _processorErrorFactory.ProcessorErrorFactory.incompatible_types_full(_info3.type, _info3.dim, cmd.sourceInfo);
+            var _info2 = stringInfo[0];
+            throw _processorErrorFactory.ProcessorErrorFactory.incompatible_types_full(_info2.type, _info2.dim, cmd.sourceInfo);
           }
           this.evaluateArrayLiteral(cmd.id, _typeInfo.lines, _typeInfo.columns, _typeInfo.type, _exp);
         } else {
           var _resultType2 = this.evaluateExpressionType(_exp);
           if (!_resultType2.isCompatible(_typeInfo.type)) {
             var _stringInfo2 = _typeInfo.type.stringInfo();
-            var _info4 = _stringInfo2[0];
-            throw _processorErrorFactory.ProcessorErrorFactory.incompatible_types_full(_info4.type, _info4.dim, cmd.sourceInfo);
+            var _info3 = _stringInfo2[0];
+            throw _processorErrorFactory.ProcessorErrorFactory.incompatible_types_full(_info3.type, _info3.dim, cmd.sourceInfo);
           }
         }
         return optional;
@@ -10410,14 +10407,14 @@ var SemanticAnalyser = exports.SemanticAnalyser = function () {
         var funcName = this.currentFunction.isMain ? _definedFunctions.LanguageDefinedFunction.getMainFunctionName() : this.currentFunction.name;
         if (cmd.expression === null && !type.isCompatible(_types.Types.VOID)) {
           var _stringInfo3 = type.stringInfo();
-          var _info5 = _stringInfo3[0];
-          throw _processorErrorFactory.ProcessorErrorFactory.invalid_void_return_full(funcName, _info5.type, _info5.dim, cmd.sourceInfo);
+          var _info4 = _stringInfo3[0];
+          throw _processorErrorFactory.ProcessorErrorFactory.invalid_void_return_full(funcName, _info4.type, _info4.dim, cmd.sourceInfo);
         } else if (cmd.expression !== null) {
           var _resultType4 = this.evaluateExpressionType(cmd.expression);
           if (!type.isCompatible(_resultType4)) {
             var _stringInfo4 = type.stringInfo();
-            var _info6 = _stringInfo4[0];
-            throw _processorErrorFactory.ProcessorErrorFactory.invalid_return_type_full(funcName, _info6.type, _info6.dim, cmd.sourceInfo);
+            var _info5 = _stringInfo4[0];
+            throw _processorErrorFactory.ProcessorErrorFactory.invalid_return_type_full(funcName, _info5.type, _info5.dim, cmd.sourceInfo);
           } else {
             return true;
           }
@@ -10429,10 +10426,10 @@ var SemanticAnalyser = exports.SemanticAnalyser = function () {
   }, {
     key: 'checkCommands',
     value: function checkCommands(type, cmds, optional) {
-      var _this4 = this;
+      var _this3 = this;
 
       return cmds.reduce(function (last, next) {
-        return _this4.checkCommand(type, next, optional) || last;
+        return _this3.checkCommand(type, next, optional) || last;
       }, optional);
     }
   }, {
@@ -10521,7 +10518,6 @@ var Store = exports.Store = function () {
         if (this.nextStore !== null) {
           return this.nextStore.applyStore(id);
         } else {
-          // TODO: better error message
           throw new Error("Variable " + id + " not found.");
         }
       }
@@ -15834,6 +15830,8 @@ var _lineI18n = __webpack_require__(/*! line-i18n */ "./node_modules/line-i18n/d
 
 var _lineI18n2 = _interopRequireDefault(_lineI18n);
 
+var _config = __webpack_require__(/*! ./../util/config */ "./js/util/config.js");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -15842,16 +15840,13 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-// This is for LanguageService with localStorage
-// const DEFAULT_LANG = "pt";
-
 var LanguageServiceExtended = function (_line_i18n$LanguageSe) {
   _inherits(LanguageServiceExtended, _line_i18n$LanguageSe);
 
   function LanguageServiceExtended() {
     _classCallCheck(this, LanguageServiceExtended);
 
-    return _possibleConstructorReturn(this, (LanguageServiceExtended.__proto__ || Object.getPrototypeOf(LanguageServiceExtended)).call(this, iLMparameters.lang));
+    return _possibleConstructorReturn(this, (LanguageServiceExtended.__proto__ || Object.getPrototypeOf(LanguageServiceExtended)).call(this, typeof iLMparameters === 'undefined' ? _config.Config.default_lang : iLMparameters.lang));
   }
 
   _createClass(LanguageServiceExtended, [{
@@ -16350,10 +16345,11 @@ var ConfigObject = function () {
     this.loopTimeout = 5000;
     this.decimalPlaces = 5;
     this.intConvertRoundMode = 2;
+    this.default_lang = 'pt';
   }
 
   _createClass(ConfigObject, [{
-    key: "setConfig",
+    key: 'setConfig',
     value: function setConfig(opts) {
       for (var key in opts) {
         if (this.hasOwnProperty(key)) {
@@ -16541,8 +16537,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var block_render = false;
 
 function renderAlgorithm() {
-	console.log('rendering algorithm...');
-
 	if (block_render) {
 		return;
 	}
@@ -16607,6 +16601,10 @@ var VariablesManagement = _interopRequireWildcard(_variables);
 var _commands = __webpack_require__(/*! ./commands */ "./js/visualUI/commands.js");
 
 var CommandsManagement = _interopRequireWildcard(_commands);
+
+var _utils = __webpack_require__(/*! ./utils */ "./js/visualUI/utils.js");
+
+var Utils = _interopRequireWildcard(_utils);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -16769,7 +16767,7 @@ function returnsCode(command_obj, indentation) {
 
 	if (command_obj.variable_value_menu) {
 		try {
-			ret += ' ' + variableValueMenuCode(command_obj.variable_value_menu);
+			ret += ' ' + variableValueMenuCode(command_obj.variable_value_menu, true);
 		} catch (err) {}
 	}
 
@@ -16917,6 +16915,10 @@ function iftruesCode(command_obj, indentation) {
 
 	ret += _localizedStringsService.LocalizedStrings.getUI('text_if');
 
+	if (!command_obj.expression.expression) {
+		Utils.renderErrorMessage(command_obj.expression.dom_object, _localizedStringsService.LocalizedStrings.getUI('inform_valid_expression'));
+	}
+
 	switch (command_obj.expression.expression.type) {
 		case Models.EXPRESSION_TYPES.exp_logic:
 			ret += logicExpressionCode(command_obj.expression.expression);
@@ -16979,6 +16981,10 @@ function doWhilesCode(command_obj, indentation) {
 
 	ret += '} ' + _localizedStringsService.LocalizedStrings.getUI('text_code_while');
 
+	if (!command_obj.expression.expression) {
+		Utils.renderErrorMessage(command_obj.expression.dom_object, _localizedStringsService.LocalizedStrings.getUI('inform_valid_expression'));
+	}
+
 	switch (command_obj.expression.expression.type) {
 		case Models.EXPRESSION_TYPES.exp_logic:
 			ret += logicExpressionCode(command_obj.expression.expression);
@@ -16999,6 +17005,10 @@ function whiletruesCode(command_obj, indentation) {
 	}
 
 	ret += _localizedStringsService.LocalizedStrings.getUI('text_code_while');
+
+	if (!command_obj.expression.expression) {
+		Utils.renderErrorMessage(command_obj.expression.dom_object, _localizedStringsService.LocalizedStrings.getUI('inform_valid_expression'));
+	}
 
 	switch (command_obj.expression.expression.type) {
 		case Models.EXPRESSION_TYPES.exp_logic:
@@ -17203,42 +17213,52 @@ function readersCode(command_obj, indentation) {
 }
 
 function variableValueMenuCode(variable_obj) {
+	var is_return = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+
 	var ret = '';
-	if (variable_obj.function_called) {
+	try {
+		if (variable_obj.function_called) {
 
-		if (variable_obj.function_called.name) {
-			ret += variable_obj.function_called.name + ' ( ';
-		} else {
-			ret += _localizedStringsService.LocalizedStrings.getUI(variable_obj.function_called.category) + '.' + _localizedStringsService.LocalizedStrings.getUI(variable_obj.function_called.identifier) + ' ( ';
-		}
+			if (variable_obj.function_called.name) {
+				ret += variable_obj.function_called.name + ' ( ';
+			} else {
+				ret += _localizedStringsService.LocalizedStrings.getUI(variable_obj.function_called.category) + '.' + _localizedStringsService.LocalizedStrings.getUI(variable_obj.function_called.identifier) + ' ( ';
+			}
 
-		if (variable_obj.parameters_list) {
-			for (var i = 0; i < variable_obj.parameters_list.length; i++) {
-				ret += variableValueMenuCode(variable_obj.parameters_list[i]);
-				if (i + 1 < variable_obj.parameters_list.length) {
-					ret += ', ';
+			if (variable_obj.parameters_list) {
+				for (var i = 0; i < variable_obj.parameters_list.length; i++) {
+					ret += variableValueMenuCode(variable_obj.parameters_list[i]);
+					if (i + 1 < variable_obj.parameters_list.length) {
+						ret += ', ';
+					}
 				}
 			}
-		}
 
-		ret += ' )';
-	} else if (variable_obj.content.type) {
+			ret += ' )';
+		} else if (variable_obj.content.type) {
 
-		ret += variable_obj.content.name;
+			ret += variable_obj.content.name;
 
-		if (variable_obj.content.dimensions == 1 && variable_obj.dimensions != 1) {
-			ret += ' [ ' + variableValueMenuCode(variable_obj.column) + ' ] ';
-		}
+			if (variable_obj.content.dimensions == 1 && variable_obj.dimensions != 1) {
+				ret += ' [ ' + variableValueMenuCode(variable_obj.column) + ' ] ';
+			}
 
-		if (variable_obj.content.dimensions == 2 && variable_obj.dimensions != 2) {
-			ret += ' [ ' + variableValueMenuCode(variable_obj.row) + ' ] ';
-			ret += ' [ ' + variableValueMenuCode(variable_obj.column) + ' ] ';
-		}
-	} else {
-		if (isNaN(variable_obj.content)) {
-			ret += '"' + variable_obj.content + '"';
+			if (variable_obj.content.dimensions == 2 && variable_obj.dimensions != 2) {
+				ret += ' [ ' + variableValueMenuCode(variable_obj.row) + ' ] ';
+				ret += ' [ ' + variableValueMenuCode(variable_obj.column) + ' ] ';
+			}
 		} else {
-			ret += variable_obj.content;
+			if (isNaN(variable_obj.content)) {
+				ret += '"' + variable_obj.content + '"';
+			} else {
+				ret += variable_obj.content;
+			}
+		}
+	} catch (err) {
+
+		if (!is_return) {
+			Utils.renderErrorMessage(variable_obj.dom_object, _localizedStringsService.LocalizedStrings.getUI('inform_valid_content'));
+			throw err;
 		}
 	}
 
@@ -17871,12 +17891,14 @@ function borderMouseDragCommand(function_obj, function_container, evt) {
 
 	function_container.find('.commands_list_div').each(function (index) {
 		prev = (0, _jquery2.default)(this);
-		var objLeft = prev.offset().left;
-		var objTop = prev.offset().top;
-		var objRight = objLeft + prev.width();
-		var objBottom = objTop + prev.height();
-		if (evt.pageX > objLeft && evt.pageX < objRight && evt.pageY > objTop && evt.pageY < objBottom) {
-			prev.addClass("over_command_drag");
+		if (prev) {
+			var objLeft = prev.offset().left;
+			var objTop = prev.offset().top;
+			var objRight = objLeft + prev.width();
+			var objBottom = objTop + prev.height();
+			if (evt.pageX > objLeft && evt.pageX < objRight && evt.pageY > objTop && evt.pageY < objBottom) {
+				prev.addClass("over_command_drag");
+			}
 		}
 	});
 
@@ -17887,7 +17909,9 @@ function borderMouseDragCommand(function_obj, function_container, evt) {
 		var objRight = objLeft + obj.width();
 		var objBottom = objTop + obj.height();
 		if (evt.pageX > objLeft && evt.pageX < objRight && evt.pageY > objTop && evt.pageY < objBottom) {
-			prev.removeClass('over_command_drag');
+			if (prev) {
+				prev.removeClass('over_command_drag');
+			}
 			obj.addClass("over_command_drag");
 			return;
 		}
@@ -18015,6 +18039,23 @@ function genericCreateCommand(command_type) {
 	}
 }
 
+function dragTrash(event) {
+
+	var trash = (0, _jquery2.default)('<i class="ui icon trash alternate outline"></i>');
+	(0, _jquery2.default)('body').append(trash);
+	trash.css('position', 'absolute');
+	trash.css('top', event.clientY);
+	trash.css('left', event.clientX - 20);
+	trash.css('font-size', '3em');
+	trash.css('display', 'none');
+
+	trash.fadeIn(200, function () {
+		trash.fadeOut(200, function () {
+			trash.remove();
+		});
+	});
+}
+
 function manageCommand(function_obj, function_container, event, command_type) {
 
 	(0, _jquery2.default)(".created_element").each(function (index) {
@@ -18046,11 +18087,13 @@ function manageCommand(function_obj, function_container, event, command_type) {
 	if (!esta_correto) {
 		has_element_created_draged = false;
 		which_element_is_draged = null;
+		dragTrash(event);
 		return;
 	} else {
 		if (!esta_na_div_correta) {
 			has_element_created_draged = false;
 			which_element_is_draged = null;
+			dragTrash(event);
 			return;
 		}
 	}
@@ -19454,6 +19497,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function renderExpression(command, expression, function_obj, initial_el_to_render) {
 
+	expression.dom_object = initial_el_to_render;
+
 	if (expression.expression == null || expression.expression.length < 1) {
 
 		renderStartMenu(command, expression, function_obj, initial_el_to_render);
@@ -19621,8 +19666,8 @@ function renderArithmeticExpression(command, all_expression, expression_arithmet
 function renderStartMenu(command, expression, function_obj, initial_el_to_render) {
 	var start_menu = '';
 	start_menu += '<div class="ui dropdown menu_start_rendered"><div class="text"><i>' + _localizedStringsService.LocalizedStrings.getUI('expression_menu_select') + '</i></div><i class="dropdown icon"></i><div class="menu">';
-	start_menu += '<div class="item" data-exp="' + Models.EXPRESSION_TYPES.exp_logic + '">' + _localizedStringsService.LocalizedStrings.getUI('text_logic_expression') + '</div>';
-	start_menu += '<div class="item" data-exp="' + Models.EXPRESSION_TYPES.exp_arithmetic + '">' + _localizedStringsService.LocalizedStrings.getUI('text_arithmetic_expression') + '</div>';
+	start_menu += '<div class="item" data-exp="' + Models.EXPRESSION_TYPES.exp_logic + '">' + _localizedStringsService.LocalizedStrings.getUI('text_logic_expression') + ' (EL == EL and EL)</div>';
+	start_menu += '<div class="item" data-exp="' + Models.EXPRESSION_TYPES.exp_arithmetic + '">' + _localizedStringsService.LocalizedStrings.getUI('text_arithmetic_expression') + ' (EA < EA)</div>';
 	start_menu += '</div></div>';
 	start_menu = (0, _jquery2.default)(start_menu);
 
@@ -19723,6 +19768,11 @@ function renderMenu(command, dom_where_render, function_obj, dom_command) {
 
 function addHandlers(command, dom_where_render, function_obj, dom_command) {
 
+	console.log('command, dom_where_render, function_obj, dom_command');
+	console.log(command, dom_where_render, function_obj, dom_command);
+
+	console.log(dom_where_render.parents());
+
 	dom_where_render.find('.menu_commands').dropdown({
 		on: 'hover'
 	});
@@ -19746,7 +19796,7 @@ function addHandlers(command, dom_where_render, function_obj, dom_command) {
 
 			switch ((0, _jquery2.default)(this).data('command')) {
 				case Models.COMMAND_TYPES.break:
-					CommandsManagement.createFloatingCommand(function_obj, null, (0, _jquery2.default)(this).data('command'), evt);
+					CommandsManagement.createFloatingCommand(function_obj, dom_command.find('.block_commands'), (0, _jquery2.default)(this).data('command'), evt);
 					break;
 
 				case Models.COMMAND_TYPES.switchcase:
@@ -20375,7 +20425,11 @@ function renderCommand(command, function_obj) {
 
 	addHandlers(command, function_obj, el);
 
-	VariableValueMenu.renderMenu(command, command.variable_value_menu, el.find('.var_value_menu_div'), function_obj);
+	if (function_obj.return_type != _types.Types.VOID) {
+		VariableValueMenu.renderMenu(command, command.variable_value_menu, el.find('.var_value_menu_div'), function_obj);
+	} else {
+		el.find('.var_value_menu_div').remove();
+	}
 
 	return el;
 }
@@ -20526,7 +20580,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.VAR_OR_VALUE_TYPES = undefined;
 exports.renderMenu = renderMenu;
-exports.refreshMenu = refreshMenu;
 
 var _jquery = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
 
@@ -20586,11 +20639,11 @@ function renderMenu(command, ref_object, dom_object, function_obj) {
 		}
 	}
 
-	var menu_var_or_value = '<div class="ui dropdown menu_var_or_value_dom" data-algo="12"><div class="text"></div><i class="dropdown icon"></i><div class="menu">';
+	var menu_var_or_value = '<div class="ui dropdown menu_var_or_value_dom" data-varmenu="true"><div class="text"></div><i class="dropdown icon"></i><div class="menu">';
 
 	if (ref_object.variable_and_value == VAR_OR_VALUE_TYPES.only_variable) {
 
-		menu_var_or_value = '<div class="ui dropdown menu_var_or_value_dom"><div class="text"></div><i class="dropdown icon"></i><div class="menu menu_only_vars">';
+		menu_var_or_value = '<div class="ui dropdown menu_var_or_value_dom" data-varmenu="true"><div class="text"></div><i class="dropdown icon"></i><div class="menu menu_only_vars">';
 		menu_var_or_value += '</div>';
 	}
 
@@ -20612,7 +20665,7 @@ function renderMenu(command, ref_object, dom_object, function_obj) {
 
 	if (ref_object.variable_and_value == VAR_OR_VALUE_TYPES.only_function) {
 
-		menu_var_or_value = '<div class="ui dropdown menu_var_or_value_dom"><div class="text"></div><i class="dropdown icon"></i><div class="menu menu_only_functions">';
+		menu_var_or_value = '<div class="ui dropdown menu_var_or_value_dom" data-varmenu="true"><div class="text"></div><i class="dropdown icon"></i><div class="menu menu_only_functions">';
 		menu_var_or_value += '</div>';
 	}
 
@@ -20637,6 +20690,8 @@ function renderMenu(command, ref_object, dom_object, function_obj) {
 	menu_var_or_value = (0, _jquery2.default)(menu_var_or_value);
 
 	dom_object.append(menu_var_or_value);
+
+	ref_object.dom_object = menu_var_or_value;
 
 	addHandlers(command, ref_object, dom_object, menu_var_or_value, function_obj, expression_element);
 
@@ -20775,14 +20830,6 @@ function isVarInProgram(var_obj, function_obj) {
 	}
 
 	return null;
-}
-
-function refreshMenu(menu_var_or_value_dom) {
-	console.log('\n\n');
-	console.log(menu_var_or_value_dom);
-	console.log("olá, fui chamado! note alguns DATAS recuperados: ");
-	console.log(menu_var_or_value_dom.data());
-	console.log('\n\n\n');
 }
 
 function renderPreviousContent(function_obj, menu_var_or_value, ref_object, dom_object, command, expression_element) {
@@ -21681,16 +21728,17 @@ function openInputToValue(command, ref_object, dom_object, menu_var_or_value, fu
 	});
 
 	if (command.type == Models.COMMAND_TYPES.comment) {
-		rendered.parent().on('click', function (e) {
-			console.log("TTT14");
-			rendered.remove();
-			rendered.empty();
-			rendered.remove();
-			dom_object.empty();
-			dom_object.append('<span class="menu_var_or_value_dom"> </span>');
-
-			openInputToValue(command, ref_object, dom_object, menu_var_or_value, function_obj, expression_element);
-		});
+		/*rendered.parent().on('click', function(e) {
+  	rendered.parent().off();
+  	console.log("TTT14");
+  	rendered.remove();
+  	rendered.empty();
+  	rendered.remove();
+  	dom_object.empty();
+  	dom_object.append('<span class="menu_var_or_value_dom"> </span>');
+  	
+  	openInputToValue(command, ref_object, dom_object, menu_var_or_value, function_obj, expression_element)
+  });*/
 	}
 
 	rendered.on('click', function (e) {
@@ -22523,7 +22571,6 @@ function updateSequenceFunction(oldIndex, newIndex) {
 }
 
 function runCodeAssessment() {
-  toggleConsole(true);
 
   window.studentGrade = null;
   studentTemp = null;
@@ -22531,6 +22578,9 @@ function runCodeAssessment() {
   if (strCode == null) {
     return;
   }
+
+  toggleConsole(true);
+
   if (domConsole == null) domConsole = new _domConsole.DOMConsole("#ivprog-term");
   (0, _jquery2.default)("#ivprog-term").slideDown(500);
   var runner = new _ivprogAssessment.IVProgAssessment(strCode, testCases, domConsole);
@@ -22547,12 +22597,14 @@ function runCodeAssessment() {
 }
 
 function runCode() {
-  toggleConsole(true);
 
   var strCode = CodeManagement.generate();
   if (strCode == null) {
     return;
   }
+
+  toggleConsole(true);
+
   if (domConsole == null) domConsole = new _domConsole.DOMConsole("#ivprog-term");
   (0, _jquery2.default)("#ivprog-term").slideDown(500);
   try {
@@ -22614,6 +22666,11 @@ function waitToCloseConsole() {
 
 function toggleTextualCoding() {
   var code = CodeManagement.generate();
+
+  if (code == null) {
+    return;
+  }
+
   (0, _jquery2.default)('.ivprog_visual_panel').css('display', 'none');
   (0, _jquery2.default)('.ivprog_textual_panel').css('display', 'block');
   (0, _jquery2.default)('.ivprog_textual_panel').removeClass('loading');
@@ -22720,6 +22777,51 @@ function renderParameter(function_obj, parameter_obj, function_container) {
   return ret;
 }
 
+function updateParameterName(parameter_var, new_name, parameter_obj_dom) {
+  if (isValidIdentifier(new_name)) {
+    parameter_var.name = new_name;
+  } else {
+    parameter_obj_dom.find('.parameter_div_edit').popup({
+      html: '<i class="ui icon inverted exclamation triangle yellow"></i>' + _localizedStringsService.LocalizedStrings.getUI('inform_valid_name'),
+      transition: "fade up",
+      on: 'click',
+      closable: true,
+      className: {
+        popup: 'ui popup invalid-identifier'
+      },
+      onHidden: function onHidden($module) {
+        parameter_obj_dom.find('.parameter_div_edit').popup('destroy');
+      }
+
+    }).popup('toggle');
+  }
+}
+
+function updateFunctionName(function_var, new_name, function_obj_dom) {
+  if (isValidIdentifier(new_name)) {
+    function_var.name = new_name;
+  } else {
+    function_obj_dom.find('.function_name_div').popup({
+      html: '<i class="ui icon inverted exclamation triangle yellow"></i>' + _localizedStringsService.LocalizedStrings.getUI('inform_valid_name'),
+      transition: "fade up",
+      on: 'click',
+      closable: true,
+      className: {
+        popup: 'ui popup invalid-identifier'
+      },
+      onHidden: function onHidden($module) {
+        function_obj_dom.find('.function_name_div').popup('destroy');
+      }
+
+    }).popup('toggle');
+  }
+}
+
+function isValidIdentifier(identifier_str) {
+  return (/^[a-zA-Z_][a-zA-Z0-9_]*$/.test(identifier_str)
+  );
+}
+
 var opened_name_parameter = false;
 var opened_input_parameter = null;
 function enableNameParameterUpdate(parameter_obj, parent_node) {
@@ -22753,7 +22855,7 @@ function enableNameParameterUpdate(parameter_obj, parent_node) {
   input_field.focusout(function () {
     /// update array:
     if (input_field.val().trim()) {
-      parameter_obj.name = input_field.val().trim();
+      updateParameterName(parameter_obj, input_field.val().trim(), parent_node);
       parent_node.find('.span_name_parameter').text(parameter_obj.name);
     }
     input_field.off();
@@ -22768,7 +22870,7 @@ function enableNameParameterUpdate(parameter_obj, parent_node) {
     var code = e.keyCode || e.which;
     if (code == 13) {
       if (input_field.val().trim()) {
-        parameter_obj.name = input_field.val().trim();
+        updateParameterName(parameter_obj, input_field.val().trim(), parent_node);
         parent_node.find('.span_name_parameter').text(parameter_obj.name);
       }
       input_field.off();
@@ -22828,7 +22930,7 @@ function enableNameFunctionUpdate(function_obj, parent_node) {
   input_field.focusout(function () {
     /// update array:
     if (input_field.val().trim()) {
-      function_obj.name = input_field.val().trim();
+      updateFunctionName(function_obj, input_field.val().trim(), parent_node);
     }
     input_field.off();
     input_field.remove();
@@ -22845,7 +22947,7 @@ function enableNameFunctionUpdate(function_obj, parent_node) {
     var code = e.keyCode || e.which;
     if (code == 13) {
       if (input_field.val().trim()) {
-        function_obj.name = input_field.val().trim();
+        updateFunctionName(function_obj, input_field.val().trim(), parent_node);
       }
       input_field.off();
       input_field.remove();
@@ -22934,8 +23036,29 @@ function toggleConstant(global_var) {
 	global_var.is_constant = !global_var.is_constant;
 }
 
-function updateName(global_var, new_name) {
-	global_var.name = new_name;
+function updateName(global_var, new_name, global_obj_dom) {
+	if (isValidIdentifier(new_name)) {
+		global_var.name = new_name;
+	} else {
+		global_obj_dom.find('.editing_name_var').popup({
+			html: '<i class="ui icon inverted exclamation triangle yellow"></i>' + _localizedStringsService.LocalizedStrings.getUI('inform_valid_name'),
+			transition: "fade up",
+			on: 'click',
+			closable: true,
+			className: {
+				popup: 'ui popup invalid-identifier'
+			},
+			onHidden: function onHidden($module) {
+				global_obj_dom.find('.editing_name_var').popup('destroy');
+			}
+
+		}).popup('toggle');
+	}
+}
+
+function isValidIdentifier(identifier_str) {
+	return (/^[a-zA-Z_][a-zA-Z0-9_]*$/.test(identifier_str)
+	);
 }
 
 function updateType(global_var, new_type) {
@@ -23650,7 +23773,7 @@ function enableNameUpdate(global_container) {
 	input_name.focusout(function () {
 		/// update array:
 		if (input_name.val().trim().length > 0) {
-			updateName(global_var, input_name.val().trim());
+			updateName(global_var, input_name.val().trim(), global_container);
 			global_container.find('.span_name_variable').text(global_var.name);
 		} else {
 			global_container.find('.span_name_variable').text(global_var.name);
@@ -23667,7 +23790,7 @@ function enableNameUpdate(global_container) {
 		var code = e.keyCode || e.which;
 		if (code == 13) {
 			if (input_name.val().trim()) {
-				updateName(global_var, input_name.val().trim());
+				updateName(global_var, input_name.val().trim(), global_container);
 				global_container.find('.span_name_variable').text(global_var.name);
 			} else {
 				global_container.find('.span_name_variable').text(global_var.name);
@@ -24195,6 +24318,50 @@ var Types = exports.Types = Object.freeze({
 
 /***/ }),
 
+/***/ "./js/visualUI/utils.js":
+/*!******************************!*\
+  !*** ./js/visualUI/utils.js ***!
+  \******************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.renderErrorMessage = renderErrorMessage;
+
+var _jquery = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function renderErrorMessage(dom_obj_target, message_text) {
+
+	dom_obj_target.popup({
+		html: '<i class="ui icon inverted exclamation triangle yellow"></i>' + message_text,
+		transition: "fade up",
+		on: 'click',
+		closable: true,
+		movePopup: true,
+		boundary: window,
+		preserve: false,
+		target: false,
+		className: {
+			popup: 'ui popup invalid-identifier'
+		},
+		onHidden: function onHidden($module) {
+			dom_obj_target.popup('destroy');
+		}
+
+	}).popup('toggle');
+}
+
+/***/ }),
+
 /***/ "./js/visualUI/variables.js":
 /*!**********************************!*\
   !*** ./js/visualUI/variables.js ***!
@@ -24252,8 +24419,30 @@ function addVariable(function_obj, function_container) {
 	}
 }
 
-function updateName(variable_obj, new_name) {
-	variable_obj.name = new_name;
+function updateName(variable_obj, new_name, variable_obj_dom) {
+
+	if (isValidIdentifier(new_name)) {
+		variable_obj.name = new_name;
+	} else {
+		variable_obj_dom.find('.editing_name_var').popup({
+			html: '<i class="ui icon inverted exclamation triangle yellow"></i>' + _localizedStringsService.LocalizedStrings.getUI('inform_valid_name'),
+			transition: "fade up",
+			on: 'click',
+			closable: true,
+			className: {
+				popup: 'ui popup invalid-identifier'
+			},
+			onHidden: function onHidden($module) {
+				variable_obj_dom.find('.editing_name_var').popup('destroy');
+			}
+
+		}).popup('toggle');
+	}
+}
+
+function isValidIdentifier(identifier_str) {
+	return (/^[a-zA-Z_][a-zA-Z0-9_]*$/.test(identifier_str)
+	);
 }
 
 function removeVariable(variable_obj, variable_container) {
@@ -24960,7 +25149,7 @@ function enableNameUpdate(variable_obj, variable_container) {
 	input_name.focusout(function () {
 		/// update array:
 		if (input_name.val().trim().length > 0) {
-			updateName(variable_obj, input_name.val().trim());
+			updateName(variable_obj, input_name.val().trim(), variable_container);
 			variable_container.find('.span_name_variable').text(variable_obj.name);
 		} else {
 			variable_container.find('.span_name_variable').text(variable_obj.name);
@@ -24977,7 +25166,7 @@ function enableNameUpdate(variable_obj, variable_container) {
 		var code = e.keyCode || e.which;
 		if (code == 13) {
 			if (input_name.val().trim().length > 0) {
-				updateName(variable_obj, input_name.val().trim());
+				updateName(variable_obj, input_name.val().trim(), variable_container);
 				variable_container.find('.span_name_variable').text(variable_obj.name);
 			} else {
 				variable_container.find('.span_name_variable').text(variable_obj.name);

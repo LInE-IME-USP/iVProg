@@ -807,3 +807,22 @@ div.ui.checkbox.transition.visible {
 .ui.iftrue, .ui.repeatNtimes, .ui.whiletrue, .ui.dowhiletrue, .ui.switch {
     background: #787fe721;
 }
+.ui.popup.invalid-identifier {
+	background: #ff3232;
+    color: white;
+    font-weight: bold;
+    border: 1px solid black;
+}
+.ui.popup.invalid-identifier:before {
+	background: #ff3232;
+	border-right: 1px solid black;
+    border-bottom: 1px solid black;
+}
+.ui.popup.invalid-identifier i.ui.icon.inverted.exclamation.triangle.yellow {
+	margin-left: -.5em;
+    margin-right: .4em;
+}
+.ui.repeatNtimes.command_container .ui.block_commands, 
+.ui.whiletrue.command_container .ui.block_commands {
+	margin-top: .8em;
+}

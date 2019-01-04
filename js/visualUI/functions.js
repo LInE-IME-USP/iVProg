@@ -566,14 +566,16 @@ function updateSequenceFunction (oldIndex, newIndex) {
 }
 
 function runCodeAssessment () {
-  toggleConsole(true);
-
+  
   window.studentGrade = null;
   studentTemp = null;
   const strCode = CodeManagement.generate();
   if (strCode == null) {
     return;
   }
+
+  toggleConsole(true);
+
   if(domConsole == null)
     domConsole = new DOMConsole("#ivprog-term");
   $("#ivprog-term").slideDown(500);
@@ -590,12 +592,14 @@ function runCodeAssessment () {
 }
 
 function runCode () {
-  toggleConsole(true);
-
+  
   const strCode = CodeManagement.generate();
   if (strCode == null) {
     return;
   }
+  
+  toggleConsole(true);
+
   if(domConsole == null)
     domConsole = new DOMConsole("#ivprog-term");
   $("#ivprog-term").slideDown(500);
@@ -659,6 +663,11 @@ function waitToCloseConsole () {
 
 function toggleTextualCoding () {
   var code = CodeManagement.generate();
+
+  if (code == null) {
+    return;
+  }
+
   $('.ivprog_visual_panel').css('display', 'none');
   $('.ivprog_textual_panel').css('display', 'block');
   $('.ivprog_textual_panel').removeClass('loading');
@@ -686,7 +695,7 @@ function removeParameter (function_obj, parameter_obj, parameter_container) {
   $(parameter_container).fadeOut();
 }
 
-function updateParameterType(parameter_obj, new_type, new_dimensions = 0) {
+function updateParameterType (parameter_obj, new_type, new_dimensions = 0) {
   parameter_obj.type = new_type;
   parameter_obj.dimensions = new_dimensions;
 
@@ -772,6 +781,50 @@ function renderParameter (function_obj, parameter_obj, function_container) {
   return ret;
 }
 
+function updateParameterName (parameter_var, new_name, parameter_obj_dom) {
+  if (isValidIdentifier(new_name)) {
+    parameter_var.name = new_name;
+  } else {
+    parameter_obj_dom.find('.parameter_div_edit').popup({
+      html : '<i class="ui icon inverted exclamation triangle yellow"></i>' + LocalizedStrings.getUI('inform_valid_name'),
+      transition : "fade up",
+      on    : 'click',
+      closable : true,
+      className   : {
+        popup       : 'ui popup invalid-identifier'
+      },
+      onHidden : function($module) {
+        parameter_obj_dom.find('.parameter_div_edit').popup('destroy');
+      }
+
+    }).popup('toggle');
+  }
+}
+
+function updateFunctionName (function_var, new_name, function_obj_dom) {
+  if (isValidIdentifier(new_name)) {
+    function_var.name = new_name;
+  } else {
+    function_obj_dom.find('.function_name_div').popup({
+      html : '<i class="ui icon inverted exclamation triangle yellow"></i>' + LocalizedStrings.getUI('inform_valid_name'),
+      transition : "fade up",
+      on    : 'click',
+      closable : true,
+      className   : {
+        popup       : 'ui popup invalid-identifier'
+      },
+      onHidden : function($module) {
+        function_obj_dom.find('.function_name_div').popup('destroy');
+      }
+
+    }).popup('toggle');
+  }
+}
+
+function isValidIdentifier (identifier_str) {
+  return /^[a-zA-Z_][a-zA-Z0-9_]*$/.test(identifier_str);
+}
+
 var opened_name_parameter = false;
 var opened_input_parameter = null;
 function enableNameParameterUpdate (parameter_obj, parent_node) {
@@ -805,7 +858,7 @@ function enableNameParameterUpdate (parameter_obj, parent_node) {
   input_field.focusout(function() {
     /// update array:
     if (input_field.val().trim()) {
-      parameter_obj.name = input_field.val().trim();
+      updateParameterName(parameter_obj, input_field.val().trim(), parent_node);
       parent_node.find('.span_name_parameter').text(parameter_obj.name);
     }
     input_field.off();
@@ -820,7 +873,7 @@ function enableNameParameterUpdate (parameter_obj, parent_node) {
     var code = e.keyCode || e.which;
     if(code == 13) {
       if (input_field.val().trim()) {
-        parameter_obj.name = input_field.val().trim();
+        updateParameterName(parameter_obj, input_field.val().trim(), parent_node);
         parent_node.find('.span_name_parameter').text(parameter_obj.name);
       }
       input_field.off();
@@ -881,7 +934,7 @@ function enableNameFunctionUpdate (function_obj, parent_node) {
   input_field.focusout(function() {
     /// update array:
     if (input_field.val().trim()) {
-      function_obj.name = input_field.val().trim();
+      updateFunctionName(function_obj, input_field.val().trim(), parent_node);
     }
     input_field.off();
     input_field.remove();
@@ -898,7 +951,7 @@ function enableNameFunctionUpdate (function_obj, parent_node) {
     var code = e.keyCode || e.which;
     if(code == 13) {
       if (input_field.val().trim()) {
-        function_obj.name = input_field.val().trim();
+        updateFunctionName(function_obj, input_field.val().trim(), parent_node);
       }
       input_field.off();
       input_field.remove();

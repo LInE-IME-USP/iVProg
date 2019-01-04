@@ -27,11 +27,11 @@ export function renderMenu (command, ref_object, dom_object, function_obj, size_
 		}
 	}
 
-	var menu_var_or_value = '<div class="ui dropdown menu_var_or_value_dom" data-algo="12"><div class="text"></div><i class="dropdown icon"></i><div class="menu">';
+	var menu_var_or_value = '<div class="ui dropdown menu_var_or_value_dom" data-varmenu="true"><div class="text"></div><i class="dropdown icon"></i><div class="menu">';
 
 	if (ref_object.variable_and_value == VAR_OR_VALUE_TYPES.only_variable) {
 
-		menu_var_or_value = '<div class="ui dropdown menu_var_or_value_dom"><div class="text"></div><i class="dropdown icon"></i><div class="menu menu_only_vars">';
+		menu_var_or_value = '<div class="ui dropdown menu_var_or_value_dom" data-varmenu="true"><div class="text"></div><i class="dropdown icon"></i><div class="menu menu_only_vars">';
 		menu_var_or_value += '</div>';
 	}
 
@@ -55,7 +55,7 @@ export function renderMenu (command, ref_object, dom_object, function_obj, size_
 
 	if (ref_object.variable_and_value == VAR_OR_VALUE_TYPES.only_function) {
 
-		menu_var_or_value = '<div class="ui dropdown menu_var_or_value_dom"><div class="text"></div><i class="dropdown icon"></i><div class="menu menu_only_functions">';
+		menu_var_or_value = '<div class="ui dropdown menu_var_or_value_dom" data-varmenu="true"><div class="text"></div><i class="dropdown icon"></i><div class="menu menu_only_functions">';
 		menu_var_or_value += '</div>';
 	} 
 
@@ -81,6 +81,8 @@ export function renderMenu (command, ref_object, dom_object, function_obj, size_
     menu_var_or_value = $(menu_var_or_value);
 
     dom_object.append(menu_var_or_value);
+    
+    ref_object.dom_object = menu_var_or_value;
 
     addHandlers(command, ref_object, dom_object, menu_var_or_value, function_obj, expression_element);
 
@@ -221,15 +223,6 @@ function isVarInProgram (var_obj, function_obj) {
 	}
 
 	return null;
-}
-
-export function refreshMenu (menu_var_or_value_dom) {
-	console.log('\n\n');
-	console.log(menu_var_or_value_dom);
-	console.log("olá, fui chamado! note alguns DATAS recuperados: ");
-	console.log(menu_var_or_value_dom.data());
-	console.log('\n\n\n');
-
 }
 
 function renderPreviousContent (function_obj, menu_var_or_value, ref_object, dom_object, command, expression_element) {
@@ -1151,7 +1144,8 @@ function openInputToValue (command, ref_object, dom_object, menu_var_or_value, f
 	});
 
 	if (command.type == Models.COMMAND_TYPES.comment) {
-		rendered.parent().on('click', function(e) {
+		/*rendered.parent().on('click', function(e) {
+			rendered.parent().off();
 			console.log("TTT14");
 			rendered.remove();
 			rendered.empty();
@@ -1160,7 +1154,7 @@ function openInputToValue (command, ref_object, dom_object, menu_var_or_value, f
 			dom_object.append('<span class="menu_var_or_value_dom"> </span>');
 			
 			openInputToValue(command, ref_object, dom_object, menu_var_or_value, function_obj, expression_element)
-		});
+		});*/
 	}
 
 	rendered.on('click', function(e) {

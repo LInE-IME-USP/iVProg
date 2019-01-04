@@ -28,8 +28,30 @@ export function addVariable (function_obj, function_container, is_in_click = fal
 	}
 }
 
-function updateName (variable_obj, new_name) {
-	variable_obj.name = new_name;
+function updateName (variable_obj, new_name, variable_obj_dom) {
+
+	if (isValidIdentifier(new_name)) {
+		variable_obj.name = new_name;
+	} else {
+		variable_obj_dom.find('.editing_name_var').popup({
+			html : '<i class="ui icon inverted exclamation triangle yellow"></i>' + LocalizedStrings.getUI('inform_valid_name'),
+			transition : "fade up",
+			on    : 'click',
+      		closable : true,
+			className   : {
+			  popup       : 'ui popup invalid-identifier'
+			},
+			onHidden : function($module) {
+				variable_obj_dom.find('.editing_name_var').popup('destroy');
+			}
+
+		}).popup('toggle');
+	}
+
+}
+
+function isValidIdentifier (identifier_str) {
+	return /^[a-zA-Z_][a-zA-Z0-9_]*$/.test(identifier_str);
 }
 
 function removeVariable (variable_obj, variable_container) {
@@ -758,7 +780,7 @@ function enableNameUpdate (variable_obj, variable_container) {
 	input_name.focusout(function() {
 		/// update array:
 		if (input_name.val().trim().length > 0) {
-			updateName(variable_obj, input_name.val().trim());
+			updateName(variable_obj, input_name.val().trim(), variable_container);
 			variable_container.find('.span_name_variable').text(variable_obj.name);
 		} else {
 			variable_container.find('.span_name_variable').text(variable_obj.name);
@@ -775,7 +797,7 @@ function enableNameUpdate (variable_obj, variable_container) {
 		var code = e.keyCode || e.which;
 		if(code == 13) {
 			if (input_name.val().trim().length > 0) {
-				updateName(variable_obj, input_name.val().trim());
+				updateName(variable_obj, input_name.val().trim(), variable_container);
 				variable_container.find('.span_name_variable').text(variable_obj.name);
 			} else {
 				variable_container.find('.span_name_variable').text(variable_obj.name);

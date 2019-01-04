@@ -9,6 +9,8 @@ import * as VariableValueMenuManagement from './variable_value_menu';
 
 export function renderExpression (command, expression, function_obj, initial_el_to_render) {
 
+	expression.dom_object = initial_el_to_render;
+
 	if (expression.expression == null || expression.expression.length < 1) {
 
 		renderStartMenu(command, expression, function_obj, initial_el_to_render);
@@ -194,8 +196,8 @@ function renderArithmeticExpression (command, all_expression, expression_arithme
 function renderStartMenu (command, expression, function_obj, initial_el_to_render) {
 	var start_menu = '';
 	start_menu += '<div class="ui dropdown menu_start_rendered"><div class="text"><i>'+LocalizedStrings.getUI('expression_menu_select')+'</i></div><i class="dropdown icon"></i><div class="menu">';
-	start_menu += '<div class="item" data-exp="'+Models.EXPRESSION_TYPES.exp_logic+'">'+LocalizedStrings.getUI('text_logic_expression')+'</div>';
-	start_menu += '<div class="item" data-exp="'+Models.EXPRESSION_TYPES.exp_arithmetic+'">'+LocalizedStrings.getUI('text_arithmetic_expression')+'</div>';
+	start_menu += '<div class="item" data-exp="'+Models.EXPRESSION_TYPES.exp_logic+'">'+LocalizedStrings.getUI('text_logic_expression')+' (EL == EL and EL)</div>';
+	start_menu += '<div class="item" data-exp="'+Models.EXPRESSION_TYPES.exp_arithmetic+'">'+LocalizedStrings.getUI('text_arithmetic_expression')+' (EA < EA)</div>';
 	start_menu += '</div></div>';
 	start_menu = $(start_menu);
 

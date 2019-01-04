@@ -31,8 +31,28 @@ function toggleConstant (global_var) {
 	global_var.is_constant = !global_var.is_constant;
 }
 
-function updateName (global_var, new_name) {
-	global_var.name = new_name;
+function updateName (global_var, new_name, global_obj_dom) {
+	if (isValidIdentifier(new_name)) {
+		global_var.name = new_name;
+	} else {
+		global_obj_dom.find('.editing_name_var').popup({
+			html : '<i class="ui icon inverted exclamation triangle yellow"></i>' + LocalizedStrings.getUI('inform_valid_name'),
+			transition : "fade up",
+			on    : 'click',
+      		closable : true,
+			className   : {
+			  popup       : 'ui popup invalid-identifier'
+			},
+			onHidden : function($module) {
+				global_obj_dom.find('.editing_name_var').popup('destroy');
+			}
+
+		}).popup('toggle');
+	}
+}
+
+function isValidIdentifier (identifier_str) {
+	return /^[a-zA-Z_][a-zA-Z0-9_]*$/.test(identifier_str);
 }
 
 function updateType (global_var, new_type, new_dimensions = 0) {
@@ -769,7 +789,7 @@ function enableNameUpdate (global_container) {
 	input_name.focusout(function() {
 		/// update array:
 		if (input_name.val().trim().length > 0) {
-			updateName(global_var, input_name.val().trim());
+			updateName(global_var, input_name.val().trim(), global_container);
 			global_container.find('.span_name_variable').text(global_var.name);
 		} else {
 			global_container.find('.span_name_variable').text(global_var.name);
@@ -786,7 +806,7 @@ function enableNameUpdate (global_container) {
 		var code = e.keyCode || e.which;
 		if(code == 13) {
 			if (input_name.val().trim()) {
-				updateName(global_var, input_name.val().trim());
+				updateName(global_var, input_name.val().trim(), global_container);
 				global_container.find('.span_name_variable').text(global_var.name);
 			} else {
 				global_container.find('.span_name_variable').text(global_var.name);
