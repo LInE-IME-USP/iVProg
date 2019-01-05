@@ -532,7 +532,7 @@ export class IVProgProcessor {
 
       const newArray = Object.assign(new StoreObjectArray(null,null,null), mustBeArray);
       if (column !== null) {
-        if (value.type instanceof CompoundType) {
+        if (value.type instanceof CompoundType || !newArray.type.canAccept(value.type)) {
           const type = mustBeArray.type.innerType;
           const stringInfo = type.stringInfo()
           const info = stringInfo[0]
@@ -541,7 +541,7 @@ export class IVProgProcessor {
         newArray.value[line].value[column] = value;
         store.updateStore(cmd.id, newArray);
       } else {
-        if(mustBeArray.columns !== null && value.type instanceof CompoundType) {
+        if((mustBeArray.columns !== null && value.type instanceof CompoundType) || !newArray.type.canAccept(value.type)) {
           const type = mustBeArray.type;
           const stringInfo = type.stringInfo()
           const info = stringInfo[0]
