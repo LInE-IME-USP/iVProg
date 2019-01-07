@@ -8,6 +8,8 @@ import { resultTypeAfterInfixOp, resultTypeAfterUnaryOp } from '../compatibility
 import { Types } from '../../typeSystem/types';
 import { CompoundType } from '../../typeSystem/compoundType';
 import { MultiType } from '../../typeSystem/multiType';
+import { Config } from '../../util/config';
+import { canImplicitTypeCast } from '../../typeSystem/parsers';
 
 export class SemanticAnalyser {
 
@@ -125,12 +127,14 @@ export class SemanticAnalyser {
           throw ProcessorErrorFactory.incompatible_types_full(info.type, info.dim, declaration.sourceInfo);
         }
         this.insertSymbol(declaration.id, {id: declaration.id, type: declaration.type})
-      } else if(!declaration.type.isCompatible(resultType)) {
+      } else if(!declaration.type.isCompatible(resultType) && !Config.enable_type_casting) {
         const stringInfo = declaration.type.stringInfo();
         const info = stringInfo[0];
         throw ProcessorErrorFactory.incompatible_types_full(info.type, info.dim, declaration.sourceInfo);
+      } else if (Config.enable_type_casting && canImplicitTypeCast(declaration.type, resultType)) {
+        this.insertSymbol(declaration.id, {id: declaration.id, type: declaration.type});
       } else {
-        this.insertSymbol(declaration.id, {id: declaration.id, type: declaration.type})
+        this.insertSymbol(declaration.id, {id: declaration.id, type: declaration.type});
       }
     }
   }

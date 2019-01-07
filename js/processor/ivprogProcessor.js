@@ -13,7 +13,7 @@ import * as Expressions from './../ast/expressions/';
 import { StoreObjectArrayAddress } from './store/storeObjectArrayAddress';
 import { StoreObjectArrayAddressRef } from './store/storeObjectArrayAddressRef';
 import { CompoundType } from './../typeSystem/compoundType';
-import { convertToString } from '../typeSystem/parsers';
+import { convertToString, canImplicitTypeCast } from '../typeSystem/parsers';
 import { Config } from '../util/config';
 import Decimal from 'decimal.js';
 import { ProcessorErrorFactory } from './error/processorErrorFactory';
@@ -612,15 +612,28 @@ export class IVProgProcessor {
         return $value.then(vl => {
           let realValue = vl;
           if (vl !== null) {
+            if(!vl.type.isCompatible(cmd.type)) {
+              if(Config.enable_type_casting && canImplicitTypeCast(cmd.type, vl.type)) {
+                if(Types.INTEGER.isCompatible(cmd.type)) {
+                  realValue = new StoreObject(cmd.type, vl.value.trunc());
+                } else {
+                  realValue = new StoreObject(cmd.type, vl.value);
+                }
+              } else {
+                const stringInfo = typeInfo.type.stringInfo();
+                const info = stringInfo[0];
+                return Promise.reject(ProcessorErrorFactory.incompatible_types_full(info.type, info.dim, cmd.sourceInfo));
+              }
+            }
             if(vl instanceof StoreObjectArrayAddress) {
               if(vl.type instanceof CompoundType) {
-                realValue = Object.assign(new StoreObjectArray(null,null,null), vl.refValue);
+                return Promise.reject(new Error("!!!Critical Error: Compatibility check failed, a Type accepts a CompoundType"))
               } else {
                 realValue = Object.assign(new StoreObject(null,null), vl.refValue);
               }
             }
           } else {
-            realValue = new StoreObject(cmd.type,0);
+            realValue = new StoreObject(cmd.type, 0);
           }
           realValue.readOnly = cmd.isConst;
           store.updateStore(cmd.id, realValue);

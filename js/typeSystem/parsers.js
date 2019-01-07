@@ -47,6 +47,15 @@ function convertBoolToString (bool) {
   }
 }
 
+export function canImplicitTypeCast (castType, sourceType) {
+  if (castType.isCompatible(Types.INTEGER) || castType.isCompatible(Types.REAL)) {
+    if (sourceType.isCompatible(Types.INTEGER) || sourceType.isCompatible(Types.REAL)) {
+      return true;
+    }
+  }
+  return false;
+}
+
 export function convertToString(stoObj, type) {
   switch (type.ord) {
     case Types.INTEGER.ord:
