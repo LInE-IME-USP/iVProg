@@ -104,6 +104,7 @@
   "inform_valid_name": "Inform a valid name!",
   "inform_valid_content": "Enter some content!",
   "inform_valid_expression": "Construct the logical condition!",
+  "inform_valid_name_duplicated": "This name is already in use by other function.",
   "text_t": "Text",
   "arrangement": "Arrangement",
   "conversion": "Conversion",

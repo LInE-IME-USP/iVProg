@@ -14,6 +14,7 @@ import WatchJS from 'melanke-watchjs';
 import { SemanticAnalyser } from '../processor/semantic/semanticAnalyser';
 import { IVProgAssessment } from '../assessment/ivprogAssessment';
 import * as AlgorithmManagement from './algorithm';
+import * as Utils from './utils';
 
 import '../Sortable.js';
 
@@ -803,22 +804,23 @@ function updateParameterName (parameter_var, new_name, parameter_obj_dom) {
 
 function updateFunctionName (function_var, new_name, function_obj_dom) {
   if (isValidIdentifier(new_name)) {
-    function_var.name = new_name;
+    if (functionNameAlreadyExists(new_name)) {
+      Utils.renderErrorMessage(function_obj_dom.find('.function_name_div'), LocalizedStrings.getUI('inform_valid_name_duplicated'));
+    } else {
+      function_var.name = new_name;
+    }
   } else {
-    function_obj_dom.find('.function_name_div').popup({
-      html : '<i class="ui icon inverted exclamation triangle yellow"></i>' + LocalizedStrings.getUI('inform_valid_name'),
-      transition : "fade up",
-      on    : 'click',
-      closable : true,
-      className   : {
-        popup       : 'ui popup invalid-identifier'
-      },
-      onHidden : function($module) {
-        function_obj_dom.find('.function_name_div').popup('destroy');
-      }
-
-    }).popup('toggle');
+    Utils.renderErrorMessage(function_obj_dom.find('.function_name_div'), LocalizedStrings.getUI('inform_valid_name'));
   }
+}
+
+function functionNameAlreadyExists (function_name) {
+  for (var i = 0; i < window.program_obj.functions.length; i++) {
+    if (window.program_obj.functions[i].name == function_name) {
+      return true;
+    }
+  }
+  return false;
 }
 
 function isValidIdentifier (identifier_str) {
