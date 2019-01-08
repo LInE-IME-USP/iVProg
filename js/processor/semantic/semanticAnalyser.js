@@ -508,13 +508,32 @@ export class SemanticAnalyser {
           }
         }
         if(shared <= 0) {
+          if(Config.enable_type_casting && !formalParam.byRef) {
+            if(resultType.isCompatible(Types.INTEGER) || resultType.isCompatible(Types.REAL)) {
+              if(formalParam.type.isCompatible(Types.INTEGER) || formalParam.type.isCompatible(Types.REAL)) {
+                continue;
+              }
+            }
+          }
           throw ProcessorErrorFactory.invalid_parameter_type_full(id, param.toString(), param.sourceInfo);
         }
       } else if (resultType instanceof MultiType) {
         if(!resultType.isCompatible(formalParam.type)) {
+          if(Config.enable_type_casting && !formalParam.byRef) {
+            if(resultType.isCompatible(Types.INTEGER) || resultType.isCompatible(Types.REAL)) {
+              if(formalParam.type.isCompatible(Types.INTEGER) || formalParam.type.isCompatible(Types.REAL)) {
+                continue;
+              }
+            }
+          }
           throw ProcessorErrorFactory.invalid_parameter_type_full(id, param.toString(), param.sourceInfo);
         }
       } else if(!formalParam.type.isCompatible(resultType)) {
+        if(Config.enable_type_casting && !formalParam.byRef) {
+          if (Store.canImplicitTypeCast(formalParam.type, resultType)) {
+            continue;
+          }
+        }
         throw ProcessorErrorFactory.invalid_parameter_type_full(id, param.toString(), param.sourceInfo);
       }
 

@@ -162,27 +162,36 @@ export class IVProgProcessor {
     return Promise.all(promises$).then(values => {
       for (let i = 0; i < values.length; i++) {
         const stoObj = values[i];
-        const exp = actualList[i]
+        const exp = actualList[i];
+        let shouldTypeCast = false;
         const formalParameter = formalList[i];
-        if(formalParameter.type.isCompatible(stoObj.type)) {
-          if(formalParameter.byRef && !stoObj.inStore) {
-            throw ProcessorErrorFactory.invalid_ref(funcName, exp.toString());
-          }
-
-          if(formalParameter.byRef) {
-            let ref = null;
-            if (stoObj instanceof StoreObjectArrayAddress) {
-              ref = new StoreObjectArrayAddressRef(stoObj);
-            } else {
-              ref = new StoreObjectRef(stoObj.id, callerStore);
-            }
-            calleeStore.insertStore(formalParameter.id, ref);
+        if(!formalParameter.type.isCompatible(stoObj.type)) {
+          if (Config.enable_type_casting && !formalParameter.byRef
+            && Store.canImplicitTypeCast(formalParameter.type, stoObj.type)) {
+              shouldTypeCast =  true;
           } else {
-            let realValue = this.parseStoreObjectValue(stoObj);
-            calleeStore.insertStore(formalParameter.id, realValue);
+            throw ProcessorErrorFactory.invalid_parameter_type(funcName, exp.toString());
           }
+        }
+
+        if(formalParameter.byRef && !stoObj.inStore) {
+          throw ProcessorErrorFactory.invalid_ref(funcName, exp.toString());
+        }
+
+        if(formalParameter.byRef) {
+          let ref = null;
+          if (stoObj instanceof StoreObjectArrayAddress) {
+            ref = new StoreObjectArrayAddressRef(stoObj);
+          } else {
+            ref = new StoreObjectRef(stoObj.id, callerStore);
+          }
+          calleeStore.insertStore(formalParameter.id, ref);
         } else {
-          throw ProcessorErrorFactory.invalid_parameter_type(funcName, exp.toString());
+          let realValue = this.parseStoreObjectValue(stoObj);
+          if (shouldTypeCast) {
+            realValue = Store.doImplicitCasting(formalParameter.type, realValue);
+          }
+          calleeStore.insertStore(formalParameter.id, realValue);
         }
       }
       return calleeStore;
