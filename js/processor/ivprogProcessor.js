@@ -162,27 +162,36 @@ export class IVProgProcessor {
     return Promise.all(promises$).then(values => {
       for (let i = 0; i < values.length; i++) {
         const stoObj = values[i];
-        const exp = actualList[i]
+        const exp = actualList[i];
+        let shouldTypeCast = false;
         const formalParameter = formalList[i];
-        if(formalParameter.type.isCompatible(stoObj.type)) {
-          if(formalParameter.byRef && !stoObj.inStore) {
-            throw ProcessorErrorFactory.invalid_ref(funcName, exp.toString());
-          }
-
-          if(formalParameter.byRef) {
-            let ref = null;
-            if (stoObj instanceof StoreObjectArrayAddress) {
-              ref = new StoreObjectArrayAddressRef(stoObj);
-            } else {
-              ref = new StoreObjectRef(stoObj.id, callerStore);
-            }
-            calleeStore.insertStore(formalParameter.id, ref);
+        if(!formalParameter.type.isCompatible(stoObj.type)) {
+          if (Config.enable_type_casting && !formalParameter.byRef
+            && Store.canImplicitTypeCast(formalParameter.type, stoObj.type)) {
+              shouldTypeCast =  true;
           } else {
-            let realValue = this.parseStoreObjectValue(stoObj);
-            calleeStore.insertStore(formalParameter.id, realValue);
+            throw ProcessorErrorFactory.invalid_parameter_type(funcName, exp.toString());
           }
+        }
+
+        if(formalParameter.byRef && !stoObj.inStore) {
+          throw ProcessorErrorFactory.invalid_ref(funcName, exp.toString());
+        }
+
+        if(formalParameter.byRef) {
+          let ref = null;
+          if (stoObj instanceof StoreObjectArrayAddress) {
+            ref = new StoreObjectArrayAddressRef(stoObj);
+          } else {
+            ref = new StoreObjectRef(stoObj.id, callerStore);
+          }
+          calleeStore.insertStore(formalParameter.id, ref);
         } else {
-          throw ProcessorErrorFactory.invalid_parameter_type(funcName, exp.toString());
+          let realValue = this.parseStoreObjectValue(stoObj);
+          if (shouldTypeCast) {
+            realValue = Store.doImplicitCasting(formalParameter.type, realValue);
+          }
+          calleeStore.insertStore(formalParameter.id, realValue);
         }
       }
       return calleeStore;
@@ -323,6 +332,7 @@ export class IVProgProcessor {
       const whileBlock = new Commands.CommandBlock([],
         cmd.commands.concat(increment));
       const forAsWhile = new Commands.While(condition, whileBlock);
+      forAsWhile.sourceInfo = cmd.sourceInfo;
       //END for -> while rewrite
       const newCmdList = [initCmd,forAsWhile];
       return this.executeCommands(store, newCmdList);
@@ -476,9 +486,20 @@ export class IVProgProcessor {
 
   executeAssign (store, cmd) {
     try {
+      const inStore = store.applyStore(cmd.id);
       const $value = this.evaluateExpression(store, cmd.expression);
       return $value.then( vl => {
         let realValue = this.parseStoreObjectValue(vl);
+        if(!inStore.type.isCompatible(realValue.type)) {
+          if(Config.enable_type_casting && Store.canImplicitTypeCast(inStore.type, vl.type)) {
+            realValue = Store.doImplicitCasting(inStore.type, realValue);
+          } else {
+            const stringInfo = inStore.type.stringInfo()
+            const info = stringInfo[0]
+            return Promise.reject(ProcessorErrorFactory.incompatible_types_full(info.type, info.dim, cmd.sourceInfo));
+          }
+        }
+        
         store.updateStore(cmd.id, realValue) 
         return store;
       });
@@ -532,7 +553,7 @@ export class IVProgProcessor {
 
       const newArray = Object.assign(new StoreObjectArray(null,null,null), mustBeArray);
       if (column !== null) {
-        if (value.type instanceof CompoundType) {
+        if (value.type instanceof CompoundType || !newArray.type.canAccept(value.type)) {
           const type = mustBeArray.type.innerType;
           const stringInfo = type.stringInfo()
           const info = stringInfo[0]
@@ -541,7 +562,7 @@ export class IVProgProcessor {
         newArray.value[line].value[column] = value;
         store.updateStore(cmd.id, newArray);
       } else {
-        if(mustBeArray.columns !== null && value.type instanceof CompoundType) {
+        if((mustBeArray.columns !== null && value.type instanceof CompoundType) || !newArray.type.canAccept(value.type)) {
           const type = mustBeArray.type;
           const stringInfo = type.stringInfo()
           const info = stringInfo[0]
@@ -612,15 +633,24 @@ export class IVProgProcessor {
         return $value.then(vl => {
           let realValue = vl;
           if (vl !== null) {
+            if(!vl.type.isCompatible(cmd.type)) {
+              if(Config.enable_type_casting && Store.canImplicitTypeCast(cmd.type, vl.type)) {
+                realValue = Store.doImplicitCasting(cmd.type, realValue);
+              } else {
+                const stringInfo = typeInfo.type.stringInfo();
+                const info = stringInfo[0];
+                return Promise.reject(ProcessorErrorFactory.incompatible_types_full(info.type, info.dim, cmd.sourceInfo));
+              }
+            }
             if(vl instanceof StoreObjectArrayAddress) {
               if(vl.type instanceof CompoundType) {
-                realValue = Object.assign(new StoreObjectArray(null,null,null), vl.refValue);
+                return Promise.reject(new Error("!!!Critical Error: Compatibility check failed, a Type accepts a CompoundType"))
               } else {
                 realValue = Object.assign(new StoreObject(null,null), vl.refValue);
               }
             }
           } else {
-            realValue = new StoreObject(cmd.type,0);
+            realValue = new StoreObject(cmd.type, 0);
           }
           realValue.readOnly = cmd.isConst;
           store.updateStore(cmd.id, realValue);
@@ -836,16 +866,21 @@ export class IVProgProcessor {
     const $left = this.evaluateExpression(store, infixApp.left);
     const $right = this.evaluateExpression(store, infixApp.right);
     return Promise.all([$left, $right]).then(values => {
+      let shouldImplicitCast = false;
       const left = values[0];
       const right = values[1];
-      const resultType = resultTypeAfterInfixOp(infixApp.op, left.type, right.type);
+      let resultType = resultTypeAfterInfixOp(infixApp.op, left.type, right.type);
       if (Types.UNDEFINED.isCompatible(resultType)) {
-        const stringInfoLeft = left.type.stringInfo();
-        const infoLeft = stringInfoLeft[0];
-        const stringInfoRight = right.type.stringInfo();
-        const infoRight = stringInfoRight[0];
-        return Promise.reject(ProcessorErrorFactory.invalid_infix_op_full(infixApp.op, infoLeft.type, infoLeft.dim,
-          infoRight.type,infoRight.dim,infixApp.sourceInfo));
+        if (Config.enable_type_casting && Store.canImplicitTypeCast(left.type, right.type)) {
+          shouldImplicitCast = true;
+        } else {
+          const stringInfoLeft = left.type.stringInfo();
+          const infoLeft = stringInfoLeft[0];
+          const stringInfoRight = right.type.stringInfo();
+          const infoRight = stringInfoRight[0];
+          return Promise.reject(ProcessorErrorFactory.invalid_infix_op_full(infixApp.op, infoLeft.type, infoLeft.dim,
+            infoRight.type,infoRight.dim,infixApp.sourceInfo));
+        }
       }
       let result = null;
       switch (infixApp.op.ord) {
@@ -880,55 +915,104 @@ export class IVProgProcessor {
           return new StoreObject(resultType, result);
         }
         case Operators.MOD.ord: {
-          result = left.value.modulo(right.value);
+          let leftValue = left.value;
+          let rightValue = right.value;
+          if(shouldImplicitCast) {
+            resultType = Types.INTEGER;
+            leftValue = leftValue.trunc();
+            rightValue = rightValue.trunc();
+          }
+          result = leftValue.modulo(rightValue);
           if(result.dp() > Config.decimalPlaces) {
             result = new Decimal(result.toFixed(Config.decimalPlaces));
           }
           return new StoreObject(resultType, result);
         }          
         case Operators.GT.ord: {
+          let leftValue = left.value;
+          let rightValue = right.value;
           if (Types.STRING.isCompatible(left.type)) {
             result = left.value.length > right.value.length;
           } else {
-            result = left.value.gt(right.value);
+            if (shouldImplicitCast) {
+              resultType = Types.BOOLEAN;
+              leftValue = leftValue.trunc();
+              rightValue = rightValue.trunc();
+            }
+            result = leftValue.gt(rightValue);
           }
           return new StoreObject(resultType, result);
         }
         case Operators.GE.ord: {
+          let leftValue = left.value;
+          let rightValue = right.value;
           if (Types.STRING.isCompatible(left.type)) {
             result = left.value.length >= right.value.length;
           } else {
-            result = left.value.gte(right.value);
+            if (shouldImplicitCast) {
+              resultType = Types.BOOLEAN;
+              leftValue = leftValue.trunc();
+              rightValue = rightValue.trunc();
+            }
+            result = leftValue.gte(rightValue);
           }
           return new StoreObject(resultType, result);
         }
         case Operators.LT.ord: {
+          let leftValue = left.value;
+          let rightValue = right.value;
           if (Types.STRING.isCompatible(left.type)) {
             result = left.value.length < right.value.length;
           } else {
-            result = left.value.lt(right.value);
+            if (shouldImplicitCast) {
+              resultType = Types.BOOLEAN;
+              leftValue = leftValue.trunc();
+              rightValue = rightValue.trunc();
+            }
+            result = leftValue.lt(rightValue);
           }
           return new StoreObject(resultType, result);
         }
         case Operators.LE.ord: {
+          let leftValue = left.value;
+          let rightValue = right.value;
           if (Types.STRING.isCompatible(left.type)) {
             result = left.value.length <= right.value.length;
           } else {
-            result = left.value.lte(right.value);
+            if (shouldImplicitCast) {
+              resultType = Types.BOOLEAN;
+              leftValue = leftValue.trunc();
+              rightValue = rightValue.trunc();
+            }
+            result = leftValue.lte(rightValue);
           }
           return new StoreObject(resultType, result);
         }
         case Operators.EQ.ord: {
+          let leftValue = left.value;
+          let rightValue = right.value;
           if (Types.INTEGER.isCompatible(left.type) || Types.REAL.isCompatible(left.type)) {
-            result = left.value.eq(right.value);
+            if (shouldImplicitCast) {
+              resultType = Types.BOOLEAN;
+              leftValue = leftValue.trunc();
+              rightValue = rightValue.trunc();
+            }
+            result = leftValue.eq(rightValue);
           } else {
             result = left.value === right.value;
           }
           return new StoreObject(resultType, result);
         }
         case Operators.NEQ.ord: {
+          let leftValue = left.value;
+          let rightValue = right.value;
           if (Types.INTEGER.isCompatible(left.type) || Types.REAL.isCompatible(left.type)) {
-            result = !left.value.eq(right.value);
+            if (shouldImplicitCast) {
+              resultType = Types.BOOLEAN;
+              leftValue = leftValue.trunc();
+              rightValue = rightValue.trunc();
+            }
+            result = !leftValue.eq(rightValue);
           } else {
             result = left.value !== right.value;
           }
