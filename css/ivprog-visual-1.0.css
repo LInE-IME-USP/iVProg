@@ -154,7 +154,7 @@ body {
 .expression_operand_1, .expression_operand_2, .operator, .div_comment_text, .value_rendered, .parameters_function_called, .parameters_function_called div, .expression_elements,
 .expression_element, .var_rendered, .menu_add_item, .component_element, .component_element, .conditional_expression, .variable_attribution, .attribution_expression, .var_value_expression,
 .incrementation_field, .incrementation_variable, .first_operand, .operator, .second_operand, .variable_to_switch, .variable_case, .button_remove_case, .editing_name_var, .parameter_div_edit,
-.all_elements_write, .container_var_element_control, .inline_add_command {
+.all_elements_write, .container_var_element_control, .inline_add_command, .restart_expression, .div_parent_handler, .div_drag_writer {
 	display: inline;
 }
 
@@ -825,4 +825,34 @@ div.ui.checkbox.transition.visible {
 .ui.repeatNtimes.command_container .ui.block_commands, 
 .ui.whiletrue.command_container .ui.block_commands {
 	margin-top: .8em;
+}
+
+.ui.restart_expression {
+	margin-left: .4em;
+    cursor: pointer;
+    color: brown;
+}
+
+.div_parent_handler {
+	padding-top: 5px;
+    padding-bottom: 6px;
+    background: #7a7acf;
+    border-radius: 4px;
+}
+
+.div_parent_handler i.times {
+	margin-left: .3em;
+	cursor: pointer;
+}
+
+.div_parent_handler i.ellipsis {
+	cursor: move;
+}
+
+.div_parent_handler i.handler {
+	opacity: 0;
+}
+
+.div_parent_handler:hover i.handler {
+	opacity: 1;
 }

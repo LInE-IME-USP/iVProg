@@ -295,7 +295,6 @@ function prepareTableTestCases (div_el) {
     $('.button_add_case').on('click', function(e) {
         addTestCase();
     });
-
 }
 
 var hist = false;

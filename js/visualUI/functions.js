@@ -85,15 +85,6 @@ window.system_functions.push(new Models.SystemFunction('$castBool', Types.BOOLEA
   null, Models.SYSTEM_FUNCTIONS_CATEGORIES.conversion));
 window.system_functions.push(new Models.SystemFunction('$castString', Types.TEXT, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
   null, Models.SYSTEM_FUNCTIONS_CATEGORIES.conversion));
-/*const variable1 = new Models.Variable(Types.INTEGER, "a", 1);
-const parameter1 = new Models.Variable(Types.INTEGER, "par_1", 1);
-const command1 = new Models.Comment(new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.only_value, "Testing rendering commands"));
-
-const sumFunction = new Models.Function("soma", Types.INTEGER, 0, [parameter1], false, false, [], null, [command1]);
-
-
-program.addFunction(sumFunction);
-*/
 
 console.log('       ___           ___                    ________          \n      /   /         /   /                  /   ____/  \n     /   /         /   /                  /   /        \n    /   /         /   /  ______    ___   /   /__         \n   /   /         /   /  /      \\  /  /  /   ___/      \n  /   /______   /   /  /   /\\   \\/  /  /   /      \n /          /  /   /  /   /  \\     /  /   /____     \n/__________/  /___/  /___/    \\___/  /________/       \n\n Laboratório de Informática na Educação\n http://line.ime.usp.br');
 
@@ -286,7 +277,7 @@ function renderFunctionReturn (function_obj, function_element) {
 
 
 export function renderFunction (function_obj) {
-
+  
   var appender = '<div class="ui secondary segment function_div list-group-item">';
 
   if (function_obj.function_comment) {
@@ -444,10 +435,6 @@ var is_iassign = false;
 
 $( document ).ready(function() {
 
-  for (var i = 0; i < program.functions.length; i++) {
-    renderFunction(program.functions[i]);
-  }
-
   var time_show = 750;
   $('.visual_coding_button').popup({
     content : LocalizedStrings.getUI("tooltip_visual"),
@@ -547,6 +534,8 @@ $( document ).ready(function() {
        updateSequenceGlobals(evt.oldIndex, evt.newIndex);
     }
   });
+
+  renderAlgorithm();
 
 });
 
@@ -776,30 +765,43 @@ function renderParameter (function_obj, parameter_obj, function_container) {
   });
 
   ret.find('.label_enable_name_parameter').on('click', function(e){
-    enableNameParameterUpdate(parameter_obj, ret);
+    enableNameParameterUpdate(parameter_obj, ret, function_obj);
   });
 
   return ret;
 }
 
-function updateParameterName (parameter_var, new_name, parameter_obj_dom) {
+function updateParameterName (parameter_var, new_name, parameter_obj_dom, function_obj) {
   if (isValidIdentifier(new_name)) {
-    parameter_var.name = new_name;
+    if (variableNameAlreadyExists(new_name, function_obj)) {
+      Utils.renderErrorMessage(parameter_obj_dom.find('.parameter_div_edit'), LocalizedStrings.getUI('inform_valid_variable_duplicated'));
+    } else {
+      parameter_var.name = new_name;
+    }
   } else {
-    parameter_obj_dom.find('.parameter_div_edit').popup({
-      html : '<i class="ui icon inverted exclamation triangle yellow"></i>' + LocalizedStrings.getUI('inform_valid_name'),
-      transition : "fade up",
-      on    : 'click',
-      closable : true,
-      className   : {
-        popup       : 'ui popup invalid-identifier'
-      },
-      onHidden : function($module) {
-        parameter_obj_dom.find('.parameter_div_edit').popup('destroy');
-      }
-
-    }).popup('toggle');
+    Utils.renderErrorMessage(parameter_obj_dom.find('.parameter_div_edit'), LocalizedStrings.getUI('inform_valid_name'));
   }
+}
+
+function variableNameAlreadyExists (name_var, function_obj) {
+
+  if (function_obj.parameters_list) {
+    for (var i = 0; i < function_obj.parameters_list.length; i++) {
+      if (function_obj.parameters_list[i].name == name_var) {
+        return true;
+      }
+    }
+  }
+
+  if (function_obj.variables_list) {
+    for (var i = 0; i < function_obj.variables_list.length; i++) {
+      if (function_obj.variables_list[i].name == name_var) {
+        return true;
+      }
+    }
+  }
+
+  return false;
 }
 
 function updateFunctionName (function_var, new_name, function_obj_dom) {
@@ -829,7 +831,7 @@ function isValidIdentifier (identifier_str) {
 
 var opened_name_parameter = false;
 var opened_input_parameter = null;
-function enableNameParameterUpdate (parameter_obj, parent_node) {
+function enableNameParameterUpdate (parameter_obj, parent_node, function_obj) {
   if (opened_name_parameter) {
     opened_input_parameter.focus();
     return;
@@ -860,7 +862,7 @@ function enableNameParameterUpdate (parameter_obj, parent_node) {
   input_field.focusout(function() {
     /// update array:
     if (input_field.val().trim()) {
-      updateParameterName(parameter_obj, input_field.val().trim(), parent_node);
+      updateParameterName(parameter_obj, input_field.val().trim(), parent_node, function_obj);
       parent_node.find('.span_name_parameter').text(parameter_obj.name);
     }
     input_field.off();
@@ -875,7 +877,7 @@ function enableNameParameterUpdate (parameter_obj, parent_node) {
     var code = e.keyCode || e.which;
     if(code == 13) {
       if (input_field.val().trim()) {
-        updateParameterName(parameter_obj, input_field.val().trim(), parent_node);
+        updateParameterName(parameter_obj, input_field.val().trim(), parent_node, function_obj);
         parent_node.find('.span_name_parameter').text(parameter_obj.name);
       }
       input_field.off();

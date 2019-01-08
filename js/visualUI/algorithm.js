@@ -35,5 +35,5 @@ export function renderAlgorithm () {
 		GlobalsManagement.renderGlobal(window.program_obj.globals[i]);
 	}	
 
-	setTimeout(function(){ block_render = false; }, 100);
+	setTimeout(function(){ block_render = false; }, 500);
 }
