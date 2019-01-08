@@ -323,6 +323,7 @@ export class IVProgProcessor {
       const whileBlock = new Commands.CommandBlock([],
         cmd.commands.concat(increment));
       const forAsWhile = new Commands.While(condition, whileBlock);
+      forAsWhile.sourceInfo = cmd.sourceInfo;
       //END for -> while rewrite
       const newCmdList = [initCmd,forAsWhile];
       return this.executeCommands(store, newCmdList);
