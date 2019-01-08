@@ -1,6 +1,28 @@
 import { Modes } from './../modes';
+import { Types } from "./../../typeSystem/types";
+import { StoreObject } from './storeObject';
 
 export class Store {
+
+  static canImplicitTypeCast (castType, sourceType) {
+    if (castType.isCompatible(Types.INTEGER) || castType.isCompatible(Types.REAL)) {
+      if (sourceType.isCompatible(Types.INTEGER) || sourceType.isCompatible(Types.REAL)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  static doImplicitCasting (castType, stoObj) {
+    if(!Store.canImplicitTypeCast(castType, stoObj.type)) {
+      throw new Error("!!!Critical error: attempted to type cast invalid types");
+    }
+    if(Types.INTEGER.isCompatible(castType)) {
+      return new StoreObject(castType, stoObj.value.trunc());
+    } else {
+      return new StoreObject(castType, stoObj.value);
+    }
+  }
 
   constructor(name) {
     this.name = name;

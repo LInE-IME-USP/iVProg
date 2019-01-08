@@ -9,7 +9,7 @@ import { Types } from '../../typeSystem/types';
 import { CompoundType } from '../../typeSystem/compoundType';
 import { MultiType } from '../../typeSystem/multiType';
 import { Config } from '../../util/config';
-import { canImplicitTypeCast } from '../../typeSystem/parsers';
+import { Store } from '../store/store';
 
 export class SemanticAnalyser {
 
@@ -127,12 +127,11 @@ export class SemanticAnalyser {
           throw ProcessorErrorFactory.incompatible_types_full(info.type, info.dim, declaration.sourceInfo);
         }
         this.insertSymbol(declaration.id, {id: declaration.id, type: declaration.type})
-      } else if(!declaration.type.isCompatible(resultType) && !Config.enable_type_casting) {
+      } else if((!declaration.type.isCompatible(resultType) && !Config.enable_type_casting)
+        || (Config.enable_type_casting && !Store.canImplicitTypeCast(declaration.type, resultType))) {
         const stringInfo = declaration.type.stringInfo();
         const info = stringInfo[0];
         throw ProcessorErrorFactory.incompatible_types_full(info.type, info.dim, declaration.sourceInfo);
-      } else if (Config.enable_type_casting && canImplicitTypeCast(declaration.type, resultType)) {
-        this.insertSymbol(declaration.id, {id: declaration.id, type: declaration.type});
       } else {
         this.insertSymbol(declaration.id, {id: declaration.id, type: declaration.type});
       }
@@ -426,7 +425,8 @@ export class SemanticAnalyser {
         this.evaluateArrayLiteral(cmd.id, typeInfo.lines, typeInfo.columns, typeInfo.type, exp);
       } else {
         const resultType = this.evaluateExpressionType(exp);
-        if(!resultType.isCompatible(typeInfo.type)) {
+        if((!resultType.isCompatible(typeInfo.type) && !Config.enable_type_casting)
+          || (Config.enable_type_casting && !Store.canImplicitTypeCast(typeInfo.type, resultType))) {
           const stringInfo = typeInfo.type.stringInfo();
           const info = stringInfo[0];
           throw ProcessorErrorFactory.incompatible_types_full(info.type, info.dim, cmd.sourceInfo);

@@ -7,7 +7,7 @@ export function createOutputFun () {
   const writeFunction = function (store, _) {
     const val = store.applyStore('p1');
     if(val.type.isCompatible(Types.INTEGER)) {
-      this.output.sendOutput(val.value.trunc().toString());
+      this.output.sendOutput(val.value.toString());
     } else if (val.type.isCompatible(Types.REAL)) {
       if (val.value.dp() <= 0) {
         this.output.sendOutput(val.value.toFixed(1));  

@@ -13,7 +13,7 @@ import * as Expressions from './../ast/expressions/';
 import { StoreObjectArrayAddress } from './store/storeObjectArrayAddress';
 import { StoreObjectArrayAddressRef } from './store/storeObjectArrayAddressRef';
 import { CompoundType } from './../typeSystem/compoundType';
-import { convertToString, canImplicitTypeCast } from '../typeSystem/parsers';
+import { convertToString } from '../typeSystem/parsers';
 import { Config } from '../util/config';
 import Decimal from 'decimal.js';
 import { ProcessorErrorFactory } from './error/processorErrorFactory';
@@ -477,9 +477,20 @@ export class IVProgProcessor {
 
   executeAssign (store, cmd) {
     try {
+      const inStore = store.applyStore(cmd.id);
       const $value = this.evaluateExpression(store, cmd.expression);
       return $value.then( vl => {
         let realValue = this.parseStoreObjectValue(vl);
+        if(!inStore.type.isCompatible(realValue.type)) {
+          if(Config.enable_type_casting && Store.canImplicitTypeCast(inStore.type, vl.type)) {
+            realValue = Store.doImplicitCasting(inStore.type, realValue);
+          } else {
+            const stringInfo = inStore.type.stringInfo()
+            const info = stringInfo[0]
+            return Promise.reject(ProcessorErrorFactory.incompatible_types_full(info.type, info.dim, cmd.sourceInfo));
+          }
+        }
+        
         store.updateStore(cmd.id, realValue) 
         return store;
       });
@@ -614,12 +625,8 @@ export class IVProgProcessor {
           let realValue = vl;
           if (vl !== null) {
             if(!vl.type.isCompatible(cmd.type)) {
-              if(Config.enable_type_casting && canImplicitTypeCast(cmd.type, vl.type)) {
-                if(Types.INTEGER.isCompatible(cmd.type)) {
-                  realValue = new StoreObject(cmd.type, vl.value.trunc());
-                } else {
-                  realValue = new StoreObject(cmd.type, vl.value);
-                }
+              if(Config.enable_type_casting && Store.canImplicitTypeCast(cmd.type, vl.type)) {
+                realValue = Store.doImplicitCasting(cmd.type, realValue);
               } else {
                 const stringInfo = typeInfo.type.stringInfo();
                 const info = stringInfo[0];
