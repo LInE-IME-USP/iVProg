@@ -105,6 +105,8 @@
   "inform_valid_content": "Enter some content!",
   "inform_valid_expression": "Construct the logical condition!",
   "inform_valid_name_duplicated": "This name is already in use by other function.",
+  "inform_valid_global_duplicated": "A global variable with this name already exists.",
+  "inform_valid_variable_duplicated" : "A local variable with this name already exists.",
   "text_t": "Text",
   "arrangement": "Arrangement",
   "conversion": "Conversion",

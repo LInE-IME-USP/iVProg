@@ -3,6 +3,7 @@ import jQuery from 'jquery';
 import { Types } from './types';
 import * as Models from './ivprog_elements';
 import { LocalizedStrings } from './../services/localizedStringsService';
+import * as Utils from './utils';
 
 
 window.jQuery = jQuery;
@@ -33,22 +34,23 @@ function toggleConstant (global_var) {
 
 function updateName (global_var, new_name, global_obj_dom) {
 	if (isValidIdentifier(new_name)) {
-		global_var.name = new_name;
+		if (globalNameAlreadyExists(new_name)) {
+			Utils.renderErrorMessage(global_obj_dom.find('.editing_name_var'), LocalizedStrings.getUI('inform_valid_global_duplicated'));
+		} else {
+			global_var.name = new_name;
+		}
 	} else {
-		global_obj_dom.find('.editing_name_var').popup({
-			html : '<i class="ui icon inverted exclamation triangle yellow"></i>' + LocalizedStrings.getUI('inform_valid_name'),
-			transition : "fade up",
-			on    : 'click',
-      		closable : true,
-			className   : {
-			  popup       : 'ui popup invalid-identifier'
-			},
-			onHidden : function($module) {
-				global_obj_dom.find('.editing_name_var').popup('destroy');
-			}
-
-		}).popup('toggle');
+		Utils.renderErrorMessage(global_obj_dom.find('.editing_name_var'), LocalizedStrings.getUI('inform_valid_name'));
 	}
+}
+
+function globalNameAlreadyExists (global_name) {
+  for (var i = 0; i < window.program_obj.globals.length; i++) {
+    if (window.program_obj.globals[i].name == global_name) {
+      return true;
+    }
+  }
+  return false;
 }
 
 function isValidIdentifier (identifier_str) {

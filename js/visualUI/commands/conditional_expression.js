@@ -29,6 +29,13 @@ export function renderExpression (command, expression, function_obj, initial_el_
 		}
 
 		initial_el_to_render.append(main_div);	
+		var restartMenu = $('<div class="ui restart_expression"><i class="ui icon undo"></i></div>');
+		initial_el_to_render.append(restartMenu);	
+		restartMenu.on('click', function(e){
+	    	expression.expression = null;
+	    	initial_el_to_render.empty();
+	    	renderExpression(command, expression, function_obj, initial_el_to_render);
+	  	});
 	}
 }
 
@@ -221,8 +228,8 @@ function renderStartMenu (command, expression, function_obj, initial_el_to_rende
 			initial_el_to_render.html('');
 
 			renderExpression(command, expression, function_obj, initial_el_to_render);
-
-    	}
+    	},
+    	selectOnKeydown: false
 	});
 
 	initial_el_to_render.append(' <span class="span_command_spec"> </span> ');
