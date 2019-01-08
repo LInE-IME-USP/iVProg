@@ -866,16 +866,21 @@ export class IVProgProcessor {
     const $left = this.evaluateExpression(store, infixApp.left);
     const $right = this.evaluateExpression(store, infixApp.right);
     return Promise.all([$left, $right]).then(values => {
+      let shouldImplicitCast = false;
       const left = values[0];
       const right = values[1];
-      const resultType = resultTypeAfterInfixOp(infixApp.op, left.type, right.type);
+      let resultType = resultTypeAfterInfixOp(infixApp.op, left.type, right.type);
       if (Types.UNDEFINED.isCompatible(resultType)) {
-        const stringInfoLeft = left.type.stringInfo();
-        const infoLeft = stringInfoLeft[0];
-        const stringInfoRight = right.type.stringInfo();
-        const infoRight = stringInfoRight[0];
-        return Promise.reject(ProcessorErrorFactory.invalid_infix_op_full(infixApp.op, infoLeft.type, infoLeft.dim,
-          infoRight.type,infoRight.dim,infixApp.sourceInfo));
+        if (Config.enable_type_casting && Store.canImplicitTypeCast(left.type, right.type)) {
+          shouldImplicitCast = true;
+        } else {
+          const stringInfoLeft = left.type.stringInfo();
+          const infoLeft = stringInfoLeft[0];
+          const stringInfoRight = right.type.stringInfo();
+          const infoRight = stringInfoRight[0];
+          return Promise.reject(ProcessorErrorFactory.invalid_infix_op_full(infixApp.op, infoLeft.type, infoLeft.dim,
+            infoRight.type,infoRight.dim,infixApp.sourceInfo));
+        }
       }
       let result = null;
       switch (infixApp.op.ord) {
@@ -910,55 +915,104 @@ export class IVProgProcessor {
           return new StoreObject(resultType, result);
         }
         case Operators.MOD.ord: {
-          result = left.value.modulo(right.value);
+          let leftValue = left.value;
+          let rightValue = right.value;
+          if(shouldImplicitCast) {
+            resultType = Types.INTEGER;
+            leftValue = leftValue.trunc();
+            rightValue = rightValue.trunc();
+          }
+          result = leftValue.modulo(rightValue);
           if(result.dp() > Config.decimalPlaces) {
             result = new Decimal(result.toFixed(Config.decimalPlaces));
           }
           return new StoreObject(resultType, result);
         }          
         case Operators.GT.ord: {
+          let leftValue = left.value;
+          let rightValue = right.value;
           if (Types.STRING.isCompatible(left.type)) {
             result = left.value.length > right.value.length;
           } else {
-            result = left.value.gt(right.value);
+            if (shouldImplicitCast) {
+              resultType = Types.BOOLEAN;
+              leftValue = leftValue.trunc();
+              rightValue = rightValue.trunc();
+            }
+            result = leftValue.gt(rightValue);
           }
           return new StoreObject(resultType, result);
         }
         case Operators.GE.ord: {
+          let leftValue = left.value;
+          let rightValue = right.value;
           if (Types.STRING.isCompatible(left.type)) {
             result = left.value.length >= right.value.length;
           } else {
-            result = left.value.gte(right.value);
+            if (shouldImplicitCast) {
+              resultType = Types.BOOLEAN;
+              leftValue = leftValue.trunc();
+              rightValue = rightValue.trunc();
+            }
+            result = leftValue.gte(rightValue);
           }
           return new StoreObject(resultType, result);
         }
         case Operators.LT.ord: {
+          let leftValue = left.value;
+          let rightValue = right.value;
           if (Types.STRING.isCompatible(left.type)) {
             result = left.value.length < right.value.length;
           } else {
-            result = left.value.lt(right.value);
+            if (shouldImplicitCast) {
+              resultType = Types.BOOLEAN;
+              leftValue = leftValue.trunc();
+              rightValue = rightValue.trunc();
+            }
+            result = leftValue.lt(rightValue);
           }
           return new StoreObject(resultType, result);
         }
         case Operators.LE.ord: {
+          let leftValue = left.value;
+          let rightValue = right.value;
           if (Types.STRING.isCompatible(left.type)) {
             result = left.value.length <= right.value.length;
           } else {
-            result = left.value.lte(right.value);
+            if (shouldImplicitCast) {
+              resultType = Types.BOOLEAN;
+              leftValue = leftValue.trunc();
+              rightValue = rightValue.trunc();
+            }
+            result = leftValue.lte(rightValue);
           }
           return new StoreObject(resultType, result);
         }
         case Operators.EQ.ord: {
+          let leftValue = left.value;
+          let rightValue = right.value;
           if (Types.INTEGER.isCompatible(left.type) || Types.REAL.isCompatible(left.type)) {
-            result = left.value.eq(right.value);
+            if (shouldImplicitCast) {
+              resultType = Types.BOOLEAN;
+              leftValue = leftValue.trunc();
+              rightValue = rightValue.trunc();
+            }
+            result = leftValue.eq(rightValue);
           } else {
             result = left.value === right.value;
           }
           return new StoreObject(resultType, result);
         }
         case Operators.NEQ.ord: {
+          let leftValue = left.value;
+          let rightValue = right.value;
           if (Types.INTEGER.isCompatible(left.type) || Types.REAL.isCompatible(left.type)) {
-            result = !left.value.eq(right.value);
+            if (shouldImplicitCast) {
+              resultType = Types.BOOLEAN;
+              leftValue = leftValue.trunc();
+              rightValue = rightValue.trunc();
+            }
+            result = !leftValue.eq(rightValue);
           } else {
             result = left.value !== right.value;
           }
