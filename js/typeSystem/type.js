@@ -1,3 +1,6 @@
+import { Config } from "../util/config";
+import { BaseTypes } from "./baseTypes";
+
 export class Type {
 
   constructor(baseType) {

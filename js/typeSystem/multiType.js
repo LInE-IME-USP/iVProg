@@ -28,7 +28,7 @@ export class MultiType extends Type {
     if(another instanceof Type) {
       for (let i = 0; i < this.types.length; i++) {
         const t = this.types[i];
-        if (t.isCompatible(another)) {
+        if (another.isCompatible(t)) {
           return true;
         }
       }

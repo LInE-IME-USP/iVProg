@@ -8,6 +8,8 @@ import { resultTypeAfterInfixOp, resultTypeAfterUnaryOp } from '../compatibility
 import { Types } from '../../typeSystem/types';
 import { CompoundType } from '../../typeSystem/compoundType';
 import { MultiType } from '../../typeSystem/multiType';
+import { Config } from '../../util/config';
+import { Store } from '../store/store';
 
 export class SemanticAnalyser {
 
@@ -125,12 +127,13 @@ export class SemanticAnalyser {
           throw ProcessorErrorFactory.incompatible_types_full(info.type, info.dim, declaration.sourceInfo);
         }
         this.insertSymbol(declaration.id, {id: declaration.id, type: declaration.type})
-      } else if(!declaration.type.isCompatible(resultType)) {
+      } else if((!declaration.type.isCompatible(resultType) && !Config.enable_type_casting)
+        || (Config.enable_type_casting && !Store.canImplicitTypeCast(declaration.type, resultType))) {
         const stringInfo = declaration.type.stringInfo();
         const info = stringInfo[0];
         throw ProcessorErrorFactory.incompatible_types_full(info.type, info.dim, declaration.sourceInfo);
       } else {
-        this.insertSymbol(declaration.id, {id: declaration.id, type: declaration.type})
+        this.insertSymbol(declaration.id, {id: declaration.id, type: declaration.type});
       }
     }
   }
@@ -422,7 +425,8 @@ export class SemanticAnalyser {
         this.evaluateArrayLiteral(cmd.id, typeInfo.lines, typeInfo.columns, typeInfo.type, exp);
       } else {
         const resultType = this.evaluateExpressionType(exp);
-        if(!resultType.isCompatible(typeInfo.type)) {
+        if((!resultType.isCompatible(typeInfo.type) && !Config.enable_type_casting)
+          || (Config.enable_type_casting && !Store.canImplicitTypeCast(typeInfo.type, resultType))) {
           const stringInfo = typeInfo.type.stringInfo();
           const info = stringInfo[0];
           throw ProcessorErrorFactory.incompatible_types_full(info.type, info.dim, cmd.sourceInfo);
@@ -504,13 +508,32 @@ export class SemanticAnalyser {
           }
         }
         if(shared <= 0) {
+          if(Config.enable_type_casting && !formalParam.byRef) {
+            if(resultType.isCompatible(Types.INTEGER) || resultType.isCompatible(Types.REAL)) {
+              if(formalParam.type.isCompatible(Types.INTEGER) || formalParam.type.isCompatible(Types.REAL)) {
+                continue;
+              }
+            }
+          }
           throw ProcessorErrorFactory.invalid_parameter_type_full(id, param.toString(), param.sourceInfo);
         }
       } else if (resultType instanceof MultiType) {
         if(!resultType.isCompatible(formalParam.type)) {
+          if(Config.enable_type_casting && !formalParam.byRef) {
+            if(resultType.isCompatible(Types.INTEGER) || resultType.isCompatible(Types.REAL)) {
+              if(formalParam.type.isCompatible(Types.INTEGER) || formalParam.type.isCompatible(Types.REAL)) {
+                continue;
+              }
+            }
+          }
           throw ProcessorErrorFactory.invalid_parameter_type_full(id, param.toString(), param.sourceInfo);
         }
       } else if(!formalParam.type.isCompatible(resultType)) {
+        if(Config.enable_type_casting && !formalParam.byRef) {
+          if (Store.canImplicitTypeCast(formalParam.type, resultType)) {
+            continue;
+          }
+        }
         throw ProcessorErrorFactory.invalid_parameter_type_full(id, param.toString(), param.sourceInfo);
       }
 
