@@ -22,7 +22,7 @@ export class IVProgAssessment {
       const partialTests = this.testCases.map( (t, name) => {
         return this.partialEvaluateTestCase(new IVProgProcessor(validTree), t.input, t.output, name);
       });
-      const testResult = partialTests.reduce((acc, curr) => acc.then( v => curr(v)), Promise.resolve(0));
+      const testResult = partialTests.reduce((acc, curr) => acc.then(curr), Promise.resolve(0));
       return testResult.then(total => Promise.resolve(total / this.testCases.length))
         .catch(err => {
           this.domConsole.err("Erro durante a execução do programa");// try and show error messages through domconsole

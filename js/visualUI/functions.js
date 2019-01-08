@@ -585,8 +585,6 @@ function runCodeAssessment () {
   runner.runTest().then(grade => {
     if (!is_iassign) {
       parent.getEvaluationCallback(grade);
-    } else {
-      is_iassign = false;
     }
   }).catch( err => domConsole.err(err.message));
   
