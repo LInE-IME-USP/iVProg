@@ -128,7 +128,8 @@ export class SemanticAnalyser {
         }
         this.insertSymbol(declaration.id, {id: declaration.id, type: declaration.type})
       } else if((!declaration.type.isCompatible(resultType) && !Config.enable_type_casting)
-        || (Config.enable_type_casting && !Store.canImplicitTypeCast(declaration.type, resultType))) {
+        || (!declaration.type.isCompatible(resultType) && Config.enable_type_casting
+        && !Store.canImplicitTypeCast(declaration.type, resultType))) {
         const stringInfo = declaration.type.stringInfo();
         const info = stringInfo[0];
         throw ProcessorErrorFactory.incompatible_types_full(info.type, info.dim, declaration.sourceInfo);
@@ -426,7 +427,8 @@ export class SemanticAnalyser {
       } else {
         const resultType = this.evaluateExpressionType(exp);
         if((!resultType.isCompatible(typeInfo.type) && !Config.enable_type_casting)
-          || (Config.enable_type_casting && !Store.canImplicitTypeCast(typeInfo.type, resultType))) {
+          || (!resultType.isCompatible(typeInfo.type) && Config.enable_type_casting
+          && !Store.canImplicitTypeCast(typeInfo.type, resultType))) {
           const stringInfo = typeInfo.type.stringInfo();
           const info = stringInfo[0];
           throw ProcessorErrorFactory.incompatible_types_full(info.type, info.dim, cmd.sourceInfo);
