@@ -5,6 +5,7 @@ import { LocalizedStrings } from './../services/localizedStringsService';
 import * as GlobalsManagement from './globals';
 import * as VariablesManagement from './variables';
 import * as CommandsManagement from './commands';
+import * as Utils from './utils';
 
 export function generate () {
 
@@ -35,9 +36,7 @@ export function generate () {
 	} else {
 		return code;
 	}
-
 }
-
 
 function functionsCode (function_obj) {
 	var ret = '\n\t' + LocalizedStrings.getUI('function') + ' ';
@@ -85,24 +84,24 @@ function functionsCode (function_obj) {
 	}
 
 	for (var j = 0; j < function_obj.commands.length; j++) {
-		//try {
+		try {
 			ret += commandsCode(function_obj.commands[j]);
-		/*} catch (err) {
+		} catch (err) {
 
 			has_error = true;
 
 			console.error(err.message);
 
 			var todos = $('body').find('.command_container');
-			for (var i = 0; i < todos.length; i++) {
 
+			for (var i = 0; i < todos.length; i++) {
 				if ($(todos[i]).data('command') == function_obj.commands[j]) {
 					$( todos[i] ).prepend( ' <i class="ui icon red exclamation triangle error_icon"></i> ' );
 					break;
 				}
 			}
 			
-		}*/
+		}
 		
 	}
 
@@ -166,7 +165,7 @@ function returnsCode (command_obj, indentation) {
 
 	if (command_obj.variable_value_menu) {
 		try {
-			ret += ' ' + variableValueMenuCode(command_obj.variable_value_menu);
+			ret += ' ' + variableValueMenuCode(command_obj.variable_value_menu, true);
 		} catch(err) {}
 	}
 
@@ -316,6 +315,10 @@ function iftruesCode (command_obj, indentation) {
 
 	ret += LocalizedStrings.getUI('text_if');
 
+	if (!command_obj.expression.expression) {
+		Utils.renderErrorMessage(command_obj.expression.dom_object, LocalizedStrings.getUI('inform_valid_expression'));
+	}
+
 	switch (command_obj.expression.expression.type) {
 		case Models.EXPRESSION_TYPES.exp_logic:
 			ret += logicExpressionCode(command_obj.expression.expression);
@@ -379,6 +382,10 @@ function doWhilesCode (command_obj, indentation) {
 
 	ret += '} ' + LocalizedStrings.getUI('text_code_while');
 
+	if (!command_obj.expression.expression) {
+		Utils.renderErrorMessage(command_obj.expression.dom_object, LocalizedStrings.getUI('inform_valid_expression'));
+	}
+
 	switch (command_obj.expression.expression.type) {
 		case Models.EXPRESSION_TYPES.exp_logic:
 			ret += logicExpressionCode(command_obj.expression.expression);
@@ -400,6 +407,10 @@ function whiletruesCode (command_obj, indentation) {
 	}
 
 	ret += LocalizedStrings.getUI('text_code_while');
+
+	if (!command_obj.expression.expression) {
+		Utils.renderErrorMessage(command_obj.expression.dom_object, LocalizedStrings.getUI('inform_valid_expression'));
+	}
 
 	switch (command_obj.expression.expression.type) {
 		case Models.EXPRESSION_TYPES.exp_logic:
@@ -610,46 +621,53 @@ function readersCode (command_obj, indentation) {
 	return ret;
 }
 
-function variableValueMenuCode (variable_obj) {
-
+function variableValueMenuCode (variable_obj, is_return = false) {
 	var ret = '';
-	if (variable_obj.function_called) {
+	try {
+		if (variable_obj.function_called) {
 
-		if (variable_obj.function_called.name) {
-			ret += variable_obj.function_called.name + ' ( ';
-		} else {
-			ret += LocalizedStrings.getUI(variable_obj.function_called.category)+'.'+LocalizedStrings.getUI(variable_obj.function_called.identifier) + ' ( ';
-		}
+			if (variable_obj.function_called.name) {
+				ret += variable_obj.function_called.name + ' ( ';
+			} else {
+				ret += LocalizedStrings.getUI(variable_obj.function_called.category)+'.'+LocalizedStrings.getUI(variable_obj.function_called.identifier) + ' ( ';
+			}
 
-		if (variable_obj.parameters_list) {
-			for (var i = 0; i < variable_obj.parameters_list.length; i++) {
-				ret += variableValueMenuCode(variable_obj.parameters_list[i]);
-				if ((i + 1) < variable_obj.parameters_list.length) {
-					ret += ', ';
+			if (variable_obj.parameters_list) {
+				for (var i = 0; i < variable_obj.parameters_list.length; i++) {
+					ret += variableValueMenuCode(variable_obj.parameters_list[i]);
+					if ((i + 1) < variable_obj.parameters_list.length) {
+						ret += ', ';
+					}
 				}
 			}
-		}
 
-		ret += ' )';
-	} else if (variable_obj.content.type) {
+			ret += ' )';
+		} else if (variable_obj.content.type) {
 
-		ret += variable_obj.content.name;
+			ret += variable_obj.content.name;
 
-		if (variable_obj.content.dimensions == 1) {
-			ret += ' [ ' + variableValueMenuCode(variable_obj.column) + ' ] ';
-		}
+			if (variable_obj.content.dimensions == 1 && variable_obj.dimensions != 1) {
+				ret += ' [ ' + variableValueMenuCode(variable_obj.column) + ' ] ';
+			}
 
-		if (variable_obj.content.dimensions == 2) {
-			ret += ' [ ' + variableValueMenuCode(variable_obj.row) + ' ] ';
-			ret += ' [ ' + variableValueMenuCode(variable_obj.column) + ' ] ';
-		}
+			if (variable_obj.content.dimensions == 2 && variable_obj.dimensions != 2) {
+				ret += ' [ ' + variableValueMenuCode(variable_obj.row) + ' ] ';
+				ret += ' [ ' + variableValueMenuCode(variable_obj.column) + ' ] ';
+			}
 
 
-	} else {
-		if (isNaN(variable_obj.content)) {
-			ret += '"' + variable_obj.content + '"';
 		} else {
-			ret += variable_obj.content;
+			if (isNaN(variable_obj.content)) {
+				ret += '"' + variable_obj.content + '"';
+			} else {
+				ret += variable_obj.content;
+			}
+		}
+	} catch (err) {
+
+		if (!is_return) {
+			Utils.renderErrorMessage(variable_obj.dom_object, LocalizedStrings.getUI('inform_valid_content'));
+			throw err;
 		}
 	}
 

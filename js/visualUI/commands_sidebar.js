@@ -23,14 +23,6 @@ var has_element_created_draged = false;
 var which_element_is_draged = null;
 
 export function removeCommand (command, function_obj, dom_obj) {
-	console.log('debugging removeCommand');
-	console.log('command');
-	console.log(command);
-	console.log('function_obj');
-	console.log(function_obj);
-	console.log('dom_obj');
-	console.log(dom_obj);
-
 	if (function_obj.commands.indexOf(command) > -1) {
 		function_obj.commands.splice(function_obj.commands.indexOf(command), 1);
 		return true;
@@ -121,7 +113,16 @@ export function createFloatingCommand (function_obj, function_container, command
 				break;
 	}
 
-	floatingObject.draggable().appendTo("body");
+	floatingObject.draggable({
+		drag: function(evt) {
+	        borderMouseDragCommand(function_obj, function_container, evt);
+	    },
+	    stop: function(evt) {
+	    	function_container.find('.over_command_drag').each(function( index ) {
+				$(this).removeClass('over_command_drag');
+			});
+	    }
+	}).appendTo("body");
 
 	floatingObject.mouseup(function(evt) {
 		manageCommand(function_obj, function_container, evt, command_type);
@@ -133,6 +134,43 @@ export function createFloatingCommand (function_obj, function_container, command
 	floatingObject.css("left", mouse_event.pageX - 15);
 	floatingObject.css("top", mouse_event.pageY - 15);
 	floatingObject.trigger(mouse_event);
+}
+
+function borderMouseDragCommand (function_obj, function_container, evt) {
+
+	function_container.find('.over_command_drag').each(function( index ) {
+		$(this).removeClass('over_command_drag');
+	});
+
+	var prev = null;
+
+	function_container.find('.commands_list_div').each(function( index ) { 
+		prev = $(this);
+		if (prev) {
+			var objLeft = prev.offset().left;
+	        var objTop = prev.offset().top;
+	        var objRight = objLeft + prev.width();
+	        var objBottom = objTop + prev.height();
+	        if (evt.pageX > objLeft && evt.pageX < objRight && evt.pageY > objTop && evt.pageY < objBottom) {
+	        	prev.addClass("over_command_drag"); 
+	        }
+	    }
+	});
+
+	function_container.find('.command_container').each(function( index ) { 
+		var obj = $(this);
+		var objLeft = obj.offset().left;
+        var objTop = obj.offset().top;
+        var objRight = objLeft + obj.width();
+        var objBottom = objTop + obj.height();
+        if (evt.pageX > objLeft && evt.pageX < objRight && evt.pageY > objTop && evt.pageY < objBottom) {
+        	if (prev) {
+        		prev.removeClass('over_command_drag');
+        	}
+        	obj.addClass("over_command_drag"); 
+        	return;
+        }
+	});
 }
 
 // before_after_inside: 1 -> before, 2 -> after, 3 -> inside
@@ -215,6 +253,14 @@ export function renderCommand (command, element_reference, before_after_inside, 
 		}
 	}
 
+	createdElement.find('.button_remove_command').mouseover(function() {
+    	createdElement.css({'opacity':'.8'});
+	});
+	createdElement.find('.button_remove_command').mouseout(function() { 
+    	createdElement.css({'opacity':'1'});
+	});
+
+
 }
 
 export function genericCreateCommand (command_type) {
@@ -263,6 +309,23 @@ export function genericCreateCommand (command_type) {
 			case Models.COMMAND_TYPES.return:
 				return new Models.Return(new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.all, null, null, null, true));
 		}
+}
+
+function dragTrash (event) {
+
+	var trash = $('<i class="ui icon trash alternate outline"></i>');
+	$('body').append(trash);
+	trash.css('position', 'absolute');
+	trash.css('top', event.clientY);
+	trash.css('left', event.clientX - 20);
+	trash.css('font-size', '3em');
+	trash.css('display', 'none');
+
+	trash.fadeIn( 200, function() {
+		trash.fadeOut( 200, function() {
+			trash.remove();
+		} );
+    });
 }
 
 function preCreateCommand(command_type, function_called) {
@@ -331,11 +394,13 @@ function manageCommand(function_obj, function_container, event, command_type, fu
 	if (!esta_correto) {
 		has_element_created_draged = false;
 		which_element_is_draged = null;
+		dragTrash(event);
 		return;
 	} else {
 		if (!esta_na_div_correta) {
 			has_element_created_draged = false;
 			which_element_is_draged = null;
+			dragTrash(event);
 			return;
 		}
 	}

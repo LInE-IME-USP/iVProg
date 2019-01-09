@@ -16,7 +16,6 @@ import { IVProgAssessment } from '../assessment/ivprogAssessment';
 import * as AlgorithmManagement from './algorithm_sidebar';
 import * as Utils from './utils';
 
-
 import '../Sortable.js';
 
 var counter_new_functions = 0;
@@ -25,6 +24,7 @@ var counter_new_parameters = 0;
 let studentTemp = null;
 let domConsole = null;
 window.studentGrade = null;
+window.LocalizedStrings = LocalizedStrings;
 const program = new Models.Program();
 
 window.system_functions = [];
@@ -53,7 +53,7 @@ window.system_functions.push(new Models.SystemFunction('$min', Types.REAL, 0, [n
   null, Models.SYSTEM_FUNCTIONS_CATEGORIES.math));
 // Adding text functions:
 window.system_functions.push(new Models.SystemFunction('$substring', Types.TEXT, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true),
-new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true), new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
+new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true),new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
   null, Models.SYSTEM_FUNCTIONS_CATEGORIES.text));
 window.system_functions.push(new Models.SystemFunction('$length', Types.INTEGER, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
   null, Models.SYSTEM_FUNCTIONS_CATEGORIES.text));
@@ -64,11 +64,11 @@ window.system_functions.push(new Models.SystemFunction('$lowercase', Types.TEXT,
 window.system_functions.push(new Models.SystemFunction('$charAt', Types.TEXT, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true), new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
   null, Models.SYSTEM_FUNCTIONS_CATEGORIES.text));
 // Adding arrangement functions:
-window.system_functions.push(new Models.SystemFunction('$numElements', Types.INTEGER, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
+window.system_functions.push(new Models.SystemFunction('$numElements', Types.INTEGER, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.variable_and_function, null, null, null, true, 1)],
   null, Models.SYSTEM_FUNCTIONS_CATEGORIES.arrangement));
-window.system_functions.push(new Models.SystemFunction('$matrixLines', Types.INTEGER, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
+window.system_functions.push(new Models.SystemFunction('$matrixLines', Types.INTEGER, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.variable_and_function, null, null, null, true, 2)],
   null, Models.SYSTEM_FUNCTIONS_CATEGORIES.arrangement));
-window.system_functions.push(new Models.SystemFunction('$matrixColumns', Types.INTEGER, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
+window.system_functions.push(new Models.SystemFunction('$matrixColumns', Types.INTEGER, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.variable_and_function, null, null, null, true, 2)],
   null, Models.SYSTEM_FUNCTIONS_CATEGORIES.arrangement));
 // Adding conversion functions:
 window.system_functions.push(new Models.SystemFunction('$isReal', Types.BOOLEAN, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
@@ -85,17 +85,8 @@ window.system_functions.push(new Models.SystemFunction('$castBool', Types.BOOLEA
   null, Models.SYSTEM_FUNCTIONS_CATEGORIES.conversion));
 window.system_functions.push(new Models.SystemFunction('$castString', Types.TEXT, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
   null, Models.SYSTEM_FUNCTIONS_CATEGORIES.conversion));
-/*const variable1 = new Models.Variable(Types.INTEGER, "a", 1);
-const parameter1 = new Models.Variable(Types.INTEGER, "par_1", 1);
-const command1 = new Models.Comment(new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.only_value, "Testing rendering commands"));
 
-const sumFunction = new Models.Function("soma", Types.INTEGER, 0, [parameter1], false, false, [], null, [command1]);
-
-
-program.addFunction(sumFunction);
-*/
-
-console.log('       ___           ___                    ________          \n      /   /         /   /                  /   ____/  \n     /   /         /   /                  /   /        \n    /   /         /   /  ______    ___   /   /__         \n   /   /         /   /  /      \\  /  /  /   ___/      \n  /   /______   /   /  /   /\\   \\/  /  /   /      \n /          /  /   /  /   /  \\     /  /   /____     \n/__________/  /___/  /___/    \\___/  /________/       ');
+console.log('       ___           ___                    ________          \n      /   /         /   /                  /   ____/  \n     /   /         /   /                  /   /        \n    /   /         /   /  ______    ___   /   /__         \n   /   /         /   /  /      \\  /  /  /   ___/      \n  /   /______   /   /  /   /\\   \\/  /  /   /      \n /          /  /   /  /   /  \\     /  /   /____     \n/__________/  /___/  /___/    \\___/  /________/       \n\n Laboratório de Informática na Educação\n http://line.ime.usp.br');
 
 const mainFunction = new Models.Function(LocalizedStrings.getUI("start"), Types.VOID, 0, [], true, false);
 mainFunction.function_comment = new Models.Comment(LocalizedStrings.getUI('text_comment_main'));
@@ -127,12 +118,12 @@ WatchJS.watch(window.program_obj.functions, function(){
   }
 }, 0);
 
-function addFunctionHandler() {
+function addFunctionHandler () {
 
   var new_function = new Models.Function(LocalizedStrings.getUI("new_function") + "_" + counter_new_functions, Types.VOID, 0, [], false, false, [], new Models.Comment(LocalizedStrings.getUI('text_comment_start')));
   program.addFunction(new_function);
 
-  counter_new_functions++;
+  counter_new_functions ++;
 
   window.insertContext = true;
 
@@ -142,13 +133,13 @@ function addFunctionHandler() {
   newe.fadeIn();
 }
 
-function addParameter(function_obj, function_container, is_from_click = false) {
+function addParameter (function_obj, function_container, is_from_click = false) {
   if (function_obj.parameters_list == null) {
     function_obj.parameters_list = [];
   }
   var new_parameter = new Models.Variable(Types.INTEGER, LocalizedStrings.getUI("new_parameter") + "_" + counter_new_parameters);
   function_obj.parameters_list.push(new_parameter);
-  counter_new_parameters++;
+  counter_new_parameters ++;
 
   var newe = renderParameter(function_obj, new_parameter, function_container);
 
@@ -158,39 +149,40 @@ function addParameter(function_obj, function_container, is_from_click = false) {
   }
 }
 
-function updateReturnType(function_obj, new_type, new_dimensions = 0) {
+function updateReturnType (function_obj, new_type, new_dimensions = 0) {
   function_obj.return_type = new_type;
   function_obj.return_dimensions = new_dimensions;
 }
 
-function removeFunction(function_obj) {
+function removeFunction (function_obj) {
   var index = program.functions.indexOf(function_obj);
   if (index > -1) {
     program.functions.splice(index, 1);
   }
 }
 
-function minimizeFunction(function_obj) {
+function minimizeFunction (function_obj) {
   function_obj.is_hidden = !function_obj.is_hidden;
 }
 
-function addHandlers(function_obj, function_container) {
+function addHandlers (function_obj, function_container) {
 
   function_container.find('.ui.dropdown.function_return').dropdown({
-    onChange: function (value, text, $selectedItem) {
+    onChange: function(value, text, $selectedItem) {
       if ($selectedItem.data('dimensions')) {
         updateReturnType(function_obj, Types[$selectedItem.data('type')], $selectedItem.data('dimensions'));
       } else {
         updateReturnType(function_obj, Types[$selectedItem.data('type')]);
       }
-    }
+    },
+    selectOnKeydown: false
   });
 
-  function_container.find(".name_function_updated").on('click', function (e) {
+  function_container.find( ".name_function_updated" ).on('click', function(e){
     enableNameFunctionUpdate(function_obj, function_container);
   });
 
-  function_container.find(".add_parameter_button").on('click', function (e) {
+  function_container.find( ".add_parameter_button" ).on('click', function(e){
     window.insertContext = true;
     addParameter(function_obj, function_container, true);
   });
@@ -199,7 +191,7 @@ function addHandlers(function_obj, function_container) {
     on: 'hover'
   });
 
-  function_container.find('.menu_commands a').on('click', function (evt) {
+  function_container.find('.menu_commands a').on('click', function(evt){
     if (function_obj.commands == null || function_obj.commands.length == 0) {
       function_obj.commands = [];
       var new_cmd = CommandsManagement.genericCreateCommand($(this).data('command'));
@@ -212,24 +204,24 @@ function addHandlers(function_obj, function_container) {
 
   });
 
-  function_container.find('.add_var_button_function').on('click', function (e) {
+  function_container.find('.add_var_button_function').on('click', function(e){
     window.insertContext = true;
     VariablesManagement.addVariable(function_obj, function_container, true);
   });
 
-  function_container.find('.remove_function_button').on('click', function (e) {
+  function_container.find('.remove_function_button').on('click', function(e){
     removeFunction(function_obj);
     function_container.fadeOut();
   });
 
-  function_container.find('.minimize_function_button').on('click', function (e) {
+  function_container.find('.minimize_function_button').on('click', function(e){
     minimizeFunction(function_obj);
     if (function_obj.is_hidden) {
       function_container.find(".add_var_button_function").toggle();
       function_container.find(".inline_add_command").toggle();
       function_container.find(".function_area").slideToggle();
     } else {
-      function_container.find(".function_area").slideToggle(function () {
+      function_container.find(".function_area").slideToggle(function(){
         function_container.find(".add_var_button_function").toggle();
         function_container.find(".inline_add_command").toggle();
       });
@@ -239,12 +231,12 @@ function addHandlers(function_obj, function_container) {
 }
 
 // Essa função imprime o tipo de retorno da função e cria o menu do tipo 'select' para alteração
-function renderFunctionReturn(function_obj, function_element) {
+function renderFunctionReturn (function_obj, function_element) {
 
   var ret = '<div class="ui dropdown function_return">';
 
   if (function_obj.return_dimensions > 0) {
-    ret += '<div class="text">' + LocalizedStrings.getUI("vector") + ':' + LocalizedStrings.getUI(function_obj.return_type);
+    ret += '<div class="text">'+ LocalizedStrings.getUI("vector") +':'+ LocalizedStrings.getUI(function_obj.return_type);
     if (function_obj.return_dimensions == 1) {
       ret += ' [ ] ';
     } else {
@@ -252,7 +244,7 @@ function renderFunctionReturn(function_obj, function_element) {
     }
     ret += '</div>';
   } else {
-    ret += '<div class="text">' + LocalizedStrings.getUI(function_obj.return_type) + '</div>';
+    ret += '<div class="text">'+LocalizedStrings.getUI(function_obj.return_type) + '</div>';
   }
 
   ret += '<div class="menu">';
@@ -434,7 +426,7 @@ export function renderFunction(function_obj) {
     CommandsManagement.renderCommand(function_obj.commands[j], $(appender.find('.commands_list_div')[0]), 3, function_obj);
   }
   $('.minimize_function_button').popup({
-    content: LocalizedStrings.getUI("tooltip_minimize"),
+    content : LocalizedStrings.getUI("tooltip_minimize"),
     delay: {
       show: 750,
       hide: 0
@@ -475,7 +467,7 @@ export function renderFunction(function_obj) {
   return appender;
 }
 
-export function initVisualUI() {
+export function initVisualUI () {
   // MUST USE CONST, LET, OR VAR !!!!!!
   const mainDiv = $('#visual-main-div');
   // fill mainDiv with functions and globals...
@@ -511,6 +503,7 @@ export function initVisualUI() {
   $('.expand_button').on('click', () => {
     full_screen();
   });
+  $('.main_title h2').prop('title', LocalizedStrings.getUI('text_ivprog_description'));
 }
 
 var is_iassign = false;
@@ -579,7 +572,7 @@ $(document).ready(function () {
     }
   });
   $('.help_button').popup({
-    content: LocalizedStrings.getUI("tooltip_help"),
+    content : LocalizedStrings.getUI("tooltip_help") + ' - ' + LocalizedStrings.getUI("text_ivprog_version"),
     delay: {
       show: time_show,
       hide: 0
@@ -620,6 +613,8 @@ $(document).ready(function () {
       updateSequenceGlobals(evt.oldIndex, evt.newIndex);
     }
   });
+
+  renderAlgorithm();
 
 });
 
@@ -666,13 +661,15 @@ function runCodeAssessment () {
 }
 
 function runCode() {
-  toggleConsole(true);
-
+  
   const strCode = CodeManagement.generate();
   if (strCode == null) {
     return;
   }
-  if (domConsole == null)
+  
+  toggleConsole(true);
+
+  if(domConsole == null)
     domConsole = new DOMConsole("#ivprog-term");
   $("#ivprog-term").slideDown(500);
   try {
@@ -684,7 +681,7 @@ function runCode() {
     proc.registerOutput(domConsole);
     $("#ivprog-term").addClass('ivprog-term-active');
 
-    proc.interpretAST().then(_ => {
+    proc.interpretAST().then( _ => {
       domConsole.info("Programa executado com sucesso!");
       $("#ivprog-term").removeClass('ivprog-term-active');
     }).catch(err => {
@@ -698,7 +695,7 @@ function runCode() {
 
 }
 
-function toggleConsole(is_running) {
+function toggleConsole (is_running) {
 
   if (is_running) {
     $('.ivprog-term-div').css('display', 'block');
@@ -721,20 +718,25 @@ function toggleConsole(is_running) {
   }
 }
 
-function waitToCloseConsole() {
+function waitToCloseConsole () {
   domConsole.info("Aperte qualquer tecla para fechar...");
   const p = new Promise((resolve, _) => {
     domConsole.requestInput(resolve, true);
   });
-  p.then(_ => {
+  p.then( _ => {
     domConsole.dispose();
     domConsole = null;
     $("#ivprog-term").hide();
   })
 }
 
-function toggleTextualCoding() {
+function toggleTextualCoding () {
   var code = CodeManagement.generate();
+
+  if (code == null) {
+    return;
+  }
+
   $('.ivprog_visual_panel').css('display', 'none');
   $('.ivprog_textual_panel').css('display', 'block');
   $('.ivprog_textual_panel').removeClass('loading');
@@ -745,7 +747,7 @@ function toggleTextualCoding() {
   $('.tabs').addClass('loading')
 }
 
-function toggleVisualCoding() {
+function toggleVisualCoding () {
   $('.ivprog_textual_panel').addClass('loading');
   $('.ivprog_textual_panel').css('display', 'none');
   $('.ivprog_visual_panel').css('display', 'block');
@@ -756,7 +758,7 @@ function toggleVisualCoding() {
   $('.tabs').removeClass('loading')
 }
 
-function removeParameter(function_obj, parameter_obj, parameter_container) {
+function removeParameter (function_obj, parameter_obj, parameter_container) {
   var index = function_obj.parameters_list.indexOf(parameter_obj);
   if (index > -1) {
     window.insertContext = true;
@@ -765,7 +767,7 @@ function removeParameter(function_obj, parameter_obj, parameter_container) {
   $(parameter_container).fadeOut();
 }
 
-function updateParameterType(parameter_obj, new_type, new_dimensions = 0) {
+function updateParameterType (parameter_obj, new_type, new_dimensions = 0) {
   parameter_obj.type = new_type;
   parameter_obj.dimensions = new_dimensions;
 
@@ -776,7 +778,7 @@ function updateParameterType(parameter_obj, new_type, new_dimensions = 0) {
 
 }
 
-function renderParameter(function_obj, parameter_obj, function_container) {
+function renderParameter (function_obj, parameter_obj, function_container) {
   var ret = "";
 
   ret += '<div class="ui label function_name_parameter pink"><i class="ui icon ellipsis vertical inverted"></i>';
@@ -784,7 +786,7 @@ function renderParameter(function_obj, parameter_obj, function_container) {
   ret += '<div class="ui dropdown parameter_type">';
 
   if (parameter_obj.dimensions > 0) {
-    ret += '<div class="text">' + LocalizedStrings.getUI('vector') + ':' + LocalizedStrings.getUI(parameter_obj.type);
+    ret += '<div class="text">'+ LocalizedStrings.getUI('vector') + ':' + LocalizedStrings.getUI(parameter_obj.type);
     if (parameter_obj.dimensions == 1) {
       ret += ' [ ] ';
     } else {
@@ -840,7 +842,8 @@ function renderParameter(function_obj, parameter_obj, function_container) {
       } else {
         updateParameterType(parameter_obj, Types[$selectedItem.data('type')]);
       }
-    }
+    },
+    selectOnKeydown: false
   });
 
   ret.find('.label_enable_name_parameter').on('click', function (e) {
@@ -850,9 +853,67 @@ function renderParameter(function_obj, parameter_obj, function_container) {
   return ret;
 }
 
+function updateParameterName (parameter_var, new_name, parameter_obj_dom, function_obj) {
+  if (isValidIdentifier(new_name)) {
+    if (variableNameAlreadyExists(new_name, function_obj)) {
+      Utils.renderErrorMessage(parameter_obj_dom.find('.parameter_div_edit'), LocalizedStrings.getUI('inform_valid_variable_duplicated'));
+    } else {
+      parameter_var.name = new_name;
+    }
+  } else {
+    Utils.renderErrorMessage(parameter_obj_dom.find('.parameter_div_edit'), LocalizedStrings.getUI('inform_valid_name'));
+  }
+}
+
+function variableNameAlreadyExists (name_var, function_obj) {
+
+  if (function_obj.parameters_list) {
+    for (var i = 0; i < function_obj.parameters_list.length; i++) {
+      if (function_obj.parameters_list[i].name == name_var) {
+        return true;
+      }
+    }
+  }
+
+  if (function_obj.variables_list) {
+    for (var i = 0; i < function_obj.variables_list.length; i++) {
+      if (function_obj.variables_list[i].name == name_var) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+}
+
+function updateFunctionName (function_var, new_name, function_obj_dom) {
+  if (isValidIdentifier(new_name)) {
+    if (functionNameAlreadyExists(new_name)) {
+      Utils.renderErrorMessage(function_obj_dom.find('.function_name_div'), LocalizedStrings.getUI('inform_valid_name_duplicated'));
+    } else {
+      function_var.name = new_name;
+    }
+  } else {
+    Utils.renderErrorMessage(function_obj_dom.find('.function_name_div'), LocalizedStrings.getUI('inform_valid_name'));
+  }
+}
+
+function functionNameAlreadyExists (function_name) {
+  for (var i = 0; i < window.program_obj.functions.length; i++) {
+    if (window.program_obj.functions[i].name == function_name) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function isValidIdentifier (identifier_str) {
+  return /^[a-zA-Z_][a-zA-Z0-9_]*$/.test(identifier_str);
+}
+
 var opened_name_parameter = false;
 var opened_input_parameter = null;
-function enableNameParameterUpdate(parameter_obj, parent_node) {
+function enableNameParameterUpdate (parameter_obj, parent_node) {
   if (opened_name_parameter) {
     opened_input_parameter.focus();
     return;
@@ -863,7 +924,7 @@ function enableNameParameterUpdate(parameter_obj, parent_node) {
   var input_field;
 
   parent_node.find('.span_name_parameter').text('');
-  input_field = $("<input type='text' class='width-dynamic input_name_function' autocomplete='off' autocorrect='off' autocapitalize='off' spellcheck='false' value='" + parameter_obj.name + "' />");
+  input_field = $( "<input type='text' class='width-dynamic input_name_function' autocomplete='off' autocorrect='off' autocapitalize='off' spellcheck='false' value='" + parameter_obj.name + "' />");
   input_field.insertBefore(parent_node.find('.span_name_parameter'));
 
   input_field.on('input', function () {
@@ -883,7 +944,7 @@ function enableNameParameterUpdate(parameter_obj, parent_node) {
   input_field.focusout(function () {
     /// update array:
     if (input_field.val().trim()) {
-      parameter_obj.name = input_field.val().trim();
+      updateParameterName(parameter_obj, input_field.val().trim(), parent_node, function_obj);
       parent_node.find('.span_name_parameter').text(parameter_obj.name);
     }
     input_field.off();
@@ -898,7 +959,7 @@ function enableNameParameterUpdate(parameter_obj, parent_node) {
     var code = e.keyCode || e.which;
     if (code == 13) {
       if (input_field.val().trim()) {
-        parameter_obj.name = input_field.val().trim();
+        updateParameterName(parameter_obj, input_field.val().trim(), parent_node, function_obj);
         parent_node.find('.span_name_parameter').text(parameter_obj.name);
       }
       input_field.off();
@@ -959,7 +1020,7 @@ function enableNameFunctionUpdate(function_obj, parent_node) {
   input_field.focusout(function () {
     /// update array:
     if (input_field.val().trim()) {
-      function_obj.name = input_field.val().trim();
+      updateFunctionName(function_obj, input_field.val().trim(), parent_node);
     }
     input_field.off();
     input_field.remove();
@@ -976,7 +1037,7 @@ function enableNameFunctionUpdate(function_obj, parent_node) {
     var code = e.keyCode || e.which;
     if (code == 13) {
       if (input_field.val().trim()) {
-        function_obj.name = input_field.val().trim();
+        updateFunctionName(function_obj, input_field.val().trim(), parent_node);
       }
       input_field.off();
       input_field.remove();
