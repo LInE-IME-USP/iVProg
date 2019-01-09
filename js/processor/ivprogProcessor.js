@@ -14,24 +14,30 @@ import { StoreObjectArrayAddress } from './store/storeObjectArrayAddress';
 import { StoreObjectArrayAddressRef } from './store/storeObjectArrayAddressRef';
 import { CompoundType } from './../typeSystem/compoundType';
 import { convertToString } from '../typeSystem/parsers';
-
-let loopTimeoutMs = 10000
+import { Config } from '../util/config';
+import Decimal from 'decimal.js';
+import { ProcessorErrorFactory } from './error/processorErrorFactory';
+import { RuntimeError } from './error/runtimeError';
 
 export class IVProgProcessor {
 
   static get LOOP_TIMEOUT () {
-    return loopTimeoutMs;
+    return Config.loopTimeout;
   }
 
   static set LOOP_TIMEOUT (ms) {
-    loopTimeoutMs = ms;
+    Config.setConfig({loopTimeout: ms});
+  }
+
+  static get MAIN_INTERNAL_ID () {
+    return "$main";
   }
 
   constructor (ast) {
     this.ast = ast;
-    this.globalStore = null;
-    this.stores = null;
-    this.context = null;
+    this.globalStore = new Store("$global");
+    this.stores = [this.globalStore];
+    this.context = [Context.BASE];
     this.input = null;
     this.forceKill = false;
     this.loopTimers = [];
@@ -73,29 +79,27 @@ export class IVProgProcessor {
     }
     if(this.globalStore !== null)
       this.globalStore = null;
-    this.globalStore = new Store();
+    this.globalStore = new Store("$global");
     this.stores = [this.globalStore];
     this.context = [Context.BASE];
   }
 
   interpretAST () {
     this.prepareState();
-    this.initGlobal();
-    const mainFunc = this.findMainFunction();
-    if(mainFunc === null) {
-      // TODO: Better error message
-      throw new Error("Missing main funciton.");
-    }
-    return this.runFunction(mainFunc, [], this.globalStore);
+    return this.initGlobal().then( _ => {
+      const mainFunc = this.findMainFunction();
+      if(mainFunc === null) {
+        throw ProcessorErrorFactory.main_missing();
+      }
+      return this.runFunction(mainFunc, [], this.globalStore);
+    });
   }
 
   initGlobal () {
     if(!this.checkContext(Context.BASE)) {
-      throw new Error("!!!CRITICAL: Invalid call to initGlobal outside BASE context!!!");
+      throw ProcessorErrorFactory.invalid_global_var();
     }
-    this.ast.global.forEach(decl => {
-      this.executeCommand(this.globalStore, decl).then(sto => this.globalStore = sto);
-    });
+    return this.executeCommands(this.globalStore, this.ast.global);
   }
 
   findMainFunction () {
@@ -106,21 +110,22 @@ export class IVProgProcessor {
     if(name.match(/^\$.+$/)) {
       const fun = LanguageDefinedFunction.getFunction(name);
       if(!!!fun) {
-        throw new Error("!!!Internal Error. Language defined function not implemented -> " + name + "!!!");
+        throw ProcessorErrorFactory.not_implemented(name);
       }
       return fun;
     } else {
       const val = this.ast.functions.find( v => v.name === name);
       if (!!!val) {
         // TODO: better error message;
-        throw new Error(`Function ${name} is not defined.`);
+        throw ProcessorErrorFactory.function_missing(name);
       }
       return val;
     }
   }
 
   runFunction (func, actualParameters, store) {
-    let funcStore = new Store();
+    const funcName = func.isMain ? IVProgProcessor.MAIN_INTERNAL_ID : func.name;
+    let funcStore = new Store(funcName);
     funcStore.extendStore(this.globalStore);
     let returnStoreObject = null;
     if(func.returnType instanceof CompoundType) {
@@ -132,10 +137,7 @@ export class IVProgProcessor {
     } else {
       returnStoreObject = new StoreObject(func.returnType, null);
     }
-    const funcName = func.isMain ? 'main' : func.name;
-    const funcNameStoreObject = new StoreObject(Types.STRING, funcName, true);
     funcStore.insertStore('$', returnStoreObject);
-    funcStore.insertStore('$name', funcNameStoreObject);
     const newFuncStore$ = this.associateParameters(func.formalParameters, actualParameters, store, funcStore);
     return newFuncStore$.then(sto => {
       this.context.push(Context.FUNCTION);
@@ -150,34 +152,46 @@ export class IVProgProcessor {
   }
 
   associateParameters (formalList, actualList, callerStore, calleeStore) {
+    const funcName = calleeStore.name === IVProgProcessor.MAIN_INTERNAL_ID ? 
+      LanguageDefinedFunction.getMainFunctionName() : calleeStore.name;
+
     if (formalList.length != actualList.length) {
-      // TODO: Better error message
-      throw new Error("Numbers of parameters doesn't match");
+      throw ProcessorErrorFactory.invalid_parameters_size(funcName, formalList.length, actualList.length);
     }
     const promises$ = actualList.map(actualParameter => this.evaluateExpression(callerStore, actualParameter));
     return Promise.all(promises$).then(values => {
       for (let i = 0; i < values.length; i++) {
         const stoObj = values[i];
+        const exp = actualList[i];
+        let shouldTypeCast = false;
         const formalParameter = formalList[i];
-        if(formalParameter.type.isCompatible(stoObj.type)) {
-          if(formalParameter.byRef && !stoObj.inStore) {
-            throw new Error('You must inform a variable as parameter');
-          }
-
-          if(formalParameter.byRef) {
-            let ref = null;
-            if (stoObj instanceof StoreObjectArrayAddress) {
-              ref = new StoreObjectArrayAddressRef(stoObj);
-            } else {
-              ref = new StoreObjectRef(stoObj.id, callerStore);
-            }
-            calleeStore.insertStore(formalParameter.id, ref);
+        if(!formalParameter.type.isCompatible(stoObj.type)) {
+          if (Config.enable_type_casting && !formalParameter.byRef
+            && Store.canImplicitTypeCast(formalParameter.type, stoObj.type)) {
+              shouldTypeCast =  true;
           } else {
-            let realValue = this.parseStoreObjectValue(stoObj);
-            calleeStore.insertStore(formalParameter.id, realValue);
+            throw ProcessorErrorFactory.invalid_parameter_type(funcName, exp.toString());
           }
+        }
+
+        if(formalParameter.byRef && !stoObj.inStore) {
+          throw ProcessorErrorFactory.invalid_ref(funcName, exp.toString());
+        }
+
+        if(formalParameter.byRef) {
+          let ref = null;
+          if (stoObj instanceof StoreObjectArrayAddress) {
+            ref = new StoreObjectArrayAddressRef(stoObj);
+          } else {
+            ref = new StoreObjectRef(stoObj.id, callerStore);
+          }
+          calleeStore.insertStore(formalParameter.id, ref);
         } else {
-          throw new Error(`Parameter ${formalParameter.id} is not compatible with the value given.`);
+          let realValue = this.parseStoreObjectValue(stoObj);
+          if (shouldTypeCast) {
+            realValue = Store.doImplicitCasting(formalParameter.type, realValue);
+          }
+          calleeStore.insertStore(formalParameter.id, realValue);
         }
       }
       return calleeStore;
@@ -197,7 +211,7 @@ export class IVProgProcessor {
   executeCommand (store, cmd) {
 
     if(this.forceKill) {
-      return Promise.reject("Interrupção forçada do programa!");
+      return Promise.reject("FORCED_KILL!");
     } else if (store.mode === Modes.PAUSE) {
       return Promise.resolve(this.executeCommand(store, cmd));
     } else if(store.mode === Modes.RETURN) {
@@ -226,12 +240,13 @@ export class IVProgProcessor {
       return this.executeFor(store, cmd);
     } else if (cmd instanceof Commands.Switch) {
       return this.executeSwitch(store, cmd);
-    } else if (cmd instanceof Commands.FunctionCall) {
+    } else if (cmd instanceof Expressions.FunctionCall) {
+      
       return this.executeFunctionCall(store, cmd);
     } else if (cmd instanceof Commands.SysCall) {
       return this.executeSysCall(store, cmd);
     } else {
-      throw new Error("!!!CRITICAL A unknown command was found!!!\n" + cmd);
+      throw ProcessorErrorFactory.unknown_command(cmd.sourceInfo);
     }
   }
 
@@ -241,12 +256,18 @@ export class IVProgProcessor {
   }
 
   executeFunctionCall (store, cmd) {
-    const func = this.findFunction(cmd.id);
+    let func = null;
+    if(cmd.isMainCall) {
+      func = this.findMainFunction();
+    } else {
+      func = this.findFunction(cmd.id);
+    }
     return this.runFunction(func, cmd.actualParameters, store)
       .then(sto => {
         if(!Types.VOID.isCompatible(func.returnType) && sto.mode !== Modes.RETURN) {
-          // TODO: better error message
-          return Promise.reject(new Error(`Function ${func.name} must have a return command`));
+          const funcName = func.name === IVProgProcessor.MAIN_INTERNAL_ID ? 
+            LanguageDefinedFunction.getMainFunctionName() : func.name;
+          return Promise.reject(ProcessorErrorFactory.function_no_return(funcName));
         } else {
           return store;
         }
@@ -311,6 +332,7 @@ export class IVProgProcessor {
       const whileBlock = new Commands.CommandBlock([],
         cmd.commands.concat(increment));
       const forAsWhile = new Commands.While(condition, whileBlock);
+      forAsWhile.sourceInfo = cmd.sourceInfo;
       //END for -> while rewrite
       const newCmdList = [initCmd,forAsWhile];
       return this.executeCommands(store, newCmdList);
@@ -335,25 +357,21 @@ export class IVProgProcessor {
         const $value = outerRef.evaluateExpression(sto, cmd.expression);
         return $value.then(vl => {
           if (!vl.type.isCompatible(Types.BOOLEAN)) {
-            // TODO: Better error message -- Inform line and column from token!!!!
-            // THIS IF SHOULD BE IN A SEMANTIC ANALYSER
-            return Promise.reject(new Error(`DoWhile expression must be of type boolean`));
+            return Promise.reject(ProcessorErrorFactory.loop_condition_type_full(cmd.sourceInfo));
           }
           if (vl.value) {
             outerRef.context.pop();
             for (let i = 0; i < outerRef.loopTimers.length; i++) {
               const time = outerRef.loopTimers[i];
               if(Date.now() - time >= IVProgProcessor.LOOP_TIMEOUT) {
-                console.log("Kill by Timeout...");
                 outerRef.forceKill = true;
-                return Promise.reject(new Error("Potential endless loop detected."));
+                return Promise.reject(ProcessorErrorFactory.endless_loop_full(cmd.sourceInfo));
               }
             }
             return outerRef.executeCommand(sto, cmd);
           } else {
             outerRef.context.pop();
             outerRef.loopTimers.pop();
-            console.log("Clear Timeout...");
             return sto;
           }
         })
@@ -383,9 +401,8 @@ export class IVProgProcessor {
               for (let i = 0; i < outerRef.loopTimers.length; i++) {
                 const time = outerRef.loopTimers[i];
                 if(Date.now() - time >= IVProgProcessor.LOOP_TIMEOUT) {
-                  console.log("Kill by Timeout...");
                   outerRef.forceKill = true;
-                  return Promise.reject(new Error("Potential endless loop detected."));
+                  return Promise.reject(ProcessorErrorFactory.endless_loop_full(cmd.sourceInfo));
                 }
               }
               return outerRef.executeCommand(sto, cmd);
@@ -393,13 +410,10 @@ export class IVProgProcessor {
           } else {
             outerRef.context.pop();
             outerRef.loopTimers.pop();
-            console.log("Clear Timeout...");
             return store;
           }
         } else {
-          // TODO: Better error message -- Inform line and column from token!!!!
-          // THIS IF SHOULD BE IN A SEMANTIC ANALYSER
-          return Promise.reject(new Error(`Loop condition must be of type boolean`));
+          return Promise.reject(ProcessorErrorFactory.loop_condition_type_full(cmd.sourceInfo));
         }
       })
       
@@ -425,9 +439,7 @@ export class IVProgProcessor {
             return Promise.resolve(store);
           }
         } else {
-          // TODO: Better error message -- Inform line and column from token!!!!
-          // THIS IF SHOULD BE IN A SEMANTIC ANALYSER
-          return Promise.reject(new Error(`If expression must be of type boolean`));
+          return Promise.reject(ProcessorErrorFactory.if_condition_type_full(cmd.sourceInfo));
         }
       });
     } catch (error) {
@@ -437,19 +449,20 @@ export class IVProgProcessor {
 
   executeReturn (store, cmd) {
     try {
-      const funcType = store.applyStore('$');
+      const funcType = store.applyStore('$').type;
       const $value = this.evaluateExpression(store, cmd.expression);
-      const funcName = store.applyStore('$name');
+      const funcName = store.name === IVProgProcessor.MAIN_INTERNAL_ID ? 
+        LanguageDefinedFunction.getMainFunctionName() : store.name;
       return $value.then(vl => {
 
         if(vl === null && funcType.isCompatible(Types.VOID)) {
           return Promise.resolve(store);
         }
 
-        if (vl === null || !funcType.type.isCompatible(vl.type)) {
-          // TODO: Better error message -- Inform line and column from token!!!!
-          // THIS IF SHOULD BE IN A SEMANTIC ANALYSER
-          return Promise.reject(new Error(`Function ${funcName.value} must return ${funcType.type} instead of ${vl.type}.`));
+        if (vl === null || !funcType.isCompatible(vl.type)) {
+          const stringInfo = funcType.stringInfo();
+          const info = stringInfo[0];
+          return Promise.reject(ProcessorErrorFactory.invalid_return_type_full(funcName, info.type, info.dim, cmd.sourceInfo));
         } else {
           let realValue = this.parseStoreObjectValue(vl);
           store.updateStore('$', realValue);
@@ -462,20 +475,31 @@ export class IVProgProcessor {
     }
   }
 
-  executeBreak (store, _) {
+  executeBreak (store, cmd) {
     if(this.checkContext(Context.BREAKABLE)) {
       store.mode = Modes.BREAK;
       return Promise.resolve(store);
     } else {
-      return Promise.reject(new Error("!!!CRITIAL: Break command outside Loop/Switch scope!!!"));
+      return Promise.reject(ProcessorErrorFactory.unexpected_break_command_full(cmd.sourceInfo));
     }
   }
 
   executeAssign (store, cmd) {
     try {
+      const inStore = store.applyStore(cmd.id);
       const $value = this.evaluateExpression(store, cmd.expression);
       return $value.then( vl => {
         let realValue = this.parseStoreObjectValue(vl);
+        if(!inStore.type.isCompatible(realValue.type)) {
+          if(Config.enable_type_casting && Store.canImplicitTypeCast(inStore.type, vl.type)) {
+            realValue = Store.doImplicitCasting(inStore.type, realValue);
+          } else {
+            const stringInfo = inStore.type.stringInfo()
+            const info = stringInfo[0]
+            return Promise.reject(ProcessorErrorFactory.incompatible_types_full(info.type, info.dim, cmd.sourceInfo));
+          }
+        }
+        
         store.updateStore(cmd.id, realValue) 
         return store;
       });
@@ -487,7 +511,7 @@ export class IVProgProcessor {
   executeArrayIndexAssign (store, cmd) {
     const mustBeArray = store.applyStore(cmd.id);
     if(!(mustBeArray.type instanceof CompoundType)) {
-      return Promise.reject(new Error(cmd.id + " is not a vector/matrix"));
+      return Promise.reject(ProcessorErrorFactory.invalid_array_access_full(cmd.id, cmd.sourceInfo));
     }
     const line$ = this.evaluateExpression(store, cmd.line);
     const column$ = this.evaluateExpression(store, cmd.column);
@@ -495,45 +519,55 @@ export class IVProgProcessor {
     return Promise.all([line$, column$, value$]).then(results => {
       const lineSO = results[0];
       if(!Types.INTEGER.isCompatible(lineSO.type)) {
-        // TODO: better error message
-        //SHOULD NOT BE HERE. IT MUST HAVE A SEMANTIC ANALYSIS
-        return Promise.reject(new Error("Array dimension must be of type int"));
+        return Promise.reject(ProcessorErrorFactory.array_dimension_not_int_full(cmd.sourceInfo));
       }
       const line = lineSO.number;
       const columnSO = results[1];
       let column = null
       if (columnSO !== null) {
         if(!Types.INTEGER.isCompatible(columnSO.type)) {
-          // TODO: better error message
-          //SHOULD NOT BE HERE. IT MUST HAVE A SEMANTIC ANALYSIS
-          return Promise.reject(new Error("Array dimension must be of type int"));
+          return Promise.reject(ProcessorErrorFactory.array_dimension_not_int_full(cmd.sourceInfo));
         }
         column = columnSO.number;
       }
       const value = this.parseStoreObjectValue(results[2]);
       if (line >= mustBeArray.lines) {
-        // TODO: better error message
-        return Promise.reject(new Error(`${exp.id}: index out of bounds: ${lines}`));
+        if(mustBeArray.isVector) {
+          return Promise.reject(ProcessorErrorFactory.vector_line_outbounds_full(cmd.id, line, mustBeArray.lines, cmd.sourceInfo));
+        } else {
+          return Promise.reject(ProcessorErrorFactory.matrix_line_outbounds_full(cmd.id, line, mustBeArray.lines, cmd.sourceInfo));
+        }
+      } else if (line < 0) {
+        throw ProcessorErrorFactory.array_dimension_not_positive_full(cmd.sourceInfo);
       }
       if (column !== null && mustBeArray.columns === null ){
-        // TODO: better error message
-        return Promise.reject(new Error(`${exp.id}: index out of bounds: ${column}`));
+        return Promise.reject(ProcessorErrorFactory.vector_not_matrix_full(cmd.id, cmd.sourceInfo));
       }
-      if(column !== null && column >= mustBeArray.columns) {
-        // TODO: better error message
-        return Promise.reject(new Error(`${exp.id}: index out of bounds: ${column}`));
+      if(column !== null ) {
+        if (column >= mustBeArray.columns) {
+          return Promise.reject(ProcessorErrorFactory.matrix_column_outbounds_full(cmd.id, column,mustBeArray.columns, cmd.sourceInfo));
+        } else if (column < 0) {
+          throw ProcessorErrorFactory.array_dimension_not_positive_full(cmd.sourceInfo);
+        }
       }
 
       const newArray = Object.assign(new StoreObjectArray(null,null,null), mustBeArray);
       if (column !== null) {
-        if (value.type instanceof CompoundType) {
-          return Promise.reject(new Error("Invalid operation. This must be a value: line "+cmd.sourceInfo.line));
+        if (value.type instanceof CompoundType || !newArray.type.canAccept(value.type)) {
+          const type = mustBeArray.type.innerType;
+          const stringInfo = type.stringInfo()
+          const info = stringInfo[0]
+          return Promise.reject(ProcessorErrorFactory.incompatible_types_full(info.type, info.dim, cmd.sourceInfo));
         }
         newArray.value[line].value[column] = value;
         store.updateStore(cmd.id, newArray);
       } else {
-        if(mustBeArray.columns !== null && value.type instanceof CompoundType) {
-          return Promise.reject(new Error("Invalid operation. This must be a vector: line "+cmd.sourceInfo.line));
+        if((mustBeArray.columns !== null && value.type instanceof CompoundType) || !newArray.type.canAccept(value.type)) {
+          const type = mustBeArray.type;
+          const stringInfo = type.stringInfo()
+          const info = stringInfo[0]
+          const exp = cmd.expression.toString()
+          return Promise.reject(ProcessorErrorFactory.incompatible_types_array_full(exp,info.type, info.dim-1, cmd.sourceInfo));
         }
         newArray.value[line] = value;
         store.updateStore(cmd.id, newArray);
@@ -551,20 +585,22 @@ export class IVProgProcessor {
         return Promise.all([$lines, $columns, $value]).then(values => {
           const lineSO = values[0];
           if(!Types.INTEGER.isCompatible(lineSO.type)) {
-            // TODO: better error message
-            //SHOULD NOT BE HERE. IT MUST HAVE A SEMANTIC ANALYSIS
-            return Promise.reject(new Error("Array dimension must be of type int"));
+            return Promise.reject(ProcessorErrorFactory.array_dimension_not_int_full(cmd.sourceInfo));
           }
           const line = lineSO.number;
+          if(line < 0) {
+            throw ProcessorErrorFactory.array_dimension_not_positive_full(cmd.sourceInfo);
+          }
           const columnSO = values[1];
           let column = null
           if (columnSO !== null) {
             if(!Types.INTEGER.isCompatible(columnSO.type)) {
-              // TODO: better error message
-              //SHOULD NOT BE HERE. IT MUST HAVE A SEMANTIC ANALYSIS
-              return Promise.reject(new Error("Array dimension must be of type int"));
+              return Promise.reject(ProcessorErrorFactory.array_dimension_not_int_full(cmd.sourceInfo));
             }
             column = columnSO.number;
+            if(column < 0) {
+              throw ProcessorErrorFactory.array_dimension_not_positive_full(cmd.sourceInfo);
+            }
           }
           const value = values[2];
           const temp = new StoreObjectArray(cmd.type, line, column, null);
@@ -597,15 +633,24 @@ export class IVProgProcessor {
         return $value.then(vl => {
           let realValue = vl;
           if (vl !== null) {
+            if(!vl.type.isCompatible(cmd.type)) {
+              if(Config.enable_type_casting && Store.canImplicitTypeCast(cmd.type, vl.type)) {
+                realValue = Store.doImplicitCasting(cmd.type, realValue);
+              } else {
+                const stringInfo = typeInfo.type.stringInfo();
+                const info = stringInfo[0];
+                return Promise.reject(ProcessorErrorFactory.incompatible_types_full(info.type, info.dim, cmd.sourceInfo));
+              }
+            }
             if(vl instanceof StoreObjectArrayAddress) {
               if(vl.type instanceof CompoundType) {
-                realValue = Object.assign(new StoreObjectArray(null,null,null), vl.refValue);
+                return Promise.reject(new Error("!!!Critical Error: Compatibility check failed, a Type accepts a CompoundType"))
               } else {
                 realValue = Object.assign(new StoreObject(null,null), vl.refValue);
               }
             }
           } else {
-            realValue = new StoreObject(cmd.type,0);
+            realValue = new StoreObject(cmd.type, 0);
           }
           realValue.readOnly = cmd.isConst;
           store.updateStore(cmd.id, realValue);
@@ -644,10 +689,13 @@ export class IVProgProcessor {
   }
 
   evaluateFunctionCall (store, exp) {
+    if(exp.isMainCall) {
+      return Promise.reject(ProcessorErrorFactory.void_in_expression_full(LanguageDefinedFunction.getMainFunctionName(), exp.sourceInfo));
+    }
     const func = this.findFunction(exp.id);
     if(Types.VOID.isCompatible(func.returnType)) {
       // TODO: better error message
-      return Promise.reject(new Error(`Function ${exp.id} cannot be used inside an expression`));
+      return Promise.reject(ProcessorErrorFactory.void_in_expression_full(exp.id, exp.sourceInfo));
     }
     const $newStore = this.runFunction(func, exp.actualParameters, store);
     return $newStore.then( sto => {
@@ -664,24 +712,53 @@ export class IVProgProcessor {
   }
 
   evaluateArrayLiteral (store, exp) {
+    const errorHelperFunction = (validationResult, exp) => {
+      const errorCode = validationResult[0];
+      switch(errorCode) {
+        case StoreObjectArray.WRONG_COLUMN_NUMBER: {
+          const columnValue = validationResult[1];
+          return Promise.reject(ProcessorErrorFactory.invalid_array_literal_column_full(arr.columns, columnValue, exp.sourceInfo));
+        }
+        case StoreObjectArray.WRONG_LINE_NUMBER: {
+          const lineValue = validationResult[1];
+          return Promise.reject(ProcessorErrorFactory.invalid_array_literal_line_full(arr.lines, lineValue, exp.sourceInfo));
+        }
+        case StoreObjectArray.WRONG_TYPE: {
+          let line = null;
+          let strExp = null;
+          if (validationResult.length > 2) {
+            line = validationResult[1];
+            const column = validationResult[2];
+            strExp = exp.value[line].value[column].toString()
+          } else {
+            line = validationResult[1];
+            strExp = exp.value[line].toString()
+          }
+          return Promise.reject(ProcessorErrorFactory.invalid_array_literal_type_full(strExp, exp.sourceInfo));            }
+      }
+    };
     if(!exp.isVector) {
       const $matrix = this.evaluateMatrix(store, exp.value);
       return $matrix.then(list => {
         const type = new CompoundType(list[0].type.innerType, 2);
         const arr = new StoreObjectArray(type, list.length, list[0].lines, list);
-        if(arr.isValid)
+        const checkResult = arr.isValid;
+        if(checkResult.length == 0)
           return Promise.resolve(arr);
-        else
-          return Promise.reject(new Error(`Invalid array`))
+        else {
+          return errorHelperFunction(checkResult, exp);
+        }
       });
     } else {
       return this.evaluateVector(store, exp.value).then(list => {
         const type = new CompoundType(list[0].type, 1);
         const stoArray = new StoreObjectArray(type, list.length, null, list);
-        if(stoArray.isValid)
+        const checkResult = stoArray.isValid;
+        if(checkResult.length == 0)
           return Promise.resolve(stoArray);
-        else
-          return Promise.reject(new Error(`Invalid array`))
+        else {
+          return errorHelperFunction(checkResult, exp);
+        }
       });
     }
   }
@@ -720,9 +797,7 @@ export class IVProgProcessor {
   evaluateArrayAccess (store, exp) {
     const mustBeArray = store.applyStore(exp.id);
     if (!(mustBeArray.type instanceof CompoundType)) {
-      // TODO: better error message
-      console.log(mustBeArray.type);
-      return Promise.reject(new Error(`${exp.id} is not of type array`));
+      return Promise.reject(ProcessorErrorFactory.invalid_array_access_full(exp.id, exp.sourceInfo));
     }
     const $line = this.evaluateExpression(store, exp.line);
     const $column = this.evaluateExpression(store, exp.column);
@@ -730,32 +805,36 @@ export class IVProgProcessor {
       const lineSO = values[0];
       const columnSO = values[1];
       if(!Types.INTEGER.isCompatible(lineSO.type)) {
-        // TODO: better error message
-        //SHOULD NOT BE HERE. IT MUST HAVE A SEMANTIC ANALYSIS
-        return Promise.reject(new Error("Array dimension must be of type int"));
+        return Promise.reject(ProcessorErrorFactory.array_dimension_not_int_full(exp.sourceInfo));
       }
       const line = lineSO.number;
       let column = null;
       if(columnSO !== null) {
         if(!Types.INTEGER.isCompatible(columnSO.type)) {
-          // TODO: better error message
-          //SHOULD NOT BE HERE. IT MUST HAVE A SEMANTIC ANALYSIS
-          return Promise.reject(new Error("Array dimension must be of type int"));
+          return Promise.reject(ProcessorErrorFactory.array_dimension_not_int_full(exp.sourceInfo));
         }
         column = columnSO.number;
       }
 
       if (line >= mustBeArray.lines) {
-        // TODO: better error message
-        return Promise.reject(new Error(`${exp.id}: index out of bounds: ${lines}`));
+        if(mustBeArray.isVector) {
+          return Promise.reject(ProcessorErrorFactory.vector_line_outbounds_full(exp.id, line, mustBeArray.lines, exp.sourceInfo));
+        } else {
+          return Promise.reject(ProcessorErrorFactory.matrix_line_outbounds_full(exp.id, line, mustBeArray.lines, exp.sourceInfo));
+        }
+      } else if (line < 0) {
+        throw ProcessorErrorFactory.array_dimension_not_positive_full(exp.sourceInfo);
       }
       if (column !== null && mustBeArray.columns === null ){
-        // TODO: better error message
-        return Promise.reject(new Error(`${exp.id}: index out of bounds: ${column}`));
+        return Promise.reject(ProcessorErrorFactory.vector_not_matrix_full(exp.id, exp.sourceInfo));
       }
-      if(column !== null && column >= mustBeArray.columns) {
-        // TODO: better error message
-        return Promise.reject(new Error(`${exp.id}: index out of bounds: ${column}`));
+      if(column !== null ) {
+        if (column >= mustBeArray.columns) {
+          return Promise.reject(ProcessorErrorFactory.matrix_column_outbounds_full(exp.id, column,mustBeArray.columns, exp.sourceInfo));
+        } else if (column < 0) {
+          throw ProcessorErrorFactory.array_dimension_not_positive_full(exp.sourceInfo);
+        }
+        
       }
       return Promise.resolve(new StoreObjectArrayAddress(mustBeArray.id, line, column, store));
     });
@@ -766,8 +845,9 @@ export class IVProgProcessor {
     return $left.then( left => {
       const resultType = resultTypeAfterUnaryOp(unaryApp.op, left.type);
       if (Types.UNDEFINED.isCompatible(resultType)) {
-        // TODO: better urgent error message
-        return Promise.reject(new Error(`Cannot use this op to ${left.type}`));
+        const stringInfo = left.type.stringInfo();
+        const info = stringInfo[0];
+        return Promise.reject(ProcessorErrorFactory.invalid_unary_op_full(unaryApp.op, info.type, info.dim, unaryApp.sourceInfo));
       }
       switch (unaryApp.op.ord) {
         case Operators.ADD.ord:
@@ -777,7 +857,7 @@ export class IVProgProcessor {
         case Operators.NOT.ord:
           return new StoreObject(resultType, !left.value);
         default:
-        return Promise.reject(new Error('!!!Critical Invalid UnaryApp '+ unaryApp.op));
+          return Promise.reject(new RuntimeError('!!!Critical Invalid UnaryApp '+ unaryApp.op));
       }
     });
   }
@@ -786,12 +866,21 @@ export class IVProgProcessor {
     const $left = this.evaluateExpression(store, infixApp.left);
     const $right = this.evaluateExpression(store, infixApp.right);
     return Promise.all([$left, $right]).then(values => {
+      let shouldImplicitCast = false;
       const left = values[0];
       const right = values[1];
-      const resultType = resultTypeAfterInfixOp(infixApp.op, left.type, right.type);
+      let resultType = resultTypeAfterInfixOp(infixApp.op, left.type, right.type);
       if (Types.UNDEFINED.isCompatible(resultType)) {
-        // TODO: better urgent error message
-        return Promise.reject(new Error(`Cannot use this ${infixApp.op} to ${left.type} and ${right.type}`));
+        if (Config.enable_type_casting && Store.canImplicitTypeCast(left.type, right.type)) {
+          shouldImplicitCast = true;
+        } else {
+          const stringInfoLeft = left.type.stringInfo();
+          const infoLeft = stringInfoLeft[0];
+          const stringInfoRight = right.type.stringInfo();
+          const infoRight = stringInfoRight[0];
+          return Promise.reject(ProcessorErrorFactory.invalid_infix_op_full(infixApp.op, infoLeft.type, infoLeft.dim,
+            infoRight.type,infoRight.dim,infixApp.sourceInfo));
+        }
       }
       let result = null;
       switch (infixApp.op.ord) {
@@ -808,61 +897,122 @@ export class IVProgProcessor {
         }
         case Operators.SUB.ord:
           return new StoreObject(resultType, left.value.minus(right.value));
-        case Operators.MULT.ord:
-          return new StoreObject(resultType, left.value.times(right.value));
+        case Operators.MULT.ord: {
+          result = left.value.times(right.value);
+          if(result.dp() > Config.decimalPlaces) {
+            result = new Decimal(result.toFixed(Config.decimalPlaces));
+          }
+          return new StoreObject(resultType, result);
+        }
         case Operators.DIV.ord: {
-          result = left.value / right.value;
           if (Types.INTEGER.isCompatible(resultType))
             result = left.value.divToInt(right.value);
           else
             result = left.value.div(right.value);
+          if(result.dp() > Config.decimalPlaces) {
+            result = new Decimal(result.toFixed(Config.decimalPlaces));
+          }
           return new StoreObject(resultType, result);
         }
-        case Operators.MOD.ord:
-          return new StoreObject(resultType, left.value.modulo(right.value));
+        case Operators.MOD.ord: {
+          let leftValue = left.value;
+          let rightValue = right.value;
+          if(shouldImplicitCast) {
+            resultType = Types.INTEGER;
+            leftValue = leftValue.trunc();
+            rightValue = rightValue.trunc();
+          }
+          result = leftValue.modulo(rightValue);
+          if(result.dp() > Config.decimalPlaces) {
+            result = new Decimal(result.toFixed(Config.decimalPlaces));
+          }
+          return new StoreObject(resultType, result);
+        }          
         case Operators.GT.ord: {
+          let leftValue = left.value;
+          let rightValue = right.value;
           if (Types.STRING.isCompatible(left.type)) {
             result = left.value.length > right.value.length;
           } else {
-            result = left.value.gt(right.value);
+            if (shouldImplicitCast) {
+              resultType = Types.BOOLEAN;
+              leftValue = leftValue.trunc();
+              rightValue = rightValue.trunc();
+            }
+            result = leftValue.gt(rightValue);
           }
           return new StoreObject(resultType, result);
         }
         case Operators.GE.ord: {
+          let leftValue = left.value;
+          let rightValue = right.value;
           if (Types.STRING.isCompatible(left.type)) {
             result = left.value.length >= right.value.length;
           } else {
-            result = left.value.gte(right.value);
+            if (shouldImplicitCast) {
+              resultType = Types.BOOLEAN;
+              leftValue = leftValue.trunc();
+              rightValue = rightValue.trunc();
+            }
+            result = leftValue.gte(rightValue);
           }
           return new StoreObject(resultType, result);
         }
         case Operators.LT.ord: {
+          let leftValue = left.value;
+          let rightValue = right.value;
           if (Types.STRING.isCompatible(left.type)) {
             result = left.value.length < right.value.length;
           } else {
-            result = left.value.lt(right.value);
+            if (shouldImplicitCast) {
+              resultType = Types.BOOLEAN;
+              leftValue = leftValue.trunc();
+              rightValue = rightValue.trunc();
+            }
+            result = leftValue.lt(rightValue);
           }
           return new StoreObject(resultType, result);
         }
         case Operators.LE.ord: {
+          let leftValue = left.value;
+          let rightValue = right.value;
           if (Types.STRING.isCompatible(left.type)) {
             result = left.value.length <= right.value.length;
           } else {
-            result = left.value.lte(right.value);
+            if (shouldImplicitCast) {
+              resultType = Types.BOOLEAN;
+              leftValue = leftValue.trunc();
+              rightValue = rightValue.trunc();
+            }
+            result = leftValue.lte(rightValue);
           }
           return new StoreObject(resultType, result);
         }
         case Operators.EQ.ord: {
+          let leftValue = left.value;
+          let rightValue = right.value;
           if (Types.INTEGER.isCompatible(left.type) || Types.REAL.isCompatible(left.type)) {
-            result = left.value.eq(right.value);
+            if (shouldImplicitCast) {
+              resultType = Types.BOOLEAN;
+              leftValue = leftValue.trunc();
+              rightValue = rightValue.trunc();
+            }
+            result = leftValue.eq(rightValue);
           } else {
             result = left.value === right.value;
           }
           return new StoreObject(resultType, result);
         }
         case Operators.NEQ.ord: {
+          let leftValue = left.value;
+          let rightValue = right.value;
           if (Types.INTEGER.isCompatible(left.type) || Types.REAL.isCompatible(left.type)) {
-            result = !left.value.eq(right.value);
+            if (shouldImplicitCast) {
+              resultType = Types.BOOLEAN;
+              leftValue = leftValue.trunc();
+              rightValue = rightValue.trunc();
+            }
+            result = !leftValue.eq(rightValue);
           } else {
             result = left.value !== right.value;
           }
@@ -873,7 +1023,7 @@ export class IVProgProcessor {
         case Operators.OR.ord:
           return new StoreObject(resultType, left.value || right.value);
         default:
-          return Promise.reject(new Error('!!!Critical Invalid InfixApp '+ infixApp.op));
+          return Promise.reject(new RuntimeError('!!!Critical Invalid InfixApp '+ infixApp.op));
       }
     });
   }
@@ -888,7 +1038,7 @@ export class IVProgProcessor {
             break;
           }
           default: {
-            throw new Error("Three dimensional array address...");
+            throw new RuntimeError("Three dimensional array address...");
           }
         }
       } else {

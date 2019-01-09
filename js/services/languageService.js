@@ -1,12 +1,11 @@
 import Lexers from './../../grammar/';
 import line_i18n from 'line-i18n';
+import { Config } from "./../util/config";
 
-const DEFAULT_LANG = "pt";
-
-class LanguageServiceExtended extends line_i18n.LanguageService {
+class LanguageServiceExtended extends line_i18n.LanguageServiceNoLS {
 
   constructor () {
-    super("ivprog.lang", DEFAULT_LANG);
+    super(typeof(iLMparameters) === 'undefined' ? Config.default_lang : iLMparameters.lang);
   }
 
   getCurrentLexer () {
@@ -36,4 +35,4 @@ class LanguageServiceExtended extends line_i18n.LanguageService {
   }
 }
 
-export const LanguageService  = Object.freeze(new LanguageServiceExtended());
+export const LanguageService  = new LanguageServiceExtended();

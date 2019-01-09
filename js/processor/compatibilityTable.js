@@ -1,6 +1,7 @@
 import { Types } from './../typeSystem/types';
 import { Operators } from './../ast/operators';
 import { MultiType } from '../typeSystem/multiType';
+import { Config } from '../util/config';
 
 function buildInfixAddTable () {
   const table = [[], [], [], []];
@@ -133,6 +134,13 @@ export function resultTypeAfterInfixOp (operator, leftExpressionType, rightExpre
         }
       }
       if(newMulti.length <= 0) {
+        if(Config.enable_type_casting) {
+          if(leftExpressionType.isCompatible(Types.INTEGER) || leftExpressionType.isCompatible(Types.REAL)) {
+            if(rightExpressionType.isCompatible(Types.INTEGER) || rightExpressionType.isCompatible(Types.REAL)) {
+              return new MultiType([Types.INTEGER, Types.REAL]);
+            }
+          }
+        }
         return Types.UNDEFINED;
       } else {
         return new MultiType(newMulti)
@@ -141,17 +149,42 @@ export function resultTypeAfterInfixOp (operator, leftExpressionType, rightExpre
       if(leftExpressionType.isCompatible(rightExpressionType)) {
         return rightExpressionType;
       } else {
+        if(Config.enable_type_casting) {
+          if(leftExpressionType.isCompatible(Types.INTEGER) || leftExpressionType.isCompatible(Types.REAL)) {
+            if(rightExpressionType.isCompatible(Types.INTEGER) || rightExpressionType.isCompatible(Types.REAL)) {
+              return rightExpressionType;
+            }
+          }
+        }
         return Types.UNDEFINED;
       }
     } else if(rightExpressionType instanceof MultiType) {
       if(rightExpressionType.isCompatible(leftExpressionType)) {
         return leftExpressionType;
       } else {
+        if(Config.enable_type_casting) {
+          if(leftExpressionType.isCompatible(Types.INTEGER) || leftExpressionType.isCompatible(Types.REAL)) {
+            if(rightExpressionType.isCompatible(Types.INTEGER) || rightExpressionType.isCompatible(Types.REAL)) {
+              return leftExpressionType;
+            }
+          }
+        }
         return Types.UNDEFINED;
       }
     }
     const resultType = infixMap.get(operator)[leftExpressionType.ord][rightExpressionType.ord];
     if (resultType === null || resultType === undefined) {
+      if(Config.enable_type_casting) {
+        if(leftExpressionType.isCompatible(Types.INTEGER) || leftExpressionType.isCompatible(Types.REAL)) {
+          if(rightExpressionType.isCompatible(Types.INTEGER) || rightExpressionType.isCompatible(Types.REAL)) {
+            if(operator === Operators.MOD) {
+              return Types.INTEGER;
+            } else if (operator.ord >= 5 && operator.ord <= 10){
+              return Types.BOOLEAN;
+            }
+          }
+        }
+      }
       return Types.UNDEFINED
     }
     return resultType;

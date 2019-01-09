@@ -13,69 +13,69 @@ export class IVProgAssessment {
   }
 
   runTest () {
-    const outerRef = this;
-    return new Promise((resolve, _) => {
-      try {
-        // try and show error messages through domconsole
-        const parser = IVProgParser.createParser(outerRef.textCode);
-        const semantic = new SemanticAnalyser(parser.parseTree());
-        const validTree = semantic.analyseTree();
-        // loop test cases and show messages through domconsole
-        const tests = outerRef.testCases.map( (t, name) => {
-          return outerRef.evaluateTestCase(new IVProgProcessor(validTree), t.input, t.output, name);
-        });
-        Promise.all(tests).then(results => {
-          const count = results.reduce((lastValue, nextValue) =>  lastValue + nextValue, 0);
-          resolve(count / outerRef.testCases.length);
-        }).catch(err => {
-          outerRef.domConsole.err("Erro durante a execução do programa");// try and show error messages through domconsole
-          outerRef.domConsole.err(err.message);
-          resolve(0);
-        })
-      } catch (error) {
-        outerRef.domConsole.err("Erro durante a execução do programa");// try and show error messages through domconsole
-        outerRef.domConsole.err(error.message);
-        resolve(0);
-      }
-    });
+    try {
+      // try and show error messages through domconsole
+      const parser = IVProgParser.createParser(this.textCode);
+      const semantic = new SemanticAnalyser(parser.parseTree());
+      const validTree = semantic.analyseTree();
+      // loop test cases and show messages through domconsole
+      const partialTests = this.testCases.map( (t, name) => {
+        return this.partialEvaluateTestCase(new IVProgProcessor(validTree), t.input, t.output, name);
+      });
+      const testResult = partialTests.reduce((acc, curr) => acc.then(curr), Promise.resolve(0));
+      return testResult.then(total => Promise.resolve(total / this.testCases.length))
+        .catch(err => {
+          this.domConsole.err("Erro durante a execução do programa");// try and show error messages through domconsole
+          this.domConsole.err(err.message);
+          return Promise.resolve(0);
+      });
+    } catch (error) {
+      this.domConsole.err("Erro durante a execução do programa");// try and show error messages through domconsole
+      this.domConsole.err(error.message);
+      return Promise.resolve(0);
+    }
   }
 
-  evaluateTestCase (prog, inputList, outputList, name) {
+  evaluateTestCase (prog, inputList, outputList, name, accumulator) {
     const outerThis = this;
-    return new Promise((resolve, reject) => {
-      const input = new InputTest(inputList);
-      const output = new OutputTest();
-      prog.registerInput(input);
-      prog.registerOutput(output);
-      const startTime = Date.now()
-      prog.interpretAST().then( _ => {
-        const millis = Date.now() - startTime;
-        if (input.inputList.length !== input.index) {
-          outerThis.domConsole.err(`Caso de teste ${name + 1}: Falhou, ainda restam entradas!`);
-          outerThis.domConsole.info(`Levou ${millis}ms`);
-          resolve(1 * (input.index/inputList.length));
-        } else if (output.list.length < outputList.length) {
+    const input = new InputTest(inputList);
+    const output = new OutputTest();
+    prog.registerInput(input);
+    prog.registerOutput(output);
+    const startTime = Date.now()
+    return prog.interpretAST().then( _ => {
+      const millis = Date.now() - startTime;
+      if (input.inputList.length !== input.index) {
+        outerThis.domConsole.err(`Caso de teste ${name + 1}: Falhou, ainda restam entradas!`);
+        outerThis.domConsole.info(`Levou ${millis}ms`);
+        return Promise.resolve(accumulator + 1 * (input.index/inputList.length));
+      } else if (output.list.length < outputList.length) {
+        outerThis.domConsole.err(`Caso de teste ${name + 1}: Falhou <${inputList.join(", ")};${outputList.join(", ")};${output.list.join(", ")}>`);
+        outerThis.domConsole.info(`Levou ${millis}ms`);
+        return Promise.resolve(accumulator + 1 * (output.list.length/outputList.length));
+      } else if (output.list.length > outputList.length) {
+        outerThis.domConsole.err(`Caso de teste ${name + 1}: Falhou <${inputList.join(", ")};${outputList.join(", ")};${output.list.join(", ")}>`);
+        outerThis.domConsole.info(`Levou ${millis}ms`);
+        return Promise.resolve(accumulator + 1 * (outputList.length/output.list.length));
+      } else {
+        const isOk = outerThis.checkOutput(output.list, outputList);
+        if(!isOk) {
           outerThis.domConsole.err(`Caso de teste ${name + 1}: Falhou <${inputList.join(", ")};${outputList.join(", ")};${output.list.join(", ")}>`);
           outerThis.domConsole.info(`Levou ${millis}ms`);
-          resolve(1 * (output.list.length/outputList.length));
-        } else if (output.list.length > outputList.length) {
-          outerThis.domConsole.err(`Caso de teste ${name + 1}: Falhou <${inputList.join(", ")};${outputList.join(", ")};${output.list.join(", ")}>`);
-          outerThis.domConsole.info(`Levou ${millis}ms`);
-          resolve(1 * (outputList.length/output.list.length));
+          return Promise.resolve(accumulator);
         } else {
-          const isOk = outerThis.checkOutput(output.list, outputList);
-          if(!isOk) {
-            outerThis.domConsole.err(`Caso de teste ${name + 1}: Falhou <${inputList.join(", ")};${outputList.join(", ")};${output.list.join(", ")}>`);
-            outerThis.domConsole.info(`Levou ${millis}ms`);
-            resolve(0);
-          } else {
-            outerThis.domConsole.info(`Caso de teste ${name + 1}: OK!`);
-            outerThis.domConsole.info(`Levou ${millis}ms`);
-            resolve(1);
-          }
+          outerThis.domConsole.info(`Caso de teste ${name + 1}: OK!`);
+          outerThis.domConsole.info(`Levou ${millis}ms`);
+          return Promise.resolve(accumulator + 1);
         }
-      }).catch( _ => resolve(0));
-    })
+      }
+    }).catch( _ => Promise.resolve(accumulator));
+  }
+
+  partialEvaluateTestCase (prog, inputList, outputList, name) {
+    let partial = (accumulator) => this.evaluateTestCase(prog, inputList, outputList, name, accumulator)
+    partial = partial.bind(this);
+    return partial;
   }
 
   checkOutput (aList, bList) {

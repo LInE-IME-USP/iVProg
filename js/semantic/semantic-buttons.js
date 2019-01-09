@@ -34,8 +34,6 @@ var button_ready = function() {
     .dropdown()
   ;
 
-  $('.program_signature_text').text(i18n('program'));
-
   // Atualiza a tela do algoritmo
   //renderAlgorithm();
 
@@ -50,18 +48,6 @@ var button_ready = function() {
     /*$('.created_element').css('top', mouseY);
     $('.created_element').css('left', mouseX);*/
 
-  });
-
-
-  //Sortable:
-  Sortable.create(listWithHandle, {
-    handle: '.glyphicon-move',
-    animation: 100,
-    ghostClass: 'ghost',
-    group: 'functions_divs_drag',
-    // onEnd: function (evt) {
-    //   updateSequenceFunctionHandler(evt.oldIndex, evt.newIndex);
-    // }
   });
 
 };

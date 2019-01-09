@@ -1,0 +1,25 @@
+ {  
+ "testcases" : [ 
+{ 
+ "input": ["1", "2"], 
+ "output": ["3"]
+},
+{ 
+ "input": ["4", "5"], 
+ "output": ["9"]
+},
+{ 
+ "input": ["10", "1"], 
+ "output": ["11"]
+},
+{ 
+ "input": ["4", "4"], 
+ "output": ["8"]
+}
+] ,
+"settings_data_types": 
+[{"name":"integer_data_type","value":"on"},{"name":"real_data_type","value":"on"},{"name":"text_data_type","value":"on"},{"name":"boolean_data_type","value":"on"},{"name":"void_data_type","value":"on"}],
+"settings_commands": 
+[{"name":"commands_read","value":"on"},{"name":"commands_write","value":"on"},{"name":"commands_comment","value":"on"},{"name":"commands_attribution","value":"on"},{"name":"commands_functioncall","value":"on"},{"name":"commands_iftrue","value":"on"},{"name":"commands_repeatNtimes","value":"on"},{"name":"commands_while","value":"on"},{"name":"commands_dowhile","value":"on"},{"name":"commands_switch","value":"on"}],
+"settings_functions": 
+[{"name":"functions_creation","value":"on"},{"name":"functions_move","value":"on"}] } 

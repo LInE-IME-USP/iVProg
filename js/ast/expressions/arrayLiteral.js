@@ -25,7 +25,7 @@ export class ArrayLiteral extends Literal {
     if (!(element instanceof ArrayLiteral)){
       return null;
     } else {
-      return element.value[0].value.length;
+      return element.value[0].length;
     }
   }
 
@@ -78,5 +78,10 @@ export class ArrayLiteral extends Literal {
       valid = equalityTest !== -1;
     }
     return valid;
+  }
+
+  toString () {
+    const strList = this.value.map(arrayLiteral => arrayLiteral.toString());
+    return "{" + strList.join(',') + "}";
   }
 }

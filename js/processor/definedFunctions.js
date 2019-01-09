@@ -113,4 +113,16 @@ export const LanguageDefinedFunction = Object.freeze({
     }
     return funcsObject[internalName];
   },
+  getLocalName: (internalName) => {
+    if (internalName.indexOf(".") !== -1) {
+      const names = internalName.split(".");
+      const libName = LanguageService.getCurrentLangLibs()[names[0]];
+      const funName = LanguageService.getCurrentLangFuncs()[names[1]];
+      return `${libName}.${funName}`;
+    } else if (LanguageService.getCurrentLangFuncs()[internalName]) {
+      return LanguageService.getCurrentLangFuncs()[internalName];
+    } else { 
+      return internalName
+    }
+  }
 });

@@ -27,11 +27,11 @@ export function renderMenu (command, ref_object, dom_object, function_obj, size_
 		}
 	}
 
-	var menu_var_or_value = '<div class="ui dropdown menu_var_or_value_dom" data-algo="12"><div class="text"></div><i class="dropdown icon"></i><div class="menu">';
+	var menu_var_or_value = '<div class="ui dropdown menu_var_or_value_dom" data-varmenu="true"><div class="text"></div><i class="dropdown icon"></i><div class="menu">';
 
 	if (ref_object.variable_and_value == VAR_OR_VALUE_TYPES.only_variable) {
 
-		menu_var_or_value = '<div class="ui dropdown menu_var_or_value_dom"><div class="text"></div><i class="dropdown icon"></i><div class="menu menu_only_vars">';
+		menu_var_or_value = '<div class="ui dropdown menu_var_or_value_dom" data-varmenu="true"><div class="text"></div><i class="dropdown icon"></i><div class="menu menu_only_vars">';
 		menu_var_or_value += '</div>';
 	}
 
@@ -55,7 +55,7 @@ export function renderMenu (command, ref_object, dom_object, function_obj, size_
 
 	if (ref_object.variable_and_value == VAR_OR_VALUE_TYPES.only_function) {
 
-		menu_var_or_value = '<div class="ui dropdown menu_var_or_value_dom"><div class="text"></div><i class="dropdown icon"></i><div class="menu menu_only_functions">';
+		menu_var_or_value = '<div class="ui dropdown menu_var_or_value_dom" data-varmenu="true"><div class="text"></div><i class="dropdown icon"></i><div class="menu menu_only_functions">';
 		menu_var_or_value += '</div>';
 	} 
 
@@ -81,6 +81,8 @@ export function renderMenu (command, ref_object, dom_object, function_obj, size_
     menu_var_or_value = $(menu_var_or_value);
 
     dom_object.append(menu_var_or_value);
+    
+    ref_object.dom_object = menu_var_or_value;
 
     addHandlers(command, ref_object, dom_object, menu_var_or_value, function_obj, expression_element);
 
@@ -223,15 +225,6 @@ function isVarInProgram (var_obj, function_obj) {
 	return null;
 }
 
-export function refreshMenu (menu_var_or_value_dom) {
-	console.log('\n\n');
-	console.log(menu_var_or_value_dom);
-	console.log("olá, fui chamado! note alguns DATAS recuperados: ");
-	console.log(menu_var_or_value_dom.data());
-	console.log('\n\n\n');
-
-}
-
 function renderPreviousContent (function_obj, menu_var_or_value, ref_object, dom_object, command, expression_element) {
 
 	
@@ -335,7 +328,8 @@ function variableValueMenuCode (command, variable_obj, dom_object, function_obj,
 			     if ($selectedItem.data('exp')) {
 			     	AttribuitionsManagement.manageExpressionElements(command, variable_obj, dom_object, menu_var_or_value, function_obj, $selectedItem, expression_element);
 			     }
-		      }
+		      },
+		      selectOnKeydown: false
 			});
 		} else {
 
@@ -404,7 +398,8 @@ function variableValueMenuCode (command, variable_obj, dom_object, function_obj,
 			     if ($selectedItem.data('exp')) {
 			     	AttribuitionsManagement.manageExpressionElements(command, variable_obj, dom_object, menu_var_or_value, function_obj, $selectedItem, expression_element);
 			     }
-		      }
+		      },
+		      selectOnKeydown: false
 			});
 		}
 
@@ -413,7 +408,7 @@ function variableValueMenuCode (command, variable_obj, dom_object, function_obj,
 
 		var variable_render = "";
 
-		if (variable_obj.content.dimensions == 1) {
+		if (variable_obj.content.dimensions == 1 && variable_obj.dimensions != 1) {
 
 			variable_render = '<div class="variable_rendered"> <span class="var_name">'+variable_obj.content.name+'</span>';
 
@@ -463,7 +458,8 @@ function variableValueMenuCode (command, variable_obj, dom_object, function_obj,
 			     if ($selectedItem.data('exp')) {
 			     	AttribuitionsManagement.manageExpressionElements(command, variable_obj, dom_object, menu_var_or_value, function_obj, $selectedItem, expression_element);
 			     }
-		      }
+		      },
+		      selectOnKeydown: false
 			});
 
 			if (!variable_obj.column) {
@@ -472,7 +468,7 @@ function variableValueMenuCode (command, variable_obj, dom_object, function_obj,
 
 			variableValueMenuCode(command, variable_obj.column, $(variable_render.find('.column_container')), function_obj, menu_var_or_value, expression_element);
 
-		} else if (variable_obj.content.dimensions == 2) {
+		} else if (variable_obj.content.dimensions == 2 && variable_obj.dimensions != 2) {
 
 			variable_render = '<div class="variable_rendered"> <span class="var_name">'+variable_obj.content.name+'</span>';
 
@@ -523,7 +519,8 @@ function variableValueMenuCode (command, variable_obj, dom_object, function_obj,
 			     if ($selectedItem.data('exp')) {
 			     	AttribuitionsManagement.manageExpressionElements(command, variable_obj, dom_object, menu_var_or_value, function_obj, $selectedItem, expression_element);
 			     }
-		      }
+		      },
+		      selectOnKeydown: false
 			});
 
 			if (!variable_obj.column) {
@@ -587,7 +584,8 @@ function variableValueMenuCode (command, variable_obj, dom_object, function_obj,
 			     if ($selectedItem.data('exp')) {
 			     	AttribuitionsManagement.manageExpressionElements(command, variable_obj, dom_object, menu_var_or_value, function_obj, $selectedItem, expression_element);
 			     }
-		      }
+		      },
+		      selectOnKeydown: false
 			});
 
 		}
@@ -645,7 +643,8 @@ function variableValueMenuCode (command, variable_obj, dom_object, function_obj,
 		     if ($selectedItem.data('exp')) {
 		     	AttribuitionsManagement.manageExpressionElements(command, variable_obj, dom_object, menu_var_or_value, function_obj, $selectedItem, expression_element);
 		     }
-	      }
+	      },
+		  selectOnKeydown: false
 		});
 
 		variable_render.on('click', function(e) {
@@ -782,7 +781,8 @@ function addHandlers (command, ref_object, dom_object, menu_var_or_value, functi
 		     if (command.type == Models.COMMAND_TYPES.repeatNtimes) {
 		     	RepeatNTimesManagement.manageExpressionElements(command, ref_object, dom_object, menu_var_or_value, function_obj, $selectedItem, expression_element);
 		     }
-	      }
+	      },
+		  selectOnKeydown: false
 	    });
 	}
 
@@ -844,7 +844,12 @@ function openInputToFunction (command, ref_object, dom_object, menu_var_or_value
 		dom_object.append(parameters_menu);
 
 		for (var j = 0; j < function_selected.parameters_list.length; j++) {
-			var temp = new Models.VariableValueMenu(VAR_OR_VALUE_TYPES.all, null, null, null, true);
+			var temp;
+			if (function_selected.parameters_list[j].dimensions > 0) {
+				temp = new Models.VariableValueMenu(VAR_OR_VALUE_TYPES.variable_and_function, null, null, null, true, function_selected.parameters_list[j].dimensions);
+			} else {
+				temp = new Models.VariableValueMenu(VAR_OR_VALUE_TYPES.all, null, null, null, true);
+			}
 			ref_object.parameters_list.push(temp);
 			renderMenu(command, temp, parameters_menu.find('.parameter_'+j), function_obj, 2, expression_element);
 		}
@@ -887,7 +892,8 @@ function openInputToFunction (command, ref_object, dom_object, menu_var_or_value
 		     if ($selectedItem.data('exp')) {
 		     	AttribuitionsManagement.manageExpressionElements(command, ref_object, dom_object, menu_var_or_value, function_obj, $selectedItem, expression_element);
 		     }
-	      }
+	      },
+		  selectOnKeydown: false
 		});
 
 	} else {
@@ -945,7 +951,8 @@ function openInputToFunction (command, ref_object, dom_object, menu_var_or_value
 		     if ($selectedItem.data('exp')) {
 		     	AttribuitionsManagement.manageExpressionElements(command, ref_object, dom_object, menu_var_or_value, function_obj, $selectedItem, expression_element);
 		     }
-	      }
+	      },
+		  selectOnKeydown: false
 		});
 	}
 
@@ -963,10 +970,10 @@ function openInputToVariable (command, ref_object, dom_object, menu_var_or_value
 
 	var variable_render = '<div class="variable_rendered"> <span class="var_name">'+variable_selected.name+'</span>';
 
-	if (variable_selected.dimensions == 1) {
+	if (variable_selected.dimensions == 1 && ref_object.dimensions != 1) {
 		variable_render += ' <span>[ </span> <div class="column_container"></div> <span> ]</span>';
 	}
-	if (variable_selected.dimensions == 2) {
+	if (variable_selected.dimensions == 2 && ref_object.dimensions != 2) {
 		variable_render += ' <span>[ </span> <div class="row_container"></div> <span> ]</span> ';
 		variable_render += ' <span>[ </span> <div class="column_container"></div> <span> ]</span>';
 	}
@@ -978,11 +985,11 @@ function openInputToVariable (command, ref_object, dom_object, menu_var_or_value
 
 	dom_object.append(variable_render);
 
-	if (variable_selected.dimensions == 1) {
+	if (variable_selected.dimensions == 1 && ref_object.dimensions != 1) {
 		ref_object.column = new Models.VariableValueMenu(VAR_OR_VALUE_TYPES.all, null, null, null, true);
 		renderMenu(command, ref_object.column, variable_render.find('.column_container'), function_obj, 2, expression_element);
 	}
-	if (variable_selected.dimensions == 2) {
+	if (variable_selected.dimensions == 2 && ref_object.dimensions != 2) {
 		ref_object.row = new Models.VariableValueMenu(VAR_OR_VALUE_TYPES.all, null, null, null, true);
 		renderMenu(command, ref_object.row, variable_render.find('.row_container'), function_obj, 2, expression_element);
 
@@ -1034,7 +1041,8 @@ function openInputToVariable (command, ref_object, dom_object, menu_var_or_value
 	     if (command.type == Models.COMMAND_TYPES.repeatNtimes) {
 	     	RepeatNTimesManagement.manageClearExpressionElements(command, ref_object, dom_object, menu_var_or_value, function_obj, $selectedItem, expression_element);
 	     }
-      }
+      },
+	  selectOnKeydown: false
 	});
 
 	if (command.type == Models.COMMAND_TYPES.attribution) {
@@ -1104,7 +1112,8 @@ function openInputToValue (command, ref_object, dom_object, menu_var_or_value, f
 	     if ($selectedItem.data('exp')) {
 	     	AttribuitionsManagement.manageExpressionElements(command, ref_object, dom_object, menu_var_or_value, function_obj, $selectedItem, expression_element);
 	     }
-      }
+      },
+	  selectOnKeydown: false
 	});
 
 	dom_object.find('.width-dynamic-minus').focusout(function() {
@@ -1135,7 +1144,8 @@ function openInputToValue (command, ref_object, dom_object, menu_var_or_value, f
 	});
 
 	if (command.type == Models.COMMAND_TYPES.comment) {
-		rendered.parent().on('click', function(e) {
+		/*rendered.parent().on('click', function(e) {
+			rendered.parent().off();
 			console.log("TTT14");
 			rendered.remove();
 			rendered.empty();
@@ -1144,7 +1154,7 @@ function openInputToValue (command, ref_object, dom_object, menu_var_or_value, f
 			dom_object.append('<span class="menu_var_or_value_dom"> </span>');
 			
 			openInputToValue(command, ref_object, dom_object, menu_var_or_value, function_obj, expression_element)
-		});
+		});*/
 	}
 
 	rendered.on('click', function(e) {

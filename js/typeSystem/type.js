@@ -1,3 +1,6 @@
+import { Config } from "../util/config";
+import { BaseTypes } from "./baseTypes";
+
 export class Type {
 
   constructor(baseType) {
@@ -10,6 +13,10 @@ export class Type {
 
   get ord () {
     return this.baseType.ord;
+  }
+
+  stringInfo () {
+    return [{type: this.baseType.name, dim: 0}];
   }
 
   isCompatible (another) {

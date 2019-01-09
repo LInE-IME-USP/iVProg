@@ -47,20 +47,20 @@ function convertBoolToString (bool) {
   }
 }
 
-export function convertToString(stoObj, type) {
+export function convertToString(value, type) {
   switch (type.ord) {
     case Types.INTEGER.ord:
-      return stoObj.toString();
+      return value.toString();
     case Types.REAL.ord: {
-      if (stoObj.dp() <= 0) {
-        return stoObj.toFixed(1);  
+      if (value.dp() <= 0) {
+        return value.toFixed(1);  
       } else {
-        return stoObj.toNumber();
+        return value.toNumber();
       }
     }
     case Types.BOOLEAN.ord:
-      return convertBoolToString(stoObj);
+      return convertBoolToString(value);
     default:
-      return stoObj;
+      return value;
   }
 }

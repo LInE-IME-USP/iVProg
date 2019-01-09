@@ -14,6 +14,8 @@ import WatchJS from 'melanke-watchjs';
 import { SemanticAnalyser } from '../processor/semantic/semanticAnalyser';
 import { IVProgAssessment } from '../assessment/ivprogAssessment';
 import * as AlgorithmManagement from './algorithm_sidebar';
+import * as Utils from './utils';
+
 
 import '../Sortable.js';
 
@@ -107,23 +109,23 @@ window.renderAlgorithm = AlgorithmManagement.renderAlgorithm;
 window.insertContext = false;
 window.watchW = WatchJS;
 
-WatchJS.watch(window.program_obj.globals, function () {
+WatchJS.watch(window.program_obj.globals, function(){
   if (window.insertContext) {
-    setTimeout(function () { AlgorithmManagement.renderAlgorithm(); }, 300);
+    setTimeout(function(){ AlgorithmManagement.renderAlgorithm(); }, 300);
     window.insertContext = false;
   } else {
     AlgorithmManagement.renderAlgorithm();
   }
 }, 1);
 
-WatchJS.watch(window.program_obj.functions, function () {
+WatchJS.watch(window.program_obj.functions, function(){
   if (window.insertContext) {
-    setTimeout(function () { AlgorithmManagement.renderAlgorithm(); }, 300);
+    setTimeout(function(){ AlgorithmManagement.renderAlgorithm(); }, 300);
     window.insertContext = false;
   } else {
     AlgorithmManagement.renderAlgorithm();
   }
-}, 1);
+}, 0);
 
 function addFunctionHandler() {
 
@@ -363,6 +365,9 @@ export function renderFunction(function_obj) {
     })
     .on('drop', function (e, bundle) {
       e.preventDefault();
+      if (program_obj.dataTransfer == null)
+        return;
+
       if (bundle) {
         e.clientX = bundle.clientX;
         e.clientY = bundle.clientY;
@@ -382,6 +387,8 @@ export function renderFunction(function_obj) {
         CommandsManagement.prepareManageCommand(function_obj, $(e.target).closest('.function_div'), e, "functioncall", data.content);
       }
       //program_obj.dataTransfer;
+
+      program_obj.dataTransfer = null;
     }).on('click', function (e) {
       if (window.ghostNode) {
         console.log("drop click");
@@ -632,16 +639,18 @@ function updateSequenceFunction(oldIndex, newIndex) {
   program_obj.functions.splice(newIndex, 0, program_obj.functions.splice(oldIndex, 1)[0]);
 }
 
-function runCodeAssessment() {
-  toggleConsole(true);
-
+function runCodeAssessment () {
+  
   window.studentGrade = null;
   studentTemp = null;
   const strCode = CodeManagement.generate();
   if (strCode == null) {
     return;
   }
-  if (domConsole == null)
+
+  toggleConsole(true);
+
+  if(domConsole == null)
     domConsole = new DOMConsole("#ivprog-term");
   $("#ivprog-term").slideDown(500);
   const runner = new IVProgAssessment(strCode, testCases, domConsole);
@@ -652,8 +661,8 @@ function runCodeAssessment() {
     } else {
       is_iassign = false;
     }
-  }).catch(err => domConsole.err(err.message));
-
+  }).catch( err => domConsole.err(err.message));
+  
 }
 
 function runCode() {

@@ -1,8 +1,31 @@
 import { Modes } from './../modes';
+import { Types } from "./../../typeSystem/types";
+import { StoreObject } from './storeObject';
 
 export class Store {
 
-  constructor() {
+  static canImplicitTypeCast (castType, sourceType) {
+    if (castType.isCompatible(Types.INTEGER) || castType.isCompatible(Types.REAL)) {
+      if (sourceType.isCompatible(Types.INTEGER) || sourceType.isCompatible(Types.REAL)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  static doImplicitCasting (castType, stoObj) {
+    if(!Store.canImplicitTypeCast(castType, stoObj.type)) {
+      throw new Error("!!!Critical error: attempted to type cast invalid types");
+    }
+    if(Types.INTEGER.isCompatible(castType)) {
+      return new StoreObject(castType, stoObj.value.trunc());
+    } else {
+      return new StoreObject(castType, stoObj.value);
+    }
+  }
+
+  constructor(name) {
+    this.name = name;
     this.store = {};
     this.nextStore = null;
     this.mode = Modes.RUN; 
@@ -17,7 +40,6 @@ export class Store {
       if (this.nextStore !== null) {
         return this.nextStore.applyStore(id);
       } else {
-        // TODO: better error message
         throw new Error(`Variable ${id} not found.`);
       }
     }

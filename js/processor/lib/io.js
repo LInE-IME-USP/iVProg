@@ -1,22 +1,12 @@
 import { StoreObject } from './../store/storeObject';
 import * as Commands from './../../ast/commands';
-import {toInt, toString, toBool, toReal} from './../../typeSystem/parsers';
+import {toInt, toString, toBool, toReal, convertToString} from './../../typeSystem/parsers';
 import { Types } from './../../typeSystem/types';
 
 export function createOutputFun () {
   const writeFunction = function (store, _) {
     const val = store.applyStore('p1');
-    if(val.type.isCompatible(Types.INTEGER)) {
-      this.output.sendOutput(val.value.toString());
-    } else if (val.type.isCompatible(Types.REAL)) {
-      if (val.value.dp() <= 0) {
-        this.output.sendOutput(val.value.toFixed(1));  
-      } else {
-        this.output.sendOutput(val.value.toString());
-      }
-    } else {
-      this.output.sendOutput(val.value);
-    }
+    this.output.sendOutput(convertToString(val.value, val.type));
     return Promise.resolve(store);
   }
   const block = new Commands.CommandBlock([], [new Commands.SysCall(writeFunction)]);

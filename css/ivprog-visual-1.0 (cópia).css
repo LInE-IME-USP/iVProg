@@ -29,6 +29,7 @@ body {
 
 .main_title h2 {
 	margin: 0;
+	color: white;
 }
 .main_title span {
 	font-size: 80%;
@@ -153,7 +154,7 @@ body {
 .expression_operand_1, .expression_operand_2, .operator, .div_comment_text, .value_rendered, .parameters_function_called, .parameters_function_called div, .expression_elements,
 .expression_element, .var_rendered, .menu_add_item, .component_element, .component_element, .conditional_expression, .variable_attribution, .attribution_expression, .var_value_expression,
 .incrementation_field, .incrementation_variable, .first_operand, .operator, .second_operand, .variable_to_switch, .variable_case, .button_remove_case, .editing_name_var, .parameter_div_edit,
-.all_elements_write, .container_var_element_control, .inline_add_command {
+.all_elements_write, .container_var_element_control, .inline_add_command, .restart_expression, .div_parent_handler, .div_drag_writer {
 	display: inline;
 }
 
@@ -279,11 +280,12 @@ div.buttons_manage_columns {
 }
 .ui.comment, .ui.reader, .ui.writer, .ui.attribution, .ui.iftrue, .ui.repeatNtimes, .ui.whiletrue, .ui.dowhiletrue, .ui.switch, .ui.functioncall,
 .ui.return {
-	border: 1px solid gray;
 	padding: 5px;
-	border-radius: 5px;
 	margin: 5px;
-	background: #f9f9f9;
+	background: #f7f2c9;
+    border: 2px solid #4d4be3;
+    border-radius: 0.25em;
+    box-shadow: 1px 1px;
 }
 .ui.repeatNtimes .separator_character {
 	margin-right: 10px;
@@ -353,7 +355,10 @@ div.buttons_manage_columns {
 
 .ui.icon.red.exclamation.triangle.error_icon {
 	float: left;
-    margin-left: -30px;
+    margin-left: -1.6em;
+    z-index: 10;
+    position: absolute;
+    font-size: 1.5em;
 }
 
 .height_100 {
@@ -768,11 +773,6 @@ div.function_name_div_updated:active,
 	opacity: 1 !important;
 }
 
-.command_container {
-    background: #e9dede !important;
-	border: 2px solid #e76060 !important;
-    border-radius: 0.25em !important;
-}
 .command_drag {
 	cursor: move;
 }
@@ -783,4 +783,76 @@ div.function_name_div_updated:active,
 .commands_list_div.over_command_drag {
 	border: 3px dotted blue !important;
 	padding: 0.2em !important;
+}
+.ui.segment:first-child {
+	margin-top: 1em !important;
+}
+div.ui.checkbox.transition.visible {
+	margin-bottom: 1em;
+}
+.var_menu_select_content_error {
+	background: #ff0000;
+    color: white !important;
+    border: 2px solid #3125ee;
+}
+.ui.comment:hover, .ui.reader:hover, .ui.writer:hover, .ui.attribution:hover, .ui.functioncall:hover,
+.ui.return:hover {
+    background: #f2e67f;
+}
+
+.ui.iftrue:hover, .ui.repeatNtimes:hover, .ui.whiletrue:hover, .ui.dowhiletrue:hover, .ui.switch:hover {
+	background: #c6c8f2;
+}
+
+.ui.iftrue, .ui.repeatNtimes, .ui.whiletrue, .ui.dowhiletrue, .ui.switch {
+    background: #787fe721;
+}
+.ui.popup.invalid-identifier {
+	background: #ff3232;
+    color: white;
+    font-weight: bold;
+    border: 1px solid black;
+}
+.ui.popup.invalid-identifier:before {
+	background: #ff3232;
+	border-right: 1px solid black;
+    border-bottom: 1px solid black;
+}
+.ui.popup.invalid-identifier i.ui.icon.inverted.exclamation.triangle.yellow {
+	margin-left: -.5em;
+    margin-right: .4em;
+}
+.ui.repeatNtimes.command_container .ui.block_commands, 
+.ui.whiletrue.command_container .ui.block_commands {
+	margin-top: .8em;
+}
+
+.ui.restart_expression {
+	margin-left: .4em;
+    cursor: pointer;
+    color: brown;
+}
+
+.div_parent_handler {
+	padding-top: 5px;
+    padding-bottom: 6px;
+    background: #7a7acf;
+    border-radius: 4px;
+}
+
+.div_parent_handler i.times {
+	margin-left: .3em;
+	cursor: pointer;
+}
+
+.div_parent_handler i.ellipsis {
+	cursor: move;
+}
+
+.div_parent_handler i.handler {
+	opacity: 0;
+}
+
+.div_parent_handler:hover i.handler {
+	opacity: 1;
 }
