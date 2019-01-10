@@ -13,14 +13,14 @@ import { IVProgParser } from './../ast/ivprogParser';
 import { IVProgProcessor } from './../processor/ivprogProcessor';
 import { LanguageService } from '../services/languageService';
 
-var block_render = false;
+window.block_render = false;
 
 export function renderAlgorithm () {
 
-	if (block_render) {
+	if (window.block_render) {
 		return;
 	}
-	block_render = true;
+	window.block_render = true;
 
  	$('.all_functions').children().off();
 	$('.all_functions').empty();
