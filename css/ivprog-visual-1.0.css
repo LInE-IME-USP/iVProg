@@ -893,3 +893,7 @@ div.ui.checkbox.transition.visible {
 .tabular > .item:not(.active) {
 	color: white !important;
 }
+
+button.fluid.ui.container.segment.labeled.icon.button.list-group-item.menu-item {
+	text-align: left;
+}

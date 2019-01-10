@@ -510,10 +510,6 @@ var is_iassign = false;
 
 $(document).ready(function () {
 
-  for (var i = 0; i < program.functions.length; i++) {
-    renderFunction(program.functions[i]);
-  }
-
   var time_show = 750;
   $('.visual_coding_button').popup({
     content: LocalizedStrings.getUI("tooltip_visual"),
@@ -1348,22 +1344,22 @@ initVisualUI = function () {
   });
 
   var commands = [
-    { type: Models.COMMAND_TYPES.reader, icon: "download", text: LocalizedStrings.getUI('text_read_var') },
-    { type: Models.COMMAND_TYPES.writer, icon: "upload", text: LocalizedStrings.getUI('text_write_var') },
-    { type: Models.COMMAND_TYPES.comment, icon: "quote left", text: LocalizedStrings.getUI('text_comment') },
-    { type: Models.COMMAND_TYPES.attribution, icon: "arrow left", text: LocalizedStrings.getUI('text_attribution') },
-    { type: Models.COMMAND_TYPES.iftrue, icon: "random", text: LocalizedStrings.getUI('text_iftrue') },
-    { type: Models.COMMAND_TYPES.repeatNtimes, icon: "sync", text: LocalizedStrings.getUI('text_repeatNtimes') },
-    { type: Models.COMMAND_TYPES.whiletrue, icon: "sync", text: LocalizedStrings.getUI('text_whiletrue') },
-    { type: Models.COMMAND_TYPES.dowhiletrue, icon: "sync", text: LocalizedStrings.getUI('text_dowhiletrue') },
-    { type: Models.COMMAND_TYPES.switch, icon: "list", text: LocalizedStrings.getUI('text_switch') },
-    { type: Models.COMMAND_TYPES.return, icon: "reply", text: LocalizedStrings.getUI('text_btn_return') },
+    { type: Models.COMMAND_TYPES.reader, icon: "download", text: LocalizedStrings.getUI('text_read_var'), alt: "Solicita a introdução de um valor pelo teclado e grava em uma variável."},
+    { type: Models.COMMAND_TYPES.writer, icon: "upload", text: LocalizedStrings.getUI('text_write_var'), alt: "Imprime o conteúdo de uma variável, valor ou função. Pode somar várias variáveis ou concatenar sequências de texto." },
+    { type: Models.COMMAND_TYPES.comment, icon: "quote left", text: LocalizedStrings.getUI('text_comment'), alt: "Permite a inserção de comentários do autor. Serão desconsiderados na execução." },
+    { type: Models.COMMAND_TYPES.attribution, icon: "arrow left", text: LocalizedStrings.getUI('text_attribution'), alt: "Resolve uma expressão e armazena em uma variável." },
+    { type: Models.COMMAND_TYPES.iftrue, icon: "random", text: LocalizedStrings.getUI('text_iftrue'), alt: "Avalia uma condição como verdadeira ou falsa, escolhendo entre dois fluxos dependendo do valor." },
+    { type: Models.COMMAND_TYPES.repeatNtimes, icon: "sync", text: LocalizedStrings.getUI('text_repeatNtimes'), alt: "Repete um bloco de código N vezes." },
+    { type: Models.COMMAND_TYPES.whiletrue, icon: "sync", text: LocalizedStrings.getUI('text_whiletrue'), alt: "Enquanto a condição for verdadeira, repete um bloco de código, avaliando a condição antes de cada execução." },
+    { type: Models.COMMAND_TYPES.dowhiletrue, icon: "sync", text: LocalizedStrings.getUI('text_dowhiletrue'), alt: "Enquanto a condição for verdadeira, repete um bloco de código, avaliando a condição depois de cada execução." },
+    { type: Models.COMMAND_TYPES.switch, icon: "list", text: LocalizedStrings.getUI('text_switch'), alt: "Avalia o valor de uma expressão e escolhe um bloco de código para executar dependendo do valor." },
+    { type: Models.COMMAND_TYPES.return, icon: "reply", text: LocalizedStrings.getUI('text_btn_return'), alt: "Retorna o valor ao término de uma função." },
     //{ type: Models.COMMAND_TYPES.break, icon: "stop", text: LocalizedStrings.getUI('text_break') },
     //{type: Models.COMMAND_TYPES.functioncall, icon: "hand point right", text: LocalizedStrings.getUI('text_functioncall')},
   ];
 
   for (var i = commands.length-1; i >= 0; i--) {
-    var command = '<button class="fluid ui container segment labeled icon button list-group-item menu-item" draggable="true"  data-command="' + commands[i].type + '"><i class="' + commands[i].icon + ' icon"></i> ' + commands[i].text + '</button>';
+    var command = '<button class="fluid ui container segment labeled icon button list-group-item menu-item" title="'+ commands[i].alt + '" draggable="true"  data-command="' + commands[i].type + '"><i class="' + commands[i].icon + ' icon"></i> ' + commands[i].text + '</button>';
     command = $(command);
     command.on('dragstart', function (evt) {
       //evt.originalEvent.dataTransfer.setData("text",$(this).data('command'));
