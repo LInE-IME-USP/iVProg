@@ -535,8 +535,6 @@ $( document ).ready(function() {
     }
   });
 
-  renderAlgorithm();
-
 });
 
 function updateSequenceParameters (oldIndex, newIndex, function_obj) {
@@ -577,7 +575,7 @@ function runCodeAssessment () {
     } else {
       is_iassign = false;
     }
-  }).catch( err => domConsole.err(err.message));
+  }).catch( err => console.log(err));
   
 }
 

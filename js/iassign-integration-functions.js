@@ -30,7 +30,12 @@ function getAnswer () {
         // Montar o retorno com a resposta do aluno
         var contentToSend = previousContent.split("\n::algorithm::")[0];
         contentToSend += '\n::algorithm::\n';
-        contentToSend += JSON.stringify(window.program_obj);
+        contentToSend += JSON.stringify(window.program_obj, function(key, value) {
+            if (key == 'dom_object') {
+                return;
+            }
+            return value; 
+        });
 
         contentToSend += '\n::logs::';
         contentToSend += getTrackingLogs();
@@ -47,10 +52,17 @@ function getAnswer () {
 
         if ($("input[name='include_algo']").is(':checked')) {
             ret += '\n::algorithm::\n';
-            ret += JSON.stringify(window.program_obj);
+            ret += JSON.stringify(window.program_obj, function(key, value) {
+                
+                if (key == 'dom_object') {
+                    return;
+                }
+                return value; 
+            });
         }
 
         return ret;
+
     }
 }
 
@@ -123,6 +135,9 @@ function getiLMContent () {
             previousContent = data;
             prepareActivityToEdit(data);
         }
+
+        window.block_render = false;
+        renderAlgorithm();
     });
 }
 
@@ -432,7 +447,7 @@ $( document ).ready(function() {
         orderIcons();
         orderWidth();
     }
-
+    renderAlgorithm();
 });
 
 function orderWidth() {

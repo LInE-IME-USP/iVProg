@@ -77,7 +77,7 @@ function addHandlers (command, function_obj, writer_dom) {
 	    handle: '.ellipsis',
 	    animation: 100,
 	    ghostClass: 'ghost',
-	    group: 'writer',
+	    group: 'writer_' + Math.floor(Math.random() * 10000000),
 	    draggable: '.div_parent_handler',
 	    onEnd: function (evt) {
 	    	

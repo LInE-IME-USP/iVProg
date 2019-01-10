@@ -176,7 +176,7 @@ module.exports =
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// Generated from /tmp/tmp-466621eJzKCqIzpf/ivprog.g4 by ANTLR 4.7
+// Generated from /tmp/tmp-4669TPRc9fhGuNBI/ivprog.g4 by ANTLR 4.7
 // jshint ignore: start
 var antlr4 = __webpack_require__(2);
 
@@ -767,7 +767,7 @@ module.exports =
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// Generated from /tmp/tmp-4666lZ30R1K3nH8H/ivprog.g4 by ANTLR 4.7
+// Generated from /tmp/tmp-466941BXYZlX19TS/ivprog.g4 by ANTLR 4.7
 // jshint ignore: start
 var antlr4 = __webpack_require__(2);
 
@@ -1421,7 +1421,7 @@ module.exports =
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// Generated from /tmp/tmp-4666V9aIMKyWvsHd/ivprog.g4 by ANTLR 4.7
+// Generated from /tmp/tmp-466977hYKcv8VRFx/ivprog.g4 by ANTLR 4.7
 // jshint ignore: start
 var antlr4 = __webpack_require__(2);
 
@@ -3613,9 +3613,7 @@ var IVProgAssessment = exports.IVProgAssessment = function () {
           return _this.partialEvaluateTestCase(new _ivprogProcessor.IVProgProcessor(validTree), t.input, t.output, name);
         });
         var testResult = partialTests.reduce(function (acc, curr) {
-          return acc.then(function (v) {
-            return curr(v);
-          });
+          return acc.then(curr);
         }, Promise.resolve(0));
         return testResult.then(function (total) {
           return Promise.resolve(total / _this.testCases.length);
@@ -16698,13 +16696,13 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var block_render = false;
+window.block_render = false;
 
 function renderAlgorithm() {
-	if (block_render) {
+	if (window.block_render) {
 		return;
 	}
-	block_render = true;
+	window.block_render = true;
 
 	(0, _jquery2.default)('.all_functions').children().off();
 	(0, _jquery2.default)('.all_functions').empty();
@@ -16721,7 +16719,7 @@ function renderAlgorithm() {
 	}
 
 	setTimeout(function () {
-		block_render = false;
+		window.block_render = false;
 	}, 500);
 }
 
@@ -22155,7 +22153,7 @@ function addHandlers(command, function_obj, writer_dom) {
 		handle: '.ellipsis',
 		animation: 100,
 		ghostClass: 'ghost',
-		group: 'writer',
+		group: 'writer_' + Math.floor(Math.random() * 10000000),
 		draggable: '.div_parent_handler',
 		onEnd: function onEnd(evt) {
 
@@ -22785,8 +22783,6 @@ var is_iassign = false;
       updateSequenceGlobals(evt.oldIndex, evt.newIndex);
     }
   });
-
-  renderAlgorithm();
 });
 
 function updateSequenceParameters(oldIndex, newIndex, function_obj) {
@@ -22827,7 +22823,7 @@ function runCodeAssessment() {
       is_iassign = false;
     }
   }).catch(function (err) {
-    return domConsole.err(err.message);
+    return console.log(err);
   });
 }
 
