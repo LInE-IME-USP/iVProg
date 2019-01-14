@@ -774,7 +774,7 @@ div.function_name_div_updated:active,
 }
 
 .command_drag {
-	cursor: move;
+	/*cursor: move;*/
 }
 .command_container.over_command_drag {
 	border: 3px dotted blue !important;

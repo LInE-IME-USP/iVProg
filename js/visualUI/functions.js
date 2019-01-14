@@ -20,6 +20,7 @@ import '../Sortable.js';
 
 var counter_new_functions = 0;
 var counter_new_parameters = 0;
+var ivprog_version = '2019_01_13 Build 18_55'
 
 let studentTemp = null;
 let domConsole = null;
@@ -116,7 +117,7 @@ WatchJS.watch(window.program_obj.functions, function(){
   } else {
     AlgorithmManagement.renderAlgorithm();
   }
-}, 0);
+}, 1);
 
 function addFunctionHandler () {
 
@@ -368,7 +369,7 @@ export function renderFunction (function_obj) {
     }
   });
 
-  Sortable.create(appender.find(".commands_list_div")[0], {
+  /*Sortable.create(appender.find(".commands_list_div")[0], {
     handle: '.command_drag',
     animation: 100,
     ghostClass: 'ghost',
@@ -376,7 +377,7 @@ export function renderFunction (function_obj) {
     onEnd: function (evt) {
        //updateSequenceLocals(evt.oldIndex, evt.newIndex, function_obj);
     }
-  });
+  });*/
 
   if (!function_obj.is_main) {
     Sortable.create(appender.find(".container_parameters_list")[0], {
@@ -493,7 +494,7 @@ $( document ).ready(function() {
     }
   });
   $('.help_button').popup({
-    content : LocalizedStrings.getUI("tooltip_help") + ' - ' + LocalizedStrings.getUI("text_ivprog_version"),
+    content : LocalizedStrings.getUI("tooltip_help") + ' - ' + LocalizedStrings.getUI("text_ivprog_version") + ' ' + ivprog_version,
     delay: {
       show: time_show,
       hide: 0
@@ -770,6 +771,11 @@ function renderParameter (function_obj, parameter_obj, function_container) {
 }
 
 function updateParameterName (parameter_var, new_name, parameter_obj_dom, function_obj) {
+  
+  if (parameter_var.name == new_name) {
+    return;
+  }
+
   if (isValidIdentifier(new_name)) {
     if (variableNameAlreadyExists(new_name, function_obj)) {
       Utils.renderErrorMessage(parameter_obj_dom.find('.parameter_div_edit'), LocalizedStrings.getUI('inform_valid_variable_duplicated'));
@@ -803,6 +809,11 @@ function variableNameAlreadyExists (name_var, function_obj) {
 }
 
 function updateFunctionName (function_var, new_name, function_obj_dom) {
+  
+  if (function_var.name == new_name) {
+    return;
+  }
+  
   if (isValidIdentifier(new_name)) {
     if (functionNameAlreadyExists(new_name)) {
       Utils.renderErrorMessage(function_obj_dom.find('.function_name_div'), LocalizedStrings.getUI('inform_valid_name_duplicated'));

@@ -30,6 +30,10 @@ export function addVariable (function_obj, function_container, is_in_click = fal
 
 function updateName (variable_obj, new_name, variable_obj_dom, function_obj) {
 
+	if (variable_obj.name == new_name) {
+		return;
+	}
+
 	if (isValidIdentifier(new_name)) {
 		if (variableNameAlreadyExists(new_name, function_obj)) {
 			Utils.renderErrorMessage(variable_obj_dom.find('.editing_name_var'), LocalizedStrings.getUI('inform_valid_variable_duplicated'));

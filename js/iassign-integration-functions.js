@@ -296,6 +296,10 @@ function prepareActivityCreation () {
     prepareTableSettings(config_div.find('.content'));
 
     prepareTableTestCases(cases_test_div.find('.content'));
+
+    if (inIframe()) {
+        $('.ui.styled.accordion').css('width', '96%');
+    }
 }
 
 function prepareTableTestCases (div_el) {
@@ -458,7 +462,6 @@ function orderWidth() {
 function orderIcons() {
     $('.ui.one.column.doubling.stackable.grid.container').css('display', 'none');
     $('.only_in_frame').css('display', 'block');
-    
 }
 
 

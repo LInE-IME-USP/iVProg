@@ -138,5 +138,5 @@
   "$castInt": "como_inteiro",
   "$castBool": "como_logico",
   "$castString": "como_cadeia",
-  "text_ivprog_version":"Versão 2018_12_19 Build 13_18"
+  "text_ivprog_version":"Versão"
 }
