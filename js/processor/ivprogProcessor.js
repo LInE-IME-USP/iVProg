@@ -232,10 +232,10 @@ export class IVProgProcessor {
       return this.executeReturn(store, cmd);
     } else if (cmd instanceof Commands.IfThenElse) {
       return this.executeIfThenElse(store, cmd);
-    } else if (cmd instanceof Commands.While) {
-      return this.executeWhile(store, cmd);
     } else if (cmd instanceof Commands.DoWhile) {
       return this.executeDoWhile(store, cmd);
+    } else if (cmd instanceof Commands.While) {
+      return this.executeWhile(store, cmd);
     } else if (cmd instanceof Commands.For) {
       return this.executeFor(store, cmd);
     } else if (cmd instanceof Commands.Switch) {
