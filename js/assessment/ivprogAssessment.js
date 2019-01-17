@@ -69,13 +69,15 @@ export class IVProgAssessment {
           return Promise.resolve(accumulator + 1);
         }
       }
-    }).catch( _ => Promise.resolve(accumulator));
+    }).catch( error => {
+      this.domConsole.err(`Execução do caso de teste ${name + 1} falhou!`);// try and show error messages through domconsole
+      this.domConsole.err(error.message);
+      return Promise.resolve(accumulator);
+    });
   }
 
   partialEvaluateTestCase (prog, inputList, outputList, name) {
-    let partial = (accumulator) => this.evaluateTestCase(prog, inputList, outputList, name, accumulator)
-    partial = partial.bind(this);
-    return partial;
+    return this.evaluateTestCase.bind(this, prog, inputList, outputList, name);
   }
 
   checkOutput (aList, bList) {

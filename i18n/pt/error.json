@@ -81,5 +81,6 @@
   "invalid_array_literal_line_full": "Erro na linha $0: esperava-se $1 linhas mas encontrou $2.",
   "invalid_array_literal_line": "Esperava-se $0 linhas mas encontrou $1.",
   "invalid_array_literal_column_full": "Erro na linha $0: esperava-se $1 colunas mas encontrou $2.",
-  "invalid_array_literal_column": "Esperava-se $0 colunas mas encontrou $1."
+  "invalid_array_literal_column": "Esperava-se $0 colunas mas encontrou $1.",
+  "exceeded_input_request": "A quantidade de leituras requisitadas execedeu a quantidade de entradas disponíveis."
 }
