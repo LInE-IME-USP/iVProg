@@ -82,5 +82,7 @@
   "invalid_array_literal_line": "Esperava-se $0 linhas mas encontrou $1.",
   "invalid_array_literal_column_full": "Erro na linha $0: esperava-se $1 colunas mas encontrou $2.",
   "invalid_array_literal_column": "Esperava-se $0 colunas mas encontrou $1.",
-  "exceeded_input_request": "The amount of requests exceeded the amount of available inputs"
+  "exceeded_input_request": "The amount of requests exceeded the amount of available inputs",
+  "test_case_few_reads": "Test case $0: Failed, there are input data remainig!",
+  "test_case_failed": "Test case $0: Failed, inputs:<$1>; expected output:<$2>; output:<$3>"
 }
