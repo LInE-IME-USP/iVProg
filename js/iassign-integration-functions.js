@@ -425,8 +425,8 @@ function getTrackingLogs () {
     var ret = "";
     for (var i = 0; i < trackingMatrix.length; i++) {
         ret += "\n" + trackingMatrix[i][0] + "," + trackingMatrix[i][1] + "," + trackingMatrix[i][2];
-        if (trackingMatrix[i][2] === 1) {
-            ret += ',"' + trackingMatrix[i][3] + '"';
+        if (trackingMatrix[i][3] === 1) {
+            ret += ',' + trackingMatrix[i][3] + ',"' + trackingMatrix[i][4] + '"';
         }
     }
     return ret;
@@ -439,7 +439,7 @@ function adCoords(e, code){
     var x = e.pageX; 
     var y = e.pageY;
     if (code === 1) {
-        return [x, y, code, e.target.classList['value']];
+        return [new Date().getTime(), x, y, code, e.target.classList['value']];
     } else {
         return [x, y, code];
     }

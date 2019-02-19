@@ -647,12 +647,12 @@ div.function_name_div_updated:active,
 
 .global_var .circle.add_global_button, .global_var i.back,
 .ui.add_var_context .icon.plus.circle, .ui.add_var_context .icon.circle.back,
-.ui.inline_add_command .icon.plus.circle, .ui.inline_add_command .icon.circle.back {
+.ui.rail .icon.plus.circle, .ui.rail .icon.circle.back {
 	position: absolute;
 }
 .global_var .circle.add_global_button,
 .ui.add_var_context .icon.plus.circle,
-.inline_add_command .icon.plus.circle {
+.ui.rail .icon.plus.circle {
 	z-index: 10;
 	color: #bf80d4!important;
 	cursor: pointer;
@@ -660,14 +660,14 @@ div.function_name_div_updated:active,
 }
 .global_var i.back,
 .ui.add_var_context .icon.circle.back,
-.inline_add_command .icon.circle.back {
+.ui.rail .icon.circle.back {
 	z-index: 9;
 	color: white !important;
 }
 .ui.add_var_context{
 	margin-left: -4px;
 }
-.inline_add_command {
+.ui.rail {
 	color: #ab0054 !important;
 }
 
@@ -713,11 +713,11 @@ div.function_name_div_updated:active,
 	color: yellow;
 	font-size: 125%;
 }
-.inline_add_command .icon.plus.circle {
+.ui.rail .icon.plus.circle {
 	color: #ec9962 !important;
 }
-.inline_add_command .icon.plus.circle, 
-.inline_add_command .icon.circle.back,
+.ui.rail .icon.plus.circle, 
+.ui.rail .icon.circle.back,
 .ui.add_var_context .icon.plus.circle, 
 .ui.add_var_context .icon.circle.back,
 .global_var .icon.plus.circle, 
@@ -725,8 +725,13 @@ div.function_name_div_updated:active,
 	left: 1.8em !important;
 	margin-top: 1.5em !important;
 }
+
+.ui.rail .icon.plus.circle, 
+.ui.rail .icon.circle.back {
+	left: 1.3em !important;
+}
+
 .ui.icon.button.dropdown.menu_commands {
-    float: left;
     color: white;
     margin-left: -4px;
     padding: 8px;
@@ -774,7 +779,7 @@ div.function_name_div_updated:active,
 }
 
 .command_drag {
-	/*cursor: move;*/
+	cursor: move;
 }
 .command_container.over_command_drag {
 	border: 3px dotted blue !important;
@@ -855,4 +860,9 @@ div.ui.checkbox.transition.visible {
 
 .div_parent_handler:hover i.handler {
 	opacity: 1;
+}
+
+.ui.block_commands {
+    min-height: 20px !important;
+    padding-top: 5px !important;
 }

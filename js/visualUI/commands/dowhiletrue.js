@@ -22,6 +22,7 @@ export function renderCommand (command, function_obj) {
 
 	var el = $(ret);
 	el.data('command', command);
+	el.find('.block_commands').data('command', command);
 
 	addHandlers(command, function_obj, el);
 

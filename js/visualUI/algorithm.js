@@ -19,7 +19,11 @@ export function renderAlgorithm () {
 	if (window.block_render) {
 		return;
 	}
+	if (window.draging) {
+		return;
+	}
 	window.block_render = true;
+	console.log('rendering algorithm');
 
  	$('.all_functions').children().off();
 	$('.all_functions').empty();

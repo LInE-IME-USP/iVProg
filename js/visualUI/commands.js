@@ -237,13 +237,6 @@ export function renderCommand (command, element_reference, before_after_inside, 
 			break;
 	}
 
-	createdElement.find('.button_remove_command').mouseover(function() {
-    	createdElement.css({'opacity':'.8'});
-	});
-	createdElement.find('.button_remove_command').mouseout(function() { 
-    	createdElement.css({'opacity':'1'});
-	});
-
 }
 
 export function genericCreateCommand (command_type) {
@@ -461,6 +454,8 @@ function manageCommand (function_obj, function_container, event, command_type) {
 	
 	has_element_created_draged = false;
 	which_element_is_draged = null;
+
+	renderAlgorithm();
 }
 
 function insertCommandInBlockHierar (el, event, function_obj, command_type, hier_dom, hier_obj) {
@@ -503,8 +498,6 @@ function insertCommandInBlockHierar (el, event, function_obj, command_type, hier
 		findBeforeOrAfterCommandToAddInsertBlock(el, event, function_obj, command_type);
 	}
 }
-
-
 
 function findNearbyCommandToAddInBlockScope (el, event, node_list_commands, function_obj, command_type, command_parent) {
 
@@ -552,8 +545,6 @@ function findNearbyCommandToAddInBlockScope (el, event, node_list_commands, func
 		renderCommand(recentComand, elemento_menor_distancia, 1, function_obj);
 	}
 }
-
-
 
 function findBeforeOrAfterCommandToAddInsertBlock (el, event, function_obj, command_type) {
 

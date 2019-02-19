@@ -276,10 +276,11 @@ function renderFunctionReturn (function_obj, function_element) {
     function_element.find('.function_return').append(ret);
 }
 
+var cont = 0;
 
 export function renderFunction (function_obj) {
   
-  var appender = '<div class="ui secondary segment function_div list-group-item">';
+  var appender = '<div class="ui secondary segment function_div list-group-item function_cont_'+cont+'">';
 
   if (function_obj.function_comment) {
     //appender += renderComment(function_obj.function_comment, sequence, true, -1);
@@ -309,7 +310,13 @@ export function renderFunction (function_obj) {
 
   appender += '<div class="ui top attached segment variables_list_div"></div>';
 
-  appender += '<div class="ui inline_add_command"><i class="icon plus circle purple"></i><i class="icon circle white back"></i><div class="ui icon button dropdown menu_commands orange" style="float: left;" ><i class="icon code"></i> <div class="menu"> ';
+  
+
+  appender += '<div class="ui bottom attached segment commands_list_div commands_cont_'+cont+'">'
+        + '<div class="ui rail" style="width: 35px; margin-left: -36px;"><div class="ui sticky sticky_cont_'+cont+'" style="top: 50px !important;">';
+
+
+  appender += '<i class="icon plus circle purple"></i><i class="icon circle white back"></i><div class="ui icon button dropdown menu_commands orange" ><i class="icon code"></i> <div class="menu"> ';
   appender += '<a class="item" data-command="'+Models.COMMAND_TYPES.reader+'"><i class="download icon"></i> ' +LocalizedStrings.getUI('text_read_var')+ '</a>'
         + '<a class="item" data-command="'+Models.COMMAND_TYPES.writer+'"><i class="upload icon"></i> '+LocalizedStrings.getUI('text_write_var')+'</a>'
         + '<a class="item" data-command="'+Models.COMMAND_TYPES.comment+'"><i class="quote left icon"></i> '+LocalizedStrings.getUI('text_comment')+'</a>'
@@ -321,9 +328,11 @@ export function renderFunction (function_obj) {
         + '<a class="item" data-command="'+Models.COMMAND_TYPES.dowhiletrue+'"><i class="sync icon"></i> '+LocalizedStrings.getUI('text_dowhiletrue')+'</a>'
         + '<a class="item" data-command="'+Models.COMMAND_TYPES.switch+'"><i class="list icon"></i> '+LocalizedStrings.getUI('text_switch')+'</a>'
         + '<a class="item" data-command="'+Models.COMMAND_TYPES.return+'"><i class="reply icon"></i> '+LocalizedStrings.getUI('text_btn_return')+'</a>'
-        + '</div></div></div>';
+        + '</div></div>';
 
-  appender += '<div class="ui bottom attached segment commands_list_div"></div>';
+
+  appender += '</div></div>'
+        +'</div>';
 
   appender += '</div></div>';
 
@@ -359,25 +368,19 @@ export function renderFunction (function_obj) {
     }
   });
 
+  var function_index = program.functions.indexOf(function_obj);
+
   Sortable.create(appender.find(".variables_list_div")[0], {
     handle: '.ellipsis',
     animation: 100,
     ghostClass: 'ghost',
-    group: 'local_vars_drag_' + program.functions.indexOf(function_obj),
+    group: 'local_vars_drag_' + function_index,
     onEnd: function (evt) {
        updateSequenceLocals(evt.oldIndex, evt.newIndex, function_obj);
     }
   });
 
-  /*Sortable.create(appender.find(".commands_list_div")[0], {
-    handle: '.command_drag',
-    animation: 100,
-    ghostClass: 'ghost',
-    group: 'commands_drag_' + program.functions.indexOf(function_obj),
-    onEnd: function (evt) {
-       //updateSequenceLocals(evt.oldIndex, evt.newIndex, function_obj);
-    }
-  });*/
+  addSortableHandler(appender.find(".commands_list_div")[0], function_index);
 
   if (!function_obj.is_main) {
     Sortable.create(appender.find(".container_parameters_list")[0], {
@@ -390,7 +393,283 @@ export function renderFunction (function_obj) {
       }
     });
   }
+
+  var teste  = '.ui.sticky.sticky_cont_'+cont;
+  $(teste).sticky({
+    context: '.ui.bottom.attached.segment.commands_list_div.commands_cont_'+cont,
+    scrollContext: '.ivprog_visual_panel',
+    observeChanges: true,
+    offset: 40,
+    onStick: function (evt) {
+      $(teste).css('top', '20px', 'important');
+    }, 
+    onBottom: function (evt) {
+      $(teste).css('top', '20px', 'important');
+    },
+    onUnstick: function (evt) {
+      $(teste).css('top', '20px', 'important');
+    },
+    onReposition: function (evt) {
+      $(teste).css('top', '20px', 'important');
+    },
+    onScroll: function (evt) {
+      $(teste).css('top', '20px', 'important');
+      if (!isVisible($(teste), $(teste).parent())) {
+        $(teste).removeClass('fixed');
+      }
+    },
+    onTop: function (evt) {
+      $(teste).css('top', '20px', 'important');
+    }
+  });
+  cont ++;
+
   return appender;
+}
+
+function isVisible (element, container) {
+
+  var elementTop = $(element).offset().top,
+      elementHeight = $(element).height(),
+      containerTop = $(container).offset().top,
+      containerHeight = $(container).height() - 30;
+
+  return ((((elementTop - containerTop) + elementHeight) > 0)
+         && ((elementTop - containerTop) < containerHeight));
+}
+
+
+window.evento_drag;
+
+function updateProgramObjDrag () {
+  var nodes = Array.prototype.slice.call( $('.all_functions').children() );
+  var function_index;
+  var start_index;
+  var function_obj;
+  $(evento_drag.item).parentsUntil(".all_functions").each(function (index) {
+    if ($(this).hasClass('function_div')) {
+      function_index = nodes.indexOf(this);
+      start_index = index;
+      function_obj = $(this);
+    }
+  });
+
+  console.log(function_index);
+
+  var path_target = [];
+  $(evento_drag.item).parentsUntil(".all_functions").each(function (index) {
+    if ($(this).hasClass('command_container')) {
+      path_target.push(this);
+    }
+  });
+  if (path_target.length == 0) {
+    //console.log('soltou na raiz, na posição: ' + evento_drag.newIndex + ' mas ainda não sei de onde saiu ');
+  } else {
+    //console.log('soltou dentro de algum bloco, sequência vem logo abaixo (de baixo pra cima): ');
+    //console.log(path_target);
+  }
+
+  var index_each = [];
+  var path_relative = [];
+  for (var i = path_target.length - 1; i >= 0; i --) {
+    console.log('da vez', $(path_target[i + 1]));
+    if (i == (path_target.length - 1)) { // está na raiz
+      var indice_na_raiz = function_obj.find('.command_container').index(path_target[i]);
+      console.log('índice na raiz: ', indice_na_raiz);
+    } else {
+      if ($(path_target[i + 1]).hasClass('iftrue')) {
+        if ($(path_target[i]).parent().hasClass('commands_if')) {
+          path_relative.push('if');
+          index_each.push($(path_target[i]).parent().find('.command_container').index(path_target[i]));
+        } else {
+          path_relative.push('else');
+          index_each.push($(path_target[i]).parent().find('.command_container').index(path_target[i]));
+        }
+      } else if ($(path_target[i + 1]).hasClass('dowhiletrue')) {
+        path_relative.push('dowhiletrue');
+        index_each.push($(path_target[i + 1]).find('.command_container').index(path_target[i]));
+      } else if ($(path_target[i + 1]).hasClass('repeatNtimes')) {
+        path_relative.push('repeatNtimes');
+        index_each.push($(path_target[i + 1]).find('.command_container').index(path_target[i]));
+      } else if ($(path_target[i + 1]).hasClass('whiletrue')) {
+        path_relative.push('whiletrue');
+        index_each.push($(path_target[i + 1]).find('.command_container').index(path_target[i]));
+      } else if ($(path_target[i + 1]).hasClass('switch')) {
+        path_relative.push('switch');
+        //index_each.push($(path_target[i + 1]).find('.command_container').index(path_target[i]));
+      }
+    }
+  }
+  var index_in_block = -1;
+  var is_in_else = $(evento_drag.item).parent().hasClass('commands_else');
+
+  index_in_block = $(evento_drag.item).parent().find('.command_container').index(evento_drag.item);
+
+  var is_in_case_switch = $(evento_drag.item).parent().hasClass('case_commands_block');
+  var index_case_of_switch = -1;
+  if (is_in_case_switch) {
+    index_case_of_switch = $(evento_drag.item).parent().parent().parent().find('.case_div').index($(evento_drag.item).parent().parent());
+  }
+
+  /*console.log('path_relative:');
+  console.log(path_relative);
+  console.log('index_each:');
+  console.log(index_each);
+  console.log('index_in_block:');
+  console.log(index_in_block);
+  console.log('ele está em algum bloco de senão? ');
+  console.log(is_in_else);
+  console.log('ele está dentro de um case de switch?');
+  console.log(is_in_case_switch);
+  console.log('qual é o índice do case: ');
+  console.log(index_case_of_switch);*/
+
+  // encontrar o elemento na árvore:
+  var command_start_point = window.program_obj.functions[function_index].commands[indice_na_raiz];
+  var block_to_insert = command_start_point;
+  for (var i = 0; i < index_each.length; i++) {
+    if (path_relative[i] == "else") {
+      block_to_insert = block_to_insert.commands_else[index_each[i]];
+    } else if (path_relative[i] == "switch") {
+
+    } else {
+      block_to_insert = block_to_insert.commands_block[index_each[i]]
+    }
+  }
+
+  //console.log('command_start_point', command_start_point);
+  //console.log('block_to_insert', block_to_insert);
+
+  // agora tem que alocar o comando na árvore, mas considerar as quatro situações:
+  // (1) se está em um else ou (2) se está em switch ou (3) será um caso padrão ou (4) se será na raiz.
+  
+  if (path_target.length == 0) { // soltou na raiz:
+    window.program_obj.functions[function_index].commands.splice(evento_drag.newIndex, 0, command_in_drag);
+  } else if (is_in_else)  {
+    if (block_to_insert.commands_else) {
+      block_to_insert.commands_else.splice(evento_drag.newIndex, 0, command_in_drag);
+    } else {
+      block_to_insert.commands_else = [];
+      block_to_insert.commands_else.push(command_in_drag);
+    }
+  } else if (is_in_case_switch) {
+
+  } else {
+    // verificar se tem alguma coisa no bloco:
+    if (block_to_insert.commands_block) {
+      block_to_insert.commands_block.splice(evento_drag.newIndex, 0, command_in_drag);
+    } else {
+      block_to_insert.commands_block = [];
+      block_to_insert.commands_block.push(command_in_drag);
+    }
+  }
+
+  window.draging = false;
+  renderAlgorithm();
+  
+
+}
+
+function prepareDragHandler (evt) {
+  window.draging = true;
+
+  var nodes = Array.prototype.slice.call( $('.all_functions').children() );
+  var function_index;
+  var function_obj;
+  $(evt.item).parentsUntil(".all_functions").each(function (index) {
+    if ($(this).hasClass('function_div')) {
+      function_index = nodes.indexOf(this);
+      function_obj = window.program_obj.functions[function_index];
+    }
+  });
+
+  command_in_drag = $(evt.item).data("command");
+
+  //console.log('$(evt.item).parent(): ');
+  //console.log($(evt.item).parent());
+
+  // descobrir qual das quatro situações:
+  if ($(evt.item).parent().hasClass('commands_list_div')) { // está na raiz:
+    if (function_obj.commands.indexOf(command_in_drag) > -1) {
+      function_obj.commands.splice(function_obj.commands.indexOf(command_in_drag), 1);
+    }
+  } else if ($(evt.item).parent().hasClass('commands_else')) { // está no else:
+    if ($(evt.item).parent().data('command').commands_else.indexOf(command_in_drag) > -1) {
+      $(evt.item).parent().data('command').commands_else.splice($(evt.item).parent().data('command').commands_else.indexOf(command_in_drag), 1);
+    }
+  } else if ($(evt.item).parent().hasClass('case_commands_block')) { // está em um switch:
+
+  } else { // caso padrão:
+    if ($(evt.item).parent().data('command').commands_block.indexOf(command_in_drag) > -1) {
+      $(evt.item).parent().data('command').commands_block.splice($(evt.item).parent().data('command').commands_block.indexOf(command_in_drag), 1);
+    }
+  }
+
+}
+
+var command_in_drag;
+
+function addSortableHandler (element, id_function) {
+  var n_group = 'commands_drag_' + id_function;
+  Sortable.create(element, {
+    handle: '.command_drag',
+    ghostClass: 'ghost',
+    animation: 300,
+    group: {name: n_group},
+    onEnd: function (evt) {
+       //updateSequenceLocals(evt.oldIndex, evt.newIndex, function_obj);
+       var itemEl = evt.item;  // dragged HTMLElement
+       evt.to;    // target list
+       evt.from;  // previous list
+       evt.oldIndex;  // element's old index within old parent
+       evt.newIndex;  // element's new index within new parent
+       //console.log('::EVT::');
+       //console.log(evt);
+
+       window.evento_drag = evt;
+
+       try {
+        updateProgramObjDrag();
+       } catch (e) {
+        window.draging = false;
+       }
+    },
+    onStart: function (evt) {
+      //console.log("START::EVT::");
+      //console.log(evt);
+      //console.log("\n\ncommand_in_drag");
+      try {
+        prepareDragHandler(evt);
+      } catch (e) {
+        window.draging = false;
+      }
+    }
+  });
+  element = $(element);
+  element.find(".iftrue").each(function( index ) {
+    addSortableHandler($(this).find(".block_commands")[0], id_function);
+    addSortableHandler($(this).find(".block_commands")[1], id_function);
+  });
+
+  element.find(".repeatNtimes").each(function( index ) {
+    addSortableHandler($(this).find(".block_commands")[0], id_function);
+  });
+
+  element.find(".dowhiletrue").each(function( index ) {
+    addSortableHandler($(this).find(".block_commands")[0], id_function);
+  });
+
+  element.find(".whiletrue").each(function( index ) {
+    addSortableHandler($(this).find(".block_commands")[0], id_function);
+  });
+
+  element.find(".switch").each(function( index ) {
+
+    $(this).find(".case_div").each(function( index ) {
+      addSortableHandler($(this).find(".case_commands_block")[0], id_function);
+    });
+
+  });  
 }
 
 export function initVisualUI () {
