@@ -3,6 +3,7 @@ import { SemanticAnalyser } from "./../processor/semantic/semanticAnalyser";
 import { IVProgProcessor } from "./../processor/ivprogProcessor";
 import { InputTest } from "./../util/inputTest";
 import { OutputTest } from "./../util/outputTest";
+import { LocalizedStrings } from "../services/localizedStringsService";
 
 export class IVProgAssessment {
 
@@ -46,25 +47,28 @@ export class IVProgAssessment {
     return prog.interpretAST().then( _ => {
       const millis = Date.now() - startTime;
       if (input.inputList.length !== input.index) {
-        outerThis.domConsole.err(`Caso de teste ${name + 1}: Falhou, ainda restam entradas!`);
+        outerThis.showErrorMessage('test_case_few_reads', name+1);
         outerThis.domConsole.info(`Levou ${millis}ms`);
         return Promise.resolve(accumulator + 1 * (input.index/inputList.length));
       } else if (output.list.length < outputList.length) {
-        outerThis.domConsole.err(`Caso de teste ${name + 1}: Falhou <${inputList.join(", ")};${outputList.join(", ")};${output.list.join(", ")}>`);
+        outerThis.showErrorMessage('test_case_failed', name + 1, inputList.join(','),
+          outputList.join(','), output.list.join(','));
         outerThis.domConsole.info(`Levou ${millis}ms`);
         return Promise.resolve(accumulator + 1 * (output.list.length/outputList.length));
       } else if (output.list.length > outputList.length) {
-        outerThis.domConsole.err(`Caso de teste ${name + 1}: Falhou <${inputList.join(", ")};${outputList.join(", ")};${output.list.join(", ")}>`);
+        outerThis.showErrorMessage('test_case_failed', name + 1, inputList.join(','),
+          outputList.join(','), output.list.join(','));
         outerThis.domConsole.info(`Levou ${millis}ms`);
         return Promise.resolve(accumulator + 1 * (outputList.length/output.list.length));
       } else {
         const isOk = outerThis.checkOutput(output.list, outputList);
         if(!isOk) {
-          outerThis.domConsole.err(`Caso de teste ${name + 1}: Falhou <${inputList.join(", ")};${outputList.join(", ")};${output.list.join(", ")}>`);
+          outerThis.showErrorMessage('test_case_failed', name + 1, inputList.join(','),
+            outputList.join(','), output.list.join(','));
           outerThis.domConsole.info(`Levou ${millis}ms`);
           return Promise.resolve(accumulator);
         } else {
-          outerThis.domConsole.info(`Caso de teste ${name + 1}: OK!`);
+          outerThis.showMessage('test_case_success', name + 1);
           outerThis.domConsole.info(`Levou ${millis}ms`);
           return Promise.resolve(accumulator + 1);
         }
@@ -88,5 +92,13 @@ export class IVProgAssessment {
       }
     }
     return true;
+  }
+
+  showErrorMessage (errorID, ...args) {
+    this.domConsole.err(LocalizedStrings.getError(errorID, args));
+  }
+
+  showMessage (msgID, ...args) {
+    this.domConsole.info(LocalizedStrings.getMessage(msgID, args));
   }
 }

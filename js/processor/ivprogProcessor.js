@@ -413,7 +413,7 @@ export class IVProgProcessor {
             return store;
           }
         } else {
-          return Promise.reject(ProcessorErrorFactory.loop_condition_type_full(cmd.sourceInfo));
+          return Promise.reject(ProcessorErrorFactory.loop_condition_type_full(cmd.expression.toString(), cmd.sourceInfo));
         }
       })
       
@@ -439,7 +439,7 @@ export class IVProgProcessor {
             return Promise.resolve(store);
           }
         } else {
-          return Promise.reject(ProcessorErrorFactory.if_condition_type_full(cmd.sourceInfo));
+          return Promise.reject(ProcessorErrorFactory.if_condition_type_full(cmd.condition.toString(), cmd.sourceInfo));
         }
       });
     } catch (error) {
