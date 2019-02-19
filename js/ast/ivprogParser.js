@@ -725,6 +725,7 @@ export class IVProgParser {
     } else {
       this.pushScope(IVProgParser.COMMAND);
     }
+    const token = this.getToken();
     this.pos++;
     this.checkOpenParenthesis();
     this.pos++;
@@ -749,11 +750,16 @@ export class IVProgParser {
       } else {
         throw SyntaxErrorFactory.token_missing_list([this.lexer.literalNames[this.lexerClass.RK_IF], '{'], maybeIf);
       }
-      return new Commands.IfThenElse(logicalExpression, cmdBlocks, elseBlock);
+      this.popScope();
+      const cmd = new Commands.IfThenElse(logicalExpression, cmdBlocks, elseBlock);
+      cmd.sourceInfo = SourceInfo.createSourceInfo(token);
+      return cmd;
     }
     this.popScope();
 
-    return new Commands.IfThenElse(logicalExpression, cmdBlocks, null);
+    const cmd = new Commands.IfThenElse(logicalExpression, cmdBlocks, null);
+    cmd.sourceInfo = SourceInfo.createSourceInfo(token);
+    return cmd;
   }
 
   parseFor () {
@@ -777,6 +783,7 @@ export class IVProgParser {
 
   parseWhile () {
     this.pushScope(IVProgParser.BREAKABLE);
+    const token = this.getToken();
     this.pos++;
     this.checkOpenParenthesis();
     this.pos++;
@@ -788,7 +795,9 @@ export class IVProgParser {
     this.consumeNewLines();
     const cmdBlocks = this.parseCommandBlock();
     this.popScope();
-    return new Commands.While(logicalExpression, cmdBlocks);
+    const cmd = new Commands.While(logicalExpression, cmdBlocks);
+    cmd.sourceInfo = SourceInfo.createSourceInfo(token);
+    return cmd;
   }
 
   parseBreak () {
