@@ -15,12 +15,13 @@ import { SemanticAnalyser } from '../processor/semantic/semanticAnalyser';
 import { IVProgAssessment } from '../assessment/ivprogAssessment';
 import * as AlgorithmManagement from './algorithm';
 import * as Utils from './utils';
+import VersionInfo from './../../.ivprog_version.json';
 
 import '../Sortable.js';
 
 var counter_new_functions = 0;
 var counter_new_parameters = 0;
-var ivprog_version = '2019_01_13 Build 18_55'
+var ivprog_version = VersionInfo.version;
 
 let studentTemp = null;
 let domConsole = null;
