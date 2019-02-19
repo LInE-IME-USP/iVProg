@@ -102,16 +102,17 @@ export const ProcessorErrorFactory  = Object.freeze({
     const context = [exp, translateType(type, dim)];
     return new SemanticError(LocalizedStrings.getError("incompatible_types_array", context));
   },
-  loop_condition_type_full: (sourceInfo) => {
+  loop_condition_type_full: (exp, sourceInfo) => {
     if(sourceInfo) {
-      const context = [sourceInfo.line, sourceInfo.column];
+      const context = [sourceInfo.line, sourceInfo.column, exp];
       return new SemanticError(LocalizedStrings.getError("loop_condition_type_full", context));
     } else {
-      return ProcessorErrorFactory.loop_condition_type();
+      return ProcessorErrorFactory.loop_condition_type(exp);
     }
   },
-  loop_condition_type: () => {
-    return new SemanticError(LocalizedStrings.getError("loop_condition_type"));
+  loop_condition_type: (exp) => {
+    const context = [exp];
+    return new SemanticError(LocalizedStrings.getError("loop_condition_type", context));
   },
   endless_loop_full: (sourceInfo) => {
     if(sourceInfo) {
@@ -124,27 +125,29 @@ export const ProcessorErrorFactory  = Object.freeze({
   endless_loop: () => {
     return new SemanticError(LocalizedStrings.getError("endless_loop"));
   },
-  for_condition_type_full: (sourceInfo) => {
+  for_condition_type_full: (exp, sourceInfo) => {
     if(sourceInfo) {
-      const context = [sourceInfo.line, sourceInfo.column];
+      const context = [sourceInfo.line, sourceInfo.column, exp];
       return new SemanticError(LocalizedStrings.getError("for_condition_type_full", context));
     } else {
-      return ProcessorErrorFactory.for_condition_type();
+      return ProcessorErrorFactory.for_condition_type(exp);
     }
   },
-  for_condition_type: () => {
-    return new SemanticError(LocalizedStrings.getError("for_condition_type"));
+  for_condition_type: (exp) => {
+    const context = [exp];
+    return new SemanticError(LocalizedStrings.getError("for_condition_type", context));
   },
-  if_condition_type_full: (sourceInfo) => {
+  if_condition_type_full: (exp, sourceInfo) => {
     if(sourceInfo) {
-      const context = [sourceInfo.line, sourceInfo.column];
+      const context = [sourceInfo.line, sourceInfo.column, exp];
       return new SemanticError(LocalizedStrings.getError("if_condition_type_full", context));
     } else {
-      return ProcessorErrorFactory.if_condition_type();
+      return ProcessorErrorFactory.if_condition_type(exp);
     }
   },
-  if_condition_type: () => {
-    return new SemanticError(LocalizedStrings.getError("if_condition_type"));
+  if_condition_type: (exp) => {
+    const context = [exp];
+    return new SemanticError(LocalizedStrings.getError("if_condition_type", context));
   },
   invalid_global_var: () => {
     return new RuntimeError(LocalizedStrings.getError("invalid_global_var"))
