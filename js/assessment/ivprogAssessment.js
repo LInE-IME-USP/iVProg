@@ -21,6 +21,7 @@ export class IVProgAssessment {
       const validTree = semantic.analyseTree();
       // loop test cases and show messages through domconsole
       const partialTests = this.testCases.map( (t, name) => {
+        console.log(t.input);
         return this.partialEvaluateTestCase(new IVProgProcessor(validTree), t.input, t.output, name);
       });
       const testResult = partialTests.reduce((acc, curr) => acc.then(curr), Promise.resolve(0));

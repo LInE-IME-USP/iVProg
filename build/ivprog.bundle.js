@@ -103,7 +103,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /*! exports provided: version, default */
 /***/ (function(module) {
 
-module.exports = {"version":"2019_02_20 13_00"};
+module.exports = {"version":"2019_02_20 13_06"};
 
 /***/ }),
 
@@ -187,7 +187,7 @@ module.exports =
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// Generated from /tmp/tmp-8149Dp4Ob6DvXRtr/ivprog.g4 by ANTLR 4.7
+// Generated from /tmp/tmp-8756ZA1NOwQEJYii/ivprog.g4 by ANTLR 4.7
 // jshint ignore: start
 var antlr4 = __webpack_require__(2);
 
@@ -778,7 +778,7 @@ module.exports =
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// Generated from /tmp/tmp-8149GzrX4xRkVAeC/ivprog.g4 by ANTLR 4.7
+// Generated from /tmp/tmp-8756QdkQEPXJtcgX/ivprog.g4 by ANTLR 4.7
 // jshint ignore: start
 var antlr4 = __webpack_require__(2);
 
@@ -1432,7 +1432,7 @@ module.exports =
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// Generated from /tmp/tmp-8149Jly80xe9tYbM/ivprog.g4 by ANTLR 4.7
+// Generated from /tmp/tmp-8756Kqb5Q92RsTUc/ivprog.g4 by ANTLR 4.7
 // jshint ignore: start
 var antlr4 = __webpack_require__(2);
 
@@ -3623,6 +3623,7 @@ var IVProgAssessment = exports.IVProgAssessment = function () {
         var validTree = semantic.analyseTree();
         // loop test cases and show messages through domconsole
         var partialTests = this.testCases.map(function (t, name) {
+          console.log(t.input);
           return _this.partialEvaluateTestCase(new _ivprogProcessor.IVProgProcessor(validTree), t.input, t.output, name);
         });
         var testResult = partialTests.reduce(function (acc, curr) {
@@ -23131,7 +23132,6 @@ function runCodeAssessment() {
 
   if (domConsole == null) domConsole = new _domConsole.DOMConsole("#ivprog-term");
   (0, _jquery2.default)("#ivprog-term").slideDown(500);
-  var testCases = [{ input: [1], output: [1] }];
   var runner = new _ivprogAssessment.IVProgAssessment(strCode, testCases, domConsole);
 
   runner.runTest().then(function (grade) {
