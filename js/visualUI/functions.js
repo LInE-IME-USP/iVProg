@@ -848,7 +848,6 @@ function runCodeAssessment () {
   if(domConsole == null)
     domConsole = new DOMConsole("#ivprog-term");
   $("#ivprog-term").slideDown(500);
-  const testCases = [{input:[1], output:[1]}];
   const runner = new IVProgAssessment(strCode, testCases, domConsole);
 
   runner.runTest().then(grade => {
