@@ -36,11 +36,6 @@ export function renderMenu (command, dom_where_render, function_obj, dom_command
 
 function addHandlers (command, dom_where_render, function_obj, dom_command) {
 
-	console.log('command, dom_where_render, function_obj, dom_command');
-	console.log(command, dom_where_render, function_obj, dom_command);
-
-	console.log(dom_where_render.parents());
-
 	dom_where_render.find('.menu_commands').dropdown({
       on: 'hover'
     });

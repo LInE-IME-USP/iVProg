@@ -127,8 +127,8 @@ export function createFloatingCommand (function_obj, function_container, command
 	floatingObject.css("position", "absolute");
 	mouse_event.type = "mousedown.draggable";
 	mouse_event.target = floatingObject[0];
-	floatingObject.css("left", mouse_event.pageX - 15);
-	floatingObject.css("top", mouse_event.pageY - 15);
+	floatingObject.css("left", mouse_event.pageX);
+	floatingObject.css("top", mouse_event.pageY);
 	floatingObject.trigger(mouse_event);
 }
 
