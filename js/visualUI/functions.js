@@ -15,7 +15,7 @@ import { SemanticAnalyser } from '../processor/semantic/semanticAnalyser';
 import { IVProgAssessment } from '../assessment/ivprogAssessment';
 import * as AlgorithmManagement from './algorithm';
 import * as Utils from './utils';
-import VersionInfo from './../../.ivprog_version.json';
+import VersionInfo from './../../.ima_version.json';
 
 import '../Sortable.js';
 

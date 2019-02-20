@@ -96,14 +96,14 @@ return /******/ (function(modules) { // webpackBootstrap
 /************************************************************************/
 /******/ ({
 
-/***/ "./.ivprog_version.json":
-/*!******************************!*\
-  !*** ./.ivprog_version.json ***!
-  \******************************/
+/***/ "./.ima_version.json":
+/*!***************************!*\
+  !*** ./.ima_version.json ***!
+  \***************************/
 /*! exports provided: version, default */
 /***/ (function(module) {
 
-module.exports = {"version":"2019_02_19 17_13"};
+module.exports = {"version":"2019_02_20 10_25"};
 
 /***/ }),
 
@@ -187,7 +187,7 @@ module.exports =
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// Generated from /tmp/tmp-20901GoFkvmbU6YOn/ivprog.g4 by ANTLR 4.7
+// Generated from /tmp/tmp-7479iGf20Ya2uEko/ivprog.g4 by ANTLR 4.7
 // jshint ignore: start
 var antlr4 = __webpack_require__(2);
 
@@ -778,7 +778,7 @@ module.exports =
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// Generated from /tmp/tmp-209012gSAvxTNF26r/ivprog.g4 by ANTLR 4.7
+// Generated from /tmp/tmp-7479HVzvc2BxL2Mk/ivprog.g4 by ANTLR 4.7
 // jshint ignore: start
 var antlr4 = __webpack_require__(2);
 
@@ -1432,7 +1432,7 @@ module.exports =
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// Generated from /tmp/tmp-20901id2WQEvZA9M1/ivprog.g4 by ANTLR 4.7
+// Generated from /tmp/tmp-7479JCS9a3yQPz6d/ivprog.g4 by ANTLR 4.7
 // jshint ignore: start
 var antlr4 = __webpack_require__(2);
 
@@ -22354,9 +22354,9 @@ var _utils = __webpack_require__(/*! ./utils */ "./js/visualUI/utils.js");
 
 var Utils = _interopRequireWildcard(_utils);
 
-var _ivprog_version = __webpack_require__(/*! ./../../.ivprog_version.json */ "./.ivprog_version.json");
+var _ima_version = __webpack_require__(/*! ./../../.ima_version.json */ "./.ima_version.json");
 
-var _ivprog_version2 = _interopRequireDefault(_ivprog_version);
+var _ima_version2 = _interopRequireDefault(_ima_version);
 
 __webpack_require__(/*! ../Sortable.js */ "./js/Sortable.js");
 
@@ -22366,7 +22366,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var counter_new_functions = 0;
 var counter_new_parameters = 0;
-var ivprog_version = _ivprog_version2.default.version;
+var ivprog_version = _ima_version2.default.version;
 
 var studentTemp = null;
 var domConsole = null;

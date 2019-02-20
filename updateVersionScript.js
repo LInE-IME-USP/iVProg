@@ -1,13 +1,27 @@
 var fs = require('fs');
 var path = require('path');
 
-var fileName = '.ivprog_version.json';
-var date = new Date();
-var day = date.getUTCDate() > 9 ? date.getUTCDate() : '0' + date.getUTCDate();
-var month = date.getMonth() > 9 ? date.getMonth() + 1 : '0' + (date.getMonth() + 1);
-var minutes = date.getMinutes() > 9 ? date.getMinutes() : '0' + date.getMinutes();
-var hour = date.getHours() > 9 ? date.getHours() : '0' + date.getHours();
-var versionString = `${date.getFullYear()}_${month}_${day} ${hour}_${minutes}`;
-var versionData = `{ "version":"${versionString}" }`;
-var filePath = path.join(__dirname, fileName);
-fs.writeFileSync(filePath, versionData);
+function processDate () {
+  var date = new Date();
+  var day = date.getUTCDate();
+  day = day > 9 ? day : '0' + day;
+  var month = date.getMonth() + 1;
+  month = month > 9 ? month : '0' + month;
+  var minutes = date.getMinutes();
+  minutes = minutes > 9 ? minutes : '0' + minutes;
+  var hour = date.getHours();
+  hour = hour > 9 ? hour : '0' + hour;
+  return {
+    year: date.getFullYear(),
+    month: month,
+    day: day,
+    hour: hour,
+    minutes: minutes
+  }
+}
+
+var versionInfo = processDate();
+var versionString = `${versionInfo.year}_${versionInfo.month}_${versionInfo.day} ${versionInfo.hour}_${versionInfo.minutes}`;
+var fileData = `{ "version":"${versionString}" }`;
+var filePath = path.join(__dirname, '.ima_version.json');
+fs.writeFileSync(filePath, fileData);
