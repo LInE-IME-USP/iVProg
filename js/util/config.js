@@ -2,7 +2,7 @@ class ConfigObject {
 
   constructor () {
     this.loopTimeout = 5000;
-    this.decimalPlaces = 5;
+    this.decimalPlaces = 6;
     this.intConvertRoundMode = 2;
     this.default_lang = 'pt';
     this.enable_type_casting = true;

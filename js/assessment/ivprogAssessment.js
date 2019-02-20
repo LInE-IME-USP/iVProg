@@ -4,6 +4,8 @@ import { IVProgProcessor } from "./../processor/ivprogProcessor";
 import { InputTest } from "./../util/inputTest";
 import { OutputTest } from "./../util/outputTest";
 import { LocalizedStrings } from "../services/localizedStringsService";
+import { Decimal } from 'decimal.js';
+import { Config } from "../util/config";
 
 export class IVProgAssessment {
 
@@ -21,7 +23,6 @@ export class IVProgAssessment {
       const validTree = semantic.analyseTree();
       // loop test cases and show messages through domconsole
       const partialTests = this.testCases.map( (t, name) => {
-        console.log(t.input);
         return this.partialEvaluateTestCase(new IVProgProcessor(validTree), t.input, t.output, name);
       });
       const testResult = partialTests.reduce((acc, curr) => acc.then(curr), Promise.resolve(0));
@@ -88,7 +89,21 @@ export class IVProgAssessment {
   checkOutput (aList, bList) {
     for (let i = 0; i < aList.length; i++) {
       const outValue = aList[i];
-      if(outValue != bList[i]) {
+      let castNumberA = parseFloat(outValue);
+      if(!Number.isNaN(castNumberA)) {
+        let castNumberB = parseFloat(bList[i]);
+        if(Number.isNaN(castNumberB)) {
+          return false;
+        }
+        castNumberA = new Decimal(castNumberA);
+        castNumberB = new Decimal(castNumberB);
+        const decimalPlaces = Math.min(castNumberA.dp(), castNumberB.dp());
+        castNumberA = new Decimal(castNumberA.toFixed(decimalPlaces));
+        castNumberB = new Decimal(castNumberB.toFixed(decimalPlaces));
+        if (!castNumberA.eq(castNumberB)) {
+          return false;
+        }
+      } else if(outValue != bList[i]) {
         return false;
       }
     }
