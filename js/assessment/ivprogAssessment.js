@@ -97,17 +97,15 @@ export class IVProgAssessment {
         }
         castNumberA = new Decimal(castNumberA);
         castNumberB = new Decimal(castNumberB);
-        const decimalPlaces = Math.min(castNumberA.dp(), castNumberB.dp());
+        const decimalPlaces = Math.min(castNumberB.dp(), Config.decimalPlaces);
         Decimal.set({ rounding: Decimal.ROUND_FLOOR});
         castNumberA = new Decimal(castNumberA.toFixed(decimalPlaces));
         castNumberB = new Decimal(castNumberB.toFixed(decimalPlaces));
-        console.log(castNumberA.toNumber());
-        console.log(castNumberB.toNumber());
-        if (!castNumberA.eq(castNumberB)) {
-          Decimal.set({ rounding: Decimal.ROUND_HALF_UP});
+        const aEqualsB = castNumberA.eq(castNumberB);
+        Decimal.set({ rounding: Decimal.ROUND_HALF_UP});
+        if (!aEqualsB) {
           return false;
         }
-        Decimal.set({ rounding: Decimal.ROUND_HALF_UP});
       } else if(outValue != bList[i]) {
         return false;
       }
