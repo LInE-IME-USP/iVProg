@@ -50,34 +50,33 @@ export class IVProgAssessment {
       const millis = Date.now() - startTime;
       if (input.inputList.length !== input.index) {
         outerThis.showErrorMessage('test_case_few_reads', name+1);
-        outerThis.domConsole.info(`Levou ${millis}ms`);
+        outerThis.showMessage('test_case_duration', millis);
         return Promise.resolve(accumulator + 1 * (input.index/inputList.length));
       } else if (output.list.length < outputList.length) {
         outerThis.showErrorMessage('test_case_failed', name + 1, inputList.join(','),
           outputList.join(','), output.list.join(','));
-        outerThis.domConsole.info(`Levou ${millis}ms`);
+        outerThis.showMessage('test_case_duration', millis);
         return Promise.resolve(accumulator + 1 * (output.list.length/outputList.length));
       } else if (output.list.length > outputList.length) {
         outerThis.showErrorMessage('test_case_failed', name + 1, inputList.join(','),
           outputList.join(','), output.list.join(','));
-        outerThis.domConsole.info(`Levou ${millis}ms`);
+        outerThis.showMessage('test_case_duration', millis);
         return Promise.resolve(accumulator + 1 * (outputList.length/output.list.length));
       } else {
         const isOk = outerThis.checkOutput(output.list, outputList);
         if(!isOk) {
           outerThis.showErrorMessage('test_case_failed', name + 1, inputList.join(','),
             outputList.join(','), output.list.join(','));
-          outerThis.domConsole.info(`Levou ${millis}ms`);
+          outerThis.showMessage('test_case_duration', millis);
           return Promise.resolve(accumulator);
         } else {
           outerThis.showMessage('test_case_success', name + 1);
-          outerThis.domConsole.info(`Levou ${millis}ms`);
+          outerThis.showMessage('test_case_duration', millis);
           return Promise.resolve(accumulator + 1);
         }
       }
     }).catch( error => {
-      this.domConsole.err(`Execução do caso de teste ${name + 1} falhou!`);// try and show error messages through domconsole
-      this.domConsole.err(error.message);
+      outerThis.showErrorMessage('test_case_failed_exception', name + 1, error.message);
       return Promise.resolve(accumulator);
     });
   }

@@ -83,6 +83,7 @@
   "invalid_array_literal_column_full": "Erro na linha $0: esperava-se $1 colunas mas encontrou $2.",
   "invalid_array_literal_column": "Esperava-se $0 colunas mas encontrou $1.",
   "exceeded_input_request": "A quantidade de leituras requisitadas execedeu a quantidade de entradas disponíveis.",
-  "test_case_few_reads": "Caso de teste $0: Falhou, ainda restam entradas!",
-  "test_case_failed": "Caso de teste $0: Falhou, entradas:<$1>; saída esperada:<$2>; saída:<$3>"
+  "test_case_few_reads": "Caso de teste $0 falhou: ainda restam entradas!",
+  "test_case_failed": "Caso de teste $0 falhou: entradas:<$1>; saída esperada:<$2>; saída:<$3>",
+  "test_case_failed_exception": "Caso de teste $0 falhou: $1"
 }
