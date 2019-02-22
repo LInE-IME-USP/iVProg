@@ -63,7 +63,7 @@ function addHandlers (command, dom_where_render, function_obj, dom_command) {
 
 			switch ($(this).data('command')) {
 				case Models.COMMAND_TYPES.break:
-					CommandsManagement.createFloatingCommand(function_obj, null, $(this).data('command'), evt);
+					CommandsManagement.createFloatingCommand(function_obj, dom_command.find('.block_commands'), $(this).data('command'), evt);
 					break;
 
 				case Models.COMMAND_TYPES.switchcase:

@@ -17,7 +17,13 @@ export function renderCommand (command, function_obj) {
 
 	addHandlers(command, function_obj, el);
 
-	VariableValueMenu.renderMenu(command, command.variable_value_menu, el.find('.var_value_menu_div'), function_obj);
+	if (function_obj.return_type != Types.VOID) {
+		VariableValueMenu.renderMenu(command, command.variable_value_menu, el.find('.var_value_menu_div'), function_obj);
+	} else {
+		el.find('.var_value_menu_div').remove();
+		command.variable_value_menu = null;
+	}
+
 
 	return el;
 }

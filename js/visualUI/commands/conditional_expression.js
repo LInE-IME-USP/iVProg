@@ -9,6 +9,8 @@ import * as VariableValueMenuManagement from './variable_value_menu';
 
 export function renderExpression (command, expression, function_obj, initial_el_to_render) {
 
+	expression.dom_object = initial_el_to_render;
+
 	if (expression.expression == null || expression.expression.length < 1) {
 
 		renderStartMenu(command, expression, function_obj, initial_el_to_render);
@@ -27,6 +29,13 @@ export function renderExpression (command, expression, function_obj, initial_el_
 		}
 
 		initial_el_to_render.append(main_div);	
+		var restartMenu = $('<div class="ui restart_expression"><i class="ui icon undo"></i></div>');
+		initial_el_to_render.append(restartMenu);	
+		restartMenu.on('click', function(e){
+	    	expression.expression = null;
+	    	initial_el_to_render.empty();
+	    	renderExpression(command, expression, function_obj, initial_el_to_render);
+	  	});
 	}
 }
 
@@ -194,8 +203,8 @@ function renderArithmeticExpression (command, all_expression, expression_arithme
 function renderStartMenu (command, expression, function_obj, initial_el_to_render) {
 	var start_menu = '';
 	start_menu += '<div class="ui dropdown menu_start_rendered"><div class="text"><i>'+LocalizedStrings.getUI('expression_menu_select')+'</i></div><i class="dropdown icon"></i><div class="menu">';
-	start_menu += '<div class="item" data-exp="'+Models.EXPRESSION_TYPES.exp_logic+'">'+LocalizedStrings.getUI('text_logic_expression')+'</div>';
-	start_menu += '<div class="item" data-exp="'+Models.EXPRESSION_TYPES.exp_arithmetic+'">'+LocalizedStrings.getUI('text_arithmetic_expression')+'</div>';
+	start_menu += '<div class="item" data-exp="'+Models.EXPRESSION_TYPES.exp_logic+'">'+LocalizedStrings.getUI('text_logic_expression')+' (EL == EL and EL)</div>';
+	start_menu += '<div class="item" data-exp="'+Models.EXPRESSION_TYPES.exp_arithmetic+'">'+LocalizedStrings.getUI('text_arithmetic_expression')+' (EA < EA)</div>';
 	start_menu += '</div></div>';
 	start_menu = $(start_menu);
 
@@ -219,8 +228,8 @@ function renderStartMenu (command, expression, function_obj, initial_el_to_rende
 			initial_el_to_render.html('');
 
 			renderExpression(command, expression, function_obj, initial_el_to_render);
-
-    	}
+    	},
+    	selectOnKeydown: false
 	});
 
 	initial_el_to_render.append(' <span class="span_command_spec"> </span> ');

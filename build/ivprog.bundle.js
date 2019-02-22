@@ -96,6 +96,17 @@ return /******/ (function(modules) { // webpackBootstrap
 /************************************************************************/
 /******/ ({
 
+/***/ "./.ima_version.json":
+/*!***************************!*\
+  !*** ./.ima_version.json ***!
+  \***************************/
+/*! exports provided: version, default */
+/***/ (function(module) {
+
+module.exports = {"version":"2019_02_20 13_06"};
+
+/***/ }),
+
 /***/ "./grammar/en/ivprog.g4":
 /*!******************************!*\
   !*** ./grammar/en/ivprog.g4 ***!
@@ -176,7 +187,7 @@ module.exports =
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// Generated from /tmp/tmp-205156ZxvmnDALMe8/ivprog.g4 by ANTLR 4.7
+// Generated from /tmp/tmp-8756ZA1NOwQEJYii/ivprog.g4 by ANTLR 4.7
 // jshint ignore: start
 var antlr4 = __webpack_require__(2);
 
@@ -767,7 +778,7 @@ module.exports =
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// Generated from /tmp/tmp-20515XHxqx1bWW1Ca/ivprog.g4 by ANTLR 4.7
+// Generated from /tmp/tmp-8756QdkQEPXJtcgX/ivprog.g4 by ANTLR 4.7
 // jshint ignore: start
 var antlr4 = __webpack_require__(2);
 
@@ -1421,7 +1432,7 @@ module.exports =
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// Generated from /tmp/tmp-20515ql5l22IwasWA/ivprog.g4 by ANTLR 4.7
+// Generated from /tmp/tmp-8756Kqb5Q92RsTUc/ivprog.g4 by ANTLR 4.7
 // jshint ignore: start
 var antlr4 = __webpack_require__(2);
 
@@ -1943,10 +1954,10 @@ exports.default = {
 /*!****************************!*\
   !*** ./i18n/en/error.json ***!
   \****************************/
-/*! exports provided: token_missing_one, token_missing_two, eos_missing, invalid_type, invalid_array_dimension, invalid_array_size, extra_lines, invalid_main_return, invalid_var_declaration, invalid_break_command, invalid_terminal, id_missing, main_missing, invalid_global_var, not_implemented, function_missing, invalid_parameters_size, invalid_ref, invalid_parameter_type, unknown_command, loop_condition_type, if_condition_type, invalid_return_type, unexpected_break_command, invalid_dimension, void_in_expression, invalid_array, invalid_array_access, column_outbounds, line_outbounds, invalid_infix_op, invalid_unary_op, unknown_op, default */
+/*! exports provided: token_missing_one, token_missing_two, eos_missing, invalid_type, invalid_array_dimension, invalid_array_size, extra_lines, invalid_main_return, invalid_var_declaration, invalid_break_command, invalid_terminal, const_not_init, id_missing, invalid_id_format, main_missing, invalid_global_var, not_implemented, function_missing, function_missing_full, invalid_parameters_size_full, invalid_parameters_size, invalid_ref_full, invalid_ref, invalid_parameter_type_full, invalid_parameter_type, unknown_command_full, unknown_command, loop_condition_type_full, loop_condition_type, endless_loop_full, endless_loop, for_condition_type_full, for_condition_type, if_condition_type_full, if_condition_type, invalid_return_type_full, invalid_return_type, invalid_void_return_full, invalid_void_return, unexpected_break_command_full, unexpected_break_command, invalid_dimension, void_in_expression_full, void_in_expression, invalid_array_access_full, invalid_array_access, invalid_matrix_access_full, invalid_matrix_access, matrix_column_outbounds_full, matrix_column_outbounds, matrix_line_outbounds_full, matrix_line_outbounds, vector_line_outbounds_full, vector_line_outbounds, vector_not_matrix_full, vector_not_matrix, invalid_infix_op_full, invalid_infix_op, invalid_unary_op_full, invalid_unary_op, unknown_op, duplicate_function, duplicate_variable, main_parameters, symbol_not_found_full, symbol_not_found, array_dimension_not_int_full, array_dimension_not_int, array_dimension_not_positive_full, array_dimension_not_positive, incompatible_types_full, incompatible_types, incompatible_types_array_full, incompatible_types_array, invalid_case_type_full, invalid_case_type, function_no_return, invalid_array_literal_type_full, invalid_array_literal_type, invalid_array_literal_line_full, invalid_array_literal_line, invalid_array_literal_column_full, invalid_array_literal_column, exceeded_input_request, test_case_few_reads, test_case_failed, default */
 /***/ (function(module) {
 
-module.exports = {"token_missing_one":"Erro de sintaxe: Espera-se $0, mas encontrou-se $1 na linha:$2, coluna:$3","token_missing_two":"Erro de sintaxe: Esperava-se $0 ou $1 mas encontrou-se $2 na liha:$3, coluna: $4","eos_missing":"Falta uma nova linha ou ; na linha: $0, coluna: $1","invalid_type":"$0 na linha: $1, coluna: $2 é um tipo inválido. Os tipos válidos são: $3","invalid_array_dimension":"A dimensão inválida na linha: $0, coluna: $1. Insira um $2 ou identificador válido do mesmo tipo.","invalid_array_size":"O tamnho do vetor/matriz excede o máximo de 2 na linha $0","extra_lines":"Nenhum texto é permitido após '}' em 'programa {...}'","invalid_main_return":"A função $0 deve retornar $1 na linha $2","invalid_var_declaration":"Erro na linha $0. Variáveis só podem ser declarados no corpo principal da função e de preferência nas primeiras linhas.","invalid_break_command":"Erro na linha $0. O comando $1 não pode ser usado fora de uma estrutura de repetição ou 'escolha...caso'","invalid_terminal":"Não é possível utilizar $0 na expressão da linha: $1, coluna: $2. Tente um valor númerico, variável ou chamada de função.","id_missing":"Esperava-se um identificador, mas encontrou-se $0 na linha: $1, coluna: $2","main_missing":"A função principal não foi encontrada","invalid_global_var":"Erro crítico: Chamada inválida da função initGlobal fora do contexto BASE","not_implemented":"Erro interno crítico: A função definida pelo sistema $0 não foi implementada.","function_missing":"A função $0 não foi encontrada","invalid_parameters_size":"A quantidade de parâmetros fornecidos está incorreta. Esperava-se $0, encontrou-se $1","invalid_ref":"Você deve fornecer apenas um identificador como parâmetro","invalid_parameter_type":"O valor fornecido como parâmetro é do tipo $0, mas o tipo esperado é $1","unknown_command":"Erro interno crítico: Comando desconhecido encontrado","loop_condition_type":"A condição dos laços de repetição deve ser do tipo lógico","if_condition_type":"A condição de um comando se...senao deve ser do tipo lógico","invalid_return_type":"A função $0 deve retornar um tipo $1, ao invés de $1","unexpected_break_command":"Erro interno crítico: Comando pare encontrado fora do contexto de um laço/escolha..caso","invalid_dimension":"As dimensões de um vetor/matriz devem ser do tipo inteiro","void_in_expression":"A função $0 não pode ser utilizada aqui pois seu tipo de retorno é vazio","invalid_array":"Expressão literal de Vetor/Mariz inválida","invalid_array_access":"Identificador $0 não se refere a um vetor/matriz válido","column_outbounds":"Número de colunas $0 é inválido para a matriz $1 que possui $2 colunas","line_outbounds":"Número de linhas $0 é invaálido para a matriz $1 que possui $2 linhas","invalid_infix_op":"Não é possível aplicar a operação $0 entre os tipos $1 e $2","invalid_unary_op":"Não é possível aplicar a operação $0 ao tipo $1","unknown_op":"Erro interno crítico: Operação $0 desconhecida"};
+module.exports = {"token_missing_one":"Erro de sintaxe: Espera-se $0, mas encontrou-se $1 na linha:$2, coluna:$3","token_missing_two":"Erro de sintaxe: Esperava-se $0 ou $1 mas encontrou-se $2 na liha:$3, coluna: $4","eos_missing":"Falta uma nova linha ou ; na linha: $0, coluna: $1","invalid_type":"$0 na linha: $1, coluna: $2 é um tipo inválido. Os tipos válidos são: $3","invalid_array_dimension":"A dimensão inválida na linha: $0, coluna: $1. Insira um $2 ou identificador válido do mesmo tipo.","invalid_array_size":"O tamnho do vetor/matriz excede o máximo de 2 na linha $0","extra_lines":"Nenhum texto é permitido após '}' em 'programa {...}'","invalid_main_return":"A função $0 deve retornar $1 na linha $2","invalid_var_declaration":"Erro na linha $0. Variáveis só podem ser declarados no corpo principal da função e de preferência nas primeiras linhas.","invalid_break_command":"Erro na linha $0. O comando $1 não pode ser usado fora de uma estrutura de repetição ou 'escolha...caso'","invalid_terminal":"Não é possível utilizar $0 na expressão da linha: $1, coluna: $2. Tente um valor númerico, variável ou chamada de função.","const_not_init":"Erro na linha: $0, coluna: $1. Uma variável declarada como const deve ser inicializada","id_missing":"Esperava-se um identificador, mas encontrou-se $0 na linha: $1, coluna: $2","invalid_id_format":"$0 na linha: $1, coluna: $2 não é um identificador válido. O símbolo '.' não é permitido neste contexto.","main_missing":"A função principal não foi encontrada","invalid_global_var":"Erro crítico: Chamada inválida da função initGlobal fora do contexto BASE","not_implemented":"Erro interno crítico: A função definida pelo sistema $0 não foi implementada.","function_missing":"A função $0 não foi encontrada","function_missing_full":"A função $0 na linha: $1, coluna: $2 não foi encontrada","invalid_parameters_size_full":"Erro na linha $0: a quantidade de parâmetros fornecidos à função $1 está incorreta. Esperava-se $2, encontrou-se $3.","invalid_parameters_size":"A quantidade de parâmetros fornecidos à função $0 está incorreta. Esperava-se $1, encontrou-se $2","invalid_ref_full":"A expressão $0 fornecida como parâmetro para a função $1 na linha $2 não é válida para esta função. Use uma variável ou posição de vetor.","invalid_ref":"A expressão $0 fornecida como parâmetro para a função $1 não é válida para esta função. Use uma variável ou posição de vetor.","invalid_parameter_type_full":"A expressão $0 fornecida como parâmetro para a função $1 na linha $2 não é compatível com o tipo esperado.","invalid_parameter_type":"A expressão $0 fornecida como parâmetro para a função $1 não é compatível com o tipo esperado.","unknown_command_full":"Erro interno crítico: comando desconhecido encontrado na linha $0","unknown_command":"Erro interno crítico: comando desconhecido encontrado!","loop_condition_type_full":"Erro na linha: $0, coluna $1: a condição dos laços de repetição deve ser do tipo lógico","loop_condition_type":"A condição dos laços de repetição deve ser do tipo lógico","endless_loop_full":"Possível laço infinito detectado no seu código. Verifique a linha $0","endless_loop":"Possível laço infinito detectado no seu código.","for_condition_type_full":"Erro na linha: $0, coluna $1: a condição de parada do comando para(...) deve ser do tipo lógico","for_condition_type":"A condição de parada do comando para(...) deve ser do tipo lógico","if_condition_type_full":"Erro na linha: $0, coluna $1: a condição de um comando se...senao deve ser do tipo lógico","if_condition_type":"A condição de um comando se...senao deve ser do tipo lógico","invalid_return_type_full":"Erro na linha $0: a expressão não produz um tipo compatível com a função $1. Tipo esperado: $2.","invalid_return_type":"A expressão não produz um tipo compatível com a função $0. Tipo esperado: $1.","invalid_void_return_full":"Erro na linha $0: a função $1 não pode retornar uma expressão vazia, use uma espressão do tipo $2","invalid_void_return":"A função $0 não pode retornar uma expressão vazia, use uma espressão do tipo $1","unexpected_break_command_full":"Erro interno crítico: comando pare encontrado fora do contexto de um laço/escolha..caso na linha $0","unexpected_break_command":"Erro interno crítico: comando pare encontrado fora do contexto de um laço/escolha..caso","invalid_dimension":"As dimensões de um vetor/matriz devem ser do tipo inteiro","void_in_expression_full":"Erro na linha: $0, coluna: $1: a função $2 não pode ser utilizada em uma expressão pois seu tipo de retorno é vazio","void_in_expression":"A função $0 não pode ser utilizada em uma expressão pois seu tipo de retorno é vazio","invalid_array_access_full":"Identificador $0 na linha: $1, coluna: $2 não se refere a um vetor/matriz válido","invalid_array_access":"Identificador $0 não se refere a um vetor/matriz válido","invalid_matrix_access_full":"Identificador $0 na linha: $1, coluna: $2 não se refere a uma matriz válida","invalid_matrix_access":"Identificador $0 não se refere a uma matriz válida","matrix_column_outbounds_full":"Erro na linha $0: número de colunas $1 é inválido para a matriz $2 que possui $3 colunas","matrix_column_outbounds":"Número de colunas $0 é inválido para a matriz $1 que possui $2 colunas","matrix_line_outbounds_full":"Erro na linha $0: número de linhas $1 é inválido para a matriz $2 que possui $3 linhas","matrix_line_outbounds":"Número de linhas $0 é inválido para a matriz $1 que possui $2 linhas","vector_line_outbounds_full":"Erro na linha $0: número de linhas $1 é inválido para a matriz $2 que possui $3 linhas","vector_line_outbounds":"Número de linhas $0 é inválido para a matriz $1 que possui $2 linhas","vector_not_matrix_full":"Erro na linha $0: $1 não é uma matriz","vector_not_matrix":"$1 não é uma matriz","invalid_infix_op_full":"Erro na linha $0: não é possível aplicar a operação $1 entre os tipos $2 e $3","invalid_infix_op":"Não é possível aplicar a operação $0 entre os tipos $1 e $2","invalid_unary_op_full":"Erro na linha $0: não é possível aplicar a operação $1 ao tipo $2","invalid_unary_op":"Não é possível aplicar a operação $0 ao tipo $1","unknown_op":"Erro interno crítico: Operação $0 desconhecida","duplicate_function":"A função $0 na linha: $1, coluna: $2 já foi definida anteriormente.","duplicate_variable":"A variável $0 na linha: $1, coluna: $2 já foi declarada anteriormente.","main_parameters":"A função inicio não pode ter parâmetros.","symbol_not_found_full":"A variável $0 na linha: $1, coluna: $2 não foi declarada","symbol_not_found":"A variável $0 não foi declarada","array_dimension_not_int_full":"As dimensões de um vetor/matriz na linha: $0 devem ser do tipo inteiro.","array_dimension_not_int":"As dimensões de um vetor/matriz devem ser do tipo inteiro.","array_dimension_not_positive_full":"As dimensões de um vetor/matriz na linha: $0 devem ser valores positivos.","array_dimension_not_positive":"As dimensões de um vetor/matriz devem ser valores positivos.","incompatible_types_full":"O tipo $0 não é compatível com o tipo resultante da expressão na linha $1","incompatible_types":"O tipo $0 não é compatível com o tipo resultante da expressão fornecida.","incompatible_types_array_full":"A expressão $0 é incompatível com o tipo $1 na linha: $2, coluna: $3.","incompatible_types_array":"A expressão $0 é incompatível com o tipo $1.","invalid_case_type_full":"O caso $0 na linha $1 é incompatível com o tipo $2.","invalid_case_type":"O caso $0 é incompatível com o tipo $1.","function_no_return":"A função $0 não possui um retorno acessível. Toda função deve ter ao menos um retorno no seu corpo principal.","invalid_array_literal_type_full":"Erro na linha $0: a expressão $1 não resulta em um tipo compatível.","invalid_array_literal_type":"A expressão $0 não resulta em um tipo compatível.","invalid_array_literal_line_full":"Erro na linha $0: esperava-se $1 linhas mas encontrou $2.","invalid_array_literal_line":"Esperava-se $0 linhas mas encontrou $1.","invalid_array_literal_column_full":"Erro na linha $0: esperava-se $1 colunas mas encontrou $2.","invalid_array_literal_column":"Esperava-se $0 colunas mas encontrou $1.","exceeded_input_request":"The amount of requests exceeded the amount of available inputs","test_case_few_reads":"Test case $0: Failed, there are input data remainig!","test_case_failed":"Test case $0: Failed, inputs:<$1>; expected output:<$2>; output:<$3>"};
 
 /***/ }),
 
@@ -1990,10 +2001,10 @@ exports.default = {
 /*!******************************!*\
   !*** ./i18n/en/message.json ***!
   \******************************/
-/*! exports provided: default */
+/*! exports provided: test_case_success, default */
 /***/ (function(module) {
 
-module.exports = {};
+module.exports = {"test_case_success":"Test case $0: OK"};
 
 /***/ }),
 
@@ -2001,10 +2012,10 @@ module.exports = {};
 /*!*************************!*\
   !*** ./i18n/en/ui.json ***!
   \*************************/
-/*! exports provided: function, btn_clear, btn_function, btn_arithmetic_plus, btn_arithmetic_minus, btn_arithmetic_multiplication, btn_arithmetic_division, btn_arithmetic_module, btn_break, btn_case, start, void, integer, real, program, text, text_start, boolean, true, false, variable, command, new_parameter, new_variable, new_global, new_function, vector, text_comment_start, text_comment_main, text_read_var, text_write_var, text_command_read, text_command_write, text_comment, text_attribution, text_if, text_else, text_break, text_for, text_code_while, text_code_do, text_command_do, text_code_switch, text_code_case, text_logic_expression, text_arithmetic_expression, text_iftrue, text_receives, text_repeatNtimes, text_return, text_btn_return, text_whiletrue, text_dowhiletrue, text_switch, text_functioncall, text_value, text_operator, text_parentheses, text_change, text_teacher_algorithm, text_teacher_algorithm_include, text_teacher_test_case, text_teacher_config, text_teacher_data_types, text_teacher_commands, text_teacher_functions, text_teacher_create_functions, text_teacher_create_movement_functions, text_teacher_test_case_input, text_teacher_test_case_output, text_teacher_test_case_actions, text_teacher_test_case_add, text_header_ivprog_functions, text_menu_functions_math, text_menu_functions_text, text_menu_functions_arrangement, text_menu_functions_conversion, text_none_variable, text_none_variable_instruction, tooltip_visual, tooltip_textual, tooltip_upload, tooltip_download, tooltip_undo, tooltip_redo, tooltip_run, tooltip_evaluate, tooltip_help, tooltip_add_global, tooltip_minimize, tooltip_console, var_menu_select_var, var_menu_select_all, var_menu_select_function, expression_menu_select, math, text_t, arrangement, conversion, $sin, $cos, $tan, $sqrt, $pow, $log, $abs, $negate, $invert, $max, $min, $substring, $length, $uppercase, $lowercase, $charAt, $numElements, $matrixLines, $matrixColumns, $isReal, $isInt, $isBool, $castReal, $castInt, $castBool, $castString, default */
+/*! exports provided: function, btn_clear, btn_function, btn_arithmetic_plus, btn_arithmetic_minus, btn_arithmetic_multiplication, btn_arithmetic_division, btn_arithmetic_module, btn_break, btn_case, start, void, integer, real, program, text, text_start, boolean, true, false, variable, command, new_parameter, new_variable, new_global, new_function, vector, text_comment_start, text_comment_main, text_read_var, text_write_var, text_command_read, text_command_write, text_comment, text_attribution, text_if, text_else, text_break, text_for, text_code_while, text_code_do, text_command_do, text_code_switch, text_code_case, text_logic_expression, text_arithmetic_expression, text_iftrue, text_receives, text_repeatNtimes, text_return, text_btn_return, text_whiletrue, text_dowhiletrue, text_switch, text_functioncall, text_value, text_operator, text_parentheses, text_change, text_teacher_algorithm, text_teacher_algorithm_include, text_teacher_test_case, text_teacher_config, text_teacher_data_types, text_teacher_commands, text_teacher_functions, text_teacher_create_functions, text_teacher_create_movement_functions, text_teacher_test_case_input, text_teacher_test_case_output, text_teacher_test_case_actions, text_teacher_test_case_add, text_header_ivprog_functions, text_menu_functions_math, text_menu_functions_text, text_menu_functions_arrangement, text_menu_functions_conversion, text_none_variable, text_none_variable_instruction, text_ivprog_description, tooltip_visual, tooltip_textual, tooltip_upload, tooltip_download, tooltip_undo, tooltip_redo, tooltip_run, tooltip_evaluate, tooltip_help, tooltip_add_global, tooltip_minimize, tooltip_console, var_menu_select_var, var_menu_select_all, var_menu_select_function, expression_menu_select, math, text_t, inform_valid_name, inform_valid_content, inform_valid_expression, inform_valid_name_duplicated, inform_valid_global_duplicated, inform_valid_variable_duplicated, arrangement, conversion, $sin, $cos, $tan, $sqrt, $pow, $log, $abs, $negate, $invert, $max, $min, $substring, $length, $uppercase, $lowercase, $charAt, $numElements, $matrixLines, $matrixColumns, $isReal, $isInt, $isBool, $castReal, $castInt, $castBool, $castString, text_ivprog_version, default */
 /***/ (function(module) {
 
-module.exports = {"function":"function","btn_clear":"Clear","btn_function":"Function","btn_arithmetic_plus":"Sum","btn_arithmetic_minus":"Minus","btn_arithmetic_multiplication":"Multiplication","btn_arithmetic_division":"Division","btn_arithmetic_module":"Module","btn_break":"Break","btn_case":"Case","start":"start","void":"void","integer":"integer","real":"real","program":"program","text":"string","text_start":"text","boolean":"boolean","true":"true","false":"false","variable":"Variable","command":"Command","new_parameter":"new_parameter","new_variable":"new_variable","new_global":"new_global","new_function":"new_function","vector":"vector","text_comment_start":"Initial comment of function...","text_comment_main":"This is the main function...","text_read_var":"Reading data","text_write_var":"Writing data","text_command_read":"read","text_command_write":"write","text_comment":"Comment","text_attribution":"Attribution","text_if":"if","text_else":"else","text_break":"break","text_for":"for","text_code_while":"while","text_code_do":"do","text_command_do":"do","text_code_switch":"switch","text_code_case":"case","text_logic_expression":"Logic Expression","text_arithmetic_expression":"Arithmetic Expression","text_iftrue":"If true then","text_receives":"receives","text_repeatNtimes":"Repeat N times","text_return":"return","text_btn_return":"Return","text_whiletrue":"While true","text_dowhiletrue":"Do while true","text_switch":"Switch","text_functioncall":"Function call","text_value":"Value","text_operator":"Operator","text_parentheses":"Parentheses","text_change":"Change","text_teacher_algorithm":"Algorithm","text_teacher_algorithm_include":"Include the following algorithm in exercise","text_teacher_test_case":"Test cases","text_teacher_config":"Settings","text_teacher_data_types":"Data types","text_teacher_commands":"Commands","text_teacher_functions":"Functions","text_teacher_create_functions":"Create new functions","text_teacher_create_movement_functions":"Move functions","text_teacher_test_case_input":"Input","text_teacher_test_case_output":"Output","text_teacher_test_case_actions":"Actions","text_teacher_test_case_add":"Add test cases","text_header_ivprog_functions":"iVProg Functions","text_menu_functions_math":"Mathematic","text_menu_functions_text":"Text","text_menu_functions_arrangement":"Arrangement","text_menu_functions_conversion":"Conversion","text_none_variable":"There is no declared variable","text_none_variable_instruction":"Create a new variable to use it","tooltip_visual":"Visual programming","tooltip_textual":"Textual programming","tooltip_upload":"Upload code file","tooltip_download":"Download code file","tooltip_undo":"Undo","tooltip_redo":"Redo","tooltip_run":"Run program","tooltip_evaluate":"Evaluate program","tooltip_help":"Help","tooltip_add_global":"Add global variable","tooltip_minimize":"Hidde function elements","tooltip_console":"Open/Close console","var_menu_select_var":"Select a var","var_menu_select_all":"Select","var_menu_select_function":"Select a function","expression_menu_select":"Select an expression","math":"Mathematic","text_t":"Text","arrangement":"Arrangement","conversion":"Conversion","$sin":"sin","$cos":"cos","$tan":"tan","$sqrt":"sqrt","$pow":"pow","$log":"log","$abs":"abs","$negate":"negate","$invert":"invert","$max":"maximum","$min":"minimum","$substring":"substring","$length":"length","$uppercase":"uppercase","$lowercase":"lowercase","$charAt":"char_at","$numElements":"total_of_elements","$matrixLines":"total_of_lines","$matrixColumns":"total_of_columns","$isReal":"is_real","$isInt":"is_integer","$isBool":"is_logic","$castReal":"to_real","$castInt":"to_integer","$castBool":"to_logic","$castString":"to_string"};
+module.exports = {"function":"function","btn_clear":"Clear","btn_function":"Function","btn_arithmetic_plus":"Sum","btn_arithmetic_minus":"Minus","btn_arithmetic_multiplication":"Multiplication","btn_arithmetic_division":"Division","btn_arithmetic_module":"Module","btn_break":"Break","btn_case":"Case","start":"start","void":"void","integer":"integer","real":"real","program":"program","text":"string","text_start":"text","boolean":"boolean","true":"true","false":"false","variable":"Variable","command":"Command","new_parameter":"new_parameter","new_variable":"new_variable","new_global":"new_global","new_function":"new_function","vector":"vector","text_comment_start":"Initial comment of function...","text_comment_main":"This is the main function...","text_read_var":"Reading data","text_write_var":"Writing data","text_command_read":"read","text_command_write":"write","text_comment":"Comment","text_attribution":"Attribution","text_if":"if","text_else":"else","text_break":"break","text_for":"for","text_code_while":"while","text_code_do":"do","text_command_do":"do","text_code_switch":"switch","text_code_case":"case","text_logic_expression":"Logic Expression","text_arithmetic_expression":"Relational Expression","text_iftrue":"If true then","text_receives":"receives","text_repeatNtimes":"Repeat N times","text_return":"return","text_btn_return":"Return","text_whiletrue":"While true","text_dowhiletrue":"Do while true","text_switch":"Switch","text_functioncall":"Function call","text_value":"Value","text_operator":"Operator","text_parentheses":"Parentheses","text_change":"Change","text_teacher_algorithm":"Algorithm","text_teacher_algorithm_include":"Include the following algorithm in exercise","text_teacher_test_case":"Test cases","text_teacher_config":"Settings","text_teacher_data_types":"Data types","text_teacher_commands":"Commands","text_teacher_functions":"Functions","text_teacher_create_functions":"Create new functions","text_teacher_create_movement_functions":"Move functions","text_teacher_test_case_input":"Input","text_teacher_test_case_output":"Output","text_teacher_test_case_actions":"Actions","text_teacher_test_case_add":"Add test cases","text_header_ivprog_functions":"iVProg Functions","text_menu_functions_math":"Mathematic","text_menu_functions_text":"Text","text_menu_functions_arrangement":"Arrangement","text_menu_functions_conversion":"Conversion","text_none_variable":"There is no declared variable","text_none_variable_instruction":"Create a new variable to use it","text_ivprog_description":"Interactive Visual Programming on the Internet","tooltip_visual":"Visual programming","tooltip_textual":"Textual programming","tooltip_upload":"Upload code file","tooltip_download":"Download code file","tooltip_undo":"Undo","tooltip_redo":"Redo","tooltip_run":"Run program","tooltip_evaluate":"Evaluate program","tooltip_help":"Help","tooltip_add_global":"Add global variable","tooltip_minimize":"Hidde function elements","tooltip_console":"Open/Close console","var_menu_select_var":"Select a var","var_menu_select_all":"Select","var_menu_select_function":"Select a function","expression_menu_select":"Construct any logical condition","math":"Mathematic","text_t":"Text","inform_valid_name":"Inform a valid name!","inform_valid_content":"Enter some content!","inform_valid_expression":"Construct the logical condition!","inform_valid_name_duplicated":"This name is already in use by other function.","inform_valid_global_duplicated":"A global variable with this name already exists.","inform_valid_variable_duplicated":"A local variable with this name already exists.","arrangement":"Arrangement","conversion":"Conversion","$sin":"sin","$cos":"cos","$tan":"tan","$sqrt":"sqrt","$pow":"pow","$log":"log","$abs":"abs","$negate":"negate","$invert":"invert","$max":"maximum","$min":"minimum","$substring":"substring","$length":"length","$uppercase":"uppercase","$lowercase":"lowercase","$charAt":"char_at","$numElements":"total_of_elements","$matrixLines":"total_of_lines","$matrixColumns":"total_of_columns","$isReal":"is_real","$isInt":"is_integer","$isBool":"is_logic","$castReal":"to_real","$castInt":"to_integer","$castBool":"to_logic","$castString":"to_string","text_ivprog_version":"Version"};
 
 /***/ }),
 
@@ -2012,10 +2023,10 @@ module.exports = {"function":"function","btn_clear":"Clear","btn_function":"Func
 /*!****************************!*\
   !*** ./i18n/es/error.json ***!
   \****************************/
-/*! exports provided: default */
+/*! exports provided: token_missing_one, token_missing_two, eos_missing, invalid_type, invalid_array_dimension, invalid_array_size, extra_lines, invalid_main_return, invalid_var_declaration, invalid_break_command, invalid_terminal, const_not_init, id_missing, invalid_id_format, main_missing, invalid_global_var, not_implemented, function_missing, function_missing_full, invalid_parameters_size_full, invalid_parameters_size, invalid_ref_full, invalid_ref, invalid_parameter_type_full, invalid_parameter_type, unknown_command_full, unknown_command, loop_condition_type_full, loop_condition_type, endless_loop_full, endless_loop, for_condition_type_full, for_condition_type, if_condition_type_full, if_condition_type, invalid_return_type_full, invalid_return_type, invalid_void_return_full, invalid_void_return, unexpected_break_command_full, unexpected_break_command, invalid_dimension, void_in_expression_full, void_in_expression, invalid_array_access_full, invalid_array_access, invalid_matrix_access_full, invalid_matrix_access, matrix_column_outbounds_full, matrix_column_outbounds, matrix_line_outbounds_full, matrix_line_outbounds, vector_line_outbounds_full, vector_line_outbounds, vector_not_matrix_full, vector_not_matrix, invalid_infix_op_full, invalid_infix_op, invalid_unary_op_full, invalid_unary_op, unknown_op, duplicate_function, duplicate_variable, main_parameters, symbol_not_found_full, symbol_not_found, array_dimension_not_int_full, array_dimension_not_int, array_dimension_not_positive_full, array_dimension_not_positive, incompatible_types_full, incompatible_types, incompatible_types_array_full, incompatible_types_array, invalid_case_type_full, invalid_case_type, function_no_return, invalid_array_literal_type_full, invalid_array_literal_type, invalid_array_literal_line_full, invalid_array_literal_line, invalid_array_literal_column_full, invalid_array_literal_column, exceeded_input_request, test_case_few_reads, test_case_failed, default */
 /***/ (function(module) {
 
-module.exports = {};
+module.exports = {"token_missing_one":"Erro de sintaxe: Espera-se $0, mas encontrou-se $1 na linha:$2, coluna:$3","token_missing_two":"Erro de sintaxe: Esperava-se $0 ou $1 mas encontrou-se $2 na liha:$3, coluna: $4","eos_missing":"Falta uma nova linha ou ; na linha: $0, coluna: $1","invalid_type":"$0 na linha: $1, coluna: $2 é um tipo inválido. Os tipos válidos são: $3","invalid_array_dimension":"A dimensão inválida na linha: $0, coluna: $1. Insira um $2 ou identificador válido do mesmo tipo.","invalid_array_size":"O tamnho do vetor/matriz excede o máximo de 2 na linha $0","extra_lines":"Nenhum texto é permitido após '}' em 'programa {...}'","invalid_main_return":"A função $0 deve retornar $1 na linha $2","invalid_var_declaration":"Erro na linha $0. Variáveis só podem ser declarados no corpo principal da função e de preferência nas primeiras linhas.","invalid_break_command":"Erro na linha $0. O comando $1 não pode ser usado fora de uma estrutura de repetição ou 'escolha...caso'","invalid_terminal":"Não é possível utilizar $0 na expressão da linha: $1, coluna: $2. Tente um valor númerico, variável ou chamada de função.","const_not_init":"Erro na linha: $0, coluna: $1. Uma variável declarada como const deve ser inicializada","id_missing":"Esperava-se um identificador, mas encontrou-se $0 na linha: $1, coluna: $2","invalid_id_format":"$0 na linha: $1, coluna: $2 não é um identificador válido. O símbolo '.' não é permitido neste contexto.","main_missing":"A função principal não foi encontrada","invalid_global_var":"Erro crítico: Chamada inválida da função initGlobal fora do contexto BASE","not_implemented":"Erro interno crítico: A função definida pelo sistema $0 não foi implementada.","function_missing":"A função $0 não foi encontrada","function_missing_full":"A função $0 na linha: $1, coluna: $2 não foi encontrada","invalid_parameters_size_full":"Erro na linha $0: a quantidade de parâmetros fornecidos à função $1 está incorreta. Esperava-se $2, encontrou-se $3.","invalid_parameters_size":"A quantidade de parâmetros fornecidos à função $0 está incorreta. Esperava-se $1, encontrou-se $2","invalid_ref_full":"A expressão $0 fornecida como parâmetro para a função $1 na linha $2 não é válida para esta função. Use uma variável ou posição de vetor.","invalid_ref":"A expressão $0 fornecida como parâmetro para a função $1 não é válida para esta função. Use uma variável ou posição de vetor.","invalid_parameter_type_full":"A expressão $0 fornecida como parâmetro para a função $1 na linha $2 não é compatível com o tipo esperado.","invalid_parameter_type":"A expressão $0 fornecida como parâmetro para a função $1 não é compatível com o tipo esperado.","unknown_command_full":"Erro interno crítico: comando desconhecido encontrado na linha $0","unknown_command":"Erro interno crítico: comando desconhecido encontrado!","loop_condition_type_full":"Erro na linha: $0, coluna $1: a condição dos laços de repetição deve ser do tipo lógico","loop_condition_type":"A condição dos laços de repetição deve ser do tipo lógico","endless_loop_full":"Possível laço infinito detectado no seu código. Verifique a linha $0","endless_loop":"Possível laço infinito detectado no seu código.","for_condition_type_full":"Erro na linha: $0, coluna $1: a condição de parada do comando para(...) deve ser do tipo lógico","for_condition_type":"A condição de parada do comando para(...) deve ser do tipo lógico","if_condition_type_full":"Erro na linha: $0, coluna $1: a condição de um comando se...senao deve ser do tipo lógico","if_condition_type":"A condição de um comando se...senao deve ser do tipo lógico","invalid_return_type_full":"Erro na linha $0: a expressão não produz um tipo compatível com a função $1. Tipo esperado: $2.","invalid_return_type":"A expressão não produz um tipo compatível com a função $0. Tipo esperado: $1.","invalid_void_return_full":"Erro na linha $0: a função $1 não pode retornar uma expressão vazia, use uma espressão do tipo $2","invalid_void_return":"A função $0 não pode retornar uma expressão vazia, use uma espressão do tipo $1","unexpected_break_command_full":"Erro interno crítico: comando pare encontrado fora do contexto de um laço/escolha..caso na linha $0","unexpected_break_command":"Erro interno crítico: comando pare encontrado fora do contexto de um laço/escolha..caso","invalid_dimension":"As dimensões de um vetor/matriz devem ser do tipo inteiro","void_in_expression_full":"Erro na linha: $0, coluna: $1: a função $2 não pode ser utilizada em uma expressão pois seu tipo de retorno é vazio","void_in_expression":"A função $0 não pode ser utilizada em uma expressão pois seu tipo de retorno é vazio","invalid_array_access_full":"Identificador $0 na linha: $1, coluna: $2 não se refere a um vetor/matriz válido","invalid_array_access":"Identificador $0 não se refere a um vetor/matriz válido","invalid_matrix_access_full":"Identificador $0 na linha: $1, coluna: $2 não se refere a uma matriz válida","invalid_matrix_access":"Identificador $0 não se refere a uma matriz válida","matrix_column_outbounds_full":"Erro na linha $0: número de colunas $1 é inválido para a matriz $2 que possui $3 colunas","matrix_column_outbounds":"Número de colunas $0 é inválido para a matriz $1 que possui $2 colunas","matrix_line_outbounds_full":"Erro na linha $0: número de linhas $1 é inválido para a matriz $2 que possui $3 linhas","matrix_line_outbounds":"Número de linhas $0 é inválido para a matriz $1 que possui $2 linhas","vector_line_outbounds_full":"Erro na linha $0: número de linhas $1 é inválido para a matriz $2 que possui $3 linhas","vector_line_outbounds":"Número de linhas $0 é inválido para a matriz $1 que possui $2 linhas","vector_not_matrix_full":"Erro na linha $0: $1 não é uma matriz","vector_not_matrix":"$1 não é uma matriz","invalid_infix_op_full":"Erro na linha $0: não é possível aplicar a operação $1 entre os tipos $2 e $3","invalid_infix_op":"Não é possível aplicar a operação $0 entre os tipos $1 e $2","invalid_unary_op_full":"Erro na linha $0: não é possível aplicar a operação $1 ao tipo $2","invalid_unary_op":"Não é possível aplicar a operação $0 ao tipo $1","unknown_op":"Erro interno crítico: Operação $0 desconhecida","duplicate_function":"A função $0 na linha: $1, coluna: $2 já foi definida anteriormente.","duplicate_variable":"A variável $0 na linha: $1, coluna: $2 já foi declarada anteriormente.","main_parameters":"A função inicio não pode ter parâmetros.","symbol_not_found_full":"A variável $0 na linha: $1, coluna: $2 não foi declarada","symbol_not_found":"A variável $0 não foi declarada","array_dimension_not_int_full":"As dimensões de um vetor/matriz na linha: $0 devem ser do tipo inteiro.","array_dimension_not_int":"As dimensões de um vetor/matriz devem ser do tipo inteiro.","array_dimension_not_positive_full":"As dimensões de um vetor/matriz na linha: $0 devem ser valores positivos.","array_dimension_not_positive":"As dimensões de um vetor/matriz devem ser valores positivos.","incompatible_types_full":"O tipo $0 não é compatível com o tipo resultante da expressão na linha $1","incompatible_types":"O tipo $0 não é compatível com o tipo resultante da expressão fornecida.","incompatible_types_array_full":"A expressão $0 é incompatível com o tipo $1 na linha: $2, coluna: $3.","incompatible_types_array":"A expressão $0 é incompatível com o tipo $1.","invalid_case_type_full":"O caso $0 na linha $1 é incompatível com o tipo $2.","invalid_case_type":"O caso $0 é incompatível com o tipo $1.","function_no_return":"A função $0 não possui um retorno acessível. Toda função deve ter ao menos um retorno no seu corpo principal.","invalid_array_literal_type_full":"Erro na linha $0: a expressão $1 não resulta em um tipo compatível.","invalid_array_literal_type":"A expressão $0 não resulta em um tipo compatível.","invalid_array_literal_line_full":"Erro na linha $0: esperava-se $1 linhas mas encontrou $2.","invalid_array_literal_line":"Esperava-se $0 linhas mas encontrou $1.","invalid_array_literal_column_full":"Erro na linha $0: esperava-se $1 colunas mas encontrou $2.","invalid_array_literal_column":"Esperava-se $0 colunas mas encontrou $1.","exceeded_input_request":"A quantidade de leituras requisitadas execedeu a quantidade de entradas disponíveis.","test_case_few_reads":"Caso de teste $0: Falhou, ainda restam entradas!","test_case_failed":"Caso de teste $0: Falhou, entradas:<$1>; saída esperada:<$2>; saída:<$3>"};
 
 /***/ }),
 
@@ -2059,10 +2070,10 @@ exports.default = {
 /*!******************************!*\
   !*** ./i18n/es/message.json ***!
   \******************************/
-/*! exports provided: default */
+/*! exports provided: test_case_success, default */
 /***/ (function(module) {
 
-module.exports = {};
+module.exports = {"test_case_success":"Caso de teste $0: OK"};
 
 /***/ }),
 
@@ -2070,10 +2081,10 @@ module.exports = {};
 /*!*************************!*\
   !*** ./i18n/es/ui.json ***!
   \*************************/
-/*! exports provided: function, btn_clear, btn_function, btn_arithmetic_plus, btn_arithmetic_minus, btn_arithmetic_multiplication, btn_arithmetic_division, btn_arithmetic_module, btn_break, btn_case, start, void, integer, real, program, text, text_start, boolean, true, false, variable, command, new_parameter, new_variable, new_global, new_function, vector, text_comment_start, text_comment_main, text_read_var, text_write_var, text_command_read, text_command_write, text_comment, text_attribution, text_if, text_break, text_else, text_return, text_btn_return, text_for, text_code_while, text_code_do, text_command_do, text_code_switch, text_code_case, text_logic_expression, text_arithmetic_expression, text_iftrue, text_repeatNtimes, text_receives, text_whiletrue, text_dowhiletrue, text_switch, text_functioncall, text_value, text_operator, text_parentheses, text_change, text_teacher_algorithm, text_teacher_algorithm_include, text_teacher_test_case, text_teacher_config, text_teacher_data_types, text_teacher_commands, text_teacher_functions, text_teacher_create_functions, text_teacher_create_movement_functions, text_teacher_test_case_input, text_teacher_test_case_output, text_teacher_test_case_actions, text_teacher_test_case_add, text_header_ivprog_functions, text_menu_functions_math, text_menu_functions_text, text_menu_functions_arrangement, text_menu_functions_conversion, text_none_variable, text_none_variable_instruction, tooltip_visual, tooltip_textual, tooltip_upload, tooltip_download, tooltip_undo, tooltip_redo, tooltip_run, tooltip_evaluate, tooltip_help, tooltip_add_global, tooltip_minimize, tooltip_console, var_menu_select_var, var_menu_select_all, var_menu_select_function, expression_menu_select, $sin, math, arrangement, conversion, text_t, $cos, $tan, $sqrt, $pow, $log, $abs, $negate, $invert, $max, $min, $substring, $length, $uppercase, $lowercase, $charAt, $numElements, $matrixLines, $matrixColumns, $isReal, $isInt, $isBool, $castReal, $castInt, $castBool, $castString, default */
+/*! exports provided: function, btn_clear, btn_function, btn_arithmetic_plus, btn_arithmetic_minus, btn_arithmetic_multiplication, btn_arithmetic_division, btn_arithmetic_module, btn_break, btn_case, start, void, integer, real, program, text, text_start, boolean, true, false, variable, command, new_parameter, new_variable, new_global, new_function, vector, text_comment_start, text_comment_main, text_read_var, text_write_var, text_command_read, text_command_write, text_comment, text_attribution, text_if, text_break, text_else, text_return, text_btn_return, text_for, text_code_while, text_code_do, text_command_do, text_code_switch, text_code_case, text_logic_expression, text_arithmetic_expression, text_iftrue, text_repeatNtimes, text_receives, text_whiletrue, text_dowhiletrue, text_switch, text_functioncall, text_value, text_operator, text_parentheses, text_change, text_teacher_algorithm, text_teacher_algorithm_include, text_teacher_test_case, text_teacher_config, text_teacher_data_types, text_teacher_commands, text_teacher_functions, text_teacher_create_functions, text_teacher_create_movement_functions, text_teacher_test_case_input, text_teacher_test_case_output, text_teacher_test_case_actions, text_teacher_test_case_add, text_header_ivprog_functions, text_menu_functions_math, text_menu_functions_text, text_menu_functions_arrangement, text_menu_functions_conversion, text_none_variable, text_none_variable_instruction, text_ivprog_description, tooltip_visual, tooltip_textual, tooltip_upload, tooltip_download, tooltip_undo, tooltip_redo, tooltip_run, tooltip_evaluate, tooltip_help, tooltip_add_global, tooltip_minimize, tooltip_console, var_menu_select_var, var_menu_select_all, var_menu_select_function, expression_menu_select, $sin, math, arrangement, conversion, inform_valid_name, inform_valid_content, inform_valid_expression, inform_valid_name_duplicated, inform_valid_global_duplicated, inform_valid_variable_duplicated, text_t, $cos, $tan, $sqrt, $pow, $log, $abs, $negate, $invert, $max, $min, $substring, $length, $uppercase, $lowercase, $charAt, $numElements, $matrixLines, $matrixColumns, $isReal, $isInt, $isBool, $castReal, $castInt, $castBool, $castString, text_ivprog_version, default */
 /***/ (function(module) {
 
-module.exports = {"function":"function","btn_clear":"Clear","btn_function":"Function","btn_arithmetic_plus":"Sum","btn_arithmetic_minus":"Minus","btn_arithmetic_multiplication":"Multiplication","btn_arithmetic_division":"Division","btn_arithmetic_module":"Module","btn_break":"Break","btn_case":"Case","start":"start","void":"void","integer":"integer","real":"real","program":"program","text":"Text","text_start":"text","boolean":"boolean","true":"true","false":"false","variable":"Variable","command":"Command","new_parameter":"new_parameter","new_variable":"new_variable","new_global":"new_global","new_function":"new_function","vector":"vector","text_comment_start":"Initial comment of function...","text_comment_main":"This is the main function...","text_read_var":"Reading data","text_write_var":"Writing data","text_command_read":"read","text_command_write":"write","text_comment":"Comment","text_attribution":"Attribution","text_if":"if","text_break":"break","text_else":"else","text_return":"return","text_btn_return":"Return","text_for":"for","text_code_while":"while","text_code_do":"do","text_command_do":"do","text_code_switch":"switch","text_code_case":"case","text_logic_expression":"Logic Expression","text_arithmetic_expression":"Arithmetic Expression","text_iftrue":"If true then","text_repeatNtimes":"Repeat N times","text_receives":"receives","text_whiletrue":"While true","text_dowhiletrue":"Do while true","text_switch":"Switch","text_functioncall":"Function call","text_value":"Value","text_operator":"Operator","text_parentheses":"Parentheses","text_change":"Change","text_teacher_algorithm":"Algorithm","text_teacher_algorithm_include":"Include the following algorithm in exercise","text_teacher_test_case":"Test cases","text_teacher_config":"Settings","text_teacher_data_types":"Data types","text_teacher_commands":"Commands","text_teacher_functions":"Functions","text_teacher_create_functions":"Create new functions","text_teacher_create_movement_functions":"Move functions","text_teacher_test_case_input":"Input","text_teacher_test_case_output":"Output","text_teacher_test_case_actions":"Actions","text_teacher_test_case_add":"Add test cases","text_header_ivprog_functions":"iVProg Functions","text_menu_functions_math":"Mathematics","text_menu_functions_text":"Text","text_menu_functions_arrangement":"Arrangement","text_menu_functions_conversion":"Conversion","text_none_variable":"There is no declared variable","text_none_variable_instruction":"Create a new variable to use it","tooltip_visual":"Visual programming","tooltip_textual":"Textual programming","tooltip_upload":"Upload code file","tooltip_download":"Download code file","tooltip_undo":"Undo","tooltip_redo":"Redo","tooltip_run":"Run program","tooltip_evaluate":"Evaluate program","tooltip_help":"Help","tooltip_add_global":"Add global variable","tooltip_minimize":"Hidde function elements","tooltip_console":"Open/Close console","var_menu_select_var":"Select a var","var_menu_select_all":"Select","var_menu_select_function":"Select a function","expression_menu_select":"Select an expression","$sin":"sin","math":"Mathematic","arrangement":"Arrangement","conversion":"Conversion","text_t":"Text","$cos":"cos","$tan":"tan","$sqrt":"sqrt","$pow":"pow","$log":"log","$abs":"abs","$negate":"negate","$invert":"invert","$max":"maximum","$min":"minimum","$substring":"substring","$length":"length","$uppercase":"uppercase","$lowercase":"lowercase","$charAt":"char_at","$numElements":"total_of_elements","$matrixLines":"total_of_lines","$matrixColumns":"total_of_columns","$isReal":"is_real","$isInt":"is_integer","$isBool":"is_logic","$castReal":"to_real","$castInt":"to_integer","$castBool":"to_logic","$castString":"to_string"};
+module.exports = {"function":"function","btn_clear":"Clear","btn_function":"Function","btn_arithmetic_plus":"Sum","btn_arithmetic_minus":"Minus","btn_arithmetic_multiplication":"Multiplication","btn_arithmetic_division":"Division","btn_arithmetic_module":"Module","btn_break":"Break","btn_case":"Case","start":"start","void":"void","integer":"integer","real":"real","program":"program","text":"Text","text_start":"text","boolean":"boolean","true":"true","false":"false","variable":"Variable","command":"Command","new_parameter":"new_parameter","new_variable":"new_variable","new_global":"new_global","new_function":"new_function","vector":"vector","text_comment_start":"Initial comment of function...","text_comment_main":"This is the main function...","text_read_var":"Reading data","text_write_var":"Writing data","text_command_read":"read","text_command_write":"write","text_comment":"Comment","text_attribution":"Attribution","text_if":"if","text_break":"break","text_else":"else","text_return":"return","text_btn_return":"Return","text_for":"for","text_code_while":"while","text_code_do":"do","text_command_do":"do","text_code_switch":"switch","text_code_case":"case","text_logic_expression":"Logic Expression","text_arithmetic_expression":"Relational Expression","text_iftrue":"If true then","text_repeatNtimes":"Repeat N times","text_receives":"receives","text_whiletrue":"While true","text_dowhiletrue":"Do while true","text_switch":"Switch","text_functioncall":"Function call","text_value":"Value","text_operator":"Operator","text_parentheses":"Parentheses","text_change":"Change","text_teacher_algorithm":"Algorithm","text_teacher_algorithm_include":"Include the following algorithm in exercise","text_teacher_test_case":"Test cases","text_teacher_config":"Settings","text_teacher_data_types":"Data types","text_teacher_commands":"Commands","text_teacher_functions":"Functions","text_teacher_create_functions":"Create new functions","text_teacher_create_movement_functions":"Move functions","text_teacher_test_case_input":"Input","text_teacher_test_case_output":"Output","text_teacher_test_case_actions":"Actions","text_teacher_test_case_add":"Add test cases","text_header_ivprog_functions":"iVProg Functions","text_menu_functions_math":"Mathematics","text_menu_functions_text":"Text","text_menu_functions_arrangement":"Arrangement","text_menu_functions_conversion":"Conversion","text_none_variable":"There is no declared variable","text_none_variable_instruction":"Create a new variable to use it","text_ivprog_description":"Interactive Visual Programming on the Internet","tooltip_visual":"Visual programming","tooltip_textual":"Textual programming","tooltip_upload":"Upload code file","tooltip_download":"Download code file","tooltip_undo":"Undo","tooltip_redo":"Redo","tooltip_run":"Run program","tooltip_evaluate":"Evaluate program","tooltip_help":"Help","tooltip_add_global":"Add global variable","tooltip_minimize":"Hidde function elements","tooltip_console":"Open/Close console","var_menu_select_var":"Select a var","var_menu_select_all":"Select","var_menu_select_function":"Select a function","expression_menu_select":"Construct any logical condition","$sin":"sin","math":"Mathematic","arrangement":"Arrangement","conversion":"Conversion","inform_valid_name":"Inform a valid name!","inform_valid_content":"Enter some content!","inform_valid_expression":"Construct the logical condition!","inform_valid_name_duplicated":"This name is already in use by other function.","inform_valid_global_duplicated":"A global variable with this name already exists.","inform_valid_variable_duplicated":"A local variable with this name already exists.","text_t":"Text","$cos":"cos","$tan":"tan","$sqrt":"sqrt","$pow":"pow","$log":"log","$abs":"abs","$negate":"negate","$invert":"invert","$max":"maximum","$min":"minimum","$substring":"substring","$length":"length","$uppercase":"uppercase","$lowercase":"lowercase","$charAt":"char_at","$numElements":"total_of_elements","$matrixLines":"total_of_lines","$matrixColumns":"total_of_columns","$isReal":"is_real","$isInt":"is_integer","$isBool":"is_logic","$castReal":"to_real","$castInt":"to_integer","$castBool":"to_logic","$castString":"to_string","text_ivprog_version":"Version"};
 
 /***/ }),
 
@@ -2117,10 +2128,10 @@ exports.default = {
 /*!****************************!*\
   !*** ./i18n/pt/error.json ***!
   \****************************/
-/*! exports provided: token_missing_one, token_missing_two, eos_missing, invalid_type, invalid_array_dimension, invalid_array_size, extra_lines, invalid_main_return, invalid_var_declaration, invalid_break_command, invalid_terminal, const_not_init, id_missing, invalid_id_format, main_missing, invalid_global_var, not_implemented, function_missing, function_missing_full, invalid_parameters_size_full, invalid_parameters_size, invalid_ref_full, invalid_ref, invalid_parameter_type_full, invalid_parameter_type, unknown_command_full, unknown_command, loop_condition_type_full, loop_condition_type, endless_loop_full, endless_loop, for_condition_type_full, for_condition_type, if_condition_type_full, if_condition_type, invalid_return_type_full, invalid_return_type, invalid_void_return_full, invalid_void_return, unexpected_break_command_full, unexpected_break_command, invalid_dimension, void_in_expression_full, void_in_expression, invalid_array_access_full, invalid_array_access, invalid_matrix_access_full, invalid_matrix_access, matrix_column_outbounds_full, matrix_column_outbounds, matrix_line_outbounds_full, matrix_line_outbounds, vector_line_outbounds_full, vector_line_outbounds, vector_not_matrix_full, vector_not_matrix, invalid_infix_op_full, invalid_infix_op, invalid_unary_op_full, invalid_unary_op, unknown_op, duplicate_function, duplicate_variable, main_parameters, symbol_not_found_full, symbol_not_found, array_dimension_not_int_full, array_dimension_not_int, array_dimension_not_positive_full, array_dimension_not_positive, incompatible_types_full, incompatible_types, incompatible_types_array_full, incompatible_types_array, invalid_case_type_full, invalid_case_type, function_no_return, invalid_array_literal_type_full, invalid_array_literal_type, invalid_array_literal_line_full, invalid_array_literal_line, invalid_array_literal_column_full, invalid_array_literal_column, default */
+/*! exports provided: token_missing_one, token_missing_two, eos_missing, invalid_type, invalid_array_dimension, invalid_array_size, extra_lines, invalid_main_return, invalid_var_declaration, invalid_break_command, invalid_terminal, const_not_init, id_missing, invalid_id_format, main_missing, invalid_global_var, not_implemented, function_missing, function_missing_full, invalid_parameters_size_full, invalid_parameters_size, invalid_ref_full, invalid_ref, invalid_parameter_type_full, invalid_parameter_type, unknown_command_full, unknown_command, loop_condition_type_full, loop_condition_type, endless_loop_full, endless_loop, for_condition_type_full, for_condition_type, if_condition_type_full, if_condition_type, invalid_return_type_full, invalid_return_type, invalid_void_return_full, invalid_void_return, unexpected_break_command_full, unexpected_break_command, invalid_dimension, void_in_expression_full, void_in_expression, invalid_array_access_full, invalid_array_access, invalid_matrix_access_full, invalid_matrix_access, matrix_column_outbounds_full, matrix_column_outbounds, matrix_line_outbounds_full, matrix_line_outbounds, vector_line_outbounds_full, vector_line_outbounds, vector_not_matrix_full, vector_not_matrix, invalid_infix_op_full, invalid_infix_op, invalid_unary_op_full, invalid_unary_op, unknown_op, duplicate_function, duplicate_variable, main_parameters, symbol_not_found_full, symbol_not_found, array_dimension_not_int_full, array_dimension_not_int, array_dimension_not_positive_full, array_dimension_not_positive, incompatible_types_full, incompatible_types, incompatible_types_array_full, incompatible_types_array, invalid_case_type_full, invalid_case_type, function_no_return, invalid_array_literal_type_full, invalid_array_literal_type, invalid_array_literal_line_full, invalid_array_literal_line, invalid_array_literal_column_full, invalid_array_literal_column, exceeded_input_request, test_case_few_reads, test_case_failed, default */
 /***/ (function(module) {
 
-module.exports = {"token_missing_one":"Erro de sintaxe: Espera-se $0, mas encontrou-se $1 na linha:$2, coluna:$3","token_missing_two":"Erro de sintaxe: Esperava-se $0 ou $1 mas encontrou-se $2 na liha:$3, coluna: $4","eos_missing":"Falta uma nova linha ou ; na linha: $0, coluna: $1","invalid_type":"$0 na linha: $1, coluna: $2 é um tipo inválido. Os tipos válidos são: $3","invalid_array_dimension":"A dimensão inválida na linha: $0, coluna: $1. Insira um $2 ou identificador válido do mesmo tipo.","invalid_array_size":"O tamnho do vetor/matriz excede o máximo de 2 na linha $0","extra_lines":"Nenhum texto é permitido após '}' em 'programa {...}'","invalid_main_return":"A função $0 deve retornar $1 na linha $2","invalid_var_declaration":"Erro na linha $0. Variáveis só podem ser declarados no corpo principal da função e de preferência nas primeiras linhas.","invalid_break_command":"Erro na linha $0. O comando $1 não pode ser usado fora de uma estrutura de repetição ou 'escolha...caso'","invalid_terminal":"Não é possível utilizar $0 na expressão da linha: $1, coluna: $2. Tente um valor númerico, variável ou chamada de função.","const_not_init":"Erro na linha: $0, coluna: $1. Uma variável declarada como const deve ser inicializada","id_missing":"Esperava-se um identificador, mas encontrou-se $0 na linha: $1, coluna: $2","invalid_id_format":"$0 na linha: $1, coluna: $2 não é um identificador válido. O símbolo '.' não é permitido neste contexto.","main_missing":"A função principal não foi encontrada","invalid_global_var":"Erro crítico: Chamada inválida da função initGlobal fora do contexto BASE","not_implemented":"Erro interno crítico: A função definida pelo sistema $0 não foi implementada.","function_missing":"A função $0 não foi encontrada","function_missing_full":"A função $0 na linha: $1, coluna: $2 não foi encontrada","invalid_parameters_size_full":"Erro na linha $0: a quantidade de parâmetros fornecidos à função $1 está incorreta. Esperava-se $2, encontrou-se $3.","invalid_parameters_size":"A quantidade de parâmetros fornecidos à função $0 está incorreta. Esperava-se $1, encontrou-se $2","invalid_ref_full":"A expressão $0 fornecida como parâmetro para a função $1 na linha $2 não é válida para esta função. Use uma variável ou posição de vetor.","invalid_ref":"A expressão $0 fornecida como parâmetro para a função $1 não é válida para esta função. Use uma variável ou posição de vetor.","invalid_parameter_type_full":"A expressão $0 fornecida como parâmetro para a função $1 na linha $2 não é compatível com o tipo esperado.","invalid_parameter_type":"A expressão $0 fornecida como parâmetro para a função $1 não é compatível com o tipo esperado.","unknown_command_full":"Erro interno crítico: comando desconhecido encontrado na linha $0","unknown_command":"Erro interno crítico: comando desconhecido encontrado!","loop_condition_type_full":"Erro na linha: $0, coluna $1: a condição dos laços de repetição deve ser do tipo lógico","loop_condition_type":"A condição dos laços de repetição deve ser do tipo lógico","endless_loop_full":"Possível laço infinito detectado no seu código. Verifique a linha $0","endless_loop":"Possível laço infinito detectado no seu código.","for_condition_type_full":"Erro na linha: $0, coluna $1: a condição de parada do comando para(...) deve ser do tipo lógico","for_condition_type":"A condição de parada do comando para(...) deve ser do tipo lógico","if_condition_type_full":"Erro na linha: $0, coluna $1: a condição de um comando se...senao deve ser do tipo lógico","if_condition_type":"A condição de um comando se...senao deve ser do tipo lógico","invalid_return_type_full":"Erro na linha $0: a expressão não produz um tipo compatível com a função $1. Tipo esperado: $2.","invalid_return_type":"A expressão não produz um tipo compatível com a função $0. Tipo esperado: $1.","invalid_void_return_full":"Erro na linha $0: a função $1 não pode retornar uma expressão vazia, use uma espressão do tipo $2","invalid_void_return":"A função $0 não pode retornar uma expressão vazia, use uma espressão do tipo $1","unexpected_break_command_full":"Erro interno crítico: comando pare encontrado fora do contexto de um laço/escolha..caso na linha $0","unexpected_break_command":"Erro interno crítico: comando pare encontrado fora do contexto de um laço/escolha..caso","invalid_dimension":"As dimensões de um vetor/matriz devem ser do tipo inteiro","void_in_expression_full":"Erro na linha: $0, coluna: $1: a função $2 não pode ser utilizada em uma expressão pois seu tipo de retorno é vazio","void_in_expression":"A função $0 não pode ser utilizada em uma expressão pois seu tipo de retorno é vazio","invalid_array_access_full":"Identificador $0 na linha: $1, coluna: $2 não se refere a um vetor/matriz válido","invalid_array_access":"Identificador $0 não se refere a um vetor/matriz válido","invalid_matrix_access_full":"Identificador $0 na linha: $1, coluna: $2 não se refere a uma matriz válida","invalid_matrix_access":"Identificador $0 não se refere a uma matriz válida","matrix_column_outbounds_full":"Erro na linha $0: número de colunas $1 é inválido para a matriz $2 que possui $3 colunas","matrix_column_outbounds":"Número de colunas $0 é inválido para a matriz $1 que possui $2 colunas","matrix_line_outbounds_full":"Erro na linha $0: número de linhas $1 é inválido para a matriz $2 que possui $3 linhas","matrix_line_outbounds":"Número de linhas $0 é inválido para a matriz $1 que possui $2 linhas","vector_line_outbounds_full":"Erro na linha $0: número de linhas $1 é inválido para a matriz $2 que possui $3 linhas","vector_line_outbounds":"Número de linhas $0 é inválido para a matriz $1 que possui $2 linhas","vector_not_matrix_full":"Erro na linha $0: $1 não é uma matriz","vector_not_matrix":"$1 não é uma matriz","invalid_infix_op_full":"Erro na linha $0: não é possível aplicar a operação $1 entre os tipos $2 e $3","invalid_infix_op":"Não é possível aplicar a operação $0 entre os tipos $1 e $2","invalid_unary_op_full":"Erro na linha $0: não é possível aplicar a operação $1 ao tipo $2","invalid_unary_op":"Não é possível aplicar a operação $0 ao tipo $1","unknown_op":"Erro interno crítico: Operação $0 desconhecida","duplicate_function":"A função $0 na linha: $1, coluna: $2 já foi definida anteriormente.","duplicate_variable":"A variável $0 na linha: $1, coluna: $2 já foi declarada anteriormente.","main_parameters":"A função inicio não pode ter parâmetros.","symbol_not_found_full":"A variável $0 na linha: $1, coluna: $2 não foi declarada","symbol_not_found":"A variável $0 não foi declarada","array_dimension_not_int_full":"As dimensões de um vetor/matriz na linha: $0 devem ser do tipo inteiro.","array_dimension_not_int":"As dimensões de um vetor/matriz devem ser do tipo inteiro.","array_dimension_not_positive_full":"As dimensões de um vetor/matriz na linha: $0 devem ser valores positivos.","array_dimension_not_positive":"As dimensões de um vetor/matriz devem ser valores positivos.","incompatible_types_full":"O tipo $0 não é compatível com o tipo resultante da expressão na linha $1","incompatible_types":"O tipo $0 não é compatível com o tipo resultante da expressão fornecida.","incompatible_types_array_full":"A expressão $0 é incompatível com o tipo $1 na linha: $2, coluna: $3.","incompatible_types_array":"A expressão $0 é incompatível com o tipo $1.","invalid_case_type_full":"O caso $0 na linha $1 é incompatível com o tipo $2.","invalid_case_type":"O caso $0 é incompatível com o tipo $1.","function_no_return":"A função $0 não possui um retorno acessível. Toda função deve ter ao menos um retorno no seu corpo principal.","invalid_array_literal_type_full":"Erro na linha $0: a expressão $1 não resulta em um tipo compatível.","invalid_array_literal_type":"A expressão $0 não resulta em um tipo compatível.","invalid_array_literal_line_full":"Erro na linha $0: esperava-se $1 linhas mas encontrou $2.","invalid_array_literal_line":"Esperava-se $0 linhas mas encontrou $1.","invalid_array_literal_column_full":"Erro na linha $0: esperava-se $1 colunas mas encontrou $2.","invalid_array_literal_column":"Esperava-se $0 colunas mas encontrou $1."};
+module.exports = {"token_missing_one":"Erro de sintaxe: Espera-se $0, mas encontrou-se $1 na linha:$2, coluna:$3","token_missing_two":"Erro de sintaxe: Esperava-se $0 ou $1 mas encontrou-se $2 na liha:$3, coluna: $4","eos_missing":"Falta uma nova linha ou ; na linha: $0, coluna: $1","invalid_type":"$0 na linha: $1, coluna: $2 é um tipo inválido. Os tipos válidos são: $3","invalid_array_dimension":"A dimensão inválida na linha: $0, coluna: $1. Insira um $2 ou identificador válido do mesmo tipo.","invalid_array_size":"O tamnho do vetor/matriz excede o máximo de 2 na linha $0","extra_lines":"Nenhum texto é permitido após '}' em 'programa {...}'","invalid_main_return":"A função $0 deve retornar $1 na linha $2","invalid_var_declaration":"Erro na linha $0. Variáveis só podem ser declarados no corpo principal da função e de preferência nas primeiras linhas.","invalid_break_command":"Erro na linha $0. O comando $1 não pode ser usado fora de uma estrutura de repetição ou 'escolha...caso'","invalid_terminal":"Não é possível utilizar $0 na expressão da linha: $1, coluna: $2. Tente um valor númerico, variável ou chamada de função.","const_not_init":"Erro na linha: $0, coluna: $1. Uma variável declarada como const deve ser inicializada","id_missing":"Esperava-se um identificador, mas encontrou-se $0 na linha: $1, coluna: $2","invalid_id_format":"$0 na linha: $1, coluna: $2 não é um identificador válido. O símbolo '.' não é permitido neste contexto.","main_missing":"A função principal não foi encontrada","invalid_global_var":"Erro crítico: Chamada inválida da função initGlobal fora do contexto BASE","not_implemented":"Erro interno crítico: A função definida pelo sistema $0 não foi implementada.","function_missing":"A função $0 não foi encontrada","function_missing_full":"A função $0 na linha: $1, coluna: $2 não foi encontrada","invalid_parameters_size_full":"Erro na linha $0: a quantidade de parâmetros fornecidos à função $1 está incorreta. Esperava-se $2, encontrou-se $3.","invalid_parameters_size":"A quantidade de parâmetros fornecidos à função $0 está incorreta. Esperava-se $1, encontrou-se $2","invalid_ref_full":"A expressão $0 fornecida como parâmetro para a função $1 na linha $2 não é válida para esta função. Use uma variável ou posição de vetor.","invalid_ref":"A expressão $0 fornecida como parâmetro para a função $1 não é válida para esta função. Use uma variável ou posição de vetor.","invalid_parameter_type_full":"A expressão $0 fornecida como parâmetro para a função $1 na linha $2 não é compatível com o tipo esperado.","invalid_parameter_type":"A expressão $0 fornecida como parâmetro para a função $1 não é compatível com o tipo esperado.","unknown_command_full":"Erro interno crítico: comando desconhecido encontrado na linha $0","unknown_command":"Erro interno crítico: comando desconhecido encontrado!","loop_condition_type_full":"Erro na linha: $0, coluna $1: a condição $2 do laço de repetição deve ser do tipo lógico","loop_condition_type":"A condição $0 do laço de repetição deve ser do tipo lógico","endless_loop_full":"Possível laço infinito detectado no seu código. Verifique a linha $0","endless_loop":"Possível laço infinito detectado no seu código.","for_condition_type_full":"Erro na linha: $0, coluna $1: a condição de parada $2 do comando para(...) deve ser do tipo lógico","for_condition_type":"A condição de parada $0 do comando para(...) deve ser do tipo lógico","if_condition_type_full":"Erro na linha: $0, coluna $1: a condição $2 do comando se...senao deve ser do tipo lógico","if_condition_type":"A condição $0 do comando se...senao deve ser do tipo lógico","invalid_return_type_full":"Erro na linha $0: a expressão não produz um tipo compatível com a função $1. Tipo esperado: $2.","invalid_return_type":"A expressão não produz um tipo compatível com a função $0. Tipo esperado: $1.","invalid_void_return_full":"Erro na linha $0: a função $1 não pode retornar uma expressão vazia, use uma espressão do tipo $2","invalid_void_return":"A função $0 não pode retornar uma expressão vazia, use uma espressão do tipo $1","unexpected_break_command_full":"Erro interno crítico: comando pare encontrado fora do contexto de um laço/escolha..caso na linha $0","unexpected_break_command":"Erro interno crítico: comando pare encontrado fora do contexto de um laço/escolha..caso","invalid_dimension":"As dimensões de um vetor/matriz devem ser do tipo inteiro","void_in_expression_full":"Erro na linha: $0, coluna: $1: a função $2 não pode ser utilizada em uma expressão pois seu tipo de retorno é vazio","void_in_expression":"A função $0 não pode ser utilizada em uma expressão pois seu tipo de retorno é vazio","invalid_array_access_full":"Identificador $0 na linha: $1, coluna: $2 não se refere a um vetor/matriz válido","invalid_array_access":"Identificador $0 não se refere a um vetor/matriz válido","invalid_matrix_access_full":"Identificador $0 na linha: $1, coluna: $2 não se refere a uma matriz válida","invalid_matrix_access":"Identificador $0 não se refere a uma matriz válida","matrix_column_outbounds_full":"Erro na linha $0: número de colunas $1 é inválido para a matriz $2 que possui $3 colunas","matrix_column_outbounds":"Número de colunas $0 é inválido para a matriz $1 que possui $2 colunas","matrix_line_outbounds_full":"Erro na linha $0: número de linhas $1 é inválido para a matriz $2 que possui $3 linhas","matrix_line_outbounds":"Número de linhas $0 é inválido para a matriz $1 que possui $2 linhas","vector_line_outbounds_full":"Erro na linha $0: número de linhas $1 é inválido para a matriz $2 que possui $3 linhas","vector_line_outbounds":"Número de linhas $0 é inválido para a matriz $1 que possui $2 linhas","vector_not_matrix_full":"Erro na linha $0: $1 não é uma matriz","vector_not_matrix":"$1 não é uma matriz","invalid_infix_op_full":"Erro na linha $0: não é possível aplicar a operação $1 entre os tipos $2 e $3","invalid_infix_op":"Não é possível aplicar a operação $0 entre os tipos $1 e $2","invalid_unary_op_full":"Erro na linha $0: não é possível aplicar a operação $1 ao tipo $2","invalid_unary_op":"Não é possível aplicar a operação $0 ao tipo $1","unknown_op":"Erro interno crítico: Operação $0 desconhecida","duplicate_function":"A função $0 na linha: $1, coluna: $2 já foi definida anteriormente.","duplicate_variable":"A variável $0 na linha: $1, coluna: $2 já foi declarada anteriormente.","main_parameters":"A função inicio não pode ter parâmetros.","symbol_not_found_full":"A variável $0 na linha: $1, coluna: $2 não foi declarada","symbol_not_found":"A variável $0 não foi declarada","array_dimension_not_int_full":"As dimensões de um vetor/matriz na linha: $0 devem ser do tipo inteiro.","array_dimension_not_int":"As dimensões de um vetor/matriz devem ser do tipo inteiro.","array_dimension_not_positive_full":"As dimensões de um vetor/matriz na linha: $0 devem ser valores positivos.","array_dimension_not_positive":"As dimensões de um vetor/matriz devem ser valores positivos.","incompatible_types_full":"O tipo $0 não é compatível com o tipo resultante da expressão na linha $1","incompatible_types":"O tipo $0 não é compatível com o tipo resultante da expressão fornecida.","incompatible_types_array_full":"A expressão $0 é incompatível com o tipo $1 na linha: $2, coluna: $3.","incompatible_types_array":"A expressão $0 é incompatível com o tipo $1.","invalid_case_type_full":"O caso $0 na linha $1 é incompatível com o tipo $2.","invalid_case_type":"O caso $0 é incompatível com o tipo $1.","function_no_return":"A função $0 não possui um retorno acessível. Toda função deve ter ao menos um retorno no seu corpo principal.","invalid_array_literal_type_full":"Erro na linha $0: a expressão $1 não resulta em um tipo compatível.","invalid_array_literal_type":"A expressão $0 não resulta em um tipo compatível.","invalid_array_literal_line_full":"Erro na linha $0: esperava-se $1 linhas mas encontrou $2.","invalid_array_literal_line":"Esperava-se $0 linhas mas encontrou $1.","invalid_array_literal_column_full":"Erro na linha $0: esperava-se $1 colunas mas encontrou $2.","invalid_array_literal_column":"Esperava-se $0 colunas mas encontrou $1.","exceeded_input_request":"A quantidade de leituras requisitadas execedeu a quantidade de entradas disponíveis.","test_case_few_reads":"Caso de teste $0: Falhou, ainda restam entradas!","test_case_failed":"Caso de teste $0: Falhou, entradas:<$1>; saída esperada:<$2>; saída:<$3>"};
 
 /***/ }),
 
@@ -2164,10 +2175,10 @@ exports.default = {
 /*!******************************!*\
   !*** ./i18n/pt/message.json ***!
   \******************************/
-/*! exports provided: default */
+/*! exports provided: test_case_success, default */
 /***/ (function(module) {
 
-module.exports = {};
+module.exports = {"test_case_success":"Caso de teste $0: OK"};
 
 /***/ }),
 
@@ -2175,10 +2186,10 @@ module.exports = {};
 /*!*************************!*\
   !*** ./i18n/pt/ui.json ***!
   \*************************/
-/*! exports provided: function, btn_clear, btn_function, btn_arithmetic_plus, btn_arithmetic_minus, btn_arithmetic_multiplication, btn_arithmetic_division, btn_arithmetic_module, btn_break, btn_case, start, void, integer, and, or, not, real, program, text, text_start, boolean, true, false, variable, command, new_parameter, new_variable, new_global, new_function, vector, text_comment_start, text_comment_main, text_read_var, text_write_var, text_command_read, text_command_write, text_return, text_btn_return, text_comment, join_or, matrix_string, vector_string, text_attribution, text_if, text_break, text_else, text_for, text_code_while, text_code_do, text_command_do, text_code_switch, text_code_case, text_logic_expression, text_arithmetic_expression, text_iftrue, text_repeatNtimes, text_receives, text_whiletrue, text_dowhiletrue, text_switch, text_functioncall, text_value, text_operator, text_parentheses, text_change, text_teacher_algorithm, text_teacher_algorithm_include, text_teacher_test_case, text_teacher_config, text_teacher_data_types, text_teacher_commands, text_teacher_functions, text_teacher_create_functions, text_teacher_create_movement_functions, text_teacher_test_case_input, text_teacher_test_case_output, text_teacher_test_case_actions, text_teacher_test_case_add, text_header_ivprog_functions, text_menu_functions_math, text_menu_functions_text, text_menu_functions_arrangement, text_menu_functions_conversion, text_none_variable, text_none_variable_instruction, tooltip_visual, tooltip_textual, tooltip_upload, tooltip_download, tooltip_undo, tooltip_redo, tooltip_run, tooltip_evaluate, tooltip_help, tooltip_add_global, tooltip_minimize, tooltip_console, var_menu_select_var, var_menu_select_all, var_menu_select_function, expression_menu_select, $sin, math, text_t, arrangement, conversion, $cos, $tan, $sqrt, $pow, $log, $abs, $negate, $invert, $max, $min, $substring, $length, $uppercase, $lowercase, $charAt, $numElements, $matrixLines, $matrixColumns, $isReal, $isInt, $isBool, $castReal, $castInt, $castBool, $castString, default */
+/*! exports provided: function, btn_clear, btn_function, btn_arithmetic_plus, btn_arithmetic_minus, btn_arithmetic_multiplication, btn_arithmetic_division, btn_arithmetic_module, btn_break, btn_case, start, void, integer, and, or, not, real, program, text, text_start, boolean, true, false, variable, command, new_parameter, new_variable, new_global, new_function, vector, text_comment_start, text_comment_main, text_read_var, text_write_var, text_command_read, text_command_write, text_return, text_btn_return, text_comment, join_or, matrix_string, vector_string, text_attribution, text_if, text_break, text_else, text_for, text_code_while, text_code_do, text_command_do, text_code_switch, text_code_case, text_logic_expression, text_arithmetic_expression, text_iftrue, text_repeatNtimes, text_receives, text_whiletrue, text_dowhiletrue, text_switch, text_functioncall, text_value, text_operator, text_parentheses, text_change, text_teacher_algorithm, text_teacher_algorithm_include, text_teacher_test_case, text_teacher_config, text_teacher_data_types, text_teacher_commands, text_teacher_functions, text_teacher_create_functions, text_teacher_create_movement_functions, text_teacher_test_case_input, text_teacher_test_case_output, text_teacher_test_case_actions, text_teacher_test_case_add, text_header_ivprog_functions, text_menu_functions_math, text_menu_functions_text, text_menu_functions_arrangement, text_menu_functions_conversion, text_none_variable, text_none_variable_instruction, text_ivprog_description, tooltip_visual, tooltip_textual, tooltip_upload, tooltip_download, tooltip_undo, tooltip_redo, tooltip_run, tooltip_evaluate, tooltip_help, tooltip_add_global, tooltip_minimize, tooltip_console, var_menu_select_var, var_menu_select_all, var_menu_select_function, expression_menu_select, $sin, math, text_t, inform_valid_name, inform_valid_content, inform_valid_expression, inform_valid_name_duplicated, inform_valid_global_duplicated, inform_valid_variable_duplicated, arrangement, conversion, $cos, $tan, $sqrt, $pow, $log, $abs, $negate, $invert, $max, $min, $substring, $length, $uppercase, $lowercase, $charAt, $numElements, $matrixLines, $matrixColumns, $isReal, $isInt, $isBool, $castReal, $castInt, $castBool, $castString, text_ivprog_version, default */
 /***/ (function(module) {
 
-module.exports = {"function":"funcao","btn_clear":"Limpar","btn_function":"Função","btn_arithmetic_plus":"Adição","btn_arithmetic_minus":"Subtração","btn_arithmetic_multiplication":"Multiplicação","btn_arithmetic_division":"Divisão","btn_arithmetic_module":"Módulo","btn_break":"Pare","btn_case":"Caso","start":"inicio","void":"vazio","integer":"inteiro","and":"E","or":"OU","not":"nao","real":"real","program":"programa","text":"cadeia","text_start":"texto","boolean":"logico","true":"verdadeiro","false":"falso","variable":"Variável","command":"Comando","new_parameter":"novo_parametro","new_variable":"nova_variavel","new_global":"nova_global","new_function":"nova_funcao","vector":"vetor","text_comment_start":"Comentário inicial da função...","text_comment_main":"Esta é a função principal...","text_read_var":"Leitura de dados","text_write_var":"Escrita de dados","text_command_read":"leia","text_command_write":"escreva","text_return":"retorne","text_btn_return":"Retorno","text_comment":"Comentário","join_or":"ou","matrix_string":"matriz de $0","vector_string":"vetor de $0","text_attribution":"Atribuição","text_if":"se","text_break":"pare","text_else":"senao","text_for":"para","text_code_while":"enquanto","text_code_do":"faca","text_command_do":"faça","text_code_switch":"escolha","text_code_case":"caso","text_logic_expression":"Expressão Lógica","text_arithmetic_expression":"Expressão Aritmética","text_iftrue":"Se verdadeiro então","text_repeatNtimes":"Repita N vezes","text_receives":"recebe","text_whiletrue":"Enquanto verdadeiro","text_dowhiletrue":"Faça enquanto verdadeiro","text_switch":"Escolha","text_functioncall":"Chamada de função","text_value":"Valor","text_operator":"Operador","text_parentheses":"Parênteses","text_change":"Alterar","text_teacher_algorithm":"Algoritmo","text_teacher_algorithm_include":"Incluir o algoritmo abaixo no exercício","text_teacher_test_case":"Casos de teste","text_teacher_config":"Configurações","text_teacher_data_types":"Tipos de dados","text_teacher_commands":"Comandos","text_teacher_functions":"Funções","text_teacher_create_functions":"Criar novas funções","text_teacher_create_movement_functions":"Movimentar funções","text_teacher_test_case_input":"Entrada","text_teacher_test_case_output":"Saída","text_teacher_test_case_actions":"Ações","text_teacher_test_case_add":"Adicionar caso de teste","text_header_ivprog_functions":"Funções do iVProg","text_menu_functions_math":"Matemática","text_menu_functions_text":"Texto","text_menu_functions_arrangement":"Arranjo","text_menu_functions_conversion":"Conversão","text_none_variable":"Nenhuma variável declarada","text_none_variable_instruction":"Antes de utilizar uma variável, é necessário criá-la","tooltip_visual":"Programação visual","tooltip_textual":"Programação textual","tooltip_upload":"Upload de código fonte","tooltip_download":"Download do código fonte","tooltip_undo":"Desfazer","tooltip_redo":"Refazer","tooltip_run":"Executar o programa","tooltip_evaluate":"Avaliar o programa","tooltip_help":"Ajuda","tooltip_add_global":"Adicionar variável global","tooltip_minimize":"Ocultar os elementos da função","tooltip_console":"Abrir/fechar o terminal","var_menu_select_var":"Selecione uma variável","var_menu_select_all":"Selecione","var_menu_select_function":"Selecione uma função","expression_menu_select":"Selecione uma expressão","$sin":"seno","math":"Matematica","text_t":"Texto","arrangement":"Arranjo","conversion":"Conversao","$cos":"cosseno","$tan":"tangente","$sqrt":"raiz_quadrada","$pow":"potencia","$log":"logaritmo","$abs":"modulo","$negate":"trocar_sinal","$invert":"inverter_valor","$max":"maximo","$min":"minimo","$substring":"subcadeia","$length":"comprimento","$uppercase":"caixa_alta","$lowercase":"caixa_baixa","$charAt":"texto_na_posicao","$numElements":"total_de_elementos","$matrixLines":"total_de_linhas","$matrixColumns":"total_de_colunas","$isReal":"e_real","$isInt":"e_inteiro","$isBool":"e_logico","$castReal":"como_real","$castInt":"como_inteiro","$castBool":"como_logico","$castString":"como_cadeia"};
+module.exports = {"function":"funcao","btn_clear":"Limpar","btn_function":"Função","btn_arithmetic_plus":"Adição","btn_arithmetic_minus":"Subtração","btn_arithmetic_multiplication":"Multiplicação","btn_arithmetic_division":"Divisão","btn_arithmetic_module":"Módulo","btn_break":"Pare","btn_case":"Caso","start":"inicio","void":"vazio","integer":"inteiro","and":"E","or":"OU","not":"nao","real":"real","program":"programa","text":"cadeia","text_start":"texto","boolean":"logico","true":"verdadeiro","false":"falso","variable":"Variável","command":"Comando","new_parameter":"novo_parametro","new_variable":"nova_variavel","new_global":"nova_global","new_function":"nova_funcao","vector":"vetor","text_comment_start":"Comentário inicial da função...","text_comment_main":"Esta é a função principal...","text_read_var":"Leitura de dados","text_write_var":"Escrita de dados","text_command_read":"leia","text_command_write":"escreva","text_return":"retorne","text_btn_return":"Retorno","text_comment":"Comentário","join_or":"ou","matrix_string":"matriz de $0","vector_string":"vetor de $0","text_attribution":"Atribuição","text_if":"se","text_break":"pare","text_else":"senao","text_for":"para","text_code_while":"enquanto","text_code_do":"faca","text_command_do":"faça","text_code_switch":"escolha","text_code_case":"caso","text_logic_expression":"Expressão Lógica","text_arithmetic_expression":"Expressão Relacional","text_iftrue":"Se verdadeiro então","text_repeatNtimes":"Repita N vezes","text_receives":"recebe","text_whiletrue":"Enquanto verdadeiro","text_dowhiletrue":"Faça enquanto verdadeiro","text_switch":"Escolha","text_functioncall":"Chamada de função","text_value":"Valor","text_operator":"Operador","text_parentheses":"Parênteses","text_change":"Alterar","text_teacher_algorithm":"Algoritmo","text_teacher_algorithm_include":"Incluir o algoritmo abaixo no exercício","text_teacher_test_case":"Casos de teste","text_teacher_config":"Configurações","text_teacher_data_types":"Tipos de dados","text_teacher_commands":"Comandos","text_teacher_functions":"Funções","text_teacher_create_functions":"Criar novas funções","text_teacher_create_movement_functions":"Movimentar funções","text_teacher_test_case_input":"Entrada","text_teacher_test_case_output":"Saída","text_teacher_test_case_actions":"Ações","text_teacher_test_case_add":"Adicionar caso de teste","text_header_ivprog_functions":"Funções do iVProg","text_menu_functions_math":"Matemática","text_menu_functions_text":"Texto","text_menu_functions_arrangement":"Arranjo","text_menu_functions_conversion":"Conversão","text_none_variable":"Nenhuma variável declarada","text_none_variable_instruction":"Antes de utilizar uma variável, é necessário criá-la","text_ivprog_description":"Programação Visual interativa na Internet","tooltip_visual":"Programação visual","tooltip_textual":"Programação textual","tooltip_upload":"Upload de código fonte","tooltip_download":"Download do código fonte","tooltip_undo":"Desfazer","tooltip_redo":"Refazer","tooltip_run":"Executar o programa","tooltip_evaluate":"Avaliar o programa","tooltip_help":"Ajuda","tooltip_add_global":"Adicionar variável global","tooltip_minimize":"Ocultar os elementos da função","tooltip_console":"Abrir/fechar o terminal","var_menu_select_var":"Selecione uma variável","var_menu_select_all":"Selecione","var_menu_select_function":"Selecione uma função","expression_menu_select":"Construir uma expressão lógica","$sin":"seno","math":"Matematica","text_t":"Texto","inform_valid_name":"Informe um nome válido!","inform_valid_content":"Informe o conteúdo!","inform_valid_expression":"Construa uma expressão lógica!","inform_valid_name_duplicated":"Este nome já está em uso por outra função!","inform_valid_global_duplicated":"Já existe uma variável global com o nome informado.","inform_valid_variable_duplicated":"Já existe uma variável local com o nome informado.","arrangement":"Arranjo","conversion":"Conversao","$cos":"cosseno","$tan":"tangente","$sqrt":"raiz_quadrada","$pow":"potencia","$log":"logaritmo","$abs":"modulo","$negate":"trocar_sinal","$invert":"inverter_valor","$max":"maximo","$min":"minimo","$substring":"subcadeia","$length":"comprimento","$uppercase":"caixa_alta","$lowercase":"caixa_baixa","$charAt":"texto_na_posicao","$numElements":"total_de_elementos","$matrixLines":"total_de_linhas","$matrixColumns":"total_de_colunas","$isReal":"e_real","$isInt":"e_inteiro","$isBool":"e_logico","$castReal":"como_real","$castInt":"como_inteiro","$castBool":"como_logico","$castString":"como_cadeia","text_ivprog_version":"Versão"};
 
 /***/ }),
 
@@ -3587,6 +3598,8 @@ var _inputTest = __webpack_require__(/*! ./../util/inputTest */ "./js/util/input
 
 var _outputTest = __webpack_require__(/*! ./../util/outputTest */ "./js/util/outputTest.js");
 
+var _localizedStringsService = __webpack_require__(/*! ../services/localizedStringsService */ "./js/services/localizedStringsService.js");
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var IVProgAssessment = exports.IVProgAssessment = function () {
@@ -3610,12 +3623,11 @@ var IVProgAssessment = exports.IVProgAssessment = function () {
         var validTree = semantic.analyseTree();
         // loop test cases and show messages through domconsole
         var partialTests = this.testCases.map(function (t, name) {
+          console.log(t.input);
           return _this.partialEvaluateTestCase(new _ivprogProcessor.IVProgProcessor(validTree), t.input, t.output, name);
         });
         var testResult = partialTests.reduce(function (acc, curr) {
-          return acc.then(function (v) {
-            return curr(v);
-          });
+          return acc.then(curr);
         }, Promise.resolve(0));
         return testResult.then(function (total) {
           return Promise.resolve(total / _this.testCases.length);
@@ -3633,6 +3645,8 @@ var IVProgAssessment = exports.IVProgAssessment = function () {
   }, {
     key: "evaluateTestCase",
     value: function evaluateTestCase(prog, inputList, outputList, name, accumulator) {
+      var _this2 = this;
+
       var outerThis = this;
       var input = new _inputTest.InputTest(inputList);
       var output = new _outputTest.OutputTest();
@@ -3642,43 +3656,39 @@ var IVProgAssessment = exports.IVProgAssessment = function () {
       return prog.interpretAST().then(function (_) {
         var millis = Date.now() - startTime;
         if (input.inputList.length !== input.index) {
-          outerThis.domConsole.err("Caso de teste " + (name + 1) + ": Falhou, ainda restam entradas!");
+          outerThis.showErrorMessage('test_case_few_reads', name + 1);
           outerThis.domConsole.info("Levou " + millis + "ms");
           return Promise.resolve(accumulator + 1 * (input.index / inputList.length));
         } else if (output.list.length < outputList.length) {
-          outerThis.domConsole.err("Caso de teste " + (name + 1) + ": Falhou <" + inputList.join(", ") + ";" + outputList.join(", ") + ";" + output.list.join(", ") + ">");
+          outerThis.showErrorMessage('test_case_failed', name + 1, inputList.join(','), outputList.join(','), output.list.join(','));
           outerThis.domConsole.info("Levou " + millis + "ms");
           return Promise.resolve(accumulator + 1 * (output.list.length / outputList.length));
         } else if (output.list.length > outputList.length) {
-          outerThis.domConsole.err("Caso de teste " + (name + 1) + ": Falhou <" + inputList.join(", ") + ";" + outputList.join(", ") + ";" + output.list.join(", ") + ">");
+          outerThis.showErrorMessage('test_case_failed', name + 1, inputList.join(','), outputList.join(','), output.list.join(','));
           outerThis.domConsole.info("Levou " + millis + "ms");
           return Promise.resolve(accumulator + 1 * (outputList.length / output.list.length));
         } else {
           var isOk = outerThis.checkOutput(output.list, outputList);
           if (!isOk) {
-            outerThis.domConsole.err("Caso de teste " + (name + 1) + ": Falhou <" + inputList.join(", ") + ";" + outputList.join(", ") + ";" + output.list.join(", ") + ">");
+            outerThis.showErrorMessage('test_case_failed', name + 1, inputList.join(','), outputList.join(','), output.list.join(','));
             outerThis.domConsole.info("Levou " + millis + "ms");
             return Promise.resolve(accumulator);
           } else {
-            outerThis.domConsole.info("Caso de teste " + (name + 1) + ": OK!");
+            outerThis.showMessage('test_case_success', name + 1);
             outerThis.domConsole.info("Levou " + millis + "ms");
             return Promise.resolve(accumulator + 1);
           }
         }
-      }).catch(function (_) {
+      }).catch(function (error) {
+        _this2.domConsole.err("Execu\xE7\xE3o do caso de teste " + (name + 1) + " falhou!"); // try and show error messages through domconsole
+        _this2.domConsole.err(error.message);
         return Promise.resolve(accumulator);
       });
     }
   }, {
     key: "partialEvaluateTestCase",
     value: function partialEvaluateTestCase(prog, inputList, outputList, name) {
-      var _this2 = this;
-
-      var partial = function partial(accumulator) {
-        return _this2.evaluateTestCase(prog, inputList, outputList, name, accumulator);
-      };
-      partial = partial.bind(this);
-      return partial;
+      return this.evaluateTestCase.bind(this, prog, inputList, outputList, name);
     }
   }, {
     key: "checkOutput",
@@ -3690,6 +3700,24 @@ var IVProgAssessment = exports.IVProgAssessment = function () {
         }
       }
       return true;
+    }
+  }, {
+    key: "showErrorMessage",
+    value: function showErrorMessage(errorID) {
+      for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+        args[_key - 1] = arguments[_key];
+      }
+
+      this.domConsole.err(_localizedStringsService.LocalizedStrings.getError(errorID, args));
+    }
+  }, {
+    key: "showMessage",
+    value: function showMessage(msgID) {
+      for (var _len2 = arguments.length, args = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+        args[_key2 - 1] = arguments[_key2];
+      }
+
+      this.domConsole.info(_localizedStringsService.LocalizedStrings.getMessage(msgID, args));
     }
   }]);
 
@@ -4829,7 +4857,7 @@ var ArrayLiteral = exports.ArrayLiteral = function (_Literal) {
       if (!(element instanceof ArrayLiteral)) {
         return null;
       } else {
-        return element.value[0].value.length;
+        return element.value[0].length;
       }
     }
   }, {
@@ -5309,7 +5337,7 @@ var StringLiteral = exports.StringLiteral = function (_Literal) {
   _createClass(StringLiteral, [{
     key: 'toString',
     value: function toString() {
-      return this.value;
+      return '"' + this.value + '"';
     }
   }]);
 
@@ -6250,6 +6278,7 @@ var IVProgParser = exports.IVProgParser = function () {
       } else {
         this.pushScope(IVProgParser.COMMAND);
       }
+      var token = this.getToken();
       this.pos++;
       this.checkOpenParenthesis();
       this.pos++;
@@ -6274,11 +6303,16 @@ var IVProgParser = exports.IVProgParser = function () {
         } else {
           throw _syntaxErrorFactory.SyntaxErrorFactory.token_missing_list([this.lexer.literalNames[this.lexerClass.RK_IF], '{'], maybeIf);
         }
-        return new Commands.IfThenElse(logicalExpression, cmdBlocks, elseBlock);
+        this.popScope();
+        var _cmd = new Commands.IfThenElse(logicalExpression, cmdBlocks, elseBlock);
+        _cmd.sourceInfo = _sourceInfo2.SourceInfo.createSourceInfo(token);
+        return _cmd;
       }
       this.popScope();
 
-      return new Commands.IfThenElse(logicalExpression, cmdBlocks, null);
+      var cmd = new Commands.IfThenElse(logicalExpression, cmdBlocks, null);
+      cmd.sourceInfo = _sourceInfo2.SourceInfo.createSourceInfo(token);
+      return cmd;
     }
   }, {
     key: 'parseFor',
@@ -6304,6 +6338,7 @@ var IVProgParser = exports.IVProgParser = function () {
     key: 'parseWhile',
     value: function parseWhile() {
       this.pushScope(IVProgParser.BREAKABLE);
+      var token = this.getToken();
       this.pos++;
       this.checkOpenParenthesis();
       this.pos++;
@@ -6315,7 +6350,9 @@ var IVProgParser = exports.IVProgParser = function () {
       this.consumeNewLines();
       var cmdBlocks = this.parseCommandBlock();
       this.popScope();
-      return new Commands.While(logicalExpression, cmdBlocks);
+      var cmd = new Commands.While(logicalExpression, cmdBlocks);
+      cmd.sourceInfo = _sourceInfo2.SourceInfo.createSourceInfo(token);
+      return cmd;
     }
   }, {
     key: 'parseBreak',
@@ -6378,9 +6415,9 @@ var IVProgParser = exports.IVProgParser = function () {
         var _exp = this.parseExpressionOR();
         this.checkEOS();
         this.pos++;
-        var _cmd = new Commands.Assign(id, _exp);
-        _cmd.sourceInfo = _sourceInfo2.SourceInfo.createSourceInfo(equalOrParenthesis);
-        return _cmd;
+        var _cmd2 = new Commands.Assign(id, _exp);
+        _cmd2.sourceInfo = _sourceInfo2.SourceInfo.createSourceInfo(equalOrParenthesis);
+        return _cmd2;
       } else if (equalOrParenthesis.type === this.lexerClass.OPEN_PARENTHESIS) {
         var funcCall = this.parseFunctionCallCommand(id);
         this.checkEOS();
@@ -7033,7 +7070,8 @@ var DOMConsole = exports.DOMConsole = function () {
     value: function sendOutput(text) {
       var _this2 = this;
 
-      text.split("\n").forEach(function (t) {
+      var output = "" + text;
+      output.split("\n").forEach(function (t) {
         t = t.replace(/\t/g, '&#9;');
         _this2.write(t);
       });
@@ -7175,6 +7213,8 @@ var _operators = __webpack_require__(/*! ./../ast/operators */ "./js/ast/operato
 
 var _multiType = __webpack_require__(/*! ../typeSystem/multiType */ "./js/typeSystem/multiType.js");
 
+var _config = __webpack_require__(/*! ../util/config */ "./js/util/config.js");
+
 function buildInfixAddTable() {
   var table = [[], [], [], []];
 
@@ -7306,6 +7346,13 @@ function resultTypeAfterInfixOp(operator, leftExpressionType, rightExpressionTyp
         }
       }
       if (newMulti.length <= 0) {
+        if (_config.Config.enable_type_casting) {
+          if (leftExpressionType.isCompatible(_types.Types.INTEGER) || leftExpressionType.isCompatible(_types.Types.REAL)) {
+            if (rightExpressionType.isCompatible(_types.Types.INTEGER) || rightExpressionType.isCompatible(_types.Types.REAL)) {
+              return new _multiType.MultiType([_types.Types.INTEGER, _types.Types.REAL]);
+            }
+          }
+        }
         return _types.Types.UNDEFINED;
       } else {
         return new _multiType.MultiType(newMulti);
@@ -7314,17 +7361,42 @@ function resultTypeAfterInfixOp(operator, leftExpressionType, rightExpressionTyp
       if (leftExpressionType.isCompatible(rightExpressionType)) {
         return rightExpressionType;
       } else {
+        if (_config.Config.enable_type_casting) {
+          if (leftExpressionType.isCompatible(_types.Types.INTEGER) || leftExpressionType.isCompatible(_types.Types.REAL)) {
+            if (rightExpressionType.isCompatible(_types.Types.INTEGER) || rightExpressionType.isCompatible(_types.Types.REAL)) {
+              return rightExpressionType;
+            }
+          }
+        }
         return _types.Types.UNDEFINED;
       }
     } else if (rightExpressionType instanceof _multiType.MultiType) {
       if (rightExpressionType.isCompatible(leftExpressionType)) {
         return leftExpressionType;
       } else {
+        if (_config.Config.enable_type_casting) {
+          if (leftExpressionType.isCompatible(_types.Types.INTEGER) || leftExpressionType.isCompatible(_types.Types.REAL)) {
+            if (rightExpressionType.isCompatible(_types.Types.INTEGER) || rightExpressionType.isCompatible(_types.Types.REAL)) {
+              return leftExpressionType;
+            }
+          }
+        }
         return _types.Types.UNDEFINED;
       }
     }
     var resultType = infixMap.get(operator)[leftExpressionType.ord][rightExpressionType.ord];
     if (resultType === null || resultType === undefined) {
+      if (_config.Config.enable_type_casting) {
+        if (leftExpressionType.isCompatible(_types.Types.INTEGER) || leftExpressionType.isCompatible(_types.Types.REAL)) {
+          if (rightExpressionType.isCompatible(_types.Types.INTEGER) || rightExpressionType.isCompatible(_types.Types.REAL)) {
+            if (operator === _operators.Operators.MOD) {
+              return _types.Types.INTEGER;
+            } else if (operator.ord >= 5 && operator.ord <= 10) {
+              return _types.Types.BOOLEAN;
+            }
+          }
+        }
+      }
       return _types.Types.UNDEFINED;
     }
     return resultType;
@@ -7639,16 +7711,17 @@ var ProcessorErrorFactory = exports.ProcessorErrorFactory = Object.freeze({
     var context = [exp, translateType(type, dim)];
     return new _semanticError.SemanticError(_localizedStringsService.LocalizedStrings.getError("incompatible_types_array", context));
   },
-  loop_condition_type_full: function loop_condition_type_full(sourceInfo) {
+  loop_condition_type_full: function loop_condition_type_full(exp, sourceInfo) {
     if (sourceInfo) {
-      var context = [sourceInfo.line, sourceInfo.column];
+      var context = [sourceInfo.line, sourceInfo.column, exp];
       return new _semanticError.SemanticError(_localizedStringsService.LocalizedStrings.getError("loop_condition_type_full", context));
     } else {
-      return ProcessorErrorFactory.loop_condition_type();
+      return ProcessorErrorFactory.loop_condition_type(exp);
     }
   },
-  loop_condition_type: function loop_condition_type() {
-    return new _semanticError.SemanticError(_localizedStringsService.LocalizedStrings.getError("loop_condition_type"));
+  loop_condition_type: function loop_condition_type(exp) {
+    var context = [exp];
+    return new _semanticError.SemanticError(_localizedStringsService.LocalizedStrings.getError("loop_condition_type", context));
   },
   endless_loop_full: function endless_loop_full(sourceInfo) {
     if (sourceInfo) {
@@ -7661,27 +7734,29 @@ var ProcessorErrorFactory = exports.ProcessorErrorFactory = Object.freeze({
   endless_loop: function endless_loop() {
     return new _semanticError.SemanticError(_localizedStringsService.LocalizedStrings.getError("endless_loop"));
   },
-  for_condition_type_full: function for_condition_type_full(sourceInfo) {
+  for_condition_type_full: function for_condition_type_full(exp, sourceInfo) {
     if (sourceInfo) {
-      var context = [sourceInfo.line, sourceInfo.column];
+      var context = [sourceInfo.line, sourceInfo.column, exp];
       return new _semanticError.SemanticError(_localizedStringsService.LocalizedStrings.getError("for_condition_type_full", context));
     } else {
-      return ProcessorErrorFactory.for_condition_type();
+      return ProcessorErrorFactory.for_condition_type(exp);
     }
   },
-  for_condition_type: function for_condition_type() {
-    return new _semanticError.SemanticError(_localizedStringsService.LocalizedStrings.getError("for_condition_type"));
+  for_condition_type: function for_condition_type(exp) {
+    var context = [exp];
+    return new _semanticError.SemanticError(_localizedStringsService.LocalizedStrings.getError("for_condition_type", context));
   },
-  if_condition_type_full: function if_condition_type_full(sourceInfo) {
+  if_condition_type_full: function if_condition_type_full(exp, sourceInfo) {
     if (sourceInfo) {
-      var context = [sourceInfo.line, sourceInfo.column];
+      var context = [sourceInfo.line, sourceInfo.column, exp];
       return new _semanticError.SemanticError(_localizedStringsService.LocalizedStrings.getError("if_condition_type_full", context));
     } else {
-      return ProcessorErrorFactory.if_condition_type();
+      return ProcessorErrorFactory.if_condition_type(exp);
     }
   },
-  if_condition_type: function if_condition_type() {
-    return new _semanticError.SemanticError(_localizedStringsService.LocalizedStrings.getError("if_condition_type"));
+  if_condition_type: function if_condition_type(exp) {
+    var context = [exp];
+    return new _semanticError.SemanticError(_localizedStringsService.LocalizedStrings.getError("if_condition_type", context));
   },
   invalid_global_var: function invalid_global_var() {
     return new _runtimeError.RuntimeError(_localizedStringsService.LocalizedStrings.getError("invalid_global_var"));
@@ -8165,27 +8240,24 @@ var IVProgProcessor = exports.IVProgProcessor = function () {
   }, {
     key: 'interpretAST',
     value: function interpretAST() {
+      var _this = this;
+
       this.prepareState();
-      this.initGlobal();
-      var mainFunc = this.findMainFunction();
-      if (mainFunc === null) {
-        throw _processorErrorFactory.ProcessorErrorFactory.main_missing();
-      }
-      return this.runFunction(mainFunc, [], this.globalStore);
+      return this.initGlobal().then(function (_) {
+        var mainFunc = _this.findMainFunction();
+        if (mainFunc === null) {
+          throw _processorErrorFactory.ProcessorErrorFactory.main_missing();
+        }
+        return _this.runFunction(mainFunc, [], _this.globalStore);
+      });
     }
   }, {
     key: 'initGlobal',
     value: function initGlobal() {
-      var _this = this;
-
       if (!this.checkContext(_context.Context.BASE)) {
         throw _processorErrorFactory.ProcessorErrorFactory.invalid_global_var();
       }
-      this.ast.global.forEach(function (decl) {
-        _this.executeCommand(_this.globalStore, decl).then(function (sto) {
-          return _this.globalStore = sto;
-        });
-      });
+      return this.executeCommands(this.globalStore, this.ast.global);
     }
   }, {
     key: 'findMainFunction',
@@ -8263,26 +8335,34 @@ var IVProgProcessor = exports.IVProgProcessor = function () {
         for (var i = 0; i < values.length; i++) {
           var stoObj = values[i];
           var exp = actualList[i];
+          var shouldTypeCast = false;
           var formalParameter = formalList[i];
-          if (formalParameter.type.isCompatible(stoObj.type)) {
-            if (formalParameter.byRef && !stoObj.inStore) {
-              throw _processorErrorFactory.ProcessorErrorFactory.invalid_ref(funcName, exp.toString());
-            }
-
-            if (formalParameter.byRef) {
-              var ref = null;
-              if (stoObj instanceof _storeObjectArrayAddress.StoreObjectArrayAddress) {
-                ref = new _storeObjectArrayAddressRef.StoreObjectArrayAddressRef(stoObj);
-              } else {
-                ref = new _storeObjectRef.StoreObjectRef(stoObj.id, callerStore);
-              }
-              calleeStore.insertStore(formalParameter.id, ref);
+          if (!formalParameter.type.isCompatible(stoObj.type)) {
+            if (_config.Config.enable_type_casting && !formalParameter.byRef && _store.Store.canImplicitTypeCast(formalParameter.type, stoObj.type)) {
+              shouldTypeCast = true;
             } else {
-              var realValue = _this3.parseStoreObjectValue(stoObj);
-              calleeStore.insertStore(formalParameter.id, realValue);
+              throw _processorErrorFactory.ProcessorErrorFactory.invalid_parameter_type(funcName, exp.toString());
             }
+          }
+
+          if (formalParameter.byRef && !stoObj.inStore) {
+            throw _processorErrorFactory.ProcessorErrorFactory.invalid_ref(funcName, exp.toString());
+          }
+
+          if (formalParameter.byRef) {
+            var ref = null;
+            if (stoObj instanceof _storeObjectArrayAddress.StoreObjectArrayAddress) {
+              ref = new _storeObjectArrayAddressRef.StoreObjectArrayAddressRef(stoObj);
+            } else {
+              ref = new _storeObjectRef.StoreObjectRef(stoObj.id, callerStore);
+            }
+            calleeStore.insertStore(formalParameter.id, ref);
           } else {
-            throw _processorErrorFactory.ProcessorErrorFactory.invalid_parameter_type(funcName, exp.toString());
+            var realValue = _this3.parseStoreObjectValue(stoObj);
+            if (shouldTypeCast) {
+              realValue = _store.Store.doImplicitCasting(formalParameter.type, realValue);
+            }
+            calleeStore.insertStore(formalParameter.id, realValue);
           }
         }
         return calleeStore;
@@ -8329,10 +8409,10 @@ var IVProgProcessor = exports.IVProgProcessor = function () {
         return this.executeReturn(store, cmd);
       } else if (cmd instanceof Commands.IfThenElse) {
         return this.executeIfThenElse(store, cmd);
-      } else if (cmd instanceof Commands.While) {
-        return this.executeWhile(store, cmd);
       } else if (cmd instanceof Commands.DoWhile) {
         return this.executeDoWhile(store, cmd);
+      } else if (cmd instanceof Commands.While) {
+        return this.executeWhile(store, cmd);
       } else if (cmd instanceof Commands.For) {
         return this.executeFor(store, cmd);
       } else if (cmd instanceof Commands.Switch) {
@@ -8433,6 +8513,7 @@ var IVProgProcessor = exports.IVProgProcessor = function () {
         var increment = cmd.increment;
         var whileBlock = new Commands.CommandBlock([], cmd.commands.concat(increment));
         var forAsWhile = new Commands.While(condition, whileBlock);
+        forAsWhile.sourceInfo = cmd.sourceInfo;
         //END for -> while rewrite
         var newCmdList = [initCmd, forAsWhile];
         return this.executeCommands(store, newCmdList);
@@ -8515,7 +8596,7 @@ var IVProgProcessor = exports.IVProgProcessor = function () {
               return store;
             }
           } else {
-            return Promise.reject(_processorErrorFactory.ProcessorErrorFactory.loop_condition_type_full(cmd.sourceInfo));
+            return Promise.reject(_processorErrorFactory.ProcessorErrorFactory.loop_condition_type_full(cmd.expression.toString(), cmd.sourceInfo));
           }
         });
       } catch (error) {
@@ -8543,7 +8624,7 @@ var IVProgProcessor = exports.IVProgProcessor = function () {
               return Promise.resolve(store);
             }
           } else {
-            return Promise.reject(_processorErrorFactory.ProcessorErrorFactory.if_condition_type_full(cmd.sourceInfo));
+            return Promise.reject(_processorErrorFactory.ProcessorErrorFactory.if_condition_type_full(cmd.condition.toString(), cmd.sourceInfo));
           }
         });
       } catch (error) {
@@ -8596,9 +8677,20 @@ var IVProgProcessor = exports.IVProgProcessor = function () {
       var _this7 = this;
 
       try {
+        var inStore = store.applyStore(cmd.id);
         var $value = this.evaluateExpression(store, cmd.expression);
         return $value.then(function (vl) {
           var realValue = _this7.parseStoreObjectValue(vl);
+          if (!inStore.type.isCompatible(realValue.type)) {
+            if (_config.Config.enable_type_casting && _store.Store.canImplicitTypeCast(inStore.type, vl.type)) {
+              realValue = _store.Store.doImplicitCasting(inStore.type, realValue);
+            } else {
+              var stringInfo = inStore.type.stringInfo();
+              var info = stringInfo[0];
+              return Promise.reject(_processorErrorFactory.ProcessorErrorFactory.incompatible_types_full(info.type, info.dim, cmd.sourceInfo));
+            }
+          }
+
           store.updateStore(cmd.id, realValue);
           return store;
         });
@@ -8655,7 +8747,7 @@ var IVProgProcessor = exports.IVProgProcessor = function () {
 
         var newArray = Object.assign(new _storeObjectArray.StoreObjectArray(null, null, null), mustBeArray);
         if (column !== null) {
-          if (value.type instanceof _compoundType.CompoundType) {
+          if (value.type instanceof _compoundType.CompoundType || !newArray.type.canAccept(value.type)) {
             var type = mustBeArray.type.innerType;
             var stringInfo = type.stringInfo();
             var info = stringInfo[0];
@@ -8664,7 +8756,7 @@ var IVProgProcessor = exports.IVProgProcessor = function () {
           newArray.value[line].value[column] = value;
           store.updateStore(cmd.id, newArray);
         } else {
-          if (mustBeArray.columns !== null && value.type instanceof _compoundType.CompoundType) {
+          if (mustBeArray.columns !== null && value.type instanceof _compoundType.CompoundType || !newArray.type.canAccept(value.type)) {
             var _type = mustBeArray.type;
             var _stringInfo = _type.stringInfo();
             var _info = _stringInfo[0];
@@ -8735,9 +8827,18 @@ var IVProgProcessor = exports.IVProgProcessor = function () {
           return $value.then(function (vl) {
             var realValue = vl;
             if (vl !== null) {
+              if (!vl.type.isCompatible(cmd.type)) {
+                if (_config.Config.enable_type_casting && _store.Store.canImplicitTypeCast(cmd.type, vl.type)) {
+                  realValue = _store.Store.doImplicitCasting(cmd.type, realValue);
+                } else {
+                  var stringInfo = typeInfo.type.stringInfo();
+                  var info = stringInfo[0];
+                  return Promise.reject(_processorErrorFactory.ProcessorErrorFactory.incompatible_types_full(info.type, info.dim, cmd.sourceInfo));
+                }
+              }
               if (vl instanceof _storeObjectArrayAddress.StoreObjectArrayAddress) {
                 if (vl.type instanceof _compoundType.CompoundType) {
-                  realValue = Object.assign(new _storeObjectArray.StoreObjectArray(null, null, null), vl.refValue);
+                  return Promise.reject(new Error("!!!Critical Error: Compatibility check failed, a Type accepts a CompoundType"));
                 } else {
                   realValue = Object.assign(new _storeObject.StoreObject(null, null), vl.refValue);
                 }
@@ -8974,15 +9075,20 @@ var IVProgProcessor = exports.IVProgProcessor = function () {
       var $left = this.evaluateExpression(store, infixApp.left);
       var $right = this.evaluateExpression(store, infixApp.right);
       return Promise.all([$left, $right]).then(function (values) {
+        var shouldImplicitCast = false;
         var left = values[0];
         var right = values[1];
         var resultType = (0, _compatibilityTable.resultTypeAfterInfixOp)(infixApp.op, left.type, right.type);
         if (_types.Types.UNDEFINED.isCompatible(resultType)) {
-          var stringInfoLeft = left.type.stringInfo();
-          var infoLeft = stringInfoLeft[0];
-          var stringInfoRight = right.type.stringInfo();
-          var infoRight = stringInfoRight[0];
-          return Promise.reject(_processorErrorFactory.ProcessorErrorFactory.invalid_infix_op_full(infixApp.op, infoLeft.type, infoLeft.dim, infoRight.type, infoRight.dim, infixApp.sourceInfo));
+          if (_config.Config.enable_type_casting && _store.Store.canImplicitTypeCast(left.type, right.type)) {
+            shouldImplicitCast = true;
+          } else {
+            var stringInfoLeft = left.type.stringInfo();
+            var infoLeft = stringInfoLeft[0];
+            var stringInfoRight = right.type.stringInfo();
+            var infoRight = stringInfoRight[0];
+            return Promise.reject(_processorErrorFactory.ProcessorErrorFactory.invalid_infix_op_full(infixApp.op, infoLeft.type, infoLeft.dim, infoRight.type, infoRight.dim, infixApp.sourceInfo));
+          }
         }
         var result = null;
         switch (infixApp.op.ord) {
@@ -9018,7 +9124,14 @@ var IVProgProcessor = exports.IVProgProcessor = function () {
             }
           case _operators.Operators.MOD.ord:
             {
-              result = left.value.modulo(right.value);
+              var leftValue = left.value;
+              var rightValue = right.value;
+              if (shouldImplicitCast) {
+                resultType = _types.Types.INTEGER;
+                leftValue = leftValue.trunc();
+                rightValue = rightValue.trunc();
+              }
+              result = leftValue.modulo(rightValue);
               if (result.dp() > _config.Config.decimalPlaces) {
                 result = new _decimal2.default(result.toFixed(_config.Config.decimalPlaces));
               }
@@ -9026,44 +9139,79 @@ var IVProgProcessor = exports.IVProgProcessor = function () {
             }
           case _operators.Operators.GT.ord:
             {
+              var _leftValue = left.value;
+              var _rightValue = right.value;
               if (_types.Types.STRING.isCompatible(left.type)) {
                 result = left.value.length > right.value.length;
               } else {
-                result = left.value.gt(right.value);
+                if (shouldImplicitCast) {
+                  resultType = _types.Types.BOOLEAN;
+                  _leftValue = _leftValue.trunc();
+                  _rightValue = _rightValue.trunc();
+                }
+                result = _leftValue.gt(_rightValue);
               }
               return new _storeObject.StoreObject(resultType, result);
             }
           case _operators.Operators.GE.ord:
             {
+              var _leftValue2 = left.value;
+              var _rightValue2 = right.value;
               if (_types.Types.STRING.isCompatible(left.type)) {
                 result = left.value.length >= right.value.length;
               } else {
-                result = left.value.gte(right.value);
+                if (shouldImplicitCast) {
+                  resultType = _types.Types.BOOLEAN;
+                  _leftValue2 = _leftValue2.trunc();
+                  _rightValue2 = _rightValue2.trunc();
+                }
+                result = _leftValue2.gte(_rightValue2);
               }
               return new _storeObject.StoreObject(resultType, result);
             }
           case _operators.Operators.LT.ord:
             {
+              var _leftValue3 = left.value;
+              var _rightValue3 = right.value;
               if (_types.Types.STRING.isCompatible(left.type)) {
                 result = left.value.length < right.value.length;
               } else {
-                result = left.value.lt(right.value);
+                if (shouldImplicitCast) {
+                  resultType = _types.Types.BOOLEAN;
+                  _leftValue3 = _leftValue3.trunc();
+                  _rightValue3 = _rightValue3.trunc();
+                }
+                result = _leftValue3.lt(_rightValue3);
               }
               return new _storeObject.StoreObject(resultType, result);
             }
           case _operators.Operators.LE.ord:
             {
+              var _leftValue4 = left.value;
+              var _rightValue4 = right.value;
               if (_types.Types.STRING.isCompatible(left.type)) {
                 result = left.value.length <= right.value.length;
               } else {
-                result = left.value.lte(right.value);
+                if (shouldImplicitCast) {
+                  resultType = _types.Types.BOOLEAN;
+                  _leftValue4 = _leftValue4.trunc();
+                  _rightValue4 = _rightValue4.trunc();
+                }
+                result = _leftValue4.lte(_rightValue4);
               }
               return new _storeObject.StoreObject(resultType, result);
             }
           case _operators.Operators.EQ.ord:
             {
+              var _leftValue5 = left.value;
+              var _rightValue5 = right.value;
               if (_types.Types.INTEGER.isCompatible(left.type) || _types.Types.REAL.isCompatible(left.type)) {
-                result = left.value.eq(right.value);
+                if (shouldImplicitCast) {
+                  resultType = _types.Types.BOOLEAN;
+                  _leftValue5 = _leftValue5.trunc();
+                  _rightValue5 = _rightValue5.trunc();
+                }
+                result = _leftValue5.eq(_rightValue5);
               } else {
                 result = left.value === right.value;
               }
@@ -9071,8 +9219,15 @@ var IVProgProcessor = exports.IVProgProcessor = function () {
             }
           case _operators.Operators.NEQ.ord:
             {
+              var _leftValue6 = left.value;
+              var _rightValue6 = right.value;
               if (_types.Types.INTEGER.isCompatible(left.type) || _types.Types.REAL.isCompatible(left.type)) {
-                result = !left.value.eq(right.value);
+                if (shouldImplicitCast) {
+                  resultType = _types.Types.BOOLEAN;
+                  _leftValue6 = _leftValue6.trunc();
+                  _rightValue6 = _rightValue6.trunc();
+                }
+                result = !_leftValue6.eq(_rightValue6);
               } else {
                 result = left.value !== right.value;
               }
@@ -9228,17 +9383,7 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 function createOutputFun() {
   var writeFunction = function writeFunction(store, _) {
     var val = store.applyStore('p1');
-    if (val.type.isCompatible(_types.Types.INTEGER)) {
-      this.output.sendOutput(val.value.toString());
-    } else if (val.type.isCompatible(_types.Types.REAL)) {
-      if (val.value.dp() <= 0) {
-        this.output.sendOutput(val.value.toFixed(1));
-      } else {
-        this.output.sendOutput(val.value.toString());
-      }
-    } else {
-      this.output.sendOutput(val.value);
-    }
+    this.output.sendOutput((0, _parsers.convertToString)(val.value, val.type));
     return Promise.resolve(store);
   };
   var block = new Commands.CommandBlock([], [new Commands.SysCall(writeFunction)]);
@@ -9258,7 +9403,7 @@ function createInputFun() {
       var stoObj = null;
       if (typeToConvert.isCompatible(_types.Types.INTEGER)) {
         var val = (0, _parsers.toInt)(text);
-        stoObj = new _storeObject.StoreObject(_types.Types.INTEGER, val);
+        stoObj = new _storeObject.StoreObject(_types.Types.INTEGER, val.trunc());
       } else if (typeToConvert.isCompatible(_types.Types.REAL)) {
         stoObj = new _storeObject.StoreObject(_types.Types.REAL, (0, _parsers.toReal)(text));
       } else if (typeToConvert.isCompatible(_types.Types.BOOLEAN)) {
@@ -9937,6 +10082,10 @@ var _compoundType = __webpack_require__(/*! ../../typeSystem/compoundType */ "./
 
 var _multiType = __webpack_require__(/*! ../../typeSystem/multiType */ "./js/typeSystem/multiType.js");
 
+var _config = __webpack_require__(/*! ../../util/config */ "./js/util/config.js");
+
+var _store = __webpack_require__(/*! ../store/store */ "./js/processor/store/store.js");
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var SemanticAnalyser = exports.SemanticAnalyser = function () {
@@ -9995,6 +10144,7 @@ var SemanticAnalyser = exports.SemanticAnalyser = function () {
   }, {
     key: 'findFunction',
     value: function findFunction(name) {
+      console.log(name);
       if (name.match(/^\$.+$/)) {
         var fun = _definedFunctions.LanguageDefinedFunction.getFunction(name);
         if (!!!fun) {
@@ -10070,7 +10220,7 @@ var SemanticAnalyser = exports.SemanticAnalyser = function () {
             throw _processorErrorFactory.ProcessorErrorFactory.incompatible_types_full(info.type, info.dim, declaration.sourceInfo);
           }
           this.insertSymbol(declaration.id, { id: declaration.id, type: declaration.type });
-        } else if (!declaration.type.isCompatible(resultType)) {
+        } else if (!declaration.type.isCompatible(resultType) && !_config.Config.enable_type_casting || !declaration.type.isCompatible(resultType) && _config.Config.enable_type_casting && !_store.Store.canImplicitTypeCast(declaration.type, resultType)) {
           var _stringInfo = declaration.type.stringInfo();
           var _info = _stringInfo[0];
           throw _processorErrorFactory.ProcessorErrorFactory.incompatible_types_full(_info.type, _info.dim, declaration.sourceInfo);
@@ -10186,92 +10336,91 @@ var SemanticAnalyser = exports.SemanticAnalyser = function () {
   }, {
     key: 'evaluateArrayLiteral',
     value: function evaluateArrayLiteral(id, lines, columns, type, literal) {
-      var _this = this;
-
-      if (literal instanceof _expressions.ArrayLiteral) {
+      /* if (literal instanceof ArrayLiteral) {
+        const dimType = this.evaluateExpressionType(lines);
+        if (!dimType.isCompatible(Types.INTEGER)) {
+          throw ProcessorErrorFactory.array_dimension_not_int_full(literal.sourceInfo);
+        }
+        if ((lines instanceof IntLiteral)) {
+          if (!lines.value.eq(literal.value.length)) {
+            if(type.dimensions > 1) {
+              throw ProcessorErrorFactory.matrix_line_outbounds_full(id, literal.value.length, lines.value.toNumber(), literal.sourceInfo)
+            } else {
+              throw ProcessorErrorFactory.vector_line_outbounds_full(id, literal.value.length, lines.value.toNumber(), literal.sourceInfo)
+            }
+          } else if (lines.value.isNeg()) {
+            throw ProcessorErrorFactory.array_dimension_not_positive_full(literal.sourceInfo);
+          }
+        }
         if (columns === null) {
           // it's a vector...
-          var dimType = this.evaluateExpressionType(lines);
-          if (!dimType.isCompatible(_types.Types.INTEGER)) {
-            throw _processorErrorFactory.ProcessorErrorFactory.array_dimension_not_int_full(literal.sourceInfo);
-          }
-          if (lines instanceof _expressions.IntLiteral) {
-            if (!lines.value.eq(literal.value.length)) {
-              if (type.dimensions > 1) {
-                throw _processorErrorFactory.ProcessorErrorFactory.matrix_line_outbounds_full(id, literal.value.length, lines.values.toNumber(), literal.sourceInfo);
-              } else {
-                throw _processorErrorFactory.ProcessorErrorFactory.vector_line_outbounds_full(id, literal.value.length, lines.values.toNumber(), literal.sourceInfo);
-              }
-            } else if (lines.value.isNeg()) {
-              throw _processorErrorFactory.ProcessorErrorFactory.array_dimension_not_positive_full(literal.sourceInfo);
-            }
-          }
-          literal.value.reduce(function (last, next) {
-            var eType = _this.evaluateExpressionType(next);
+          literal.value.reduce((last, next) => {
+            const eType = this.evaluateExpressionType(next);
             if (!last.canAccept(eType)) {
-              var strInfo = last.stringInfo();invalid;
-              var info = strInfo[0];
-              var strExp = literal.toString();
-              throw _processorErrorFactory.ProcessorErrorFactory.incompatible_types_array_full(strExp, info.type, info.dim, literal.sourceInfo);
+              const strInfo = last.stringInfo();
+              const info = strInfo[0];
+              const strExp = literal.toString();
+              throw ProcessorErrorFactory.incompatible_types_array_full(strExp,info.type, info.dim, literal.sourceInfo);
             }
             return last;
           }, type);
           return true;
         } else {
-          var _dimType = this.evaluateExpressionType(columns);
-          if (!_dimType.isCompatible(_types.Types.INTEGER)) {
-            throw _processorErrorFactory.ProcessorErrorFactory.array_dimension_not_int_full(literal.sourceInfo);
+          const dimType = this.evaluateExpressionType(columns);
+          if (!dimType.isCompatible(Types.INTEGER)) {
+            throw ProcessorErrorFactory.array_dimension_not_int_full(literal.sourceInfo);
           }
-          if (columns instanceof _expressions.IntLiteral) {
-            if (!columns.value.eq(literal.value.length)) {
-              if (type.dimensions > 1) {
-                throw _processorErrorFactory.ProcessorErrorFactory.matrix_column_outbounds_full(id, literal.value.length, columns.values.toNumber(), literal.sourceInfo);
+          if ((columns instanceof IntLiteral)) {
+            const columnValue = literal.value[0].value.length;
+            if (!columns.value.eq(columnValue)) {
+              if(type.dimensions > 1) {
+                throw ProcessorErrorFactory.matrix_column_outbounds_full(id, literal.value.length, columns.value.toNumber(), literal.sourceInfo)
               } else {
-                throw _processorErrorFactory.ProcessorErrorFactory.invalid_matrix_access_full(id, literal.sourceInfo);
+                throw ProcessorErrorFactory.invalid_matrix_access_full(id, literal.sourceInfo);
               }
             } else if (columns.value.isNeg()) {
-              throw _processorErrorFactory.ProcessorErrorFactory.array_dimension_not_positive_full(literal.sourceInfo);
+              throw ProcessorErrorFactory.array_dimension_not_positive_full(literal.sourceInfo);
+            }
+            for (let i = 0; i < columns; i++) {
+              const anotherArray = literal.value[i];
+              this.evaluateArrayLiteral(id, columns, null, type, anotherArray)
             }
           }
-          for (var i = 0; i < columns; i++) {
-            var anotherArray = literal.value[i];
-            this.evaluateArrayLiteral(id, lines, null, type, anotherArray);
-          }
         }
-      } else {
-
-        var resultType = this.evaluateExpressionType(literal);
-        if (!(resultType instanceof _compoundType.CompoundType)) {
-          var strInfo = type.stringInfo();
-          var info = strInfo[0];
-          var strExp = literal.toString();
-          throw _processorErrorFactory.ProcessorErrorFactory.incompatible_types_array_full(strExp, info.type, info.dim, literal.sourceInfo);
+       } else {
+         const resultType = this.evaluateExpressionType(literal);
+        if (!(resultType instanceof CompoundType)) {
+          const strInfo = type.stringInfo();
+          const info = strInfo[0];
+          const strExp = literal.toString();
+          throw ProcessorErrorFactory.incompatible_types_array_full(strExp,info.type, info.dim, literal.sourceInfo);
         }
         if (!type.isCompatible(resultType)) {
-          var _strInfo = type.stringInfo();
-          var _info2 = _strInfo[0];
-          var _strExp = literal.toString();
-          throw _processorErrorFactory.ProcessorErrorFactory.incompatible_types_array_full(_strExp, _info2.type, _info2.dim, literal.sourceInfo);
+          const strInfo = type.stringInfo();
+          const info = strInfo[0];
+          const strExp = literal.toString();
+          throw ProcessorErrorFactory.incompatible_types_array_full(strExp,info.type, info.dim, literal.sourceInfo);
         }
         return true;
-      }
+      } */
+      return true;
     }
   }, {
     key: 'assertFunction',
     value: function assertFunction(fun) {
-      var _this2 = this;
+      var _this = this;
 
       this.pushMap();
       this.currentFunction = fun;
       fun.formalParameters.forEach(function (formalParam) {
         if (formalParam.type instanceof _compoundType.CompoundType) {
           if (formalParam.type.dimensions > 1) {
-            _this2.insertSymbol(formalParam.id, { id: formalParam.id, lines: -1, columns: -1, type: formalParam.type });
+            _this.insertSymbol(formalParam.id, { id: formalParam.id, lines: -1, columns: -1, type: formalParam.type });
           } else {
-            _this2.insertSymbol(formalParam.id, { id: formalParam.id, lines: -1, columns: null, type: formalParam.type });
+            _this.insertSymbol(formalParam.id, { id: formalParam.id, lines: -1, columns: null, type: formalParam.type });
           }
         } else {
-          _this2.insertSymbol(formalParam.id, { id: formalParam.id, type: formalParam.type });
+          _this.insertSymbol(formalParam.id, { id: formalParam.id, type: formalParam.type });
         }
       });
       this.assertDeclarations(fun.variablesDeclarations);
@@ -10285,10 +10434,10 @@ var SemanticAnalyser = exports.SemanticAnalyser = function () {
   }, {
     key: 'assertReturn',
     value: function assertReturn(fun, optional) {
-      var _this3 = this;
+      var _this2 = this;
 
       return fun.commands.reduce(function (last, next) {
-        return _this3.checkCommand(fun.returnType, next, optional) || last;
+        return _this2.checkCommand(fun.returnType, next, optional) || last;
       }, optional);
     }
   }, {
@@ -10297,7 +10446,7 @@ var SemanticAnalyser = exports.SemanticAnalyser = function () {
       if (cmd instanceof _commands.While) {
         var resultType = this.evaluateExpressionType(cmd.expression);
         if (!resultType.isCompatible(_types.Types.BOOLEAN)) {
-          throw _processorErrorFactory.ProcessorErrorFactory.loop_condition_type_full(cmd.sourceInfo);
+          throw _processorErrorFactory.ProcessorErrorFactory.loop_condition_type_full(cmd.expression.toString(), cmd.sourceInfo);
         }
         this.checkCommands(type, cmd.commands, optional);
         return false;
@@ -10305,7 +10454,7 @@ var SemanticAnalyser = exports.SemanticAnalyser = function () {
         this.checkCommand(type, cmd.assignment, optional);
         var _resultType = this.evaluateExpressionType(cmd.condition);
         if (!_resultType.isCompatible(_types.Types.BOOLEAN)) {
-          throw _processorErrorFactory.ProcessorErrorFactory.for_condition_type_full(cmd.sourceInfo);
+          throw _processorErrorFactory.ProcessorErrorFactory.for_condition_type_full(cmd.condition.toString(), cmd.sourceInfo);
         }
         this.checkCommand(type, cmd.increment, optional);
         this.checkCommands(type, cmd.commands, optional);
@@ -10369,16 +10518,16 @@ var SemanticAnalyser = exports.SemanticAnalyser = function () {
         if (_exp instanceof _expressions.ArrayLiteral) {
           if (!(_typeInfo.type instanceof _compoundType.CompoundType)) {
             var stringInfo = _typeInfo.type.stringInfo();
-            var _info3 = stringInfo[0];
-            throw _processorErrorFactory.ProcessorErrorFactory.incompatible_types_full(_info3.type, _info3.dim, cmd.sourceInfo);
+            var _info2 = stringInfo[0];
+            throw _processorErrorFactory.ProcessorErrorFactory.incompatible_types_full(_info2.type, _info2.dim, cmd.sourceInfo);
           }
           this.evaluateArrayLiteral(cmd.id, _typeInfo.lines, _typeInfo.columns, _typeInfo.type, _exp);
         } else {
           var _resultType2 = this.evaluateExpressionType(_exp);
-          if (!_resultType2.isCompatible(_typeInfo.type)) {
+          if (!_resultType2.isCompatible(_typeInfo.type) && !_config.Config.enable_type_casting || !_resultType2.isCompatible(_typeInfo.type) && _config.Config.enable_type_casting && !_store.Store.canImplicitTypeCast(_typeInfo.type, _resultType2)) {
             var _stringInfo2 = _typeInfo.type.stringInfo();
-            var _info4 = _stringInfo2[0];
-            throw _processorErrorFactory.ProcessorErrorFactory.incompatible_types_full(_info4.type, _info4.dim, cmd.sourceInfo);
+            var _info3 = _stringInfo2[0];
+            throw _processorErrorFactory.ProcessorErrorFactory.incompatible_types_full(_info3.type, _info3.dim, cmd.sourceInfo);
           }
         }
         return optional;
@@ -10387,7 +10536,7 @@ var SemanticAnalyser = exports.SemanticAnalyser = function () {
       } else if (cmd instanceof _commands.IfThenElse) {
         var _resultType3 = this.evaluateExpressionType(cmd.condition);
         if (!_resultType3.isCompatible(_types.Types.BOOLEAN)) {
-          throw _processorErrorFactory.ProcessorErrorFactory.if_condition_type_full(cmd.sourceInfo);
+          throw _processorErrorFactory.ProcessorErrorFactory.if_condition_type_full(cmd.condition.toString(), cmd.sourceInfo);
         }
         if (cmd.ifFalse instanceof _commands.IfThenElse) {
           return this.checkCommands(type, cmd.ifTrue.commands, optional) && this.checkCommand(type, cmd.ifFalse, optional);
@@ -10410,14 +10559,14 @@ var SemanticAnalyser = exports.SemanticAnalyser = function () {
         var funcName = this.currentFunction.isMain ? _definedFunctions.LanguageDefinedFunction.getMainFunctionName() : this.currentFunction.name;
         if (cmd.expression === null && !type.isCompatible(_types.Types.VOID)) {
           var _stringInfo3 = type.stringInfo();
-          var _info5 = _stringInfo3[0];
-          throw _processorErrorFactory.ProcessorErrorFactory.invalid_void_return_full(funcName, _info5.type, _info5.dim, cmd.sourceInfo);
+          var _info4 = _stringInfo3[0];
+          throw _processorErrorFactory.ProcessorErrorFactory.invalid_void_return_full(funcName, _info4.type, _info4.dim, cmd.sourceInfo);
         } else if (cmd.expression !== null) {
           var _resultType4 = this.evaluateExpressionType(cmd.expression);
           if (!type.isCompatible(_resultType4)) {
             var _stringInfo4 = type.stringInfo();
-            var _info6 = _stringInfo4[0];
-            throw _processorErrorFactory.ProcessorErrorFactory.invalid_return_type_full(funcName, _info6.type, _info6.dim, cmd.sourceInfo);
+            var _info5 = _stringInfo4[0];
+            throw _processorErrorFactory.ProcessorErrorFactory.invalid_return_type_full(funcName, _info5.type, _info5.dim, cmd.sourceInfo);
           } else {
             return true;
           }
@@ -10429,10 +10578,10 @@ var SemanticAnalyser = exports.SemanticAnalyser = function () {
   }, {
     key: 'checkCommands',
     value: function checkCommands(type, cmds, optional) {
-      var _this4 = this;
+      var _this3 = this;
 
       return cmds.reduce(function (last, next) {
-        return _this4.checkCommand(type, next, optional) || last;
+        return _this3.checkCommand(type, next, optional) || last;
       }, optional);
     }
   }, {
@@ -10460,13 +10609,32 @@ var SemanticAnalyser = exports.SemanticAnalyser = function () {
             }
           }
           if (shared <= 0) {
+            if (_config.Config.enable_type_casting && !formalParam.byRef) {
+              if (resultType.isCompatible(_types.Types.INTEGER) || resultType.isCompatible(_types.Types.REAL)) {
+                if (formalParam.type.isCompatible(_types.Types.INTEGER) || formalParam.type.isCompatible(_types.Types.REAL)) {
+                  continue;
+                }
+              }
+            }
             throw _processorErrorFactory.ProcessorErrorFactory.invalid_parameter_type_full(id, param.toString(), param.sourceInfo);
           }
         } else if (resultType instanceof _multiType.MultiType) {
           if (!resultType.isCompatible(formalParam.type)) {
+            if (_config.Config.enable_type_casting && !formalParam.byRef) {
+              if (resultType.isCompatible(_types.Types.INTEGER) || resultType.isCompatible(_types.Types.REAL)) {
+                if (formalParam.type.isCompatible(_types.Types.INTEGER) || formalParam.type.isCompatible(_types.Types.REAL)) {
+                  continue;
+                }
+              }
+            }
             throw _processorErrorFactory.ProcessorErrorFactory.invalid_parameter_type_full(id, param.toString(), param.sourceInfo);
           }
         } else if (!formalParam.type.isCompatible(resultType)) {
+          if (_config.Config.enable_type_casting && !formalParam.byRef) {
+            if (_store.Store.canImplicitTypeCast(formalParam.type, resultType)) {
+              continue;
+            }
+          }
           throw _processorErrorFactory.ProcessorErrorFactory.invalid_parameter_type_full(id, param.toString(), param.sourceInfo);
         }
       }
@@ -10497,9 +10665,37 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _modes = __webpack_require__(/*! ./../modes */ "./js/processor/modes.js");
 
+var _types = __webpack_require__(/*! ./../../typeSystem/types */ "./js/typeSystem/types.js");
+
+var _storeObject = __webpack_require__(/*! ./storeObject */ "./js/processor/store/storeObject.js");
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Store = exports.Store = function () {
+  _createClass(Store, null, [{
+    key: 'canImplicitTypeCast',
+    value: function canImplicitTypeCast(castType, sourceType) {
+      if (castType.isCompatible(_types.Types.INTEGER) || castType.isCompatible(_types.Types.REAL)) {
+        if (sourceType.isCompatible(_types.Types.INTEGER) || sourceType.isCompatible(_types.Types.REAL)) {
+          return true;
+        }
+      }
+      return false;
+    }
+  }, {
+    key: 'doImplicitCasting',
+    value: function doImplicitCasting(castType, stoObj) {
+      if (!Store.canImplicitTypeCast(castType, stoObj.type)) {
+        throw new Error("!!!Critical error: attempted to type cast invalid types");
+      }
+      if (_types.Types.INTEGER.isCompatible(castType)) {
+        return new _storeObject.StoreObject(castType, stoObj.value.trunc());
+      } else {
+        return new _storeObject.StoreObject(castType, stoObj.value);
+      }
+    }
+  }]);
+
   function Store(name) {
     _classCallCheck(this, Store);
 
@@ -10510,19 +10706,18 @@ var Store = exports.Store = function () {
   }
 
   _createClass(Store, [{
-    key: "extendStore",
+    key: 'extendStore',
     value: function extendStore(nextStore) {
       this.nextStore = nextStore;
     }
   }, {
-    key: "applyStore",
+    key: 'applyStore',
     value: function applyStore(id) {
       if (!this.store[id]) {
         if (this.nextStore !== null) {
           return this.nextStore.applyStore(id);
         } else {
-          // TODO: better error message
-          throw new Error("Variable " + id + " not found.");
+          throw new Error('Variable ' + id + ' not found.');
         }
       }
       var val = this.store[id];
@@ -10532,7 +10727,7 @@ var Store = exports.Store = function () {
       return this.store[id];
     }
   }, {
-    key: "updateStore",
+    key: 'updateStore',
     value: function updateStore(id, stoObj) {
       if (!this.store[id]) {
         if (this.nextStore !== null) {
@@ -10540,7 +10735,7 @@ var Store = exports.Store = function () {
           return this;
         } else {
           // TODO: better error message
-          throw new Error("Variable " + id + " not found.");
+          throw new Error('Variable ' + id + ' not found.');
         }
       } else {
         var oldObj = this.store[id];
@@ -10559,7 +10754,7 @@ var Store = exports.Store = function () {
           var oldType = oldObj.type;
           var stoType = stoObj.type;
           // TODO: better error message
-          throw new Error(oldType + " is not compatible with type " + stoType + " given");
+          throw new Error(oldType + ' is not compatible with type ' + stoType + ' given');
         }
       }
     }
@@ -10569,11 +10764,11 @@ var Store = exports.Store = function () {
     // updateStoreRef(id, stoObjAddress) {...}
 
   }, {
-    key: "insertStore",
+    key: 'insertStore',
     value: function insertStore(id, stoObj) {
       if (this.store[id]) {
         // TODO: better error message
-        throw new Error(id + " is already defined");
+        throw new Error(id + ' is already defined');
       }
       stoObj.setID(id);
       this.store[id] = Object.freeze(stoObj);
@@ -15834,6 +16029,8 @@ var _lineI18n = __webpack_require__(/*! line-i18n */ "./node_modules/line-i18n/d
 
 var _lineI18n2 = _interopRequireDefault(_lineI18n);
 
+var _config = __webpack_require__(/*! ./../util/config */ "./js/util/config.js");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -15842,16 +16039,13 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-// This is for LanguageService with localStorage
-// const DEFAULT_LANG = "pt";
-
 var LanguageServiceExtended = function (_line_i18n$LanguageSe) {
   _inherits(LanguageServiceExtended, _line_i18n$LanguageSe);
 
   function LanguageServiceExtended() {
     _classCallCheck(this, LanguageServiceExtended);
 
-    return _possibleConstructorReturn(this, (LanguageServiceExtended.__proto__ || Object.getPrototypeOf(LanguageServiceExtended)).call(this, iLMparameters.lang));
+    return _possibleConstructorReturn(this, (LanguageServiceExtended.__proto__ || Object.getPrototypeOf(LanguageServiceExtended)).call(this, typeof iLMparameters === 'undefined' ? _config.Config.default_lang : iLMparameters.lang));
   }
 
   _createClass(LanguageServiceExtended, [{
@@ -16110,7 +16304,7 @@ var MultiType = exports.MultiType = function (_Type) {
       if (another instanceof _type.Type) {
         for (var i = 0; i < this.types.length; i++) {
           var t = this.types[i];
-          if (t.isCompatible(another)) {
+          if (another.isCompatible(t)) {
             return true;
           }
         }
@@ -16208,22 +16402,22 @@ function convertBoolToString(bool) {
   }
 }
 
-function convertToString(stoObj, type) {
+function convertToString(value, type) {
   switch (type.ord) {
     case _types.Types.INTEGER.ord:
-      return stoObj.toString();
+      return value.toString();
     case _types.Types.REAL.ord:
       {
-        if (stoObj.dp() <= 0) {
-          return stoObj.toFixed(1);
+        if (value.dp() <= 0) {
+          return value.toFixed(1);
         } else {
-          return stoObj.toNumber();
+          return value.toNumber();
         }
       }
     case _types.Types.BOOLEAN.ord:
-      return convertBoolToString(stoObj);
+      return convertBoolToString(value);
     default:
-      return stoObj;
+      return value;
   }
 }
 
@@ -16242,8 +16436,13 @@ function convertToString(stoObj, type) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.Type = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _config = __webpack_require__(/*! ../util/config */ "./js/util/config.js");
+
+var _baseTypes = __webpack_require__(/*! ./baseTypes */ "./js/typeSystem/baseTypes.js");
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -16350,10 +16549,12 @@ var ConfigObject = function () {
     this.loopTimeout = 5000;
     this.decimalPlaces = 5;
     this.intConvertRoundMode = 2;
+    this.default_lang = 'pt';
+    this.enable_type_casting = true;
   }
 
   _createClass(ConfigObject, [{
-    key: "setConfig",
+    key: 'setConfig',
     value: function setConfig(opts) {
       for (var key in opts) {
         if (this.hasOwnProperty(key)) {
@@ -16390,6 +16591,8 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _input = __webpack_require__(/*! ./../io/input */ "./js/io/input.js");
 
+var _localizedStringsService = __webpack_require__(/*! ../services/localizedStringsService */ "./js/services/localizedStringsService.js");
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -16416,7 +16619,7 @@ var InputTest = exports.InputTest = function (_Input) {
         callback(this.inputList[this.index]);
         this.index++;
       } else {
-        throw new Error('The amount of requests exceeded the amount of available inputs');
+        throw new Error(_localizedStringsService.LocalizedStrings.getError("exceeded_input_request"));
       }
     }
   }]);
@@ -16538,15 +16741,17 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var block_render = false;
+window.block_render = false;
 
 function renderAlgorithm() {
-	console.log('rendering algorithm...');
-
-	if (block_render) {
+	if (window.block_render) {
 		return;
 	}
-	block_render = true;
+	if (window.draging) {
+		return;
+	}
+	window.block_render = true;
+	console.log('rendering algorithm');
 
 	(0, _jquery2.default)('.all_functions').children().off();
 	(0, _jquery2.default)('.all_functions').empty();
@@ -16563,7 +16768,7 @@ function renderAlgorithm() {
 	}
 
 	setTimeout(function () {
-		block_render = false;
+		window.block_render = false;
 	}, 500);
 }
 
@@ -16607,6 +16812,10 @@ var VariablesManagement = _interopRequireWildcard(_variables);
 var _commands = __webpack_require__(/*! ./commands */ "./js/visualUI/commands.js");
 
 var CommandsManagement = _interopRequireWildcard(_commands);
+
+var _utils = __webpack_require__(/*! ./utils */ "./js/visualUI/utils.js");
+
+var Utils = _interopRequireWildcard(_utils);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -16688,20 +16897,23 @@ function functionsCode(function_obj) {
 	}
 
 	for (var j = 0; j < function_obj.commands.length; j++) {
-		//try {
-		ret += commandsCode(function_obj.commands[j]);
-		/*} catch (err) {
-  		has_error = true;
-  		console.error(err.message);
-  		var todos = $('body').find('.command_container');
-  	for (var i = 0; i < todos.length; i++) {
-  			if ($(todos[i]).data('command') == function_obj.commands[j]) {
-  			$( todos[i] ).prepend( ' <i class="ui icon red exclamation triangle error_icon"></i> ' );
-  			break;
-  		}
-  	}
-  	
-  }*/
+		try {
+			ret += commandsCode(function_obj.commands[j]);
+		} catch (err) {
+
+			has_error = true;
+
+			console.error(err.message);
+
+			var todos = (0, _jquery2.default)('body').find('.command_container');
+
+			for (var i = 0; i < todos.length; i++) {
+				if ((0, _jquery2.default)(todos[i]).data('command') == function_obj.commands[j]) {
+					(0, _jquery2.default)(todos[i]).prepend(' <i class="ui icon red exclamation triangle error_icon"></i> ');
+					break;
+				}
+			}
+		}
 	}
 
 	ret += '\n\t}';
@@ -16766,7 +16978,7 @@ function returnsCode(command_obj, indentation) {
 
 	if (command_obj.variable_value_menu) {
 		try {
-			ret += ' ' + variableValueMenuCode(command_obj.variable_value_menu);
+			ret += ' ' + variableValueMenuCode(command_obj.variable_value_menu, true);
 		} catch (err) {}
 	}
 
@@ -16914,6 +17126,10 @@ function iftruesCode(command_obj, indentation) {
 
 	ret += _localizedStringsService.LocalizedStrings.getUI('text_if');
 
+	if (!command_obj.expression.expression) {
+		Utils.renderErrorMessage(command_obj.expression.dom_object, _localizedStringsService.LocalizedStrings.getUI('inform_valid_expression'));
+	}
+
 	switch (command_obj.expression.expression.type) {
 		case Models.EXPRESSION_TYPES.exp_logic:
 			ret += logicExpressionCode(command_obj.expression.expression);
@@ -16976,6 +17192,10 @@ function doWhilesCode(command_obj, indentation) {
 
 	ret += '} ' + _localizedStringsService.LocalizedStrings.getUI('text_code_while');
 
+	if (!command_obj.expression.expression) {
+		Utils.renderErrorMessage(command_obj.expression.dom_object, _localizedStringsService.LocalizedStrings.getUI('inform_valid_expression'));
+	}
+
 	switch (command_obj.expression.expression.type) {
 		case Models.EXPRESSION_TYPES.exp_logic:
 			ret += logicExpressionCode(command_obj.expression.expression);
@@ -16996,6 +17216,10 @@ function whiletruesCode(command_obj, indentation) {
 	}
 
 	ret += _localizedStringsService.LocalizedStrings.getUI('text_code_while');
+
+	if (!command_obj.expression.expression) {
+		Utils.renderErrorMessage(command_obj.expression.dom_object, _localizedStringsService.LocalizedStrings.getUI('inform_valid_expression'));
+	}
 
 	switch (command_obj.expression.expression.type) {
 		case Models.EXPRESSION_TYPES.exp_logic:
@@ -17200,43 +17424,52 @@ function readersCode(command_obj, indentation) {
 }
 
 function variableValueMenuCode(variable_obj) {
+	var is_return = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
 
 	var ret = '';
-	if (variable_obj.function_called) {
+	try {
+		if (variable_obj.function_called) {
 
-		if (variable_obj.function_called.name) {
-			ret += variable_obj.function_called.name + ' ( ';
-		} else {
-			ret += _localizedStringsService.LocalizedStrings.getUI(variable_obj.function_called.category) + '.' + _localizedStringsService.LocalizedStrings.getUI(variable_obj.function_called.identifier) + ' ( ';
-		}
+			if (variable_obj.function_called.name) {
+				ret += variable_obj.function_called.name + ' ( ';
+			} else {
+				ret += _localizedStringsService.LocalizedStrings.getUI(variable_obj.function_called.category) + '.' + _localizedStringsService.LocalizedStrings.getUI(variable_obj.function_called.identifier) + ' ( ';
+			}
 
-		if (variable_obj.parameters_list) {
-			for (var i = 0; i < variable_obj.parameters_list.length; i++) {
-				ret += variableValueMenuCode(variable_obj.parameters_list[i]);
-				if (i + 1 < variable_obj.parameters_list.length) {
-					ret += ', ';
+			if (variable_obj.parameters_list) {
+				for (var i = 0; i < variable_obj.parameters_list.length; i++) {
+					ret += variableValueMenuCode(variable_obj.parameters_list[i]);
+					if (i + 1 < variable_obj.parameters_list.length) {
+						ret += ', ';
+					}
 				}
 			}
-		}
 
-		ret += ' )';
-	} else if (variable_obj.content.type) {
+			ret += ' )';
+		} else if (variable_obj.content.type) {
 
-		ret += variable_obj.content.name;
+			ret += variable_obj.content.name;
 
-		if (variable_obj.content.dimensions == 1) {
-			ret += ' [ ' + variableValueMenuCode(variable_obj.column) + ' ] ';
-		}
+			if (variable_obj.content.dimensions == 1 && variable_obj.dimensions != 1) {
+				ret += ' [ ' + variableValueMenuCode(variable_obj.column) + ' ] ';
+			}
 
-		if (variable_obj.content.dimensions == 2) {
-			ret += ' [ ' + variableValueMenuCode(variable_obj.row) + ' ] ';
-			ret += ' [ ' + variableValueMenuCode(variable_obj.column) + ' ] ';
-		}
-	} else {
-		if (isNaN(variable_obj.content)) {
-			ret += '"' + variable_obj.content + '"';
+			if (variable_obj.content.dimensions == 2 && variable_obj.dimensions != 2) {
+				ret += ' [ ' + variableValueMenuCode(variable_obj.row) + ' ] ';
+				ret += ' [ ' + variableValueMenuCode(variable_obj.column) + ' ] ';
+			}
 		} else {
-			ret += variable_obj.content;
+			if (isNaN(variable_obj.content)) {
+				ret += '"' + variable_obj.content + '"';
+			} else {
+				ret += variable_obj.content;
+			}
+		}
+	} catch (err) {
+
+		if (!is_return) {
+			Utils.renderErrorMessage(variable_obj.dom_object, _localizedStringsService.LocalizedStrings.getUI('inform_valid_content'));
+			throw err;
 		}
 	}
 
@@ -17854,8 +18087,8 @@ function createFloatingCommand(function_obj, function_container, command_type, m
 	floatingObject.css("position", "absolute");
 	mouse_event.type = "mousedown.draggable";
 	mouse_event.target = floatingObject[0];
-	floatingObject.css("left", mouse_event.pageX - 15);
-	floatingObject.css("top", mouse_event.pageY - 15);
+	floatingObject.css("left", mouse_event.pageX);
+	floatingObject.css("top", mouse_event.pageY);
 	floatingObject.trigger(mouse_event);
 }
 
@@ -17869,12 +18102,14 @@ function borderMouseDragCommand(function_obj, function_container, evt) {
 
 	function_container.find('.commands_list_div').each(function (index) {
 		prev = (0, _jquery2.default)(this);
-		var objLeft = prev.offset().left;
-		var objTop = prev.offset().top;
-		var objRight = objLeft + prev.width();
-		var objBottom = objTop + prev.height();
-		if (evt.pageX > objLeft && evt.pageX < objRight && evt.pageY > objTop && evt.pageY < objBottom) {
-			prev.addClass("over_command_drag");
+		if (prev) {
+			var objLeft = prev.offset().left;
+			var objTop = prev.offset().top;
+			var objRight = objLeft + prev.width();
+			var objBottom = objTop + prev.height();
+			if (evt.pageX > objLeft && evt.pageX < objRight && evt.pageY > objTop && evt.pageY < objBottom) {
+				prev.addClass("over_command_drag");
+			}
 		}
 	});
 
@@ -17885,7 +18120,9 @@ function borderMouseDragCommand(function_obj, function_container, evt) {
 		var objRight = objLeft + obj.width();
 		var objBottom = objTop + obj.height();
 		if (evt.pageX > objLeft && evt.pageX < objRight && evt.pageY > objTop && evt.pageY < objBottom) {
-			prev.removeClass('over_command_drag');
+			if (prev) {
+				prev.removeClass('over_command_drag');
+			}
 			obj.addClass("over_command_drag");
 			return;
 		}
@@ -18006,6 +18243,23 @@ function genericCreateCommand(command_type) {
 	}
 }
 
+function dragTrash(event) {
+
+	var trash = (0, _jquery2.default)('<i class="ui icon trash alternate outline"></i>');
+	(0, _jquery2.default)('body').append(trash);
+	trash.css('position', 'absolute');
+	trash.css('top', event.clientY);
+	trash.css('left', event.clientX - 20);
+	trash.css('font-size', '3em');
+	trash.css('display', 'none');
+
+	trash.fadeIn(200, function () {
+		trash.fadeOut(200, function () {
+			trash.remove();
+		});
+	});
+}
+
 function manageCommand(function_obj, function_container, event, command_type) {
 
 	(0, _jquery2.default)(".created_element").each(function (index) {
@@ -18037,11 +18291,13 @@ function manageCommand(function_obj, function_container, event, command_type) {
 	if (!esta_correto) {
 		has_element_created_draged = false;
 		which_element_is_draged = null;
+		dragTrash(event);
 		return;
 	} else {
 		if (!esta_na_div_correta) {
 			has_element_created_draged = false;
 			which_element_is_draged = null;
+			dragTrash(event);
 			return;
 		}
 	}
@@ -18145,6 +18401,8 @@ function manageCommand(function_obj, function_container, event, command_type) {
 
 	has_element_created_draged = false;
 	which_element_is_draged = null;
+
+	renderAlgorithm();
 }
 
 function insertCommandInBlockHierar(el, event, function_obj, command_type, hier_dom, hier_obj) {
@@ -19445,6 +19703,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function renderExpression(command, expression, function_obj, initial_el_to_render) {
 
+	expression.dom_object = initial_el_to_render;
+
 	if (expression.expression == null || expression.expression.length < 1) {
 
 		renderStartMenu(command, expression, function_obj, initial_el_to_render);
@@ -19462,6 +19722,13 @@ function renderExpression(command, expression, function_obj, initial_el_to_rende
 		}
 
 		initial_el_to_render.append(main_div);
+		var restartMenu = (0, _jquery2.default)('<div class="ui restart_expression"><i class="ui icon undo"></i></div>');
+		initial_el_to_render.append(restartMenu);
+		restartMenu.on('click', function (e) {
+			expression.expression = null;
+			initial_el_to_render.empty();
+			renderExpression(command, expression, function_obj, initial_el_to_render);
+		});
 	}
 }
 
@@ -19612,8 +19879,8 @@ function renderArithmeticExpression(command, all_expression, expression_arithmet
 function renderStartMenu(command, expression, function_obj, initial_el_to_render) {
 	var start_menu = '';
 	start_menu += '<div class="ui dropdown menu_start_rendered"><div class="text"><i>' + _localizedStringsService.LocalizedStrings.getUI('expression_menu_select') + '</i></div><i class="dropdown icon"></i><div class="menu">';
-	start_menu += '<div class="item" data-exp="' + Models.EXPRESSION_TYPES.exp_logic + '">' + _localizedStringsService.LocalizedStrings.getUI('text_logic_expression') + '</div>';
-	start_menu += '<div class="item" data-exp="' + Models.EXPRESSION_TYPES.exp_arithmetic + '">' + _localizedStringsService.LocalizedStrings.getUI('text_arithmetic_expression') + '</div>';
+	start_menu += '<div class="item" data-exp="' + Models.EXPRESSION_TYPES.exp_logic + '">' + _localizedStringsService.LocalizedStrings.getUI('text_logic_expression') + ' (EL == EL and EL)</div>';
+	start_menu += '<div class="item" data-exp="' + Models.EXPRESSION_TYPES.exp_arithmetic + '">' + _localizedStringsService.LocalizedStrings.getUI('text_arithmetic_expression') + ' (EA < EA)</div>';
 	start_menu += '</div></div>';
 	start_menu = (0, _jquery2.default)(start_menu);
 
@@ -19631,7 +19898,8 @@ function renderStartMenu(command, expression, function_obj, initial_el_to_render
 			initial_el_to_render.html('');
 
 			renderExpression(command, expression, function_obj, initial_el_to_render);
-		}
+		},
+		selectOnKeydown: false
 	});
 
 	initial_el_to_render.append(' <span class="span_command_spec"> </span> ');
@@ -19737,7 +20005,7 @@ function addHandlers(command, dom_where_render, function_obj, dom_command) {
 
 			switch ((0, _jquery2.default)(this).data('command')) {
 				case Models.COMMAND_TYPES.break:
-					CommandsManagement.createFloatingCommand(function_obj, null, (0, _jquery2.default)(this).data('command'), evt);
+					CommandsManagement.createFloatingCommand(function_obj, dom_command.find('.block_commands'), (0, _jquery2.default)(this).data('command'), evt);
 					break;
 
 				case Models.COMMAND_TYPES.switchcase:
@@ -19829,6 +20097,7 @@ function renderCommand(command, function_obj) {
 
 	var el = (0, _jquery2.default)(ret);
 	el.data('command', command);
+	el.find('.block_commands').data('command', command);
 
 	addHandlers(command, function_obj, el);
 
@@ -20001,6 +20270,7 @@ function renderCommand(command, function_obj) {
 	el.find('.block_commands').data('command', command);
 	el.find('.data_block_if').data('command', command);
 	el.find('.data_block_else').data('command', command);
+	el.find('.commands_if').data('command', command);
 
 	addHandlers(command, function_obj, el);
 
@@ -20177,6 +20447,7 @@ function renderCommand(command, function_obj) {
 
 	var el = (0, _jquery2.default)(ret);
 	el.data('command', command);
+	el.find('.block_commands').data('command', command);
 
 	addHandlers(command, function_obj, el);
 
@@ -20366,7 +20637,12 @@ function renderCommand(command, function_obj) {
 
 	addHandlers(command, function_obj, el);
 
-	VariableValueMenu.renderMenu(command, command.variable_value_menu, el.find('.var_value_menu_div'), function_obj);
+	if (function_obj.return_type != _types.Types.VOID) {
+		VariableValueMenu.renderMenu(command, command.variable_value_menu, el.find('.var_value_menu_div'), function_obj);
+	} else {
+		el.find('.var_value_menu_div').remove();
+		command.variable_value_menu = null;
+	}
 
 	return el;
 }
@@ -20517,7 +20793,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.VAR_OR_VALUE_TYPES = undefined;
 exports.renderMenu = renderMenu;
-exports.refreshMenu = refreshMenu;
 
 var _jquery = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
 
@@ -20577,11 +20852,11 @@ function renderMenu(command, ref_object, dom_object, function_obj) {
 		}
 	}
 
-	var menu_var_or_value = '<div class="ui dropdown menu_var_or_value_dom" data-algo="12"><div class="text"></div><i class="dropdown icon"></i><div class="menu">';
+	var menu_var_or_value = '<div class="ui dropdown menu_var_or_value_dom" data-varmenu="true"><div class="text"></div><i class="dropdown icon"></i><div class="menu">';
 
 	if (ref_object.variable_and_value == VAR_OR_VALUE_TYPES.only_variable) {
 
-		menu_var_or_value = '<div class="ui dropdown menu_var_or_value_dom"><div class="text"></div><i class="dropdown icon"></i><div class="menu menu_only_vars">';
+		menu_var_or_value = '<div class="ui dropdown menu_var_or_value_dom" data-varmenu="true"><div class="text"></div><i class="dropdown icon"></i><div class="menu menu_only_vars">';
 		menu_var_or_value += '</div>';
 	}
 
@@ -20603,7 +20878,7 @@ function renderMenu(command, ref_object, dom_object, function_obj) {
 
 	if (ref_object.variable_and_value == VAR_OR_VALUE_TYPES.only_function) {
 
-		menu_var_or_value = '<div class="ui dropdown menu_var_or_value_dom"><div class="text"></div><i class="dropdown icon"></i><div class="menu menu_only_functions">';
+		menu_var_or_value = '<div class="ui dropdown menu_var_or_value_dom" data-varmenu="true"><div class="text"></div><i class="dropdown icon"></i><div class="menu menu_only_functions">';
 		menu_var_or_value += '</div>';
 	}
 
@@ -20628,6 +20903,8 @@ function renderMenu(command, ref_object, dom_object, function_obj) {
 	menu_var_or_value = (0, _jquery2.default)(menu_var_or_value);
 
 	dom_object.append(menu_var_or_value);
+
+	ref_object.dom_object = menu_var_or_value;
 
 	addHandlers(command, ref_object, dom_object, menu_var_or_value, function_obj, expression_element);
 
@@ -20768,14 +21045,6 @@ function isVarInProgram(var_obj, function_obj) {
 	return null;
 }
 
-function refreshMenu(menu_var_or_value_dom) {
-	console.log('\n\n');
-	console.log(menu_var_or_value_dom);
-	console.log("olá, fui chamado! note alguns DATAS recuperados: ");
-	console.log(menu_var_or_value_dom.data());
-	console.log('\n\n\n');
-}
-
 function renderPreviousContent(function_obj, menu_var_or_value, ref_object, dom_object, command, expression_element) {
 
 	if (ref_object.function_called) {
@@ -20875,7 +21144,8 @@ function variableValueMenuCode(command, variable_obj, dom_object, function_obj, 
 					if ($selectedItem.data('exp')) {
 						AttribuitionsManagement.manageExpressionElements(command, variable_obj, dom_object, menu_var_or_value, function_obj, $selectedItem, expression_element);
 					}
-				}
+				},
+				selectOnKeydown: false
 			});
 		} else {
 
@@ -20943,14 +21213,15 @@ function variableValueMenuCode(command, variable_obj, dom_object, function_obj, 
 					if ($selectedItem.data('exp')) {
 						AttribuitionsManagement.manageExpressionElements(command, variable_obj, dom_object, menu_var_or_value, function_obj, $selectedItem, expression_element);
 					}
-				}
+				},
+				selectOnKeydown: false
 			});
 		}
 	} else if (variable_obj.content.type) {
 
 		var variable_render = "";
 
-		if (variable_obj.content.dimensions == 1) {
+		if (variable_obj.content.dimensions == 1 && variable_obj.dimensions != 1) {
 
 			variable_render = '<div class="variable_rendered"> <span class="var_name">' + variable_obj.content.name + '</span>';
 
@@ -20999,7 +21270,8 @@ function variableValueMenuCode(command, variable_obj, dom_object, function_obj, 
 					if ($selectedItem.data('exp')) {
 						AttribuitionsManagement.manageExpressionElements(command, variable_obj, dom_object, menu_var_or_value, function_obj, $selectedItem, expression_element);
 					}
-				}
+				},
+				selectOnKeydown: false
 			});
 
 			if (!variable_obj.column) {
@@ -21007,7 +21279,7 @@ function variableValueMenuCode(command, variable_obj, dom_object, function_obj, 
 			}
 
 			variableValueMenuCode(command, variable_obj.column, (0, _jquery2.default)(variable_render.find('.column_container')), function_obj, menu_var_or_value, expression_element);
-		} else if (variable_obj.content.dimensions == 2) {
+		} else if (variable_obj.content.dimensions == 2 && variable_obj.dimensions != 2) {
 
 			variable_render = '<div class="variable_rendered"> <span class="var_name">' + variable_obj.content.name + '</span>';
 
@@ -21057,7 +21329,8 @@ function variableValueMenuCode(command, variable_obj, dom_object, function_obj, 
 					if ($selectedItem.data('exp')) {
 						AttribuitionsManagement.manageExpressionElements(command, variable_obj, dom_object, menu_var_or_value, function_obj, $selectedItem, expression_element);
 					}
-				}
+				},
+				selectOnKeydown: false
 			});
 
 			if (!variable_obj.column) {
@@ -21119,7 +21392,8 @@ function variableValueMenuCode(command, variable_obj, dom_object, function_obj, 
 					if ($selectedItem.data('exp')) {
 						AttribuitionsManagement.manageExpressionElements(command, variable_obj, dom_object, menu_var_or_value, function_obj, $selectedItem, expression_element);
 					}
-				}
+				},
+				selectOnKeydown: false
 			});
 		}
 	} else {
@@ -21175,7 +21449,8 @@ function variableValueMenuCode(command, variable_obj, dom_object, function_obj, 
 				if ($selectedItem.data('exp')) {
 					AttribuitionsManagement.manageExpressionElements(command, variable_obj, dom_object, menu_var_or_value, function_obj, $selectedItem, expression_element);
 				}
-			}
+			},
+			selectOnKeydown: false
 		});
 
 		variable_render.on('click', function (e) {
@@ -21311,7 +21586,8 @@ function addHandlers(command, ref_object, dom_object, menu_var_or_value, functio
 				if (command.type == Models.COMMAND_TYPES.repeatNtimes) {
 					RepeatNTimesManagement.manageExpressionElements(command, ref_object, dom_object, menu_var_or_value, function_obj, $selectedItem, expression_element);
 				}
-			}
+			},
+			selectOnKeydown: false
 		});
 	}
 
@@ -21370,7 +21646,12 @@ function openInputToFunction(command, ref_object, dom_object, menu_var_or_value,
 		dom_object.append(parameters_menu);
 
 		for (var j = 0; j < function_selected.parameters_list.length; j++) {
-			var temp = new Models.VariableValueMenu(VAR_OR_VALUE_TYPES.all, null, null, null, true);
+			var temp;
+			if (function_selected.parameters_list[j].dimensions > 0) {
+				temp = new Models.VariableValueMenu(VAR_OR_VALUE_TYPES.variable_and_function, null, null, null, true, function_selected.parameters_list[j].dimensions);
+			} else {
+				temp = new Models.VariableValueMenu(VAR_OR_VALUE_TYPES.all, null, null, null, true);
+			}
 			ref_object.parameters_list.push(temp);
 			renderMenu(command, temp, parameters_menu.find('.parameter_' + j), function_obj, 2, expression_element);
 		}
@@ -21412,7 +21693,8 @@ function openInputToFunction(command, ref_object, dom_object, menu_var_or_value,
 				if ($selectedItem.data('exp')) {
 					AttribuitionsManagement.manageExpressionElements(command, ref_object, dom_object, menu_var_or_value, function_obj, $selectedItem, expression_element);
 				}
-			}
+			},
+			selectOnKeydown: false
 		});
 	} else {
 		menu_var_or_value.find('.text').text(' ');
@@ -21469,7 +21751,8 @@ function openInputToFunction(command, ref_object, dom_object, menu_var_or_value,
 				if ($selectedItem.data('exp')) {
 					AttribuitionsManagement.manageExpressionElements(command, ref_object, dom_object, menu_var_or_value, function_obj, $selectedItem, expression_element);
 				}
-			}
+			},
+			selectOnKeydown: false
 		});
 	}
 
@@ -21487,10 +21770,10 @@ function openInputToVariable(command, ref_object, dom_object, menu_var_or_value,
 
 	var variable_render = '<div class="variable_rendered"> <span class="var_name">' + variable_selected.name + '</span>';
 
-	if (variable_selected.dimensions == 1) {
+	if (variable_selected.dimensions == 1 && ref_object.dimensions != 1) {
 		variable_render += ' <span>[ </span> <div class="column_container"></div> <span> ]</span>';
 	}
-	if (variable_selected.dimensions == 2) {
+	if (variable_selected.dimensions == 2 && ref_object.dimensions != 2) {
 		variable_render += ' <span>[ </span> <div class="row_container"></div> <span> ]</span> ';
 		variable_render += ' <span>[ </span> <div class="column_container"></div> <span> ]</span>';
 	}
@@ -21501,11 +21784,11 @@ function openInputToVariable(command, ref_object, dom_object, menu_var_or_value,
 
 	dom_object.append(variable_render);
 
-	if (variable_selected.dimensions == 1) {
+	if (variable_selected.dimensions == 1 && ref_object.dimensions != 1) {
 		ref_object.column = new Models.VariableValueMenu(VAR_OR_VALUE_TYPES.all, null, null, null, true);
 		renderMenu(command, ref_object.column, variable_render.find('.column_container'), function_obj, 2, expression_element);
 	}
-	if (variable_selected.dimensions == 2) {
+	if (variable_selected.dimensions == 2 && ref_object.dimensions != 2) {
 		ref_object.row = new Models.VariableValueMenu(VAR_OR_VALUE_TYPES.all, null, null, null, true);
 		renderMenu(command, ref_object.row, variable_render.find('.row_container'), function_obj, 2, expression_element);
 
@@ -21557,7 +21840,8 @@ function openInputToVariable(command, ref_object, dom_object, menu_var_or_value,
 			if (command.type == Models.COMMAND_TYPES.repeatNtimes) {
 				RepeatNTimesManagement.manageClearExpressionElements(command, ref_object, dom_object, menu_var_or_value, function_obj, $selectedItem, expression_element);
 			}
-		}
+		},
+		selectOnKeydown: false
 	});
 
 	if (command.type == Models.COMMAND_TYPES.attribution) {
@@ -21626,7 +21910,8 @@ function openInputToValue(command, ref_object, dom_object, menu_var_or_value, fu
 			if ($selectedItem.data('exp')) {
 				AttribuitionsManagement.manageExpressionElements(command, ref_object, dom_object, menu_var_or_value, function_obj, $selectedItem, expression_element);
 			}
-		}
+		},
+		selectOnKeydown: false
 	});
 
 	dom_object.find('.width-dynamic-minus').focusout(function () {
@@ -21656,16 +21941,17 @@ function openInputToValue(command, ref_object, dom_object, menu_var_or_value, fu
 	});
 
 	if (command.type == Models.COMMAND_TYPES.comment) {
-		rendered.parent().on('click', function (e) {
-			console.log("TTT14");
-			rendered.remove();
-			rendered.empty();
-			rendered.remove();
-			dom_object.empty();
-			dom_object.append('<span class="menu_var_or_value_dom"> </span>');
-
-			openInputToValue(command, ref_object, dom_object, menu_var_or_value, function_obj, expression_element);
-		});
+		/*rendered.parent().on('click', function(e) {
+  	rendered.parent().off();
+  	console.log("TTT14");
+  	rendered.remove();
+  	rendered.empty();
+  	rendered.remove();
+  	dom_object.empty();
+  	dom_object.append('<span class="menu_var_or_value_dom"> </span>');
+  	
+  	openInputToValue(command, ref_object, dom_object, menu_var_or_value, function_obj, expression_element)
+  });*/
 	}
 
 	rendered.on('click', function (e) {
@@ -21763,6 +22049,7 @@ function renderCommand(command, function_obj) {
 
 	var el = (0, _jquery2.default)(ret);
 	el.data('command', command);
+	el.find('.block_commands').data('command', command);
 
 	addHandlers(command, function_obj, el);
 
@@ -21837,6 +22124,8 @@ var _commands = __webpack_require__(/*! ../commands */ "./js/visualUI/commands.j
 
 var CommandsManagement = _interopRequireWildcard(_commands);
 
+__webpack_require__(/*! ../../Sortable.js */ "./js/Sortable.js");
+
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -21854,13 +22143,46 @@ function renderCommand(command, function_obj) {
 
 	for (var i = 0; i < command.content.length; i++) {
 		var new_div_item = (0, _jquery2.default)('<div class="var_value_menu_div"></div>');
-		el.find('.all_elements_write').append(new_div_item);
+		var div_parent_with_handler = (0, _jquery2.default)('<div class="div_parent_handler"></div>');
+		div_parent_with_handler.append((0, _jquery2.default)('<i class="ui icon ellipsis vertical inverted handler"></i>'));
+		div_parent_with_handler.append(new_div_item);
+		div_parent_with_handler.append((0, _jquery2.default)('<i class="white inverted icon times handler"></i>'));
+
+		el.find('.all_elements_write').append(div_parent_with_handler);
 		VariableValueMenu.renderMenu(command, command.content[i], new_div_item, function_obj);
 
 		addHandlerIconAdd(el.find('.all_elements_write'), command, function_obj);
+
+		addHandlersManager(command, function_obj, el, div_parent_with_handler, command.content[i]);
 	}
+
+	if (command.content.length == 0) {
+		addHandlerIconAdd(el.find('.all_elements_write'), command, function_obj);
+	}
+
 	addHandlers(command, function_obj, el);
 	return el;
+}
+
+function addHandlersManager(command, function_obj, writer_dom, item_div, content_element) {
+
+	item_div.find('.times').on('click', function () {
+		for (var i = 0; i < command.content.length; i++) {
+			if (command.content[i] == content_element) {
+				delete command.content[i];
+				command.content.splice(i, 1);
+
+				item_div.children().off();
+				item_div.off();
+				item_div.fadeOut();
+
+				if (command.content.length > 0) {
+					item_div.next('.icon_add_item_to_writer').fadeOut();
+				}
+				break;
+			}
+		}
+	});
 }
 
 function addHandlers(command, function_obj, writer_dom) {
@@ -21868,6 +22190,21 @@ function addHandlers(command, function_obj, writer_dom) {
 	writer_dom.find('.button_remove_command').on('click', function () {
 		if (CommandsManagement.removeCommand(command, function_obj, writer_dom)) {
 			writer_dom.fadeOut();
+		}
+	});
+
+	Sortable.create(writer_dom.find(".all_elements_write")[0], {
+		handle: '.ellipsis',
+		animation: 100,
+		ghostClass: 'ghost',
+		group: 'writer_' + Math.floor(Math.random() * 10000000),
+		draggable: '.div_parent_handler',
+		onEnd: function onEnd(evt) {
+
+			command.content.splice(evt.newIndex, 0, command.content.splice(evt.oldIndex, 1)[0]);
+
+			writer_dom.empty();
+			writer_dom.replaceWith(renderCommand(command, function_obj));
 		}
 	});
 }
@@ -21884,13 +22221,20 @@ function addHandlerIconAdd(dom_object, command, function_obj) {
 	}
 
 	icon_add_item.on('click', function (e) {
-		var new_div_item = (0, _jquery2.default)('<div class="var_value_menu_div" style="display:none;"></div>');
-		new_div_item.insertAfter(icon_add_item);
+		var div_parent_with_handler = (0, _jquery2.default)('<div class="div_parent_handler" style="display:none;"></div>');
+		var new_div_item = (0, _jquery2.default)('<div class="var_value_menu_div"></div>');
+		div_parent_with_handler.append((0, _jquery2.default)('<i class="ui icon ellipsis vertical inverted handler"></i>'));
+		div_parent_with_handler.append(new_div_item);
+		div_parent_with_handler.append((0, _jquery2.default)('<i class="white inverted icon times handler"></i>'));
+		div_parent_with_handler.insertAfter(icon_add_item);
+
 		var new_related_menu = new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.all, null, null, null, true);
 
 		VariableValueMenu.renderMenu(command, new_related_menu, new_div_item, function_obj);
 
-		addHandlerIconAdd(dom_object, command, function_obj, true, new_div_item);
+		addHandlerIconAdd(dom_object, command, function_obj, true, div_parent_with_handler);
+
+		addHandlersManager(command, function_obj, dom_object, div_parent_with_handler, new_related_menu);
 		var pos = 1;
 		dom_object.find('.icon_add_item_to_writer').each(function () {
 			if ((0, _jquery2.default)(this).get(0) === icon_add_item.get(0)) {
@@ -21899,7 +22243,10 @@ function addHandlerIconAdd(dom_object, command, function_obj) {
 				pos++;
 			}
 		});
-		new_div_item.fadeIn();
+		if (command.content.length == 1) {
+			icon_add_item.remove();
+		}
+		div_parent_with_handler.fadeIn();
 	});
 }
 
@@ -21910,13 +22257,23 @@ function addContent(command, ref_object, dom_object, menu_var_or_value, function
 		icon_add_item.insertAfter(dom_object);
 
 		icon_add_item.on('click', function (e) {
-			var new_div_item = (0, _jquery2.default)('<div class="var_value_menu_div"></div>');
-			new_div_item.insertAfter(icon_add_item);
+			var div_parent_with_handler = (0, _jquery2.default)('<div class="div_parent_handler"></div>');
+			div_parent_with_handler.append((0, _jquery2.default)('<i class="ui icon ellipsis vertical inverted handler"></i>'));
+			div_parent_with_handler.append(new_div_item);
+			div_parent_with_handler.append((0, _jquery2.default)('<i class="white inverted icon times handler"></i>'));
+
+			div_parent_with_handler.insertAfter(icon_add_item);
 			var new_related_menu = new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.all, null, null, null, true);
 
 			VariableValueMenu.renderMenu(command, new_related_menu, new_div_item, function_obj);
 
+			addHandlersManager(command, function_obj, dom_object, div_parent_with_handler, new_related_menu);
+
 			command.content.push(new_related_menu);
+
+			if (command.content.length == 1) {
+				icon_add_item.remove();
+			}
 		});
 	}
 }
@@ -21989,6 +22346,14 @@ var _algorithm = __webpack_require__(/*! ./algorithm */ "./js/visualUI/algorithm
 
 var AlgorithmManagement = _interopRequireWildcard(_algorithm);
 
+var _utils = __webpack_require__(/*! ./utils */ "./js/visualUI/utils.js");
+
+var Utils = _interopRequireWildcard(_utils);
+
+var _ima_version = __webpack_require__(/*! ./../../.ima_version.json */ "./.ima_version.json");
+
+var _ima_version2 = _interopRequireDefault(_ima_version);
+
 __webpack_require__(/*! ../Sortable.js */ "./js/Sortable.js");
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
@@ -21997,10 +22362,12 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var counter_new_functions = 0;
 var counter_new_parameters = 0;
+var ivprog_version = _ima_version2.default.version;
 
 var studentTemp = null;
 var domConsole = null;
 window.studentGrade = null;
+window.LocalizedStrings = _localizedStringsService.LocalizedStrings;
 var program = new Models.Program();
 
 window.system_functions = [];
@@ -22023,9 +22390,9 @@ window.system_functions.push(new Models.SystemFunction('$uppercase', _types.Type
 window.system_functions.push(new Models.SystemFunction('$lowercase', _types.Types.TEXT, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)], null, Models.SYSTEM_FUNCTIONS_CATEGORIES.text));
 window.system_functions.push(new Models.SystemFunction('$charAt', _types.Types.TEXT, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true), new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)], null, Models.SYSTEM_FUNCTIONS_CATEGORIES.text));
 // Adding arrangement functions:
-window.system_functions.push(new Models.SystemFunction('$numElements', _types.Types.INTEGER, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)], null, Models.SYSTEM_FUNCTIONS_CATEGORIES.arrangement));
-window.system_functions.push(new Models.SystemFunction('$matrixLines', _types.Types.INTEGER, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)], null, Models.SYSTEM_FUNCTIONS_CATEGORIES.arrangement));
-window.system_functions.push(new Models.SystemFunction('$matrixColumns', _types.Types.INTEGER, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)], null, Models.SYSTEM_FUNCTIONS_CATEGORIES.arrangement));
+window.system_functions.push(new Models.SystemFunction('$numElements', _types.Types.INTEGER, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.variable_and_function, null, null, null, true, 1)], null, Models.SYSTEM_FUNCTIONS_CATEGORIES.arrangement));
+window.system_functions.push(new Models.SystemFunction('$matrixLines', _types.Types.INTEGER, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.variable_and_function, null, null, null, true, 2)], null, Models.SYSTEM_FUNCTIONS_CATEGORIES.arrangement));
+window.system_functions.push(new Models.SystemFunction('$matrixColumns', _types.Types.INTEGER, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.variable_and_function, null, null, null, true, 2)], null, Models.SYSTEM_FUNCTIONS_CATEGORIES.arrangement));
 // Adding conversion functions:
 window.system_functions.push(new Models.SystemFunction('$isReal', _types.Types.BOOLEAN, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)], null, Models.SYSTEM_FUNCTIONS_CATEGORIES.conversion));
 window.system_functions.push(new Models.SystemFunction('$isInt', _types.Types.BOOLEAN, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)], null, Models.SYSTEM_FUNCTIONS_CATEGORIES.conversion));
@@ -22034,17 +22401,8 @@ window.system_functions.push(new Models.SystemFunction('$castReal', _types.Types
 window.system_functions.push(new Models.SystemFunction('$castInt', _types.Types.INTEGER, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)], null, Models.SYSTEM_FUNCTIONS_CATEGORIES.conversion));
 window.system_functions.push(new Models.SystemFunction('$castBool', _types.Types.BOOLEAN, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)], null, Models.SYSTEM_FUNCTIONS_CATEGORIES.conversion));
 window.system_functions.push(new Models.SystemFunction('$castString', _types.Types.TEXT, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)], null, Models.SYSTEM_FUNCTIONS_CATEGORIES.conversion));
-/*const variable1 = new Models.Variable(Types.INTEGER, "a", 1);
-const parameter1 = new Models.Variable(Types.INTEGER, "par_1", 1);
-const command1 = new Models.Comment(new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.only_value, "Testing rendering commands"));
 
-const sumFunction = new Models.Function("soma", Types.INTEGER, 0, [parameter1], false, false, [], null, [command1]);
-
-
-program.addFunction(sumFunction);
-*/
-
-console.log('       ___           ___                    ________          \n      /   /         /   /                  /   ____/  \n     /   /         /   /                  /   /        \n    /   /         /   /  ______    ___   /   /__         \n   /   /         /   /  /      \\  /  /  /   ___/      \n  /   /______   /   /  /   /\\   \\/  /  /   /      \n /          /  /   /  /   /  \\     /  /   /____     \n/__________/  /___/  /___/    \\___/  /________/       ');
+console.log('       ___           ___                    ________          \n      /   /         /   /                  /   ____/  \n     /   /         /   /                  /   /        \n    /   /         /   /  ______    ___   /   /__         \n   /   /         /   /  /      \\  /  /  /   ___/      \n  /   /______   /   /  /   /\\   \\/  /  /   /      \n /          /  /   /  /   /  \\     /  /   /____     \n/__________/  /___/  /___/    \\___/  /________/       \n\n Laboratório de Informática na Educação\n http://line.ime.usp.br');
 
 var mainFunction = new Models.Function(_localizedStringsService.LocalizedStrings.getUI("start"), _types.Types.VOID, 0, [], true, false);
 mainFunction.function_comment = new Models.Comment(_localizedStringsService.LocalizedStrings.getUI('text_comment_main'));
@@ -22140,7 +22498,8 @@ function addHandlers(function_obj, function_container) {
       } else {
         updateReturnType(function_obj, _types.Types[$selectedItem.data('type')]);
       }
-    }
+    },
+    selectOnKeydown: false
   });
 
   function_container.find(".name_function_updated").on('click', function (e) {
@@ -22230,9 +22589,11 @@ function renderFunctionReturn(function_obj, function_element) {
   function_element.find('.function_return').append(ret);
 }
 
+var cont = 0;
+
 function renderFunction(function_obj) {
 
-  var appender = '<div class="ui secondary segment function_div list-group-item">';
+  var appender = '<div class="ui secondary segment function_div list-group-item function_cont_' + cont + '">';
 
   if (function_obj.function_comment) {
     //appender += renderComment(function_obj.function_comment, sequence, true, -1);
@@ -22258,10 +22619,12 @@ function renderFunction(function_obj) {
 
   appender += '<div class="ui top attached segment variables_list_div"></div>';
 
-  appender += '<div class="ui inline_add_command"><i class="icon plus circle purple"></i><i class="icon circle white back"></i><div class="ui icon button dropdown menu_commands orange" style="float: left;" ><i class="icon code"></i> <div class="menu"> ';
-  appender += '<a class="item" data-command="' + Models.COMMAND_TYPES.reader + '"><i class="download icon"></i> ' + _localizedStringsService.LocalizedStrings.getUI('text_read_var') + '</a>' + '<a class="item" data-command="' + Models.COMMAND_TYPES.writer + '"><i class="upload icon"></i> ' + _localizedStringsService.LocalizedStrings.getUI('text_write_var') + '</a>' + '<a class="item" data-command="' + Models.COMMAND_TYPES.comment + '"><i class="quote left icon"></i> ' + _localizedStringsService.LocalizedStrings.getUI('text_comment') + '</a>' + '<a class="item" data-command="' + Models.COMMAND_TYPES.attribution + '"><i class="arrow left icon"></i> ' + _localizedStringsService.LocalizedStrings.getUI('text_attribution') + '</a>' + '<a class="item" data-command="' + Models.COMMAND_TYPES.functioncall + '"><i class="hand point right icon"></i> ' + _localizedStringsService.LocalizedStrings.getUI('text_functioncall') + '</a>' + '<a class="item" data-command="' + Models.COMMAND_TYPES.iftrue + '" ><i class="random icon"></i> ' + _localizedStringsService.LocalizedStrings.getUI('text_iftrue') + '</a>' + '<a class="item" data-command="' + Models.COMMAND_TYPES.repeatNtimes + '"><i class="sync icon"></i> ' + _localizedStringsService.LocalizedStrings.getUI('text_repeatNtimes') + '</a>' + '<a class="item" data-command="' + Models.COMMAND_TYPES.whiletrue + '"><i class="sync icon"></i> ' + _localizedStringsService.LocalizedStrings.getUI('text_whiletrue') + '</a>' + '<a class="item" data-command="' + Models.COMMAND_TYPES.dowhiletrue + '"><i class="sync icon"></i> ' + _localizedStringsService.LocalizedStrings.getUI('text_dowhiletrue') + '</a>' + '<a class="item" data-command="' + Models.COMMAND_TYPES.switch + '"><i class="list icon"></i> ' + _localizedStringsService.LocalizedStrings.getUI('text_switch') + '</a>' + '<a class="item" data-command="' + Models.COMMAND_TYPES.return + '"><i class="reply icon"></i> ' + _localizedStringsService.LocalizedStrings.getUI('text_btn_return') + '</a>' + '</div></div></div>';
+  appender += '<div class="ui bottom attached segment commands_list_div commands_cont_' + cont + '">' + '<div class="ui rail" style="width: 35px; margin-left: -36px;"><div class="ui sticky sticky_cont_' + cont + '" style="top: 50px !important;">';
 
-  appender += '<div class="ui bottom attached segment commands_list_div"></div>';
+  appender += '<i class="icon plus circle purple"></i><i class="icon circle white back"></i><div class="ui icon button dropdown menu_commands orange" ><i class="icon code"></i> <div class="menu"> ';
+  appender += '<a class="item" data-command="' + Models.COMMAND_TYPES.reader + '"><i class="download icon"></i> ' + _localizedStringsService.LocalizedStrings.getUI('text_read_var') + '</a>' + '<a class="item" data-command="' + Models.COMMAND_TYPES.writer + '"><i class="upload icon"></i> ' + _localizedStringsService.LocalizedStrings.getUI('text_write_var') + '</a>' + '<a class="item" data-command="' + Models.COMMAND_TYPES.comment + '"><i class="quote left icon"></i> ' + _localizedStringsService.LocalizedStrings.getUI('text_comment') + '</a>' + '<a class="item" data-command="' + Models.COMMAND_TYPES.attribution + '"><i class="arrow left icon"></i> ' + _localizedStringsService.LocalizedStrings.getUI('text_attribution') + '</a>' + '<a class="item" data-command="' + Models.COMMAND_TYPES.functioncall + '"><i class="hand point right icon"></i> ' + _localizedStringsService.LocalizedStrings.getUI('text_functioncall') + '</a>' + '<a class="item" data-command="' + Models.COMMAND_TYPES.iftrue + '" ><i class="random icon"></i> ' + _localizedStringsService.LocalizedStrings.getUI('text_iftrue') + '</a>' + '<a class="item" data-command="' + Models.COMMAND_TYPES.repeatNtimes + '"><i class="sync icon"></i> ' + _localizedStringsService.LocalizedStrings.getUI('text_repeatNtimes') + '</a>' + '<a class="item" data-command="' + Models.COMMAND_TYPES.whiletrue + '"><i class="sync icon"></i> ' + _localizedStringsService.LocalizedStrings.getUI('text_whiletrue') + '</a>' + '<a class="item" data-command="' + Models.COMMAND_TYPES.dowhiletrue + '"><i class="sync icon"></i> ' + _localizedStringsService.LocalizedStrings.getUI('text_dowhiletrue') + '</a>' + '<a class="item" data-command="' + Models.COMMAND_TYPES.switch + '"><i class="list icon"></i> ' + _localizedStringsService.LocalizedStrings.getUI('text_switch') + '</a>' + '<a class="item" data-command="' + Models.COMMAND_TYPES.return + '"><i class="reply icon"></i> ' + _localizedStringsService.LocalizedStrings.getUI('text_btn_return') + '</a>' + '</div></div>';
+
+  appender += '</div></div>' + '</div>';
 
   appender += '</div></div>';
 
@@ -22297,25 +22660,19 @@ function renderFunction(function_obj) {
     }
   });
 
+  var function_index = program.functions.indexOf(function_obj);
+
   Sortable.create(appender.find(".variables_list_div")[0], {
     handle: '.ellipsis',
     animation: 100,
     ghostClass: 'ghost',
-    group: 'local_vars_drag_' + program.functions.indexOf(function_obj),
+    group: 'local_vars_drag_' + function_index,
     onEnd: function onEnd(evt) {
       updateSequenceLocals(evt.oldIndex, evt.newIndex, function_obj);
     }
   });
 
-  Sortable.create(appender.find(".commands_list_div")[0], {
-    handle: '.command_drag',
-    animation: 100,
-    ghostClass: 'ghost',
-    group: 'commands_drag_' + program.functions.indexOf(function_obj),
-    onEnd: function onEnd(evt) {
-      //updateSequenceLocals(evt.oldIndex, evt.newIndex, function_obj);
-    }
-  });
+  addSortableHandler(appender.find(".commands_list_div")[0], function_index);
 
   if (!function_obj.is_main) {
     Sortable.create(appender.find(".container_parameters_list")[0], {
@@ -22328,7 +22685,278 @@ function renderFunction(function_obj) {
       }
     });
   }
+
+  var teste = '.ui.sticky.sticky_cont_' + cont;
+  (0, _jquery2.default)(teste).sticky({
+    context: '.ui.bottom.attached.segment.commands_list_div.commands_cont_' + cont,
+    scrollContext: '.ivprog_visual_panel',
+    observeChanges: true,
+    offset: 40,
+    onStick: function onStick(evt) {
+      (0, _jquery2.default)(teste).css('top', '20px', 'important');
+    },
+    onBottom: function onBottom(evt) {
+      (0, _jquery2.default)(teste).css('top', '20px', 'important');
+    },
+    onUnstick: function onUnstick(evt) {
+      (0, _jquery2.default)(teste).css('top', '20px', 'important');
+    },
+    onReposition: function onReposition(evt) {
+      (0, _jquery2.default)(teste).css('top', '20px', 'important');
+    },
+    onScroll: function onScroll(evt) {
+      (0, _jquery2.default)(teste).css('top', '20px', 'important');
+      if (!isVisible((0, _jquery2.default)(teste), (0, _jquery2.default)(teste).parent())) {
+        (0, _jquery2.default)(teste).removeClass('fixed');
+      }
+    },
+    onTop: function onTop(evt) {
+      (0, _jquery2.default)(teste).css('top', '20px', 'important');
+    }
+  });
+  cont++;
+
   return appender;
+}
+
+function isVisible(element, container) {
+
+  var elementTop = (0, _jquery2.default)(element).offset().top,
+      elementHeight = (0, _jquery2.default)(element).height(),
+      containerTop = (0, _jquery2.default)(container).offset().top,
+      containerHeight = (0, _jquery2.default)(container).height() - 30;
+
+  return elementTop - containerTop + elementHeight > 0 && elementTop - containerTop < containerHeight;
+}
+
+window.evento_drag;
+
+function updateProgramObjDrag() {
+  var nodes = Array.prototype.slice.call((0, _jquery2.default)('.all_functions').children());
+  var function_index;
+  var start_index;
+  var function_obj;
+  (0, _jquery2.default)(evento_drag.item).parentsUntil(".all_functions").each(function (index) {
+    if ((0, _jquery2.default)(this).hasClass('function_div')) {
+      function_index = nodes.indexOf(this);
+      start_index = index;
+      function_obj = (0, _jquery2.default)(this);
+    }
+  });
+
+  console.log(function_index);
+
+  var path_target = [];
+  (0, _jquery2.default)(evento_drag.item).parentsUntil(".all_functions").each(function (index) {
+    if ((0, _jquery2.default)(this).hasClass('command_container')) {
+      path_target.push(this);
+    }
+  });
+  if (path_target.length == 0) {
+    //console.log('soltou na raiz, na posição: ' + evento_drag.newIndex + ' mas ainda não sei de onde saiu ');
+  } else {
+      //console.log('soltou dentro de algum bloco, sequência vem logo abaixo (de baixo pra cima): ');
+      //console.log(path_target);
+    }
+
+  var index_each = [];
+  var path_relative = [];
+  for (var i = path_target.length - 1; i >= 0; i--) {
+    console.log('da vez', (0, _jquery2.default)(path_target[i + 1]));
+    if (i == path_target.length - 1) {
+      // está na raiz
+      var indice_na_raiz = function_obj.find('.command_container').index(path_target[i]);
+      console.log('índice na raiz: ', indice_na_raiz);
+    } else {
+      if ((0, _jquery2.default)(path_target[i + 1]).hasClass('iftrue')) {
+        if ((0, _jquery2.default)(path_target[i]).parent().hasClass('commands_if')) {
+          path_relative.push('if');
+          index_each.push((0, _jquery2.default)(path_target[i]).parent().find('.command_container').index(path_target[i]));
+        } else {
+          path_relative.push('else');
+          index_each.push((0, _jquery2.default)(path_target[i]).parent().find('.command_container').index(path_target[i]));
+        }
+      } else if ((0, _jquery2.default)(path_target[i + 1]).hasClass('dowhiletrue')) {
+        path_relative.push('dowhiletrue');
+        index_each.push((0, _jquery2.default)(path_target[i + 1]).find('.command_container').index(path_target[i]));
+      } else if ((0, _jquery2.default)(path_target[i + 1]).hasClass('repeatNtimes')) {
+        path_relative.push('repeatNtimes');
+        index_each.push((0, _jquery2.default)(path_target[i + 1]).find('.command_container').index(path_target[i]));
+      } else if ((0, _jquery2.default)(path_target[i + 1]).hasClass('whiletrue')) {
+        path_relative.push('whiletrue');
+        index_each.push((0, _jquery2.default)(path_target[i + 1]).find('.command_container').index(path_target[i]));
+      } else if ((0, _jquery2.default)(path_target[i + 1]).hasClass('switch')) {
+        path_relative.push('switch');
+        //index_each.push($(path_target[i + 1]).find('.command_container').index(path_target[i]));
+      }
+    }
+  }
+  var index_in_block = -1;
+  var is_in_else = (0, _jquery2.default)(evento_drag.item).parent().hasClass('commands_else');
+
+  index_in_block = (0, _jquery2.default)(evento_drag.item).parent().find('.command_container').index(evento_drag.item);
+
+  var is_in_case_switch = (0, _jquery2.default)(evento_drag.item).parent().hasClass('case_commands_block');
+  var index_case_of_switch = -1;
+  if (is_in_case_switch) {
+    index_case_of_switch = (0, _jquery2.default)(evento_drag.item).parent().parent().parent().find('.case_div').index((0, _jquery2.default)(evento_drag.item).parent().parent());
+  }
+
+  /*console.log('path_relative:');
+  console.log(path_relative);
+  console.log('index_each:');
+  console.log(index_each);
+  console.log('index_in_block:');
+  console.log(index_in_block);
+  console.log('ele está em algum bloco de senão? ');
+  console.log(is_in_else);
+  console.log('ele está dentro de um case de switch?');
+  console.log(is_in_case_switch);
+  console.log('qual é o índice do case: ');
+  console.log(index_case_of_switch);*/
+
+  // encontrar o elemento na árvore:
+  var command_start_point = window.program_obj.functions[function_index].commands[indice_na_raiz];
+  var block_to_insert = command_start_point;
+  for (var i = 0; i < index_each.length; i++) {
+    if (path_relative[i] == "else") {
+      block_to_insert = block_to_insert.commands_else[index_each[i]];
+    } else if (path_relative[i] == "switch") {} else {
+      block_to_insert = block_to_insert.commands_block[index_each[i]];
+    }
+  }
+
+  //console.log('command_start_point', command_start_point);
+  //console.log('block_to_insert', block_to_insert);
+
+  // agora tem que alocar o comando na árvore, mas considerar as quatro situações:
+  // (1) se está em um else ou (2) se está em switch ou (3) será um caso padrão ou (4) se será na raiz.
+
+  if (path_target.length == 0) {
+    // soltou na raiz:
+    window.program_obj.functions[function_index].commands.splice(evento_drag.newIndex, 0, command_in_drag);
+  } else if (is_in_else) {
+    if (block_to_insert.commands_else) {
+      block_to_insert.commands_else.splice(evento_drag.newIndex, 0, command_in_drag);
+    } else {
+      block_to_insert.commands_else = [];
+      block_to_insert.commands_else.push(command_in_drag);
+    }
+  } else if (is_in_case_switch) {} else {
+    // verificar se tem alguma coisa no bloco:
+    if (block_to_insert.commands_block) {
+      block_to_insert.commands_block.splice(evento_drag.newIndex, 0, command_in_drag);
+    } else {
+      block_to_insert.commands_block = [];
+      block_to_insert.commands_block.push(command_in_drag);
+    }
+  }
+
+  window.draging = false;
+  renderAlgorithm();
+}
+
+function prepareDragHandler(evt) {
+  window.draging = true;
+
+  var nodes = Array.prototype.slice.call((0, _jquery2.default)('.all_functions').children());
+  var function_index;
+  var function_obj;
+  (0, _jquery2.default)(evt.item).parentsUntil(".all_functions").each(function (index) {
+    if ((0, _jquery2.default)(this).hasClass('function_div')) {
+      function_index = nodes.indexOf(this);
+      function_obj = window.program_obj.functions[function_index];
+    }
+  });
+
+  command_in_drag = (0, _jquery2.default)(evt.item).data("command");
+
+  //console.log('$(evt.item).parent(): ');
+  //console.log($(evt.item).parent());
+
+  // descobrir qual das quatro situações:
+  if ((0, _jquery2.default)(evt.item).parent().hasClass('commands_list_div')) {
+    // está na raiz:
+    if (function_obj.commands.indexOf(command_in_drag) > -1) {
+      function_obj.commands.splice(function_obj.commands.indexOf(command_in_drag), 1);
+    }
+  } else if ((0, _jquery2.default)(evt.item).parent().hasClass('commands_else')) {
+    // está no else:
+    if ((0, _jquery2.default)(evt.item).parent().data('command').commands_else.indexOf(command_in_drag) > -1) {
+      (0, _jquery2.default)(evt.item).parent().data('command').commands_else.splice((0, _jquery2.default)(evt.item).parent().data('command').commands_else.indexOf(command_in_drag), 1);
+    }
+  } else if ((0, _jquery2.default)(evt.item).parent().hasClass('case_commands_block')) {// está em um switch:
+
+  } else {
+    // caso padrão:
+    if ((0, _jquery2.default)(evt.item).parent().data('command').commands_block.indexOf(command_in_drag) > -1) {
+      (0, _jquery2.default)(evt.item).parent().data('command').commands_block.splice((0, _jquery2.default)(evt.item).parent().data('command').commands_block.indexOf(command_in_drag), 1);
+    }
+  }
+}
+
+var command_in_drag;
+
+function addSortableHandler(element, id_function) {
+  var n_group = 'commands_drag_' + id_function;
+  Sortable.create(element, {
+    handle: '.command_drag',
+    ghostClass: 'ghost',
+    animation: 300,
+    group: { name: n_group },
+    onEnd: function onEnd(evt) {
+      //updateSequenceLocals(evt.oldIndex, evt.newIndex, function_obj);
+      var itemEl = evt.item; // dragged HTMLElement
+      evt.to; // target list
+      evt.from; // previous list
+      evt.oldIndex; // element's old index within old parent
+      evt.newIndex; // element's new index within new parent
+      //console.log('::EVT::');
+      //console.log(evt);
+
+      window.evento_drag = evt;
+
+      try {
+        updateProgramObjDrag();
+      } catch (e) {
+        window.draging = false;
+      }
+    },
+    onStart: function onStart(evt) {
+      //console.log("START::EVT::");
+      //console.log(evt);
+      //console.log("\n\ncommand_in_drag");
+      try {
+        prepareDragHandler(evt);
+      } catch (e) {
+        window.draging = false;
+      }
+    }
+  });
+  element = (0, _jquery2.default)(element);
+  element.find(".iftrue").each(function (index) {
+    addSortableHandler((0, _jquery2.default)(this).find(".block_commands")[0], id_function);
+    addSortableHandler((0, _jquery2.default)(this).find(".block_commands")[1], id_function);
+  });
+
+  element.find(".repeatNtimes").each(function (index) {
+    addSortableHandler((0, _jquery2.default)(this).find(".block_commands")[0], id_function);
+  });
+
+  element.find(".dowhiletrue").each(function (index) {
+    addSortableHandler((0, _jquery2.default)(this).find(".block_commands")[0], id_function);
+  });
+
+  element.find(".whiletrue").each(function (index) {
+    addSortableHandler((0, _jquery2.default)(this).find(".block_commands")[0], id_function);
+  });
+
+  element.find(".switch").each(function (index) {
+
+    (0, _jquery2.default)(this).find(".case_div").each(function (index) {
+      addSortableHandler((0, _jquery2.default)(this).find(".case_commands_block")[0], id_function);
+    });
+  });
 }
 
 function initVisualUI() {
@@ -22367,15 +22995,12 @@ function initVisualUI() {
   (0, _jquery2.default)('.expand_button').on('click', function () {
     full_screen();
   });
+  (0, _jquery2.default)('.main_title h2').prop('title', _localizedStringsService.LocalizedStrings.getUI('text_ivprog_description'));
 }
 
 var is_iassign = false;
 
 (0, _jquery2.default)(document).ready(function () {
-
-  for (var i = 0; i < program.functions.length; i++) {
-    renderFunction(program.functions[i]);
-  }
 
   var time_show = 750;
   (0, _jquery2.default)('.visual_coding_button').popup({
@@ -22435,7 +23060,7 @@ var is_iassign = false;
     }
   });
   (0, _jquery2.default)('.help_button').popup({
-    content: _localizedStringsService.LocalizedStrings.getUI("tooltip_help"),
+    content: _localizedStringsService.LocalizedStrings.getUI("tooltip_help") + ' - ' + _localizedStringsService.LocalizedStrings.getUI("text_ivprog_version") + ' ' + ivprog_version,
     delay: {
       show: time_show,
       hide: 0
@@ -22495,7 +23120,6 @@ function updateSequenceFunction(oldIndex, newIndex) {
 }
 
 function runCodeAssessment() {
-  toggleConsole(true);
 
   window.studentGrade = null;
   studentTemp = null;
@@ -22503,6 +23127,9 @@ function runCodeAssessment() {
   if (strCode == null) {
     return;
   }
+
+  toggleConsole(true);
+
   if (domConsole == null) domConsole = new _domConsole.DOMConsole("#ivprog-term");
   (0, _jquery2.default)("#ivprog-term").slideDown(500);
   var runner = new _ivprogAssessment.IVProgAssessment(strCode, testCases, domConsole);
@@ -22514,17 +23141,19 @@ function runCodeAssessment() {
       is_iassign = false;
     }
   }).catch(function (err) {
-    return domConsole.err(err.message);
+    return console.log(err);
   });
 }
 
 function runCode() {
-  toggleConsole(true);
 
   var strCode = CodeManagement.generate();
   if (strCode == null) {
     return;
   }
+
+  toggleConsole(true);
+
   if (domConsole == null) domConsole = new _domConsole.DOMConsole("#ivprog-term");
   (0, _jquery2.default)("#ivprog-term").slideDown(500);
   try {
@@ -22586,6 +23215,11 @@ function waitToCloseConsole() {
 
 function toggleTextualCoding() {
   var code = CodeManagement.generate();
+
+  if (code == null) {
+    return;
+  }
+
   (0, _jquery2.default)('.ivprog_visual_panel').css('display', 'none');
   (0, _jquery2.default)('.ivprog_textual_panel').css('display', 'block');
   (0, _jquery2.default)('.ivprog_textual_panel').removeClass('loading');
@@ -22681,19 +23315,89 @@ function renderParameter(function_obj, parameter_obj, function_container) {
       } else {
         updateParameterType(parameter_obj, _types.Types[$selectedItem.data('type')]);
       }
-    }
+    },
+    selectOnKeydown: false
   });
 
   ret.find('.label_enable_name_parameter').on('click', function (e) {
-    enableNameParameterUpdate(parameter_obj, ret);
+    enableNameParameterUpdate(parameter_obj, ret, function_obj);
   });
 
   return ret;
 }
 
+function updateParameterName(parameter_var, new_name, parameter_obj_dom, function_obj) {
+
+  if (parameter_var.name == new_name) {
+    return;
+  }
+
+  if (isValidIdentifier(new_name)) {
+    if (variableNameAlreadyExists(new_name, function_obj)) {
+      Utils.renderErrorMessage(parameter_obj_dom.find('.parameter_div_edit'), _localizedStringsService.LocalizedStrings.getUI('inform_valid_variable_duplicated'));
+    } else {
+      parameter_var.name = new_name;
+    }
+  } else {
+    Utils.renderErrorMessage(parameter_obj_dom.find('.parameter_div_edit'), _localizedStringsService.LocalizedStrings.getUI('inform_valid_name'));
+  }
+}
+
+function variableNameAlreadyExists(name_var, function_obj) {
+
+  if (function_obj.parameters_list) {
+    for (var i = 0; i < function_obj.parameters_list.length; i++) {
+      if (function_obj.parameters_list[i].name == name_var) {
+        return true;
+      }
+    }
+  }
+
+  if (function_obj.variables_list) {
+    for (var i = 0; i < function_obj.variables_list.length; i++) {
+      if (function_obj.variables_list[i].name == name_var) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+}
+
+function updateFunctionName(function_var, new_name, function_obj_dom) {
+
+  if (function_var.name == new_name) {
+    return;
+  }
+
+  if (isValidIdentifier(new_name)) {
+    if (functionNameAlreadyExists(new_name)) {
+      Utils.renderErrorMessage(function_obj_dom.find('.function_name_div'), _localizedStringsService.LocalizedStrings.getUI('inform_valid_name_duplicated'));
+    } else {
+      function_var.name = new_name;
+    }
+  } else {
+    Utils.renderErrorMessage(function_obj_dom.find('.function_name_div'), _localizedStringsService.LocalizedStrings.getUI('inform_valid_name'));
+  }
+}
+
+function functionNameAlreadyExists(function_name) {
+  for (var i = 0; i < window.program_obj.functions.length; i++) {
+    if (window.program_obj.functions[i].name == function_name) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function isValidIdentifier(identifier_str) {
+  return (/^[a-zA-Z_][a-zA-Z0-9_]*$/.test(identifier_str)
+  );
+}
+
 var opened_name_parameter = false;
 var opened_input_parameter = null;
-function enableNameParameterUpdate(parameter_obj, parent_node) {
+function enableNameParameterUpdate(parameter_obj, parent_node, function_obj) {
   if (opened_name_parameter) {
     opened_input_parameter.focus();
     return;
@@ -22724,7 +23428,7 @@ function enableNameParameterUpdate(parameter_obj, parent_node) {
   input_field.focusout(function () {
     /// update array:
     if (input_field.val().trim()) {
-      parameter_obj.name = input_field.val().trim();
+      updateParameterName(parameter_obj, input_field.val().trim(), parent_node, function_obj);
       parent_node.find('.span_name_parameter').text(parameter_obj.name);
     }
     input_field.off();
@@ -22739,7 +23443,7 @@ function enableNameParameterUpdate(parameter_obj, parent_node) {
     var code = e.keyCode || e.which;
     if (code == 13) {
       if (input_field.val().trim()) {
-        parameter_obj.name = input_field.val().trim();
+        updateParameterName(parameter_obj, input_field.val().trim(), parent_node, function_obj);
         parent_node.find('.span_name_parameter').text(parameter_obj.name);
       }
       input_field.off();
@@ -22799,7 +23503,7 @@ function enableNameFunctionUpdate(function_obj, parent_node) {
   input_field.focusout(function () {
     /// update array:
     if (input_field.val().trim()) {
-      function_obj.name = input_field.val().trim();
+      updateFunctionName(function_obj, input_field.val().trim(), parent_node);
     }
     input_field.off();
     input_field.remove();
@@ -22816,7 +23520,7 @@ function enableNameFunctionUpdate(function_obj, parent_node) {
     var code = e.keyCode || e.which;
     if (code == 13) {
       if (input_field.val().trim()) {
-        function_obj.name = input_field.val().trim();
+        updateFunctionName(function_obj, input_field.val().trim(), parent_node);
       }
       input_field.off();
       input_field.remove();
@@ -22874,6 +23578,10 @@ var Models = _interopRequireWildcard(_ivprog_elements);
 
 var _localizedStringsService = __webpack_require__(/*! ./../services/localizedStringsService */ "./js/services/localizedStringsService.js");
 
+var _utils = __webpack_require__(/*! ./utils */ "./js/visualUI/utils.js");
+
+var Utils = _interopRequireWildcard(_utils);
+
 __webpack_require__(/*! ../semantic/semantic.min.js */ "./js/semantic/semantic.min.js");
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
@@ -22905,8 +23613,35 @@ function toggleConstant(global_var) {
 	global_var.is_constant = !global_var.is_constant;
 }
 
-function updateName(global_var, new_name) {
-	global_var.name = new_name;
+function updateName(global_var, new_name, global_obj_dom) {
+
+	if (global_var.name == new_name) {
+		return;
+	}
+
+	if (isValidIdentifier(new_name)) {
+		if (globalNameAlreadyExists(new_name)) {
+			Utils.renderErrorMessage(global_obj_dom.find('.editing_name_var'), _localizedStringsService.LocalizedStrings.getUI('inform_valid_global_duplicated'));
+		} else {
+			global_var.name = new_name;
+		}
+	} else {
+		Utils.renderErrorMessage(global_obj_dom.find('.editing_name_var'), _localizedStringsService.LocalizedStrings.getUI('inform_valid_name'));
+	}
+}
+
+function globalNameAlreadyExists(global_name) {
+	for (var i = 0; i < window.program_obj.globals.length; i++) {
+		if (window.program_obj.globals[i].name == global_name) {
+			return true;
+		}
+	}
+	return false;
+}
+
+function isValidIdentifier(identifier_str) {
+	return (/^[a-zA-Z_][a-zA-Z0-9_]*$/.test(identifier_str)
+	);
 }
 
 function updateType(global_var, new_type) {
@@ -23267,7 +24002,8 @@ function addHandlers(global_container) {
 			}
 
 			renderValues(global_var, global_container);
-		}
+		},
+		selectOnKeydown: false
 	});
 
 	// Remove global: 
@@ -23620,7 +24356,7 @@ function enableNameUpdate(global_container) {
 	input_name.focusout(function () {
 		/// update array:
 		if (input_name.val().trim().length > 0) {
-			updateName(global_var, input_name.val().trim());
+			updateName(global_var, input_name.val().trim(), global_container);
 			global_container.find('.span_name_variable').text(global_var.name);
 		} else {
 			global_container.find('.span_name_variable').text(global_var.name);
@@ -23637,7 +24373,7 @@ function enableNameUpdate(global_container) {
 		var code = e.keyCode || e.which;
 		if (code == 13) {
 			if (input_name.val().trim()) {
-				updateName(global_var, input_name.val().trim());
+				updateName(global_var, input_name.val().trim(), global_container);
 				global_container.find('.span_name_variable').text(global_var.name);
 			} else {
 				global_container.find('.span_name_variable').text(global_var.name);
@@ -24062,6 +24798,7 @@ var VariableValueMenu = exports.VariableValueMenu = function VariableValueMenu()
   var row = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
   var column = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
   var include_constant = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : true;
+  var dimensions = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : 0;
 
   _classCallCheck(this, VariableValueMenu);
 
@@ -24071,6 +24808,7 @@ var VariableValueMenu = exports.VariableValueMenu = function VariableValueMenu()
   this.row = row;
   this.column = column;
   this.include_constant = include_constant;
+  this.dimensions = dimensions;
 };
 
 var FunctionCallMenu = exports.FunctionCallMenu = function FunctionCallMenu() {
@@ -24163,6 +24901,50 @@ var Types = exports.Types = Object.freeze({
 
 /***/ }),
 
+/***/ "./js/visualUI/utils.js":
+/*!******************************!*\
+  !*** ./js/visualUI/utils.js ***!
+  \******************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.renderErrorMessage = renderErrorMessage;
+
+var _jquery = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function renderErrorMessage(dom_obj_target, message_text) {
+
+	dom_obj_target.popup({
+		html: '<i class="ui icon inverted exclamation triangle yellow"></i>' + message_text,
+		transition: "fade up",
+		on: 'click',
+		closable: true,
+		movePopup: true,
+		boundary: window,
+		preserve: false,
+		target: false,
+		className: {
+			popup: 'ui popup invalid-identifier'
+		},
+		onHidden: function onHidden($module) {
+			dom_obj_target.popup('destroy');
+		}
+
+	}).popup('toggle');
+}
+
+/***/ }),
+
 /***/ "./js/visualUI/variables.js":
 /*!**********************************!*\
   !*** ./js/visualUI/variables.js ***!
@@ -24190,6 +24972,10 @@ var _ivprog_elements = __webpack_require__(/*! ./ivprog_elements */ "./js/visual
 var Models = _interopRequireWildcard(_ivprog_elements);
 
 var _localizedStringsService = __webpack_require__(/*! ./../services/localizedStringsService */ "./js/services/localizedStringsService.js");
+
+var _utils = __webpack_require__(/*! ./utils */ "./js/visualUI/utils.js");
+
+var Utils = _interopRequireWildcard(_utils);
 
 __webpack_require__(/*! ../semantic/semantic.min.js */ "./js/semantic/semantic.min.js");
 
@@ -24220,8 +25006,47 @@ function addVariable(function_obj, function_container) {
 	}
 }
 
-function updateName(variable_obj, new_name) {
-	variable_obj.name = new_name;
+function updateName(variable_obj, new_name, variable_obj_dom, function_obj) {
+
+	if (variable_obj.name == new_name) {
+		return;
+	}
+
+	if (isValidIdentifier(new_name)) {
+		if (variableNameAlreadyExists(new_name, function_obj)) {
+			Utils.renderErrorMessage(variable_obj_dom.find('.editing_name_var'), _localizedStringsService.LocalizedStrings.getUI('inform_valid_variable_duplicated'));
+		} else {
+			variable_obj.name = new_name;
+		}
+	} else {
+		Utils.renderErrorMessage(variable_obj_dom.find('.editing_name_var'), _localizedStringsService.LocalizedStrings.getUI('inform_valid_name'));
+	}
+}
+
+function variableNameAlreadyExists(name_var, function_obj) {
+
+	if (function_obj.parameters_list) {
+		for (var i = 0; i < function_obj.parameters_list.length; i++) {
+			if (function_obj.parameters_list[i].name == name_var) {
+				return true;
+			}
+		}
+	}
+
+	if (function_obj.variables_list) {
+		for (var i = 0; i < function_obj.variables_list.length; i++) {
+			if (function_obj.variables_list[i].name == name_var) {
+				return true;
+			}
+		}
+	}
+
+	return false;
+}
+
+function isValidIdentifier(identifier_str) {
+	return (/^[a-zA-Z_][a-zA-Z0-9_]*$/.test(identifier_str)
+	);
 }
 
 function removeVariable(variable_obj, variable_container) {
@@ -24252,11 +25077,11 @@ function updateType(variable_obj, new_type) {
 	updateInitialValues(variable_obj);
 }
 
-function addHandlers(variable_obj, variable_container) {
+function addHandlers(variable_obj, variable_container, function_obj) {
 
 	// Manage variable name: 
 	variable_container.find(".enable_edit_name_variable").on('click', function (e) {
-		enableNameUpdate(variable_obj, variable_container);
+		enableNameUpdate(variable_obj, variable_container, function_obj);
 	});
 
 	// Menu to change type:
@@ -24269,7 +25094,8 @@ function addHandlers(variable_obj, variable_container) {
 			}
 
 			renderValues(variable_obj, variable_container);
-		}
+		},
+		selectOnKeydown: false
 	});
 
 	// Remove variable: 
@@ -24323,7 +25149,7 @@ function renderVariable(function_container, new_var, function_obj) {
 
 	function_container.find('.variables_list_div').append(element);
 
-	addHandlers(new_var, element);
+	addHandlers(new_var, element, function_obj);
 
 	renderValues(new_var, element);
 
@@ -24895,7 +25721,7 @@ function enableValueUpdate(var_obj, parent_node) {
 
 var opened_name_global = false;
 var opened_input_global = null;
-function enableNameUpdate(variable_obj, variable_container) {
+function enableNameUpdate(variable_obj, variable_container, function_obj) {
 
 	if (opened_name_global) {
 		opened_input_global.focus();
@@ -24927,7 +25753,7 @@ function enableNameUpdate(variable_obj, variable_container) {
 	input_name.focusout(function () {
 		/// update array:
 		if (input_name.val().trim().length > 0) {
-			updateName(variable_obj, input_name.val().trim());
+			updateName(variable_obj, input_name.val().trim(), variable_container, function_obj);
 			variable_container.find('.span_name_variable').text(variable_obj.name);
 		} else {
 			variable_container.find('.span_name_variable').text(variable_obj.name);
@@ -24944,7 +25770,7 @@ function enableNameUpdate(variable_obj, variable_container) {
 		var code = e.keyCode || e.which;
 		if (code == 13) {
 			if (input_name.val().trim().length > 0) {
-				updateName(variable_obj, input_name.val().trim());
+				updateName(variable_obj, input_name.val().trim(), variable_container, function_obj);
 				variable_container.find('.span_name_variable').text(variable_obj.name);
 			} else {
 				variable_container.find('.span_name_variable').text(variable_obj.name);

@@ -127,8 +127,8 @@ export function createFloatingCommand (function_obj, function_container, command
 	floatingObject.css("position", "absolute");
 	mouse_event.type = "mousedown.draggable";
 	mouse_event.target = floatingObject[0];
-	floatingObject.css("left", mouse_event.pageX - 15);
-	floatingObject.css("top", mouse_event.pageY - 15);
+	floatingObject.css("left", mouse_event.pageX);
+	floatingObject.css("top", mouse_event.pageY);
 	floatingObject.trigger(mouse_event);
 }
 
@@ -142,13 +142,15 @@ function borderMouseDragCommand (function_obj, function_container, evt) {
 
 	function_container.find('.commands_list_div').each(function( index ) { 
 		prev = $(this);
-		var objLeft = prev.offset().left;
-        var objTop = prev.offset().top;
-        var objRight = objLeft + prev.width();
-        var objBottom = objTop + prev.height();
-        if (evt.pageX > objLeft && evt.pageX < objRight && evt.pageY > objTop && evt.pageY < objBottom) {
-        	prev.addClass("over_command_drag"); 
-        }
+		if (prev) {
+			var objLeft = prev.offset().left;
+	        var objTop = prev.offset().top;
+	        var objRight = objLeft + prev.width();
+	        var objBottom = objTop + prev.height();
+	        if (evt.pageX > objLeft && evt.pageX < objRight && evt.pageY > objTop && evt.pageY < objBottom) {
+	        	prev.addClass("over_command_drag"); 
+	        }
+	    }
 	});
 
 	function_container.find('.command_container').each(function( index ) { 
@@ -158,7 +160,9 @@ function borderMouseDragCommand (function_obj, function_container, evt) {
         var objRight = objLeft + obj.width();
         var objBottom = objTop + obj.height();
         if (evt.pageX > objLeft && evt.pageX < objRight && evt.pageY > objTop && evt.pageY < objBottom) {
-        	prev.removeClass('over_command_drag');
+        	if (prev) {
+        		prev.removeClass('over_command_drag');
+        	}
         	obj.addClass("over_command_drag"); 
         	return;
         }
@@ -283,6 +287,23 @@ export function genericCreateCommand (command_type) {
 	}
 }
 
+function dragTrash (event) {
+
+	var trash = $('<i class="ui icon trash alternate outline"></i>');
+	$('body').append(trash);
+	trash.css('position', 'absolute');
+	trash.css('top', event.clientY);
+	trash.css('left', event.clientX - 20);
+	trash.css('font-size', '3em');
+	trash.css('display', 'none');
+
+	trash.fadeIn( 200, function() {
+		trash.fadeOut( 200, function() {
+			trash.remove();
+		} );
+    });
+}
+
 function manageCommand (function_obj, function_container, event, command_type) {
 
 	$( ".created_element" ).each(function( index ) { 
@@ -315,11 +336,13 @@ function manageCommand (function_obj, function_container, event, command_type) {
 	if (!esta_correto) {
 		has_element_created_draged = false;
 		which_element_is_draged = null;
+		dragTrash(event);
 		return;
 	} else {
 		if (!esta_na_div_correta) {
 			has_element_created_draged = false;
 			which_element_is_draged = null;
+			dragTrash(event);
 			return;
 		}
 	}
@@ -431,6 +454,8 @@ function manageCommand (function_obj, function_container, event, command_type) {
 	
 	has_element_created_draged = false;
 	which_element_is_draged = null;
+
+	renderAlgorithm();
 }
 
 function insertCommandInBlockHierar (el, event, function_obj, command_type, hier_dom, hier_obj) {
@@ -473,8 +498,6 @@ function insertCommandInBlockHierar (el, event, function_obj, command_type, hier
 		findBeforeOrAfterCommandToAddInsertBlock(el, event, function_obj, command_type);
 	}
 }
-
-
 
 function findNearbyCommandToAddInBlockScope (el, event, node_list_commands, function_obj, command_type, command_parent) {
 
@@ -522,8 +545,6 @@ function findNearbyCommandToAddInBlockScope (el, event, node_list_commands, func
 		renderCommand(recentComand, elemento_menor_distancia, 1, function_obj);
 	}
 }
-
-
 
 function findBeforeOrAfterCommandToAddInsertBlock (el, event, function_obj, command_type) {
 

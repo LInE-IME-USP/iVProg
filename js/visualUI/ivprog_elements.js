@@ -215,14 +215,15 @@ export class FunctionCall {
 }
 
 export class VariableValueMenu {
-  
-  constructor (variable_and_value = 7, content = null, row = null, column = null, include_constant = true) {
+
+  constructor (variable_and_value = 7, content = null, row = null, column = null, include_constant = true, dimensions = 0) {
     this.type = "var_value";
     this.variable_and_value = variable_and_value;
     this.content = content;
     this.row = row;
     this.column = column;
     this.include_constant = include_constant;
+    this.dimensions = dimensions;
   }
 }
 

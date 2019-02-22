@@ -1,5 +1,7 @@
 var path = require('path');
 var webpack = require('webpack');
+var UpdateVersionPlugin = require('./updateVersionPlugin');
+
 module.exports = {
     entry: './js/main.js',
     mode: 'development',
@@ -28,10 +30,14 @@ module.exports = {
     stats: {
         colors: true
     },
+    plugins: [new UpdateVersionPlugin()],
     /*optimization: {
         splitChunks: {
             chunks: 'all'
         }
     },*/
-    devtool: 'source-map'
+    devtool: 'source-map',
+    watchOptions: {
+        ignored: path.resolve(__dirname, '.ima_version.json')
+    }
 };

@@ -30,6 +30,7 @@ export function renderCommand (command, function_obj) {
 	el.find('.block_commands').data('command', command);
 	el.find('.data_block_if').data('command', command);
 	el.find('.data_block_else').data('command', command);
+	el.find('.commands_if').data('command', command);
 
 	addHandlers(command, function_obj, el);
 

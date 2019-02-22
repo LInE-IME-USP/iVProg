@@ -1,3 +1,4 @@
 {
-  
+  "test_case_success": "Caso de teste $0: OK",
+  "test_case_duration": "Levou $0ms"
 }
