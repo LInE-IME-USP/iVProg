@@ -1,5 +1,7 @@
-import { LocalizedStrings } from './../../services/localizedStringsService';
+import * as LocalizedStringsService from './../../services/localizedStringsService';
 import { SyntaxError } from './syntaxError';
+
+const LocalizedStrings = LocalizedStringsService.getInstance();
 
 export const SyntaxErrorFactory = Object.freeze({
   extra_lines: () => new SyntaxError(LocalizedStrings.getError("extra_lines")),

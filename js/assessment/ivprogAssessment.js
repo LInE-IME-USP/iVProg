@@ -3,9 +3,11 @@ import { SemanticAnalyser } from "./../processor/semantic/semanticAnalyser";
 import { IVProgProcessor } from "./../processor/ivprogProcessor";
 import { InputTest } from "./../util/inputTest";
 import { OutputTest } from "./../util/outputTest";
-import { LocalizedStrings } from "../services/localizedStringsService";
+import * as LocalizedStringsService from "../services/localizedStringsService";
 import { Decimal } from 'decimal.js';
 import { Config } from "../util/config";
+
+const LocalizedStrings = LocalizedStringsService.getInstance();
 
 export class IVProgAssessment {
 

@@ -209,7 +209,6 @@ export class IVProgProcessor {
   }
 
   executeCommand (store, cmd) {
-
     if(this.forceKill) {
       return Promise.reject("FORCED_KILL!");
     } else if (store.mode === Modes.PAUSE) {
@@ -456,6 +455,7 @@ export class IVProgProcessor {
       return $value.then(vl => {
 
         if(vl === null && funcType.isCompatible(Types.VOID)) {
+          store.mode = Modes.RETURN;
           return Promise.resolve(store);
         }
 

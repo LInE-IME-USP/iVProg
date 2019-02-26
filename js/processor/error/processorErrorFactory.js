@@ -1,31 +1,8 @@
 import { RuntimeError } from './runtimeError';
 import { SemanticError } from './semanticError';
-import { LocalizedStrings } from './../../services/localizedStringsService';
-import { Operators } from '../../ast/operators';
+import * as  LocalizedStringsService from './../../services/localizedStringsService';
 
-function translateType (type, dim) {
-  switch (dim) {
-    case 0:
-      return LocalizedStrings.getUI(type);
-    default:
-      const transType = LocalizedStrings.getUI(type);
-      if(dim === 1)
-        return LocalizedStrings.getUI("vector_string", [transType])
-      else
-        return LocalizedStrings.getUI("matrix_string", [transType])
-  }
-}
-
-function translateOp (op) {
-  switch(op.ord) {
-    case Operators.AND.ord:
-    case Operators.OR.ord:
-    case Operators.NOT.ord:
-      return LocalizedStrings.getUI(op.value);
-    default:
-      return op.value;
-  }
-}
+const LocalizedStrings = LocalizedStringsService.getInstance();
 
 export const ProcessorErrorFactory  = Object.freeze({
   symbol_not_found_full: (id, sourceInfo) => {
@@ -80,26 +57,26 @@ export const ProcessorErrorFactory  = Object.freeze({
   },
   incompatible_types_full: (type, dim, sourceInfo) => {
     if(sourceInfo) {
-      const context = [translateType(type, dim), sourceInfo.line, sourceInfo.column];
+      const context = [LocalizedStrings.translateType(type, dim), sourceInfo.line, sourceInfo.column];
       return new SemanticError(LocalizedStrings.getError("incompatible_types_full", context));
     } else {
       return ProcessorErrorFactory.incompatible_types(type, dim);
     }
   },
   incompatible_types: (type, dim) => {
-    const context = [translateType(type, dim)];
+    const context = [LocalizedStrings.translateType(type, dim)];
     return new SemanticError(LocalizedStrings.getError("incompatible_types", context));
   },
   incompatible_types_array_full: (exp, type, dim, sourceInfo) => {
     if(sourceInfo) {
-      const context = [exp, translateType(type, dim), sourceInfo.line, sourceInfo.column];
+      const context = [exp, LocalizedStrings.translateType(type, dim), sourceInfo.line, sourceInfo.column];
       return new SemanticError(LocalizedStrings.getError("incompatible_types_array_full", context));
     } else {
       return ProcessorErrorFactory.incompatible_types_array(exp, type, dim);
     }
   },
   incompatible_types_array: (exp, type, dim) => {
-    const context = [exp, translateType(type, dim)];
+    const context = [exp, LocalizedStrings.translateType(type, dim)];
     return new SemanticError(LocalizedStrings.getError("incompatible_types_array", context));
   },
   loop_condition_type_full: (exp, sourceInfo) => {
@@ -158,14 +135,14 @@ export const ProcessorErrorFactory  = Object.freeze({
   },
   invalid_case_type_full: (exp, type, dim, sourceInfo) => {
     if(sourceInfo) {
-      const context = [exp, translateType(type, dim), sourceInfo.line, sourceInfo.column];
+      const context = [exp, LocalizedStrings.translateType(type, dim), sourceInfo.line, sourceInfo.column];
       return new SemanticError(LocalizedStrings.getError("invalid_case_type_full", context));
     } else {
       return ProcessorErrorFactory.invalid_case_type(exp, type, dim);
     }
   },
   invalid_case_type: (exp, type, dim) => {
-    const context = [exp, translateType(type, dim)];
+    const context = [exp, LocalizedStrings.translateType(type, dim)];
     return new SemanticError(LocalizedStrings.getError("invalid_case_type", context));
   },
   void_in_expression_full: (id, sourceInfo) => {
@@ -258,26 +235,26 @@ export const ProcessorErrorFactory  = Object.freeze({
   },
   invalid_void_return_full: (id, type, dim, sourceInfo) => {
     if(sourceInfo) {
-      const context = [sourceInfo.line, id, translateType(type, dim)];
+      const context = [sourceInfo.line, id, LocalizedStrings.translateType(type, dim)];
       return new SemanticError(LocalizedStrings.getError("invalid_void_return_full", context));
     } else {
       return ProcessorErrorFactory.invalid_void_return(id, type, dim);
     }
   },
   invalid_void_return: (id, type, dim) => {
-    const context = [id, translateType(type, dim)];
+    const context = [id, LocalizedStrings.translateType(type, dim)];
     return new SemanticError(LocalizedStrings.getError("invalid_void_return_full", context));
   },
   invalid_return_type_full: (id, type, dim, sourceInfo) => {
     if(sourceInfo) {
-      const context = [sourceInfo.line, id, translateType(type, dim)];
+      const context = [sourceInfo.line, id, LocalizedStrings.translateType(type, dim)];
       return new SemanticError(LocalizedStrings.getError("invalid_return_type_full", context));
     } else {
       return ProcessorErrorFactory.invalid_return_type(id, type, dim);
     }
   },
   invalid_return_type: (id, type, dim) => {
-    const context = [id, translateType(type, dim)];
+    const context = [id, LocalizedStrings.translateType(type, dim)];
     return new SemanticError(LocalizedStrings.getError("invalid_return_type", context));
   },
   invalid_parameters_size_full: (id, expected, actual, sourceInfo) => {
@@ -365,26 +342,26 @@ export const ProcessorErrorFactory  = Object.freeze({
   },
   invalid_unary_op_full: (opName, type, dim, sourceInfo) => {
     if(sourceInfo) {
-      const context = [sourceInfo.line, translateOp(opName), translateType(type, dim)];
+      const context = [sourceInfo.line, LocalizedStrings.translateOp(opName), LocalizedStrings.translateType(type, dim)];
       return new RuntimeError(LocalizedStrings.getError("invalid_unary_op_full", context));
     } else {
       return ProcessorErrorFactory.invalid_unary_op(opName, type, dim);
     }
   },
   invalid_unary_op: (opName, type, dim) => {
-    const context = [translateOp(opName), translateType(type, dim)];
+    const context = [LocalizedStrings.translateOp(opName), LocalizedStrings.translateType(type, dim)];
     return new RuntimeError(LocalizedStrings.getError("invalid_unary_op", context));
   },
   invalid_infix_op_full: (opName, typeLeft, dimLeft, typeRight, dimRight,  sourceInfo) => {
     if(sourceInfo) {
-      const context = [sourceInfo.line, translateOp(opName), translateType(typeLeft, dimLeft), translateType(typeRight, dimRight)];
+      const context = [sourceInfo.line, LocalizedStrings.translateOp(opName), LocalizedStrings.translateType(typeLeft, dimLeft), LocalizedStrings.translateType(typeRight, dimRight)];
       return new RuntimeError(LocalizedStrings.getError("invalid_infix_op_full", context));
     } else {
       return ProcessorErrorFactory.invalid_infix_op(opName, typeLeft, dimLeft, typeRight, dimRight);
     }
   },
   invalid_infix_op: (opName, typeLeft, dimLeft, typeRight, dimRight) => {
-    const context = [translateOp(opName), translateType(typeLeft, dimLeft), translateType(typeRight, dimRight)];
+    const context = [LocalizedStrings.translateOp(opName), LocalizedStrings.translateType(typeLeft, dimLeft), LocalizedStrings.translateType(typeRight, dimRight)];
     return new RuntimeError(LocalizedStrings.getError("invalid_infix_op", context));
   },
   array_dimension_not_positive_full: (sourceInfo) => {
