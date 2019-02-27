@@ -39,5 +39,6 @@ export function renderAlgorithm () {
 		GlobalsManagement.renderGlobal(window.program_obj.globals[i]);
 	}	
 
-	setTimeout(function(){ window.block_render = false; }, 500);
+	setTimeout(function(){ window.block_render = false; }, 100);
+	console.log('fim do render');
 }

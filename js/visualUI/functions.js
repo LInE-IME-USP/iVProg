@@ -131,8 +131,8 @@ function addFunctionHandler () {
 
   var newe = renderFunction(new_function);
 
-  newe.css('display', 'none');
-  newe.fadeIn();
+  /*newe.css('display', 'none');
+  newe.fadeIn();*/
 }
 
 function addParameter (function_obj, function_container, is_from_click = false) {
@@ -146,8 +146,8 @@ function addParameter (function_obj, function_container, is_from_click = false) 
   var newe = renderParameter(function_obj, new_parameter, function_container);
 
   if (is_from_click) {
-    newe.css('display', 'none');
-    newe.fadeIn();
+    /*newe.css('display', 'none');
+    newe.fadeIn();*/
   }
 }
 

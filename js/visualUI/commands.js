@@ -18,6 +18,8 @@ import * as VariableValueMenuManagement from './commands/variable_value_menu';
 import * as BreaksManagement from './commands/break';
 import * as ReturnsManagement from './commands/return';
 
+import * as nearest from 'jquery-nearest';
+
 var has_element_created_draged = false;
 var which_element_is_draged = null;
 
@@ -55,6 +57,8 @@ export function removeCommand (command, function_obj, dom_obj) {
 
 	return false;
 }
+
+window.function_container_active = null;
 
 export function createFloatingCommand (function_obj, function_container, command_type, mouse_event) {
 	var floatingObject;
@@ -110,26 +114,225 @@ export function createFloatingCommand (function_obj, function_container, command
 	}
 
 	floatingObject.draggable({
-		drag: function(evt) {
+		/*drag: function(evt) {
 	        borderMouseDragCommand(function_obj, function_container, evt);
 	    },
 	    stop: function(evt) {
 	    	function_container.find('.over_command_drag').each(function( index ) {
 				$(this).removeClass('over_command_drag');
 			});
-	    }
+	    }*/
 	}).appendTo("body");
 
-	floatingObject.mouseup(function(evt) {
+	$('body').mouseup(function(evt) {
 	  manageCommand(function_obj, function_container, evt, command_type);
+	  $('body').off('mouseup');
+	  $('body').off('mouseover');
+	});
+
+	function_container_active = function_container;
+
+	function_container.find('.commands_list_div').on('mouseover', function(evt) {
+	  addGhostDiv(evt);
+	});
+	function_container.find('.commands_list_div').find("*").on('mouseover', function(evt) {
+	  addGhostDiv(evt);
 	});
 	
 	floatingObject.css("position", "absolute");
 	mouse_event.type = "mousedown.draggable";
 	mouse_event.target = floatingObject[0];
-	floatingObject.css("left", mouse_event.pageX);
+	floatingObject.css("left", mouse_event.pageX - window.divx);
 	floatingObject.css("top", mouse_event.pageY);
 	floatingObject.trigger(mouse_event);
+}
+
+window.divx = 100;
+window.ghostDiv = $('<div class="ghost_div">');
+window.active_container = null;
+
+function addGhostToEmptyBlock (element, evt) {
+
+	$('.ghost_div').remove();
+
+	var container = element.closest('.command_container');
+
+	if (!container.hasClass('dowhiletrue') && !container.hasClass('iftrue') && !container.hasClass('repeatNtimes') 
+				&& !container.hasClass('case_div') && !container.hasClass('whiletrue')) {
+		addGhostToNotEmptyBlock(element, evt);
+		return;
+	}
+
+	if (window.active_container != null) {
+		if (window.active_container.is(container)) {
+			console.log('é o mesmo, não mudou!');
+		} else {
+			if (container.length < 1) {
+				container = element.closest('.commands_list_div');
+				if (window.active_container.is(container)) {
+					console.log('é o mesmo command list');
+				} else {
+					console.log('mudou para um command list');
+					window.active_container = container;
+				}
+			} else {
+				console.log('mudou para um outro container?');
+			}
+		}
+	}
+
+	window.active_container = container;
+	if (container.hasClass('iftrue')) {
+		var containerIf = container.find('.commands_if').get(0);
+		var containerElse = container.find('.commands_else').get(0);
+		var topIfDistance = Math.abs(evt.clientY - containerIf.getBoundingClientRect().top);
+		var bottomIfDistance = Math.abs(containerIf.getBoundingClientRect().top + containerIf.getBoundingClientRect().height - evt.clientY);
+		var topElseDistance = Math.abs(evt.clientY - containerElse.getBoundingClientRect().top);
+		var bottomElseDistance = Math.abs(containerElse.getBoundingClientRect().top + containerElse.getBoundingClientRect().height - evt.clientY);
+
+		if (topIfDistance < topElseDistance && topIfDistance < bottomElseDistance) {
+			$(containerIf).append(window.ghostDiv);
+		} else {
+			$(containerElse).append(window.ghostDiv);
+		}
+	} else {
+		container.find('.block_commands').append(window.ghostDiv);
+	}
+	
+}
+
+function addGhostToNotEmptyBlock (element, evt) {
+
+	$('.ghost_div').remove();
+
+	var container = element.closest('.dowhiletrue, .iftrue, .repeatNtimes, .case_div, .whiletrue');
+
+	//console.log("\n\nNOT EMPTY: ", container);
+
+	if (window.active_container != null) {
+		if (container.length < 1) {
+			container = element.closest('.commands_list_div');
+			window.active_container = container;
+			addGhostToFunctionArea(element, evt);
+		} else {
+			//console.log('mudou para um outro container?');
+		}
+		
+	}
+	window.active_container = container;
+
+	// quem está mais próximo? // Essa regra se aplica somente quando o over está sobre um comando
+	var allfilhos;
+	
+	if (container.hasClass('iftrue')) {
+		
+		if ($(evt.target).closest('.data_block_if').length > 0) {
+			allfilhos = container.find('.commands_if').children('.command_container');
+		} else if ($(evt.target).closest('.data_block_else').length > 0) {
+			allfilhos = container.find('.commands_else').children('.command_container');
+		} else {
+
+			var containerIf = container.find('.commands_if').get(0);
+			var containerElse = container.find('.commands_else').get(0);
+			var topIfDistance = Math.abs(evt.clientY - containerIf.getBoundingClientRect().top);
+			var bottomIfDistance = Math.abs(containerIf.getBoundingClientRect().top + containerIf.getBoundingClientRect().height - evt.clientY);
+			var topElseDistance = Math.abs(evt.clientY - containerElse.getBoundingClientRect().top);
+			var bottomElseDistance = Math.abs(containerElse.getBoundingClientRect().top + containerElse.getBoundingClientRect().height - evt.clientY);
+
+			if (topIfDistance < topElseDistance && topIfDistance < bottomElseDistance) {
+				allfilhos = $(containerIf).children('.command_container');
+			} else {
+				allfilhos = $(containerElse).children('.command_container');
+			}
+		}
+
+	} else {
+		allfilhos = container.children('.block_commands').children('.command_container');
+	}
+
+	var topDistances = [];
+	var bottomDistances = [];
+
+	for (var i = 0; i < allfilhos.length; i++) {
+		var topD = Math.abs(evt.clientY - allfilhos.get(i).getBoundingClientRect().top);
+		topDistances.push(topD);
+		var botD = Math.abs(allfilhos.get(i).getBoundingClientRect().top + allfilhos.get(i).getBoundingClientRect().height - evt.clientY);
+		bottomDistances.push(botD);
+	}
+
+	var menorTop = Math.min.apply(null, topDistances);
+	var indiceTop = topDistances.indexOf(menorTop);
+
+	var menorBot = Math.min.apply(null, bottomDistances);
+	var indiceBot = bottomDistances.indexOf(menorBot);
+
+	if (menorTop < menorBot) {
+		window.ghostDiv.insertBefore($(allfilhos.get(indiceTop)));
+	} else {
+		window.ghostDiv.insertAfter($(allfilhos.get(indiceBot)));
+	}
+}
+
+function addGhostToFunctionArea (undermouse, evt) {
+	$('.ghost_div').remove();
+	var allfilhos = undermouse.closest('.commands_list_div').children('.command_container');
+
+	var topDistances = [];
+	var bottomDistances = [];
+
+	for (var i = 0; i < allfilhos.length; i++) {
+		var topD = Math.abs(evt.clientY - allfilhos.get(i).getBoundingClientRect().top);
+		topDistances.push(topD);
+		var botD = Math.abs(allfilhos.get(i).getBoundingClientRect().top + allfilhos.get(i).getBoundingClientRect().height - evt.clientY);
+		bottomDistances.push(botD);
+	}
+
+	var menorTop = Math.min.apply(null, topDistances);
+	var indiceTop = topDistances.indexOf(menorTop);
+
+	var menorBot = Math.min.apply(null, bottomDistances);
+	var indiceBot = bottomDistances.indexOf(menorBot);
+
+	if (menorTop < menorBot) {
+		window.ghostDiv.insertBefore($(allfilhos.get(indiceTop)));
+	} else {
+		window.ghostDiv.insertAfter($(allfilhos.get(indiceBot)));
+	}
+
+}
+
+function addGhostDiv (evt) {
+
+	console.log('a');
+
+	var undermouse = $(evt.target);
+
+	if (undermouse.hasClass('ghost_div')) {
+		return;
+	} else if (undermouse.hasClass('commands_list_div')) {
+		addGhostToFunctionArea(undermouse, evt);
+		return;
+	} else if (undermouse.hasClass('block_commands')) {
+		if (undermouse.find('.command_container').length > 0) {
+			addGhostToNotEmptyBlock(undermouse, evt);
+		} else {
+			addGhostToEmptyBlock(undermouse, evt);
+		}
+	} else if (undermouse.hasClass('case_commands_block')) {
+		if (undermouse.find('.command_container').length > 0) {
+			addGhostToNotEmptyBlock(undermouse, evt);
+		} else {
+			addGhostToEmptyBlock(undermouse, evt);
+		}
+	} else if (undermouse.hasClass('command_container')) {
+		if (undermouse.find('.command_container').length > 0) {
+			addGhostToNotEmptyBlock(undermouse, evt);
+		} else {
+			addGhostToEmptyBlock(undermouse, evt);
+		}
+	} else {
+
+	}
 }
 
 function borderMouseDragCommand (function_obj, function_container, evt) {
@@ -220,9 +423,7 @@ export function renderCommand (command, element_reference, before_after_inside, 
 		case Models.COMMAND_TYPES.return:
 			createdElement = ReturnsManagement.renderCommand(command, function_obj);
 			break;
-
 	}
-
 	switch (before_after_inside) {
 		case 1:
 			createdElement.insertBefore(element_reference);
@@ -289,6 +490,8 @@ export function genericCreateCommand (command_type) {
 
 function dragTrash (event) {
 
+	$('.ghost_div').remove();
+
 	var trash = $('<i class="ui icon trash alternate outline"></i>');
 	$('body').append(trash);
 	trash.css('position', 'absolute');
@@ -296,6 +499,9 @@ function dragTrash (event) {
 	trash.css('left', event.clientX - 20);
 	trash.css('font-size', '3em');
 	trash.css('display', 'none');
+
+	function_container_active.find('.commands_list_div').off('mouseover');
+	function_container_active.find('.commands_list_div').find("*").off('mouseover');
 
 	trash.fadeIn( 200, function() {
 		trash.fadeOut( 200, function() {
@@ -306,15 +512,33 @@ function dragTrash (event) {
 
 function manageCommand (function_obj, function_container, event, command_type) {
 
+	//$('.ghost_div').remove();
+
 	$( ".created_element" ).each(function( index ) { 
 		$(this).remove();
 	});
 
 	var el = $(document.elementFromPoint(event.clientX, event.clientY));
+
+	if (el.hasClass('ghost_div')) {
+		if (el.closest('.command_container').length < 1) {
+			
+
+			console.log('\n\nvou tentar!!!!');
+
+			console.log(el.closest('.commands_list_div'), '\n\n');
+
+			el.closest('.commands_list_div').css('height', el.closest('.commands_list_div').css('height') + 30);
+			
+			//$('.ghost_div').remove();
+
+			el = el.closest('.commands_list_div');
+		}
+	}
+
 	console.log('soltou no: ');
 	console.log(el);
 	console.log(el.data('fun'));
-
 
 	// Primeiro verificar se ele soltou no espaço da função correta:
 	var hier = el.parentsUntil(".all_functions");
@@ -401,7 +625,6 @@ function manageCommand (function_obj, function_container, event, command_type) {
 
 					is_correct_context = true;
 					break;
-
 				}
 			}
 
@@ -410,8 +633,6 @@ function manageCommand (function_obj, function_container, event, command_type) {
 				return;
 			}
 		}
-
-		
 
 		// se a hierarquia possuir apenas um elemento, então está na raiz dos comandos: 
 		if (hierarquia_bottom_up.length == 1) {

@@ -45,7 +45,9 @@ function addHandlers (command, function_obj, whiletrue_dom) {
 
 	whiletrue_dom.find('.button_remove_command').on('click', function() {
 		if (CommandsManagement.removeCommand(command, function_obj, whiletrue_dom)) {
-			whiletrue_dom.fadeOut();
+			whiletrue_dom.fadeOut(400, function() {
+				whiletrue_dom.remove();
+			});
 		}
 	});
 }

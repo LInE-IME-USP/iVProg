@@ -800,14 +800,6 @@ div.ui.checkbox.transition.visible {
     color: white !important;
     border: 2px solid #3125ee;
 }
-.ui.comment:hover, .ui.reader:hover, .ui.writer:hover, .ui.attribution:hover, .ui.functioncall:hover,
-.ui.return:hover {
-    background: #f2e67f;
-}
-
-.ui.iftrue:hover, .ui.repeatNtimes:hover, .ui.whiletrue:hover, .ui.dowhiletrue:hover, .ui.switch:hover {
-	background: #c6c8f2;
-}
 
 .ui.iftrue, .ui.repeatNtimes, .ui.whiletrue, .ui.dowhiletrue, .ui.switch {
     background: #787fe721;
@@ -865,4 +857,14 @@ div.ui.checkbox.transition.visible {
 .ui.block_commands {
     min-height: 20px !important;
     padding-top: 5px !important;
+}
+
+.ghost_div {
+
+    height: 20px;
+    background-color: #ffffff;
+    margin: 5px;
+    border: 2px dotted #000000;
+    box-shadow: 1px 1px;
+    height: 28px;
 }
