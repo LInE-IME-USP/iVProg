@@ -1,5 +1,7 @@
 import { runner } from './runner';
-import { initVisualUI } from './visualUI/functions';
+import { initVisualUI, addFunctionChangeListener,
+  addGlobalChangeListener, removeFunctionListener,
+  removeGlobalListener } from './visualUI/functions';
 import * as LocalizedStringsService from './services/localizedStringsService';
 import { i18nHelper } from "./services/i18nHelper";
 
@@ -9,6 +11,10 @@ const LocalizedStrings = LocalizedStringsService.getInstance();
 export {
   runner,
   initVisualUI,
+  addFunctionChangeListener,
+  addGlobalChangeListener,
+  removeFunctionListener,
+  removeGlobalListener,
   LocalizedStrings,
   i18n
 }

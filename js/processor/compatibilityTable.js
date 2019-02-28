@@ -127,12 +127,14 @@ export function resultTypeAfterInfixOp (operator, leftExpressionType, rightExpre
   try {
     if(leftExpressionType instanceof MultiType && rightExpressionType instanceof MultiType) {
       let newMulti = [];
-      for (let i = 0; i < leftExpressionType.types.length; i++) {
-        const element = leftExpressionType.types[i];
-        if(rightExpressionType.types.indexOf(element) !== -1) {
-          newMulti.push(element);
+      for (let i = 0; i < leftExpressionType.types.length; ++i) {
+        const typeA = leftExpressionType.types[i];
+        for(let j = 0; j < rightExpressionType.types.length; ++i) {
+          const typeB = rightExpressionType.types[j];
+          newMulti.push(resultTypeAfterInfixOp(operator, typeA, typeB));
         }
       }
+      newMulti = newMulti.filter(x => !x.isCompatible(Types.UNDEFINED));
       if(newMulti.length <= 0) {
         if(Config.enable_type_casting) {
           if(leftExpressionType.isCompatible(Types.INTEGER) || leftExpressionType.isCompatible(Types.REAL)) {
@@ -147,7 +149,7 @@ export function resultTypeAfterInfixOp (operator, leftExpressionType, rightExpre
       }
     } else if(leftExpressionType instanceof MultiType) {
       if(leftExpressionType.isCompatible(rightExpressionType)) {
-        return rightExpressionType;
+        return resultTypeAfterInfixOp(operator, rightExpressionType, rightExpressionType);
       } else {
         if(Config.enable_type_casting) {
           if(leftExpressionType.isCompatible(Types.INTEGER) || leftExpressionType.isCompatible(Types.REAL)) {
@@ -160,7 +162,7 @@ export function resultTypeAfterInfixOp (operator, leftExpressionType, rightExpre
       }
     } else if(rightExpressionType instanceof MultiType) {
       if(rightExpressionType.isCompatible(leftExpressionType)) {
-        return leftExpressionType;
+        return resultTypeAfterInfixOp(operator, leftExpressionType, leftExpressionType);
       } else {
         if(Config.enable_type_casting) {
           if(leftExpressionType.isCompatible(Types.INTEGER) || leftExpressionType.isCompatible(Types.REAL)) {

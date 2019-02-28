@@ -18,8 +18,6 @@ import * as VariableValueMenuManagement from './commands/variable_value_menu';
 import * as BreaksManagement from './commands/break';
 import * as ReturnsManagement from './commands/return';
 
-import * as nearest from 'jquery-nearest';
-
 var has_element_created_draged = false;
 var which_element_is_draged = null;
 

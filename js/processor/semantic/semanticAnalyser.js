@@ -57,7 +57,6 @@ export class SemanticAnalyser {
   }
 
   findFunction (name) {
-    console.log(name);
     if(name.match(/^\$.+$/)) {
       const fun = LanguageDefinedFunction.getFunction(name);
       if(!!!fun) {

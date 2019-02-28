@@ -23,7 +23,8 @@ var counter_new_functions = 0;
 var counter_new_parameters = 0;
 var ivprog_version = VersionInfo.version;
 
-let studentTemp = null;
+const globalChangeListeners = [];
+const functionsChangeListeners = [];
 let domConsole = null;
 window.studentGrade = null;
 window.LocalizedStrings = LocalizedStrings;
@@ -104,19 +105,27 @@ window.watchW = WatchJS;
 
 WatchJS.watch(window.program_obj.globals, function(){
   if (window.insertContext) {
-    setTimeout(function(){ AlgorithmManagement.renderAlgorithm(); }, 300);
+    setTimeout(function() {
+      AlgorithmManagement.renderAlgorithm();
+      globalChangeListeners.forEach(x => x());
+    }, 300);
     window.insertContext = false;
   } else {
     AlgorithmManagement.renderAlgorithm();
+    globalChangeListeners.forEach(x => x());
   }
 }, 1);
 
 WatchJS.watch(window.program_obj.functions, function(){
   if (window.insertContext) {
-    setTimeout(function(){ AlgorithmManagement.renderAlgorithm(); }, 300);
+    setTimeout(function(){
+      AlgorithmManagement.renderAlgorithm();
+      functionsChangeListeners.forEach( x => x());
+    }, 300);
     window.insertContext = false;
   } else {
     AlgorithmManagement.renderAlgorithm();
+    functionsChangeListeners.forEach( x => x());
   }
 }, 1);
 
@@ -1271,4 +1280,22 @@ function enableNameFunctionUpdate (function_obj, parent_node) {
   });
   input_field.select();
   
+}
+
+export function addFunctionChangeListener (callback) {
+  functionsChangeListeners.push(callback);
+  return functionsChangeListeners.length - 1;
+}
+
+export function addGlobalChangeListener (callback) {
+  globalChangeListeners.push(callback);
+  return globalChangeListeners.length - 1;
+}
+
+export function removeGlobalListener (index) {
+  globalChangeListeners.splice(index, 1);
+}
+
+export function removeFunctionListener (index) {
+  functionsChangeListeners.splice(index);
 }

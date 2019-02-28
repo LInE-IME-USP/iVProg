@@ -173,8 +173,9 @@ export function createAbsFun () {
     const x = sto.applyStore('x');
     const result = x.value.abs();
     const temp = new StoreObject(x.type, result);
+    sto.updateStore('$', temp)
     sto.mode = Modes.RETURN;
-    return Promise.resolve(sto.updateStore('$', temp));
+    return Promise.resolve(sto);
   };
 
  const block = new Commands.CommandBlock([],  [new Commands.SysCall(absFun)]);

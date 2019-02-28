@@ -116,7 +116,6 @@ export class IVProgProcessor {
     } else {
       const val = this.ast.functions.find( v => v.name === name);
       if (!!!val) {
-        // TODO: better error message;
         throw ProcessorErrorFactory.function_missing(name);
       }
       return val;
@@ -139,13 +138,14 @@ export class IVProgProcessor {
     }
     funcStore.insertStore('$', returnStoreObject);
     const newFuncStore$ = this.associateParameters(func.formalParameters, actualParameters, store, funcStore);
+    const outerRef = this;
     return newFuncStore$.then(sto => {
       this.context.push(Context.FUNCTION);
       this.stores.push(sto);
       return this.executeCommands(sto, func.variablesDeclarations)
-        .then(stoWithVars => this.executeCommands(stoWithVars, func.commands)).then(finalSto => {
-          this.stores.pop();
-          this.context.pop();
+        .then(stoWithVars => outerRef.executeCommands(stoWithVars, func.commands)).then(finalSto => {
+          outerRef.stores.pop();
+          outerRef.context.pop();
           return finalSto;
         });
     });
@@ -694,7 +694,6 @@ export class IVProgProcessor {
     }
     const func = this.findFunction(exp.id);
     if(Types.VOID.isCompatible(func.returnType)) {
-      // TODO: better error message
       return Promise.reject(ProcessorErrorFactory.void_in_expression_full(exp.id, exp.sourceInfo));
     }
     const $newStore = this.runFunction(func, exp.actualParameters, store);
