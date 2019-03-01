@@ -85,5 +85,6 @@
   "exceeded_input_request": "A quantidade de leituras requisitadas execedeu a quantidade de entradas disponíveis.",
   "test_case_few_reads": "Caso de teste $0 falhou: ainda restam entradas!",
   "test_case_failed": "Caso de teste $0 falhou: entradas:<$1>; saída esperada:<$2>; saída:<$3>",
-  "test_case_failed_exception": "Caso de teste $0 falhou: $1"
+  "test_case_failed_exception": "Caso de teste $0 falhou: $1",
+  "invalid_type_conversion": "O valor $0 não pode ser convertido para o tipo $1"
 }

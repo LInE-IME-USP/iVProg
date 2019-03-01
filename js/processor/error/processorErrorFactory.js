@@ -374,5 +374,9 @@ export const ProcessorErrorFactory  = Object.freeze({
   },
   array_dimension_not_positive: () => {
     return new SemanticError(LocalizedStrings.getError("array_dimension_not_positive"));
+  },
+  invalid_type_conversion: (value, type, dim) => {
+    const context = [value, LocalizedStrings.translateType(type, dim)];
+    return new RuntimeError(LocalizedStrings.getError("invalid_type_conversion", context));
   }
 });
