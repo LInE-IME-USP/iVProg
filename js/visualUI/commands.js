@@ -61,6 +61,7 @@ export function removeCommand (command, function_obj, dom_obj) {
 window.function_container_active = null;
 
 export function createFloatingCommand (function_obj, function_container, command_type, mouse_event) {
+
 	var floatingObject;
 
 	switch (command_type) {
@@ -113,16 +114,7 @@ export function createFloatingCommand (function_obj, function_container, command
 			break;
 	}
 
-	floatingObject.draggable({
-		/*drag: function(evt) {
-	        borderMouseDragCommand(function_obj, function_container, evt);
-	    },
-	    stop: function(evt) {
-	    	function_container.find('.over_command_drag').each(function( index ) {
-				$(this).removeClass('over_command_drag');
-			});
-	    }*/
-	}).appendTo("body");
+	floatingObject.draggable().appendTo("body");
 
 	$('body').mouseup(function(evt) {
 	  manageCommand(function_obj, function_container, evt, command_type);
@@ -130,13 +122,27 @@ export function createFloatingCommand (function_obj, function_container, command
 	  $('body').off('mouseover');
 	});
 
+	if (!function_container.hasClass('function_div') || function_container.length < 1) {
+		window.mouse_event = mouse_event;
+		function_container = $(mouse_event.originalEvent.srcElement.closest('.function_div'));
+	}
+
+	console.log('function_container', function_container);
+
 	function_container_active = function_container;
 
-	function_container.find('.commands_list_div').on('mouseover', function(evt) {
+	function_container.find('.commands_list_div').on('mousemove', function(evt) {
 	  addGhostDiv(evt);
 	});
-	function_container.find('.commands_list_div').find("*").on('mouseover', function(evt) {
+	function_container.find('.commands_list_div').find("*").on('mousemove', function(evt) {
 	  addGhostDiv(evt);
+	});
+
+	function_container.on('mouseout', function(event) {
+		var el = $(document.elementFromPoint(event.clientX, event.clientY));
+		if (el.closest('.commands_list_div').length < 1) {
+			window.ghostDiv.remove();
+		}
 	});
 	
 	floatingObject.css("position", "absolute");
@@ -156,6 +162,10 @@ function addGhostToEmptyBlock (element, evt) {
 	$('.ghost_div').remove();
 
 	var container = element.closest('.command_container');
+
+	if (container.hasClass('switch')) {
+		container = $(evt.target).closest('.case_div');		
+	}
 
 	if (!container.hasClass('dowhiletrue') && !container.hasClass('iftrue') && !container.hasClass('repeatNtimes') 
 				&& !container.hasClass('case_div') && !container.hasClass('whiletrue')) {
@@ -195,6 +205,8 @@ function addGhostToEmptyBlock (element, evt) {
 		} else {
 			$(containerElse).append(window.ghostDiv);
 		}
+	} else if (container.hasClass('case_div')) {
+		container.find('.case_commands_block').append(window.ghostDiv);
 	} else {
 		container.find('.block_commands').append(window.ghostDiv);
 	}
@@ -209,21 +221,24 @@ function addGhostToNotEmptyBlock (element, evt) {
 
 	//console.log("\n\nNOT EMPTY: ", container);
 
-	if (window.active_container != null) {
-		if (container.length < 1) {
-			container = element.closest('.commands_list_div');
-			window.active_container = container;
-			addGhostToFunctionArea(element, evt);
-		} else {
-			//console.log('mudou para um outro container?');
-		}
+	//if (window.active_container != null) {
 		
+		
+	//}
+
+	if (container.length < 1) {
+		container = element.closest('.commands_list_div');
+		window.active_container = container;
+		addGhostToFunctionArea(element, evt);
+	} else {
+		//console.log('mudou para um outro container?');
 	}
+
 	window.active_container = container;
 
 	// quem está mais próximo? // Essa regra se aplica somente quando o over está sobre um comando
 	var allfilhos;
-	
+	console.log('olha o container: ', container);
 	if (container.hasClass('iftrue')) {
 		
 		if ($(evt.target).closest('.data_block_if').length > 0) {
@@ -245,7 +260,10 @@ function addGhostToNotEmptyBlock (element, evt) {
 				allfilhos = $(containerElse).children('.command_container');
 			}
 		}
-
+	} else if (container.hasClass('case_div')) {
+		allfilhos = container.children('.case_commands_block').children('.command_container');
+	} else if (container.hasClass('commands_list_div')) {
+		allfilhos = container.children('.command_container');
 	} else {
 		allfilhos = container.children('.block_commands').children('.command_container');
 	}
@@ -260,6 +278,8 @@ function addGhostToNotEmptyBlock (element, evt) {
 		bottomDistances.push(botD);
 	}
 
+	console.log('topDistances\n', topDistances, '\nbottomDistances\n', bottomDistances)
+
 	var menorTop = Math.min.apply(null, topDistances);
 	var indiceTop = topDistances.indexOf(menorTop);
 
@@ -271,6 +291,8 @@ function addGhostToNotEmptyBlock (element, evt) {
 	} else {
 		window.ghostDiv.insertAfter($(allfilhos.get(indiceBot)));
 	}
+
+	console.log('distancias: menorTop ', menorTop, ' menorBot ', menorBot);
 }
 
 function addGhostToFunctionArea (undermouse, evt) {
@@ -307,6 +329,8 @@ function addGhostDiv (evt) {
 
 	var undermouse = $(evt.target);
 
+	console.log('undermouse', undermouse);
+
 	if (undermouse.hasClass('ghost_div')) {
 		return;
 	} else if (undermouse.hasClass('commands_list_div')) {
@@ -318,21 +342,17 @@ function addGhostDiv (evt) {
 		} else {
 			addGhostToEmptyBlock(undermouse, evt);
 		}
-	} else if (undermouse.hasClass('case_commands_block')) {
-		if (undermouse.find('.command_container').length > 0) {
-			addGhostToNotEmptyBlock(undermouse, evt);
-		} else {
-			addGhostToEmptyBlock(undermouse, evt);
-		}
-	} else if (undermouse.hasClass('command_container')) {
-		if (undermouse.find('.command_container').length > 0) {
+	} else if (undermouse.hasClass('case_div')) {
+		if (undermouse.find('.case_commands_block').find('.command_container').length > 0) {
 			addGhostToNotEmptyBlock(undermouse, evt);
 		} else {
 			addGhostToEmptyBlock(undermouse, evt);
 		}
 	} else {
-
-	}
+		
+		addGhostToNotEmptyBlock(undermouse, evt);
+		
+	} 
 }
 
 function borderMouseDragCommand (function_obj, function_container, evt) {
@@ -500,8 +520,8 @@ function dragTrash (event) {
 	trash.css('font-size', '3em');
 	trash.css('display', 'none');
 
-	function_container_active.find('.commands_list_div').off('mouseover');
-	function_container_active.find('.commands_list_div').find("*").off('mouseover');
+	function_container_active.find('.commands_list_div').off('mousemove');
+	function_container_active.find('.commands_list_div').find("*").off('mousemove');
 
 	trash.fadeIn( 200, function() {
 		trash.fadeOut( 200, function() {
@@ -511,8 +531,6 @@ function dragTrash (event) {
 }
 
 function manageCommand (function_obj, function_container, event, command_type) {
-
-	//$('.ghost_div').remove();
 
 	$( ".created_element" ).each(function( index ) { 
 		$(this).remove();

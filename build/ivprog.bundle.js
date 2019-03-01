@@ -103,7 +103,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /*! exports provided: version, default */
 /***/ (function(module) {
 
-module.exports = {"version":"2019_02_27 12_24"};
+module.exports = {"version":"2019_03_01 11_14"};
 
 /***/ }),
 
@@ -187,7 +187,7 @@ module.exports =
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// Generated from /tmp/tmp-10592bIDwoCTu8TO4/ivprog.g4 by ANTLR 4.7
+// Generated from /tmp/tmp-3038w8aXMFgnMfz5/ivprog.g4 by ANTLR 4.7
 // jshint ignore: start
 var antlr4 = __webpack_require__(2);
 
@@ -778,7 +778,7 @@ module.exports =
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// Generated from /tmp/tmp-105929zIVqdewR4af/ivprog.g4 by ANTLR 4.7
+// Generated from /tmp/tmp-30385082IqWSJ5os/ivprog.g4 by ANTLR 4.7
 // jshint ignore: start
 var antlr4 = __webpack_require__(2);
 
@@ -1432,7 +1432,7 @@ module.exports =
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// Generated from /tmp/tmp-10592PhWgtMCp7Iog/ivprog.g4 by ANTLR 4.7
+// Generated from /tmp/tmp-3038q1OWMfFMEMdn/ivprog.g4 by ANTLR 4.7
 // jshint ignore: start
 var antlr4 = __webpack_require__(2);
 
@@ -18099,6 +18099,7 @@ function removeCommand(command, function_obj, dom_obj) {
 window.function_container_active = null;
 
 function createFloatingCommand(function_obj, function_container, command_type, mouse_event) {
+
 	var floatingObject;
 
 	switch (command_type) {
@@ -18151,16 +18152,7 @@ function createFloatingCommand(function_obj, function_container, command_type, m
 			break;
 	}
 
-	floatingObject.draggable({
-		/*drag: function(evt) {
-         borderMouseDragCommand(function_obj, function_container, evt);
-     },
-     stop: function(evt) {
-     	function_container.find('.over_command_drag').each(function( index ) {
-  		$(this).removeClass('over_command_drag');
-  	});
-     }*/
-	}).appendTo("body");
+	floatingObject.draggable().appendTo("body");
 
 	(0, _jquery2.default)('body').mouseup(function (evt) {
 		manageCommand(function_obj, function_container, evt, command_type);
@@ -18168,13 +18160,27 @@ function createFloatingCommand(function_obj, function_container, command_type, m
 		(0, _jquery2.default)('body').off('mouseover');
 	});
 
+	if (!function_container.hasClass('function_div') || function_container.length < 1) {
+		window.mouse_event = mouse_event;
+		function_container = (0, _jquery2.default)(mouse_event.originalEvent.srcElement.closest('.function_div'));
+	}
+
+	console.log('function_container', function_container);
+
 	function_container_active = function_container;
 
-	function_container.find('.commands_list_div').on('mouseover', function (evt) {
+	function_container.find('.commands_list_div').on('mousemove', function (evt) {
 		addGhostDiv(evt);
 	});
-	function_container.find('.commands_list_div').find("*").on('mouseover', function (evt) {
+	function_container.find('.commands_list_div').find("*").on('mousemove', function (evt) {
 		addGhostDiv(evt);
+	});
+
+	function_container.on('mouseout', function (event) {
+		var el = (0, _jquery2.default)(document.elementFromPoint(event.clientX, event.clientY));
+		if (el.closest('.commands_list_div').length < 1) {
+			window.ghostDiv.remove();
+		}
 	});
 
 	floatingObject.css("position", "absolute");
@@ -18194,6 +18200,10 @@ function addGhostToEmptyBlock(element, evt) {
 	(0, _jquery2.default)('.ghost_div').remove();
 
 	var container = element.closest('.command_container');
+
+	if (container.hasClass('switch')) {
+		container = (0, _jquery2.default)(evt.target).closest('.case_div');
+	}
 
 	if (!container.hasClass('dowhiletrue') && !container.hasClass('iftrue') && !container.hasClass('repeatNtimes') && !container.hasClass('case_div') && !container.hasClass('whiletrue')) {
 		addGhostToNotEmptyBlock(element, evt);
@@ -18232,6 +18242,8 @@ function addGhostToEmptyBlock(element, evt) {
 		} else {
 			(0, _jquery2.default)(containerElse).append(window.ghostDiv);
 		}
+	} else if (container.hasClass('case_div')) {
+		container.find('.case_commands_block').append(window.ghostDiv);
 	} else {
 		container.find('.block_commands').append(window.ghostDiv);
 	}
@@ -18245,20 +18257,24 @@ function addGhostToNotEmptyBlock(element, evt) {
 
 	//console.log("\n\nNOT EMPTY: ", container);
 
-	if (window.active_container != null) {
-		if (container.length < 1) {
-			container = element.closest('.commands_list_div');
-			window.active_container = container;
-			addGhostToFunctionArea(element, evt);
-		} else {
-			//console.log('mudou para um outro container?');
-		}
+	//if (window.active_container != null) {
+
+
+	//}
+
+	if (container.length < 1) {
+		container = element.closest('.commands_list_div');
+		window.active_container = container;
+		addGhostToFunctionArea(element, evt);
+	} else {
+		//console.log('mudou para um outro container?');
 	}
+
 	window.active_container = container;
 
 	// quem está mais próximo? // Essa regra se aplica somente quando o over está sobre um comando
 	var allfilhos;
-
+	console.log('olha o container: ', container);
 	if (container.hasClass('iftrue')) {
 
 		if ((0, _jquery2.default)(evt.target).closest('.data_block_if').length > 0) {
@@ -18280,6 +18296,10 @@ function addGhostToNotEmptyBlock(element, evt) {
 				allfilhos = (0, _jquery2.default)(containerElse).children('.command_container');
 			}
 		}
+	} else if (container.hasClass('case_div')) {
+		allfilhos = container.children('.case_commands_block').children('.command_container');
+	} else if (container.hasClass('commands_list_div')) {
+		allfilhos = container.children('.command_container');
 	} else {
 		allfilhos = container.children('.block_commands').children('.command_container');
 	}
@@ -18294,6 +18314,8 @@ function addGhostToNotEmptyBlock(element, evt) {
 		bottomDistances.push(botD);
 	}
 
+	console.log('topDistances\n', topDistances, '\nbottomDistances\n', bottomDistances);
+
 	var menorTop = Math.min.apply(null, topDistances);
 	var indiceTop = topDistances.indexOf(menorTop);
 
@@ -18305,6 +18327,8 @@ function addGhostToNotEmptyBlock(element, evt) {
 	} else {
 		window.ghostDiv.insertAfter((0, _jquery2.default)(allfilhos.get(indiceBot)));
 	}
+
+	console.log('distancias: menorTop ', menorTop, ' menorBot ', menorBot);
 }
 
 function addGhostToFunctionArea(undermouse, evt) {
@@ -18340,6 +18364,8 @@ function addGhostDiv(evt) {
 
 	var undermouse = (0, _jquery2.default)(evt.target);
 
+	console.log('undermouse', undermouse);
+
 	if (undermouse.hasClass('ghost_div')) {
 		return;
 	} else if (undermouse.hasClass('commands_list_div')) {
@@ -18351,19 +18377,16 @@ function addGhostDiv(evt) {
 		} else {
 			addGhostToEmptyBlock(undermouse, evt);
 		}
-	} else if (undermouse.hasClass('case_commands_block')) {
-		if (undermouse.find('.command_container').length > 0) {
+	} else if (undermouse.hasClass('case_div')) {
+		if (undermouse.find('.case_commands_block').find('.command_container').length > 0) {
 			addGhostToNotEmptyBlock(undermouse, evt);
 		} else {
 			addGhostToEmptyBlock(undermouse, evt);
 		}
-	} else if (undermouse.hasClass('command_container')) {
-		if (undermouse.find('.command_container').length > 0) {
-			addGhostToNotEmptyBlock(undermouse, evt);
-		} else {
-			addGhostToEmptyBlock(undermouse, evt);
-		}
-	} else {}
+	} else {
+
+		addGhostToNotEmptyBlock(undermouse, evt);
+	}
 }
 
 function borderMouseDragCommand(function_obj, function_container, evt) {
@@ -18527,8 +18550,8 @@ function dragTrash(event) {
 	trash.css('font-size', '3em');
 	trash.css('display', 'none');
 
-	function_container_active.find('.commands_list_div').off('mouseover');
-	function_container_active.find('.commands_list_div').find("*").off('mouseover');
+	function_container_active.find('.commands_list_div').off('mousemove');
+	function_container_active.find('.commands_list_div').find("*").off('mousemove');
 
 	trash.fadeIn(200, function () {
 		trash.fadeOut(200, function () {
@@ -18538,8 +18561,6 @@ function dragTrash(event) {
 }
 
 function manageCommand(function_obj, function_container, event, command_type) {
-
-	//$('.ghost_div').remove();
 
 	(0, _jquery2.default)(".created_element").each(function (index) {
 		(0, _jquery2.default)(this).remove();
@@ -20385,12 +20406,12 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function createFloatingCommand() {
-	return (0, _jquery2.default)('<div class="ui dowhiletrue created_element"> <i class="ui icon small sync"></i> <span> ' + _localizedStringsService.LocalizedStrings.getUI('text_command_do') + ' {<br>} ' + _localizedStringsService.LocalizedStrings.getUI('text_code_while') + '(x < 10) </span></div>');
+	return (0, _jquery2.default)('<div class="ui dowhiletrue created_element"> <i class="ui icon small sync"></i> <span> ' + _localizedStringsService.LocalizedStrings.getUI('text_command_do') + ' <br> ' + _localizedStringsService.LocalizedStrings.getUI('text_code_while') + '(x < 10) </span></div>');
 }
 
 function renderCommand(command, function_obj) {
 	var ret = '';
-	ret += '<div class="ui dowhiletrue command_container"> <i class="ui icon small random command_drag"></i> <i class="ui icon times red button_remove_command"></i> <div class="ui context_menu"></div>  <span class="span_command_spec"> ' + _localizedStringsService.LocalizedStrings.getUI('text_command_do') + ' </span>';
+	ret += '<div class="ui dowhiletrue command_container"> <i class="ui icon small sync command_drag"></i> <i class="ui icon times red button_remove_command"></i> <div class="ui context_menu"></div>  <span class="span_command_spec"> ' + _localizedStringsService.LocalizedStrings.getUI('text_command_do') + ' </span>';
 	ret += '<div class="ui block_commands" data-subblock="" data-idcommand="">';
 	ret += '</div>';
 	ret += ' <span class="span_command_spec"> ' + _localizedStringsService.LocalizedStrings.getUI('text_code_while') + ' </span> <span class="span_command_spec"> ( </span> <div class="conditional_expression"></div> <span class="span_command_spec"> ) </span>';
@@ -20744,11 +20765,11 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function createFloatingCommand() {
-	return (0, _jquery2.default)('<div class="ui repeatNtimes created_element"> <i class="ui icon small sync"></i> <span> para (x = 0; x < 10; x ++) { } </span></div>');
+	return (0, _jquery2.default)('<div class="ui repeatNtimes created_element"> <i class="ui icon small sync"></i> <span> para (x = 0; x < 10; x ++) <br> </span></div>');
 }
 
 function renderCommand(command, function_obj) {
-	var ret = '<div class="ui repeatNtimes command_container"> <i class="ui icon small random command_drag"></i> <i class="ui icon times red button_remove_command"></i> <div class="ui context_menu"></div>  <span class="span_command_spec"> ' + _localizedStringsService.LocalizedStrings.getUI('text_for') + ' ( </span>  <div class="ui attribution_expression"><div class="ui variable_attribution"></div> <span class="text_receives span_command_spec"></span> <div class="ui var_value_expression div_expression_st"></div> </div> <span class="span_command_spec separator_character">;</span> <div class="conditional_expression"></div> <span class="span_command_spec separator_character">;</span>  <div class="ui incrementation_field"><div class="ui incrementation_variable"></div> <span class="text_inc_receives span_command_spec"></span> <div class="ui first_operand"></div><div class="ui operator"></div><div class="ui second_operand"></div></div>  <span class="span_command_spec"> ) </span>';
+	var ret = '<div class="ui repeatNtimes command_container"> <i class="ui icon small sync command_drag"></i> <i class="ui icon times red button_remove_command"></i> <div class="ui context_menu"></div>  <span class="span_command_spec"> ' + _localizedStringsService.LocalizedStrings.getUI('text_for') + ' ( </span>  <div class="ui attribution_expression"><div class="ui variable_attribution"></div> <span class="text_receives span_command_spec"></span> <div class="ui var_value_expression div_expression_st"></div> </div> <span class="span_command_spec separator_character">;</span> <div class="conditional_expression"></div> <span class="span_command_spec separator_character">;</span>  <div class="ui incrementation_field"><div class="ui incrementation_variable"></div> <span class="text_inc_receives span_command_spec"></span> <div class="ui first_operand"></div><div class="ui operator"></div><div class="ui second_operand"></div></div>  <span class="span_command_spec"> ) </span>';
 	ret += '<div class="ui block_commands">';
 	ret += '</div>';
 	ret += '<span> </span>';
@@ -22349,12 +22370,12 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function createFloatingCommand() {
-	return (0, _jquery2.default)('<div class="ui whiletrue created_element"> <i class="ui icon small sync"></i> <span> ' + _localizedStringsService.LocalizedStrings.getUI('text_code_while') + ' ( x < 10 ) { } </span></div>');
+	return (0, _jquery2.default)('<div class="ui whiletrue created_element"> <i class="ui icon small sync"></i> <span> ' + _localizedStringsService.LocalizedStrings.getUI('text_code_while') + ' ( x < 10 ) <br> </span></div>');
 }
 
 function renderCommand(command, function_obj) {
 	var ret = '';
-	ret += '<div class="ui whiletrue command_container"> <i class="ui icon small random command_drag"></i> <i class="ui icon times red button_remove_command"></i> <div class="ui context_menu"></div>  <span class="span_command_spec"> ' + _localizedStringsService.LocalizedStrings.getUI('text_code_while') + ' </span>';
+	ret += '<div class="ui whiletrue command_container"> <i class="ui icon small sync command_drag"></i> <i class="ui icon times red button_remove_command"></i> <div class="ui context_menu"></div>  <span class="span_command_spec"> ' + _localizedStringsService.LocalizedStrings.getUI('text_code_while') + ' </span>';
 	ret += '<span class="span_command_spec"> ( </span> <div class="conditional_expression"></div> <span class="span_command_spec"> ) </span>';
 	ret += ' </span>';
 	ret += '<div class="ui block_commands">';
