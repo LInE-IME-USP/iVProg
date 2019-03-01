@@ -37,7 +37,7 @@ export function toBool (str) {
   }
 }
 
-function convertBoolToString (bool) {
+export function convertBoolToString (bool) {
   const lexer = LanguageService.getCurrentLexer();
   const instance = new lexer(null);
   if (bool) {

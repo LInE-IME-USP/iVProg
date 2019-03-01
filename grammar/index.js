@@ -8,6 +8,8 @@ import * as ES from './es/ivprog.g4';
 import ESFuncs from './es/langFunctions';
 import ESLibs from './es/langLibs';
 
-exports.pt = {lexer: PT.ivprog, langFuncs: PTFuncs, langLibs: PTLibs};
-exports.en = {lexer: EN.ivprog, langFuncs: ENFuncs, langLibs: ENLibs};
-exports.es = {lexer: ES.ivprog, langFuncs: ESFuncs, langLibs: ESLibs};
+export default {
+  pt: {lexer: PT.ivprog, langFuncs: PTFuncs, langLibs: PTLibs},
+  en: {lexer: EN.ivprog, langFuncs: ENFuncs, langLibs: ENLibs},
+  es: {lexer: ES.ivprog, langFuncs: ESFuncs, langLibs: ESLibs}
+}
