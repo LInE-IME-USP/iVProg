@@ -5,7 +5,6 @@ var UpdateVersionPlugin = require('./updateVersionPlugin');
 module.exports = {
     entry: './js/main.js',
     mode: 'development',
-    watch: true,
     output: {
         path: path.resolve(__dirname, 'build'),
         filename: 'ivprog.bundle.js',
@@ -16,16 +15,25 @@ module.exports = {
         fs: 'empty',
     },
     module: {
-        rules: [{
-            test: /\.js$/,
-            loader: 'babel-loader',
-            query: {
-                presets: ['env']
+        rules: [
+            {
+              test: /\.js$/,
+              exclude: /(node_modules)/,
+              use: {
+                loader: "babel-loader",
+                options: {
+                  presets: ["@babel/preset-env"]
+                }
+              }
+            },
+            {
+              test: /\.g4$/,
+              exclude: /(node_modules)/,
+              use: {
+                loader:'antlr4-webpack-loader'
+              }
             }
-        }, {
-            test: /\.g4/,
-            loader: 'antlr4-webpack-loader'
-        }]
+        ]
     },
     stats: {
         colors: true
