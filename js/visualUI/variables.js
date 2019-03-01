@@ -3,7 +3,7 @@ import jQuery from 'jquery';
 import { Types } from './types';
 import * as Models from './ivprog_elements';
 import { LocalizedStrings } from './../services/localizedStringsService';
-
+import * as Utils from './utils';
 
 window.jQuery = jQuery;
 
@@ -28,8 +28,46 @@ export function addVariable (function_obj, function_container, is_in_click = fal
 	}
 }
 
-function updateName (variable_obj, new_name) {
-	variable_obj.name = new_name;
+function updateName (variable_obj, new_name, variable_obj_dom, function_obj) {
+
+	if (variable_obj.name == new_name) {
+		return;
+	}
+
+	if (isValidIdentifier(new_name)) {
+		if (variableNameAlreadyExists(new_name, function_obj)) {
+			Utils.renderErrorMessage(variable_obj_dom.find('.editing_name_var'), LocalizedStrings.getUI('inform_valid_variable_duplicated'));
+		} else {
+			variable_obj.name = new_name;
+		}
+	} else {
+		Utils.renderErrorMessage(variable_obj_dom.find('.editing_name_var'), LocalizedStrings.getUI('inform_valid_name'));
+	}
+}
+
+function variableNameAlreadyExists (name_var, function_obj) {
+
+	if (function_obj.parameters_list) {
+		for (var i = 0; i < function_obj.parameters_list.length; i++) {
+			if (function_obj.parameters_list[i].name == name_var) {
+				return true;
+			}
+		}
+	}
+
+	if (function_obj.variables_list) {
+		for (var i = 0; i < function_obj.variables_list.length; i++) {
+			if (function_obj.variables_list[i].name == name_var) {
+				return true;
+			}
+		}
+	}
+
+	return false;
+}
+
+function isValidIdentifier (identifier_str) {
+	return /^[a-zA-Z_][a-zA-Z0-9_]*$/.test(identifier_str);
 }
 
 function removeVariable (variable_obj, variable_container) {
@@ -58,11 +96,11 @@ function updateType (variable_obj, new_type, new_dimensions = 0) {
 	updateInitialValues(variable_obj);
 }
 
-function addHandlers (variable_obj, variable_container) {
+function addHandlers (variable_obj, variable_container, function_obj) {
 
 	// Manage variable name: 
 	variable_container.find( ".enable_edit_name_variable" ).on('click', function(e){
-		enableNameUpdate(variable_obj, variable_container);
+		enableNameUpdate(variable_obj, variable_container, function_obj);
 	});
 
 	// Menu to change type:
@@ -75,7 +113,8 @@ function addHandlers (variable_obj, variable_container) {
 	    	}
 
 	    	renderValues(variable_obj, variable_container);
-	    }
+	    },
+	    selectOnKeydown: false
 	});
 
 	// Remove variable: 
@@ -138,7 +177,7 @@ export function renderVariable (function_container, new_var, function_obj) {
 
 	function_container.find('.variables_list_div').append(element);
 
-	addHandlers(new_var, element);
+	addHandlers(new_var, element, function_obj);
 
 	renderValues(new_var, element);
 
@@ -725,7 +764,7 @@ function enableValueUpdate (var_obj, parent_node) {
 
 var opened_name_global = false;
 var opened_input_global = null;
-function enableNameUpdate (variable_obj, variable_container) {
+function enableNameUpdate (variable_obj, variable_container, function_obj) {
 
 	if (opened_name_global) {
 		opened_input_global.focus();
@@ -757,7 +796,7 @@ function enableNameUpdate (variable_obj, variable_container) {
 	input_name.focusout(function() {
 		/// update array:
 		if (input_name.val().trim().length > 0) {
-			updateName(variable_obj, input_name.val().trim());
+			updateName(variable_obj, input_name.val().trim(), variable_container, function_obj);
 			variable_container.find('.span_name_variable').text(variable_obj.name);
 		} else {
 			variable_container.find('.span_name_variable').text(variable_obj.name);
@@ -774,7 +813,7 @@ function enableNameUpdate (variable_obj, variable_container) {
 		var code = e.keyCode || e.which;
 		if(code == 13) {
 			if (input_name.val().trim().length > 0) {
-				updateName(variable_obj, input_name.val().trim());
+				updateName(variable_obj, input_name.val().trim(), variable_container, function_obj);
 				variable_container.find('.span_name_variable').text(variable_obj.name);
 			} else {
 				variable_container.find('.span_name_variable').text(variable_obj.name);

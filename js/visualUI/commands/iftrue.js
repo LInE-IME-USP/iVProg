@@ -30,6 +30,7 @@ export function renderCommand (command, function_obj) {
 	el.find('.block_commands').data('command', command);
 	el.find('.data_block_if').data('command', command);
 	el.find('.data_block_else').data('command', command);
+	el.find('.commands_if').data('command', command);
 
 	addHandlers(command, function_obj, el);
 
@@ -54,7 +55,9 @@ function addHandlers (command, function_obj, iftrue_dom) {
 
 	iftrue_dom.find('.button_remove_command').on('click', function() {
 		if (CommandsManagement.removeCommand(command, function_obj, iftrue_dom)) {
-			iftrue_dom.fadeOut();
+			iftrue_dom.fadeOut(400, function() {
+				iftrue_dom.remove();
+			});
 		}
 	});
 }

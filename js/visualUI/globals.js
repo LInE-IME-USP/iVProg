@@ -3,6 +3,7 @@ import jQuery from 'jquery';
 import { Types } from './types';
 import * as Models from './ivprog_elements';
 import { LocalizedStrings } from './../services/localizedStringsService';
+import * as Utils from './utils';
 
 
 window.jQuery = jQuery;
@@ -31,8 +32,34 @@ function toggleConstant (global_var) {
 	global_var.is_constant = !global_var.is_constant;
 }
 
-function updateName (global_var, new_name) {
-	global_var.name = new_name;
+function updateName (global_var, new_name, global_obj_dom) {
+
+	if (global_var.name == new_name) {
+		return;
+	}
+
+	if (isValidIdentifier(new_name)) {
+		if (globalNameAlreadyExists(new_name)) {
+			Utils.renderErrorMessage(global_obj_dom.find('.editing_name_var'), LocalizedStrings.getUI('inform_valid_global_duplicated'));
+		} else {
+			global_var.name = new_name;
+		}
+	} else {
+		Utils.renderErrorMessage(global_obj_dom.find('.editing_name_var'), LocalizedStrings.getUI('inform_valid_name'));
+	}
+}
+
+function globalNameAlreadyExists (global_name) {
+  for (var i = 0; i < window.program_obj.globals.length; i++) {
+    if (window.program_obj.globals[i].name == global_name) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function isValidIdentifier (identifier_str) {
+	return /^[a-zA-Z_][a-zA-Z0-9_]*$/.test(identifier_str);
 }
 
 function updateType (global_var, new_type, new_dimensions = 0) {
@@ -399,7 +426,8 @@ function addHandlers (global_container) {
 
 	    	renderValues(global_var, global_container);
 
-	    }
+	    },
+	    selectOnKeydown: false
 	});
 
 	// Remove global: 
@@ -768,7 +796,7 @@ function enableNameUpdate (global_container) {
 	input_name.focusout(function() {
 		/// update array:
 		if (input_name.val().trim().length > 0) {
-			updateName(global_var, input_name.val().trim());
+			updateName(global_var, input_name.val().trim(), global_container);
 			global_container.find('.span_name_variable').text(global_var.name);
 		} else {
 			global_container.find('.span_name_variable').text(global_var.name);
@@ -785,7 +813,7 @@ function enableNameUpdate (global_container) {
 		var code = e.keyCode || e.which;
 		if(code == 13) {
 			if (input_name.val().trim()) {
-				updateName(global_var, input_name.val().trim());
+				updateName(global_var, input_name.val().trim(), global_container);
 				global_container.find('.span_name_variable').text(global_var.name);
 			} else {
 				global_container.find('.span_name_variable').text(global_var.name);

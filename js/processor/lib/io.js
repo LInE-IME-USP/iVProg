@@ -26,7 +26,7 @@ export function createInputFun () {
       let stoObj = null;
       if (typeToConvert.isCompatible(Types.INTEGER)) {
         const val = toInt(text);
-        stoObj = new StoreObject(Types.INTEGER, val);
+        stoObj = new StoreObject(Types.INTEGER, val.trunc());
       } else if (typeToConvert.isCompatible(Types.REAL)) {
         stoObj = new StoreObject(Types.REAL, toReal(text));
       } else if (typeToConvert.isCompatible(Types.BOOLEAN)) {

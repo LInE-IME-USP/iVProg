@@ -56,7 +56,10 @@ export function removeCommand (command, function_obj, dom_obj) {
 	return false;
 }
 
+window.function_container_active = null;
+
 export function createFloatingCommand (function_obj, function_container, command_type, mouse_event) {
+
 	var floatingObject;
 
 	switch (command_type) {
@@ -109,27 +112,245 @@ export function createFloatingCommand (function_obj, function_container, command
 			break;
 	}
 
-	floatingObject.draggable({
-		drag: function(evt) {
-	        borderMouseDragCommand(function_obj, function_container, evt);
-	    },
-	    stop: function(evt) {
-	    	function_container.find('.over_command_drag').each(function( index ) {
-				$(this).removeClass('over_command_drag');
-			});
-	    }
-	}).appendTo("body");
+	floatingObject.draggable().appendTo("body");
 
-	floatingObject.mouseup(function(evt) {
+	$('body').mouseup(function(evt) {
 	  manageCommand(function_obj, function_container, evt, command_type);
+	  $('body').off('mouseup');
+	  $('body').off('mouseover');
+	});
+
+	if (!function_container.hasClass('function_div') || function_container.length < 1) {
+		window.mouse_event = mouse_event;
+		function_container = $(mouse_event.originalEvent.srcElement.closest('.function_div'));
+	}
+
+	console.log('function_container', function_container);
+
+	function_container_active = function_container;
+
+	function_container.find('.commands_list_div').on('mousemove', function(evt) {
+	  addGhostDiv(evt);
+	});
+	function_container.find('.commands_list_div').find("*").on('mousemove', function(evt) {
+	  addGhostDiv(evt);
+	});
+
+	function_container.on('mouseout', function(event) {
+		var el = $(document.elementFromPoint(event.clientX, event.clientY));
+		if (el.closest('.commands_list_div').length < 1) {
+			window.ghostDiv.remove();
+		}
 	});
 	
 	floatingObject.css("position", "absolute");
 	mouse_event.type = "mousedown.draggable";
 	mouse_event.target = floatingObject[0];
-	floatingObject.css("left", mouse_event.pageX - 15);
-	floatingObject.css("top", mouse_event.pageY - 15);
+	floatingObject.css("left", mouse_event.pageX - window.divx);
+	floatingObject.css("top", mouse_event.pageY);
 	floatingObject.trigger(mouse_event);
+}
+
+window.divx = 100;
+window.ghostDiv = $('<div class="ghost_div">');
+window.active_container = null;
+
+function addGhostToEmptyBlock (element, evt) {
+
+	$('.ghost_div').remove();
+
+	var container = element.closest('.command_container');
+
+	if (container.hasClass('switch')) {
+		container = $(evt.target).closest('.case_div');		
+	}
+
+	if (!container.hasClass('dowhiletrue') && !container.hasClass('iftrue') && !container.hasClass('repeatNtimes') 
+				&& !container.hasClass('case_div') && !container.hasClass('whiletrue')) {
+		addGhostToNotEmptyBlock(element, evt);
+		return;
+	}
+
+	if (window.active_container != null) {
+		if (window.active_container.is(container)) {
+			console.log('é o mesmo, não mudou!');
+		} else {
+			if (container.length < 1) {
+				container = element.closest('.commands_list_div');
+				if (window.active_container.is(container)) {
+					console.log('é o mesmo command list');
+				} else {
+					console.log('mudou para um command list');
+					window.active_container = container;
+				}
+			} else {
+				console.log('mudou para um outro container?');
+			}
+		}
+	}
+
+	window.active_container = container;
+	if (container.hasClass('iftrue')) {
+		var containerIf = container.find('.commands_if').get(0);
+		var containerElse = container.find('.commands_else').get(0);
+		var topIfDistance = Math.abs(evt.clientY - containerIf.getBoundingClientRect().top);
+		var bottomIfDistance = Math.abs(containerIf.getBoundingClientRect().top + containerIf.getBoundingClientRect().height - evt.clientY);
+		var topElseDistance = Math.abs(evt.clientY - containerElse.getBoundingClientRect().top);
+		var bottomElseDistance = Math.abs(containerElse.getBoundingClientRect().top + containerElse.getBoundingClientRect().height - evt.clientY);
+
+		if (topIfDistance < topElseDistance && topIfDistance < bottomElseDistance) {
+			$(containerIf).append(window.ghostDiv);
+		} else {
+			$(containerElse).append(window.ghostDiv);
+		}
+	} else if (container.hasClass('case_div')) {
+		container.find('.case_commands_block').append(window.ghostDiv);
+	} else {
+		container.find('.block_commands').append(window.ghostDiv);
+	}
+	
+}
+
+function addGhostToNotEmptyBlock (element, evt) {
+
+	$('.ghost_div').remove();
+
+	var container = element.closest('.dowhiletrue, .iftrue, .repeatNtimes, .case_div, .whiletrue');
+
+	//console.log("\n\nNOT EMPTY: ", container);
+
+	//if (window.active_container != null) {
+		
+		
+	//}
+
+	if (container.length < 1) {
+		container = element.closest('.commands_list_div');
+		window.active_container = container;
+		addGhostToFunctionArea(element, evt);
+	} else {
+		//console.log('mudou para um outro container?');
+	}
+
+	window.active_container = container;
+
+	// quem está mais próximo? // Essa regra se aplica somente quando o over está sobre um comando
+	var allfilhos;
+	console.log('olha o container: ', container);
+	if (container.hasClass('iftrue')) {
+		
+		if ($(evt.target).closest('.data_block_if').length > 0) {
+			allfilhos = container.find('.commands_if').children('.command_container');
+		} else if ($(evt.target).closest('.data_block_else').length > 0) {
+			allfilhos = container.find('.commands_else').children('.command_container');
+		} else {
+
+			var containerIf = container.find('.commands_if').get(0);
+			var containerElse = container.find('.commands_else').get(0);
+			var topIfDistance = Math.abs(evt.clientY - containerIf.getBoundingClientRect().top);
+			var bottomIfDistance = Math.abs(containerIf.getBoundingClientRect().top + containerIf.getBoundingClientRect().height - evt.clientY);
+			var topElseDistance = Math.abs(evt.clientY - containerElse.getBoundingClientRect().top);
+			var bottomElseDistance = Math.abs(containerElse.getBoundingClientRect().top + containerElse.getBoundingClientRect().height - evt.clientY);
+
+			if (topIfDistance < topElseDistance && topIfDistance < bottomElseDistance) {
+				allfilhos = $(containerIf).children('.command_container');
+			} else {
+				allfilhos = $(containerElse).children('.command_container');
+			}
+		}
+	} else if (container.hasClass('case_div')) {
+		allfilhos = container.children('.case_commands_block').children('.command_container');
+	} else if (container.hasClass('commands_list_div')) {
+		allfilhos = container.children('.command_container');
+	} else {
+		allfilhos = container.children('.block_commands').children('.command_container');
+	}
+
+	var topDistances = [];
+	var bottomDistances = [];
+
+	for (var i = 0; i < allfilhos.length; i++) {
+		var topD = Math.abs(evt.clientY - allfilhos.get(i).getBoundingClientRect().top);
+		topDistances.push(topD);
+		var botD = Math.abs(allfilhos.get(i).getBoundingClientRect().top + allfilhos.get(i).getBoundingClientRect().height - evt.clientY);
+		bottomDistances.push(botD);
+	}
+
+	console.log('topDistances\n', topDistances, '\nbottomDistances\n', bottomDistances)
+
+	var menorTop = Math.min.apply(null, topDistances);
+	var indiceTop = topDistances.indexOf(menorTop);
+
+	var menorBot = Math.min.apply(null, bottomDistances);
+	var indiceBot = bottomDistances.indexOf(menorBot);
+
+	if (menorTop < menorBot) {
+		window.ghostDiv.insertBefore($(allfilhos.get(indiceTop)));
+	} else {
+		window.ghostDiv.insertAfter($(allfilhos.get(indiceBot)));
+	}
+
+	console.log('distancias: menorTop ', menorTop, ' menorBot ', menorBot);
+}
+
+function addGhostToFunctionArea (undermouse, evt) {
+	$('.ghost_div').remove();
+	var allfilhos = undermouse.closest('.commands_list_div').children('.command_container');
+
+	var topDistances = [];
+	var bottomDistances = [];
+
+	for (var i = 0; i < allfilhos.length; i++) {
+		var topD = Math.abs(evt.clientY - allfilhos.get(i).getBoundingClientRect().top);
+		topDistances.push(topD);
+		var botD = Math.abs(allfilhos.get(i).getBoundingClientRect().top + allfilhos.get(i).getBoundingClientRect().height - evt.clientY);
+		bottomDistances.push(botD);
+	}
+
+	var menorTop = Math.min.apply(null, topDistances);
+	var indiceTop = topDistances.indexOf(menorTop);
+
+	var menorBot = Math.min.apply(null, bottomDistances);
+	var indiceBot = bottomDistances.indexOf(menorBot);
+
+	if (menorTop < menorBot) {
+		window.ghostDiv.insertBefore($(allfilhos.get(indiceTop)));
+	} else {
+		window.ghostDiv.insertAfter($(allfilhos.get(indiceBot)));
+	}
+
+}
+
+function addGhostDiv (evt) {
+
+	console.log('a');
+
+	var undermouse = $(evt.target);
+
+	console.log('undermouse', undermouse);
+
+	if (undermouse.hasClass('ghost_div')) {
+		return;
+	} else if (undermouse.hasClass('commands_list_div')) {
+		addGhostToFunctionArea(undermouse, evt);
+		return;
+	} else if (undermouse.hasClass('block_commands')) {
+		if (undermouse.find('.command_container').length > 0) {
+			addGhostToNotEmptyBlock(undermouse, evt);
+		} else {
+			addGhostToEmptyBlock(undermouse, evt);
+		}
+	} else if (undermouse.hasClass('case_div')) {
+		if (undermouse.find('.case_commands_block').find('.command_container').length > 0) {
+			addGhostToNotEmptyBlock(undermouse, evt);
+		} else {
+			addGhostToEmptyBlock(undermouse, evt);
+		}
+	} else {
+		
+		addGhostToNotEmptyBlock(undermouse, evt);
+		
+	} 
 }
 
 function borderMouseDragCommand (function_obj, function_container, evt) {
@@ -142,13 +363,15 @@ function borderMouseDragCommand (function_obj, function_container, evt) {
 
 	function_container.find('.commands_list_div').each(function( index ) { 
 		prev = $(this);
-		var objLeft = prev.offset().left;
-        var objTop = prev.offset().top;
-        var objRight = objLeft + prev.width();
-        var objBottom = objTop + prev.height();
-        if (evt.pageX > objLeft && evt.pageX < objRight && evt.pageY > objTop && evt.pageY < objBottom) {
-        	prev.addClass("over_command_drag"); 
-        }
+		if (prev) {
+			var objLeft = prev.offset().left;
+	        var objTop = prev.offset().top;
+	        var objRight = objLeft + prev.width();
+	        var objBottom = objTop + prev.height();
+	        if (evt.pageX > objLeft && evt.pageX < objRight && evt.pageY > objTop && evt.pageY < objBottom) {
+	        	prev.addClass("over_command_drag"); 
+	        }
+	    }
 	});
 
 	function_container.find('.command_container').each(function( index ) { 
@@ -158,7 +381,9 @@ function borderMouseDragCommand (function_obj, function_container, evt) {
         var objRight = objLeft + obj.width();
         var objBottom = objTop + obj.height();
         if (evt.pageX > objLeft && evt.pageX < objRight && evt.pageY > objTop && evt.pageY < objBottom) {
-        	prev.removeClass('over_command_drag');
+        	if (prev) {
+        		prev.removeClass('over_command_drag');
+        	}
         	obj.addClass("over_command_drag"); 
         	return;
         }
@@ -216,9 +441,7 @@ export function renderCommand (command, element_reference, before_after_inside, 
 		case Models.COMMAND_TYPES.return:
 			createdElement = ReturnsManagement.renderCommand(command, function_obj);
 			break;
-
 	}
-
 	switch (before_after_inside) {
 		case 1:
 			createdElement.insertBefore(element_reference);
@@ -283,6 +506,28 @@ export function genericCreateCommand (command_type) {
 	}
 }
 
+function dragTrash (event) {
+
+	$('.ghost_div').remove();
+
+	var trash = $('<i class="ui icon trash alternate outline"></i>');
+	$('body').append(trash);
+	trash.css('position', 'absolute');
+	trash.css('top', event.clientY);
+	trash.css('left', event.clientX - 20);
+	trash.css('font-size', '3em');
+	trash.css('display', 'none');
+
+	function_container_active.find('.commands_list_div').off('mousemove');
+	function_container_active.find('.commands_list_div').find("*").off('mousemove');
+
+	trash.fadeIn( 200, function() {
+		trash.fadeOut( 200, function() {
+			trash.remove();
+		} );
+    });
+}
+
 function manageCommand (function_obj, function_container, event, command_type) {
 
 	$( ".created_element" ).each(function( index ) { 
@@ -290,10 +535,26 @@ function manageCommand (function_obj, function_container, event, command_type) {
 	});
 
 	var el = $(document.elementFromPoint(event.clientX, event.clientY));
+
+	if (el.hasClass('ghost_div')) {
+		if (el.closest('.command_container').length < 1) {
+			
+
+			console.log('\n\nvou tentar!!!!');
+
+			console.log(el.closest('.commands_list_div'), '\n\n');
+
+			el.closest('.commands_list_div').css('height', el.closest('.commands_list_div').css('height') + 30);
+			
+			//$('.ghost_div').remove();
+
+			el = el.closest('.commands_list_div');
+		}
+	}
+
 	console.log('soltou no: ');
 	console.log(el);
 	console.log(el.data('fun'));
-
 
 	// Primeiro verificar se ele soltou no espaço da função correta:
 	var hier = el.parentsUntil(".all_functions");
@@ -315,11 +576,13 @@ function manageCommand (function_obj, function_container, event, command_type) {
 	if (!esta_correto) {
 		has_element_created_draged = false;
 		which_element_is_draged = null;
+		dragTrash(event);
 		return;
 	} else {
 		if (!esta_na_div_correta) {
 			has_element_created_draged = false;
 			which_element_is_draged = null;
+			dragTrash(event);
 			return;
 		}
 	}
@@ -378,7 +641,6 @@ function manageCommand (function_obj, function_container, event, command_type) {
 
 					is_correct_context = true;
 					break;
-
 				}
 			}
 
@@ -387,8 +649,6 @@ function manageCommand (function_obj, function_container, event, command_type) {
 				return;
 			}
 		}
-
-		
 
 		// se a hierarquia possuir apenas um elemento, então está na raiz dos comandos: 
 		if (hierarquia_bottom_up.length == 1) {
@@ -431,6 +691,8 @@ function manageCommand (function_obj, function_container, event, command_type) {
 	
 	has_element_created_draged = false;
 	which_element_is_draged = null;
+
+	renderAlgorithm();
 }
 
 function insertCommandInBlockHierar (el, event, function_obj, command_type, hier_dom, hier_obj) {
@@ -473,8 +735,6 @@ function insertCommandInBlockHierar (el, event, function_obj, command_type, hier
 		findBeforeOrAfterCommandToAddInsertBlock(el, event, function_obj, command_type);
 	}
 }
-
-
 
 function findNearbyCommandToAddInBlockScope (el, event, node_list_commands, function_obj, command_type, command_parent) {
 
@@ -522,8 +782,6 @@ function findNearbyCommandToAddInBlockScope (el, event, node_list_commands, func
 		renderCommand(recentComand, elemento_menor_distancia, 1, function_obj);
 	}
 }
-
-
 
 function findBeforeOrAfterCommandToAddInsertBlock (el, event, function_obj, command_type) {
 

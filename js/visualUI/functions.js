@@ -14,15 +14,20 @@ import WatchJS from 'melanke-watchjs';
 import { SemanticAnalyser } from '../processor/semantic/semanticAnalyser';
 import { IVProgAssessment } from '../assessment/ivprogAssessment';
 import * as AlgorithmManagement from './algorithm';
+import * as Utils from './utils';
+import VersionInfo from './../../.ima_version.json';
 
-import '../Sortable.js';
+import '../Sortable.js'; 
 
 var counter_new_functions = 0;
 var counter_new_parameters = 0;
+var ivprog_version = VersionInfo.version;
 
-let studentTemp = null;
+const globalChangeListeners = [];
+const functionsChangeListeners = [];
 let domConsole = null;
 window.studentGrade = null;
+window.LocalizedStrings = LocalizedStrings;
 const program = new Models.Program();
 
 window.system_functions = [];
@@ -62,11 +67,11 @@ window.system_functions.push(new Models.SystemFunction('$lowercase', Types.TEXT,
 window.system_functions.push(new Models.SystemFunction('$charAt', Types.TEXT, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true), new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
   null, Models.SYSTEM_FUNCTIONS_CATEGORIES.text));
 // Adding arrangement functions:
-window.system_functions.push(new Models.SystemFunction('$numElements', Types.INTEGER, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
+window.system_functions.push(new Models.SystemFunction('$numElements', Types.INTEGER, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.variable_and_function, null, null, null, true, 1)],
   null, Models.SYSTEM_FUNCTIONS_CATEGORIES.arrangement));
-window.system_functions.push(new Models.SystemFunction('$matrixLines', Types.INTEGER, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
+window.system_functions.push(new Models.SystemFunction('$matrixLines', Types.INTEGER, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.variable_and_function, null, null, null, true, 2)],
   null, Models.SYSTEM_FUNCTIONS_CATEGORIES.arrangement));
-window.system_functions.push(new Models.SystemFunction('$matrixColumns', Types.INTEGER, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
+window.system_functions.push(new Models.SystemFunction('$matrixColumns', Types.INTEGER, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.variable_and_function, null, null, null, true, 2)],
   null, Models.SYSTEM_FUNCTIONS_CATEGORIES.arrangement));
 // Adding conversion functions:
 window.system_functions.push(new Models.SystemFunction('$isReal', Types.BOOLEAN, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
@@ -83,17 +88,8 @@ window.system_functions.push(new Models.SystemFunction('$castBool', Types.BOOLEA
   null, Models.SYSTEM_FUNCTIONS_CATEGORIES.conversion));
 window.system_functions.push(new Models.SystemFunction('$castString', Types.TEXT, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
   null, Models.SYSTEM_FUNCTIONS_CATEGORIES.conversion));
-/*const variable1 = new Models.Variable(Types.INTEGER, "a", 1);
-const parameter1 = new Models.Variable(Types.INTEGER, "par_1", 1);
-const command1 = new Models.Comment(new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.only_value, "Testing rendering commands"));
 
-const sumFunction = new Models.Function("soma", Types.INTEGER, 0, [parameter1], false, false, [], null, [command1]);
-
-
-program.addFunction(sumFunction);
-*/
-
-console.log('       ___           ___                    ________          \n      /   /         /   /                  /   ____/  \n     /   /         /   /                  /   /        \n    /   /         /   /  ______    ___   /   /__         \n   /   /         /   /  /      \\  /  /  /   ___/      \n  /   /______   /   /  /   /\\   \\/  /  /   /      \n /          /  /   /  /   /  \\     /  /   /____     \n/__________/  /___/  /___/    \\___/  /________/       ');
+console.log('       ___           ___                    ________          \n      /   /         /   /                  /   ____/  \n     /   /         /   /                  /   /        \n    /   /         /   /  ______    ___   /   /__         \n   /   /         /   /  /      \\  /  /  /   ___/      \n  /   /______   /   /  /   /\\   \\/  /  /   /      \n /          /  /   /  /   /  \\     /  /   /____     \n/__________/  /___/  /___/    \\___/  /________/       \n\n Laboratório de Informática na Educação\n http://line.ime.usp.br');
 
 const mainFunction = new Models.Function(LocalizedStrings.getUI("start"), Types.VOID, 0, [], true, false);
 mainFunction.function_comment = new Models.Comment(LocalizedStrings.getUI('text_comment_main'));
@@ -109,19 +105,27 @@ window.watchW = WatchJS;
 
 WatchJS.watch(window.program_obj.globals, function(){
   if (window.insertContext) {
-    setTimeout(function(){ AlgorithmManagement.renderAlgorithm(); }, 300);
+    setTimeout(function() {
+      AlgorithmManagement.renderAlgorithm();
+      globalChangeListeners.forEach(x => x());
+    }, 300);
     window.insertContext = false;
   } else {
     AlgorithmManagement.renderAlgorithm();
+    globalChangeListeners.forEach(x => x());
   }
 }, 1);
 
 WatchJS.watch(window.program_obj.functions, function(){
   if (window.insertContext) {
-    setTimeout(function(){ AlgorithmManagement.renderAlgorithm(); }, 300);
+    setTimeout(function(){
+      AlgorithmManagement.renderAlgorithm();
+      functionsChangeListeners.forEach( x => x());
+    }, 300);
     window.insertContext = false;
   } else {
     AlgorithmManagement.renderAlgorithm();
+    functionsChangeListeners.forEach( x => x());
   }
 }, 1);
 
@@ -136,8 +140,8 @@ function addFunctionHandler () {
 
   var newe = renderFunction(new_function);
 
-  newe.css('display', 'none');
-  newe.fadeIn();
+  /*newe.css('display', 'none');
+  newe.fadeIn();*/
 }
 
 function addParameter (function_obj, function_container, is_from_click = false) {
@@ -151,8 +155,8 @@ function addParameter (function_obj, function_container, is_from_click = false) 
   var newe = renderParameter(function_obj, new_parameter, function_container);
 
   if (is_from_click) {
-    newe.css('display', 'none');
-    newe.fadeIn();
+    /*newe.css('display', 'none');
+    newe.fadeIn();*/
   }
 }
 
@@ -181,7 +185,8 @@ function addHandlers (function_obj, function_container) {
         } else {
           updateReturnType(function_obj, Types[$selectedItem.data('type')]);
         }
-      }
+      },
+      selectOnKeydown: false
   });
 
   function_container.find( ".name_function_updated" ).on('click', function(e){
@@ -281,10 +286,11 @@ function renderFunctionReturn (function_obj, function_element) {
     function_element.find('.function_return').append(ret);
 }
 
+var cont = 0;
 
 export function renderFunction (function_obj) {
-
-  var appender = '<div class="ui secondary segment function_div list-group-item">';
+  
+  var appender = '<div class="ui secondary segment function_div list-group-item function_cont_'+cont+'">';
 
   if (function_obj.function_comment) {
     //appender += renderComment(function_obj.function_comment, sequence, true, -1);
@@ -314,7 +320,13 @@ export function renderFunction (function_obj) {
 
   appender += '<div class="ui top attached segment variables_list_div"></div>';
 
-  appender += '<div class="ui inline_add_command"><i class="icon plus circle purple"></i><i class="icon circle white back"></i><div class="ui icon button dropdown menu_commands orange" style="float: left;" ><i class="icon code"></i> <div class="menu"> ';
+  
+
+  appender += '<div class="ui bottom attached segment commands_list_div commands_cont_'+cont+'">'
+        + '<div class="ui rail" style="width: 35px; margin-left: -36px;"><div class="ui sticky sticky_cont_'+cont+'" style="top: 50px !important;">';
+
+
+  appender += '<i class="icon plus circle purple"></i><i class="icon circle white back"></i><div class="ui icon button dropdown menu_commands orange" ><i class="icon code"></i> <div class="menu"> ';
   appender += '<a class="item" data-command="'+Models.COMMAND_TYPES.reader+'"><i class="download icon"></i> ' +LocalizedStrings.getUI('text_read_var')+ '</a>'
         + '<a class="item" data-command="'+Models.COMMAND_TYPES.writer+'"><i class="upload icon"></i> '+LocalizedStrings.getUI('text_write_var')+'</a>'
         + '<a class="item" data-command="'+Models.COMMAND_TYPES.comment+'"><i class="quote left icon"></i> '+LocalizedStrings.getUI('text_comment')+'</a>'
@@ -326,9 +338,11 @@ export function renderFunction (function_obj) {
         + '<a class="item" data-command="'+Models.COMMAND_TYPES.dowhiletrue+'"><i class="sync icon"></i> '+LocalizedStrings.getUI('text_dowhiletrue')+'</a>'
         + '<a class="item" data-command="'+Models.COMMAND_TYPES.switch+'"><i class="list icon"></i> '+LocalizedStrings.getUI('text_switch')+'</a>'
         + '<a class="item" data-command="'+Models.COMMAND_TYPES.return+'"><i class="reply icon"></i> '+LocalizedStrings.getUI('text_btn_return')+'</a>'
-        + '</div></div></div>';
+        + '</div></div>';
 
-  appender += '<div class="ui bottom attached segment commands_list_div"></div>';
+
+  appender += '</div></div>'
+        +'</div>';
 
   appender += '</div></div>';
 
@@ -364,25 +378,19 @@ export function renderFunction (function_obj) {
     }
   });
 
+  var function_index = program.functions.indexOf(function_obj);
+
   Sortable.create(appender.find(".variables_list_div")[0], {
     handle: '.ellipsis',
     animation: 100,
     ghostClass: 'ghost',
-    group: 'local_vars_drag_' + program.functions.indexOf(function_obj),
+    group: 'local_vars_drag_' + function_index,
     onEnd: function (evt) {
        updateSequenceLocals(evt.oldIndex, evt.newIndex, function_obj);
     }
   });
 
-  Sortable.create(appender.find(".commands_list_div")[0], {
-    handle: '.command_drag',
-    animation: 100,
-    ghostClass: 'ghost',
-    group: 'commands_drag_' + program.functions.indexOf(function_obj),
-    onEnd: function (evt) {
-       //updateSequenceLocals(evt.oldIndex, evt.newIndex, function_obj);
-    }
-  });
+  addSortableHandler(appender.find(".commands_list_div")[0], function_index);
 
   if (!function_obj.is_main) {
     Sortable.create(appender.find(".container_parameters_list")[0], {
@@ -395,7 +403,283 @@ export function renderFunction (function_obj) {
       }
     });
   }
+
+  var teste  = '.ui.sticky.sticky_cont_'+cont;
+  $(teste).sticky({
+    context: '.ui.bottom.attached.segment.commands_list_div.commands_cont_'+cont,
+    scrollContext: '.ivprog_visual_panel',
+    observeChanges: true,
+    offset: 40,
+    onStick: function (evt) {
+      $(teste).css('top', '20px', 'important');
+    }, 
+    onBottom: function (evt) {
+      $(teste).css('top', '20px', 'important');
+    },
+    onUnstick: function (evt) {
+      $(teste).css('top', '20px', 'important');
+    },
+    onReposition: function (evt) {
+      $(teste).css('top', '20px', 'important');
+    },
+    onScroll: function (evt) {
+      $(teste).css('top', '20px', 'important');
+      if (!isVisible($(teste), $(teste).parent())) {
+        $(teste).removeClass('fixed');
+      }
+    },
+    onTop: function (evt) {
+      $(teste).css('top', '20px', 'important');
+    }
+  });
+  cont ++;
+
   return appender;
+}
+
+function isVisible (element, container) {
+
+  var elementTop = $(element).offset().top,
+      elementHeight = $(element).height(),
+      containerTop = $(container).offset().top,
+      containerHeight = $(container).height() - 30;
+
+  return ((((elementTop - containerTop) + elementHeight) > 0)
+         && ((elementTop - containerTop) < containerHeight));
+}
+
+
+window.evento_drag;
+
+function updateProgramObjDrag () {
+  var nodes = Array.prototype.slice.call( $('.all_functions').children() );
+  var function_index;
+  var start_index;
+  var function_obj;
+  $(evento_drag.item).parentsUntil(".all_functions").each(function (index) {
+    if ($(this).hasClass('function_div')) {
+      function_index = nodes.indexOf(this);
+      start_index = index;
+      function_obj = $(this);
+    }
+  });
+
+  console.log(function_index);
+
+  var path_target = [];
+  $(evento_drag.item).parentsUntil(".all_functions").each(function (index) {
+    if ($(this).hasClass('command_container')) {
+      path_target.push(this);
+    }
+  });
+  if (path_target.length == 0) {
+    //console.log('soltou na raiz, na posição: ' + evento_drag.newIndex + ' mas ainda não sei de onde saiu ');
+  } else {
+    //console.log('soltou dentro de algum bloco, sequência vem logo abaixo (de baixo pra cima): ');
+    //console.log(path_target);
+  }
+
+  var index_each = [];
+  var path_relative = [];
+  for (var i = path_target.length - 1; i >= 0; i --) {
+    console.log('da vez', $(path_target[i + 1]));
+    if (i == (path_target.length - 1)) { // está na raiz
+      var indice_na_raiz = function_obj.find('.command_container').index(path_target[i]);
+      console.log('índice na raiz: ', indice_na_raiz);
+    } else {
+      if ($(path_target[i + 1]).hasClass('iftrue')) {
+        if ($(path_target[i]).parent().hasClass('commands_if')) {
+          path_relative.push('if');
+          index_each.push($(path_target[i]).parent().find('.command_container').index(path_target[i]));
+        } else {
+          path_relative.push('else');
+          index_each.push($(path_target[i]).parent().find('.command_container').index(path_target[i]));
+        }
+      } else if ($(path_target[i + 1]).hasClass('dowhiletrue')) {
+        path_relative.push('dowhiletrue');
+        index_each.push($(path_target[i + 1]).find('.command_container').index(path_target[i]));
+      } else if ($(path_target[i + 1]).hasClass('repeatNtimes')) {
+        path_relative.push('repeatNtimes');
+        index_each.push($(path_target[i + 1]).find('.command_container').index(path_target[i]));
+      } else if ($(path_target[i + 1]).hasClass('whiletrue')) {
+        path_relative.push('whiletrue');
+        index_each.push($(path_target[i + 1]).find('.command_container').index(path_target[i]));
+      } else if ($(path_target[i + 1]).hasClass('switch')) {
+        path_relative.push('switch');
+        //index_each.push($(path_target[i + 1]).find('.command_container').index(path_target[i]));
+      }
+    }
+  }
+  var index_in_block = -1;
+  var is_in_else = $(evento_drag.item).parent().hasClass('commands_else');
+
+  index_in_block = $(evento_drag.item).parent().find('.command_container').index(evento_drag.item);
+
+  var is_in_case_switch = $(evento_drag.item).parent().hasClass('case_commands_block');
+  var index_case_of_switch = -1;
+  if (is_in_case_switch) {
+    index_case_of_switch = $(evento_drag.item).parent().parent().parent().find('.case_div').index($(evento_drag.item).parent().parent());
+  }
+
+  /*console.log('path_relative:');
+  console.log(path_relative);
+  console.log('index_each:');
+  console.log(index_each);
+  console.log('index_in_block:');
+  console.log(index_in_block);
+  console.log('ele está em algum bloco de senão? ');
+  console.log(is_in_else);
+  console.log('ele está dentro de um case de switch?');
+  console.log(is_in_case_switch);
+  console.log('qual é o índice do case: ');
+  console.log(index_case_of_switch);*/
+
+  // encontrar o elemento na árvore:
+  var command_start_point = window.program_obj.functions[function_index].commands[indice_na_raiz];
+  var block_to_insert = command_start_point;
+  for (var i = 0; i < index_each.length; i++) {
+    if (path_relative[i] == "else") {
+      block_to_insert = block_to_insert.commands_else[index_each[i]];
+    } else if (path_relative[i] == "switch") {
+
+    } else {
+      block_to_insert = block_to_insert.commands_block[index_each[i]]
+    }
+  }
+
+  //console.log('command_start_point', command_start_point);
+  //console.log('block_to_insert', block_to_insert);
+
+  // agora tem que alocar o comando na árvore, mas considerar as quatro situações:
+  // (1) se está em um else ou (2) se está em switch ou (3) será um caso padrão ou (4) se será na raiz.
+  
+  if (path_target.length == 0) { // soltou na raiz:
+    window.program_obj.functions[function_index].commands.splice(evento_drag.newIndex, 0, command_in_drag);
+  } else if (is_in_else)  {
+    if (block_to_insert.commands_else) {
+      block_to_insert.commands_else.splice(evento_drag.newIndex, 0, command_in_drag);
+    } else {
+      block_to_insert.commands_else = [];
+      block_to_insert.commands_else.push(command_in_drag);
+    }
+  } else if (is_in_case_switch) {
+
+  } else {
+    // verificar se tem alguma coisa no bloco:
+    if (block_to_insert.commands_block) {
+      block_to_insert.commands_block.splice(evento_drag.newIndex, 0, command_in_drag);
+    } else {
+      block_to_insert.commands_block = [];
+      block_to_insert.commands_block.push(command_in_drag);
+    }
+  }
+
+  window.draging = false;
+  renderAlgorithm();
+  
+
+}
+
+function prepareDragHandler (evt) {
+  window.draging = true;
+
+  var nodes = Array.prototype.slice.call( $('.all_functions').children() );
+  var function_index;
+  var function_obj;
+  $(evt.item).parentsUntil(".all_functions").each(function (index) {
+    if ($(this).hasClass('function_div')) {
+      function_index = nodes.indexOf(this);
+      function_obj = window.program_obj.functions[function_index];
+    }
+  });
+
+  command_in_drag = $(evt.item).data("command");
+
+  //console.log('$(evt.item).parent(): ');
+  //console.log($(evt.item).parent());
+
+  // descobrir qual das quatro situações:
+  if ($(evt.item).parent().hasClass('commands_list_div')) { // está na raiz:
+    if (function_obj.commands.indexOf(command_in_drag) > -1) {
+      function_obj.commands.splice(function_obj.commands.indexOf(command_in_drag), 1);
+    }
+  } else if ($(evt.item).parent().hasClass('commands_else')) { // está no else:
+    if ($(evt.item).parent().data('command').commands_else.indexOf(command_in_drag) > -1) {
+      $(evt.item).parent().data('command').commands_else.splice($(evt.item).parent().data('command').commands_else.indexOf(command_in_drag), 1);
+    }
+  } else if ($(evt.item).parent().hasClass('case_commands_block')) { // está em um switch:
+
+  } else { // caso padrão:
+    if ($(evt.item).parent().data('command').commands_block.indexOf(command_in_drag) > -1) {
+      $(evt.item).parent().data('command').commands_block.splice($(evt.item).parent().data('command').commands_block.indexOf(command_in_drag), 1);
+    }
+  }
+
+}
+
+var command_in_drag;
+
+function addSortableHandler (element, id_function) {
+  var n_group = 'commands_drag_' + id_function;
+  Sortable.create(element, {
+    handle: '.command_drag',
+    ghostClass: 'ghost',
+    animation: 300,
+    group: {name: n_group},
+    onEnd: function (evt) {
+       //updateSequenceLocals(evt.oldIndex, evt.newIndex, function_obj);
+       var itemEl = evt.item;  // dragged HTMLElement
+       evt.to;    // target list
+       evt.from;  // previous list
+       evt.oldIndex;  // element's old index within old parent
+       evt.newIndex;  // element's new index within new parent
+       //console.log('::EVT::');
+       //console.log(evt);
+
+       window.evento_drag = evt;
+
+       try {
+        updateProgramObjDrag();
+       } catch (e) {
+        window.draging = false;
+       }
+    },
+    onStart: function (evt) {
+      //console.log("START::EVT::");
+      //console.log(evt);
+      //console.log("\n\ncommand_in_drag");
+      try {
+        prepareDragHandler(evt);
+      } catch (e) {
+        window.draging = false;
+      }
+    }
+  });
+  element = $(element);
+  element.find(".iftrue").each(function( index ) {
+    addSortableHandler($(this).find(".block_commands")[0], id_function);
+    addSortableHandler($(this).find(".block_commands")[1], id_function);
+  });
+
+  element.find(".repeatNtimes").each(function( index ) {
+    addSortableHandler($(this).find(".block_commands")[0], id_function);
+  });
+
+  element.find(".dowhiletrue").each(function( index ) {
+    addSortableHandler($(this).find(".block_commands")[0], id_function);
+  });
+
+  element.find(".whiletrue").each(function( index ) {
+    addSortableHandler($(this).find(".block_commands")[0], id_function);
+  });
+
+  element.find(".switch").each(function( index ) {
+
+    $(this).find(".case_div").each(function( index ) {
+      addSortableHandler($(this).find(".case_commands_block")[0], id_function);
+    });
+
+  });  
 }
 
 export function initVisualUI () {
@@ -434,15 +718,12 @@ export function initVisualUI () {
   $('.expand_button').on('click', () => {
     full_screen();
   });
+  $('.main_title h2').prop('title', LocalizedStrings.getUI('text_ivprog_description'));
 }
 
 var is_iassign = false;
 
 $( document ).ready(function() {
-
-  for (var i = 0; i < program.functions.length; i++) {
-    renderFunction(program.functions[i]);
-  }
 
   var time_show = 750;
   $('.visual_coding_button').popup({
@@ -502,7 +783,7 @@ $( document ).ready(function() {
     }
   });
   $('.help_button').popup({
-    content : LocalizedStrings.getUI("tooltip_help"),
+    content : LocalizedStrings.getUI("tooltip_help") + ' - ' + LocalizedStrings.getUI("text_ivprog_version") + ' ' + ivprog_version,
     delay: {
       show: time_show,
       hide: 0
@@ -563,14 +844,16 @@ function updateSequenceFunction (oldIndex, newIndex) {
 }
 
 function runCodeAssessment () {
-  toggleConsole(true);
-
+  
   window.studentGrade = null;
   studentTemp = null;
   const strCode = CodeManagement.generate();
   if (strCode == null) {
     return;
   }
+
+  toggleConsole(true);
+
   if(domConsole == null)
     domConsole = new DOMConsole("#ivprog-term");
   $("#ivprog-term").slideDown(500);
@@ -582,17 +865,19 @@ function runCodeAssessment () {
     } else {
       is_iassign = false;
     }
-  }).catch( err => domConsole.err(err.message));
+  }).catch( err => console.log(err));
   
 }
 
 function runCode () {
-  toggleConsole(true);
-
+  
   const strCode = CodeManagement.generate();
   if (strCode == null) {
     return;
   }
+  
+  toggleConsole(true);
+
   if(domConsole == null)
     domConsole = new DOMConsole("#ivprog-term");
   $("#ivprog-term").slideDown(500);
@@ -656,6 +941,11 @@ function waitToCloseConsole () {
 
 function toggleTextualCoding () {
   var code = CodeManagement.generate();
+
+  if (code == null) {
+    return;
+  }
+
   $('.ivprog_visual_panel').css('display', 'none');
   $('.ivprog_textual_panel').css('display', 'block');
   $('.ivprog_textual_panel').removeClass('loading');
@@ -683,7 +973,7 @@ function removeParameter (function_obj, parameter_obj, parameter_container) {
   $(parameter_container).fadeOut();
 }
 
-function updateParameterType(parameter_obj, new_type, new_dimensions = 0) {
+function updateParameterType (parameter_obj, new_type, new_dimensions = 0) {
   parameter_obj.type = new_type;
   parameter_obj.dimensions = new_dimensions;
 
@@ -758,19 +1048,88 @@ function renderParameter (function_obj, parameter_obj, function_container) {
       } else {
         updateParameterType(parameter_obj, Types[$selectedItem.data('type')]);
       }
-    }
+    },
+    selectOnKeydown: false
   });
 
   ret.find('.label_enable_name_parameter').on('click', function(e){
-    enableNameParameterUpdate(parameter_obj, ret);
+    enableNameParameterUpdate(parameter_obj, ret, function_obj);
   });
 
   return ret;
 }
 
+function updateParameterName (parameter_var, new_name, parameter_obj_dom, function_obj) {
+  
+  if (parameter_var.name == new_name) {
+    return;
+  }
+
+  if (isValidIdentifier(new_name)) {
+    if (variableNameAlreadyExists(new_name, function_obj)) {
+      Utils.renderErrorMessage(parameter_obj_dom.find('.parameter_div_edit'), LocalizedStrings.getUI('inform_valid_variable_duplicated'));
+    } else {
+      parameter_var.name = new_name;
+    }
+  } else {
+    Utils.renderErrorMessage(parameter_obj_dom.find('.parameter_div_edit'), LocalizedStrings.getUI('inform_valid_name'));
+  }
+}
+
+function variableNameAlreadyExists (name_var, function_obj) {
+
+  if (function_obj.parameters_list) {
+    for (var i = 0; i < function_obj.parameters_list.length; i++) {
+      if (function_obj.parameters_list[i].name == name_var) {
+        return true;
+      }
+    }
+  }
+
+  if (function_obj.variables_list) {
+    for (var i = 0; i < function_obj.variables_list.length; i++) {
+      if (function_obj.variables_list[i].name == name_var) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+}
+
+function updateFunctionName (function_var, new_name, function_obj_dom) {
+  
+  if (function_var.name == new_name) {
+    return;
+  }
+  
+  if (isValidIdentifier(new_name)) {
+    if (functionNameAlreadyExists(new_name)) {
+      Utils.renderErrorMessage(function_obj_dom.find('.function_name_div'), LocalizedStrings.getUI('inform_valid_name_duplicated'));
+    } else {
+      function_var.name = new_name;
+    }
+  } else {
+    Utils.renderErrorMessage(function_obj_dom.find('.function_name_div'), LocalizedStrings.getUI('inform_valid_name'));
+  }
+}
+
+function functionNameAlreadyExists (function_name) {
+  for (var i = 0; i < window.program_obj.functions.length; i++) {
+    if (window.program_obj.functions[i].name == function_name) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function isValidIdentifier (identifier_str) {
+  return /^[a-zA-Z_][a-zA-Z0-9_]*$/.test(identifier_str);
+}
+
 var opened_name_parameter = false;
 var opened_input_parameter = null;
-function enableNameParameterUpdate (parameter_obj, parent_node) {
+function enableNameParameterUpdate (parameter_obj, parent_node, function_obj) {
   if (opened_name_parameter) {
     opened_input_parameter.focus();
     return;
@@ -801,7 +1160,7 @@ function enableNameParameterUpdate (parameter_obj, parent_node) {
   input_field.focusout(function() {
     /// update array:
     if (input_field.val().trim()) {
-      parameter_obj.name = input_field.val().trim();
+      updateParameterName(parameter_obj, input_field.val().trim(), parent_node, function_obj);
       parent_node.find('.span_name_parameter').text(parameter_obj.name);
     }
     input_field.off();
@@ -816,7 +1175,7 @@ function enableNameParameterUpdate (parameter_obj, parent_node) {
     var code = e.keyCode || e.which;
     if(code == 13) {
       if (input_field.val().trim()) {
-        parameter_obj.name = input_field.val().trim();
+        updateParameterName(parameter_obj, input_field.val().trim(), parent_node, function_obj);
         parent_node.find('.span_name_parameter').text(parameter_obj.name);
       }
       input_field.off();
@@ -877,7 +1236,7 @@ function enableNameFunctionUpdate (function_obj, parent_node) {
   input_field.focusout(function() {
     /// update array:
     if (input_field.val().trim()) {
-      function_obj.name = input_field.val().trim();
+      updateFunctionName(function_obj, input_field.val().trim(), parent_node);
     }
     input_field.off();
     input_field.remove();
@@ -894,7 +1253,7 @@ function enableNameFunctionUpdate (function_obj, parent_node) {
     var code = e.keyCode || e.which;
     if(code == 13) {
       if (input_field.val().trim()) {
-        function_obj.name = input_field.val().trim();
+        updateFunctionName(function_obj, input_field.val().trim(), parent_node);
       }
       input_field.off();
       input_field.remove();
@@ -921,4 +1280,22 @@ function enableNameFunctionUpdate (function_obj, parent_node) {
   });
   input_field.select();
   
+}
+
+export function addFunctionChangeListener (callback) {
+  functionsChangeListeners.push(callback);
+  return functionsChangeListeners.length - 1;
+}
+
+export function addGlobalChangeListener (callback) {
+  globalChangeListeners.push(callback);
+  return globalChangeListeners.length - 1;
+}
+
+export function removeGlobalListener (index) {
+  globalChangeListeners.splice(index, 1);
+}
+
+export function removeFunctionListener (index) {
+  functionsChangeListeners.splice(index);
 }

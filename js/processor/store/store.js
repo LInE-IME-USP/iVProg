@@ -17,10 +17,10 @@ export class Store {
     if(!Store.canImplicitTypeCast(castType, stoObj.type)) {
       throw new Error("!!!Critical error: attempted to type cast invalid types");
     }
-    if(Types.INTEGER.isCompatible(castType)) {
-      return new StoreObject(castType, stoObj.value.trunc());
+    if(castType.isCompatible(Types.INTEGER)) {
+      return new StoreObject(Types.INTEGER, stoObj.value.trunc());
     } else {
-      return new StoreObject(castType, stoObj.value);
+      return new StoreObject(Types.REAL, stoObj.value);
     }
   }
 

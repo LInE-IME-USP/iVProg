@@ -125,7 +125,8 @@ export class DOMConsole {
   }
 
   sendOutput (text) {
-    text.split("\n").forEach(t => {
+    const output = ""+text;
+    output.split("\n").forEach(t => {
       t = t.replace(/\t/g,'&#9;');
       this.write(t)
     });

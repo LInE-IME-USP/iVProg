@@ -28,85 +28,83 @@
 
       <div class="title default_visual_title">
         <i class="dropdown icon"></i>
-        
       </div>
 
     <div class="content height_100">
    
-    <div class="ui container main_title only_in_frame">
-      <h2>iVProg</h2>
-      <span class="subtext" style="display: inline;">interactive coding</span>
-    </div>
+      <div class="ui raised container segment div_to_body">
 
-    <div class="ui raised container segment div_to_body">
+        <div class="ui container main_title only_in_frame">
+          <h2>iVProg</h2>
+        </div>
 
-      <div class="ui icon menu center aligned container" style="width: 438px; margin-top: -20px;">
-        <a class="item active visual_coding_button">
-          <i class="window maximize outline icon"></i>
-        </a>
-        <a class="item textual_coding_button">
-          <i class="code icon"></i>
-        </a>
-        <a class="item upload_file_button disabled">
-          <i class="upload icon"></i>
-        </a>
-        <a class="item download_file_button disabled">
-          <i class="download icon"></i>
-        </a>
-        <a class="item undo_button disabled">
-          <i class="undo icon"></i>
-        </a>
-        <a class="item redo_button disabled">
-          <i class="redo icon"></i>
-        </a>
-        <a class="item run_button">
-          <i class="play icon"></i>
-        </a>
-        <a class="item assessment assessment_button">
-          <i class="check icon"></i>
-        </a>
-        <!--<a class="item expand_button">
-          <i class="expand arrows alternate icon"></i>
-        </a>-->
-        <a class="item help_button">
-          <i class="help icon"></i>
-        </a>
-      </div>
+        <div class="ui icon menu center aligned container" style="width: 438px; margin-top: -20px;">
+          <a class="item active visual_coding_button">
+            <i class="window maximize outline icon"></i>
+          </a>
+          <a class="item textual_coding_button">
+            <i class="code icon"></i>
+          </a>
+          <a class="item upload_file_button disabled">
+            <i class="upload icon"></i>
+          </a>
+          <a class="item download_file_button disabled">
+            <i class="download icon"></i>
+          </a>
+          <a class="item undo_button disabled">
+            <i class="undo icon"></i>
+          </a>
+          <a class="item redo_button disabled">
+            <i class="redo icon"></i>
+          </a>
+          <a class="item run_button">
+            <i class="play icon"></i>
+          </a>
+          <a class="item assessment assessment_button">
+            <i class="check icon"></i>
+          </a>
+          <!--<a class="item expand_button">
+            <i class="expand arrows alternate icon"></i>
+          </a>-->
+          <a class="item help_button">
+            <i class="help icon"></i>
+          </a>
+        </div>
 
-      <div class="ui one column container segment ivprog_visual_panel loading">
+        <div class="ui one column container segment ivprog_visual_panel loading">
 
-        <div class="global_var">
-          <i class="icon plus circle purple add_global_button"></i>
-          <i class="icon circle white back"></i>
+          <div class="global_var">
+            <i class="icon plus circle purple add_global_button"></i>
+            <i class="icon circle white back"></i>
 
-          <div class="ui icon button add-globalVar-button add_global_button purple"><i class="icon superscript"></i></div>
+            <div class="ui icon button add-globalVar-button add_global_button purple"><i class="icon superscript"></i></div>
 
-          <div class="list_globals" id="listGlobalsHandle"></div>
+            <div class="list_globals" id="listGlobalsHandle"></div>
+
+          </div>
+
+          <div class="all_functions list-group" id="listWithHandle">
+
+          </div>
+
+
+          <div class="ui teal small labeled icon button add_function_button">
+            <data class="i18n" value="ui:btn_function">Function</data>
+            <i class="add icon"></i>
+          </div>
+          <div class="program_final"></div>
 
         </div>
 
-        <div class="all_functions list-group" id="listWithHandle">
 
+        <div class="ui one column container segment ivprog_textual_panel loading" style="display: none;">
+          <textarea class="ivprog_textual_code" readonly></textarea>
         </div>
 
-
-        <div class="ui teal small labeled icon button add_function_button">
-          <data class="i18n" value="ui:btn_function">Function</data>
-          <i class="add icon"></i>
+        <div id='ivprog-term' class="six column wide">
+          <div class="div_toggle_console"><i class="inverted terminal icon green button_toggle_console"></i></div>
         </div>
-        <div class="program_final"></div>
-
       </div>
-
-
-      <div class="ui one column container segment ivprog_textual_panel loading" style="display: none;">
-        <textarea class="ivprog_textual_code" readonly></textarea>
-      </div>
-
-      <div id='ivprog-term' class="six column wide">
-        <div class="div_toggle_console"><i class="inverted terminal icon green button_toggle_console"></i></div>
-      </div>
-    </div>
 
     </div>
 

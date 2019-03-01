@@ -10,11 +10,11 @@ import * as VariableValueMenu from './variable_value_menu';
 import * as ContextualizedMenu from './contextualized_menu';
 
 export function createFloatingCommand () {
-	return $('<div class="ui repeatNtimes created_element"> <i class="ui icon small sync"></i> <span> para (x = 0; x < 10; x ++) { } </span></div>');
+	return $('<div class="ui repeatNtimes created_element"> <i class="ui icon small sync"></i> <span> para (x = 0; x < 10; x ++) <br> </span></div>');
 }
 
 export function renderCommand (command, function_obj) {
-	var ret = '<div class="ui repeatNtimes command_container"> <i class="ui icon small random command_drag"></i> <i class="ui icon times red button_remove_command"></i> <div class="ui context_menu"></div>  <span class="span_command_spec"> ' + LocalizedStrings.getUI('text_for') + ' ( </span>  <div class="ui attribution_expression"><div class="ui variable_attribution"></div> <span class="text_receives span_command_spec"></span> <div class="ui var_value_expression div_expression_st"></div> </div> <span class="span_command_spec separator_character">;</span> <div class="conditional_expression"></div> <span class="span_command_spec separator_character">;</span>  <div class="ui incrementation_field"><div class="ui incrementation_variable"></div> <span class="text_inc_receives span_command_spec"></span> <div class="ui first_operand"></div><div class="ui operator"></div><div class="ui second_operand"></div></div>  <span class="span_command_spec"> ) </span>';
+	var ret = '<div class="ui repeatNtimes command_container"> <i class="ui icon small sync command_drag"></i> <i class="ui icon times red button_remove_command"></i> <div class="ui context_menu"></div>  <span class="span_command_spec"> ' + LocalizedStrings.getUI('text_for') + ' ( </span>  <div class="ui attribution_expression"><div class="ui variable_attribution"></div> <span class="text_receives span_command_spec"></span> <div class="ui var_value_expression div_expression_st"></div> </div> <span class="span_command_spec separator_character">;</span> <div class="conditional_expression"></div> <span class="span_command_spec separator_character">;</span>  <div class="ui incrementation_field"><div class="ui incrementation_variable"></div> <span class="text_inc_receives span_command_spec"></span> <div class="ui first_operand"></div><div class="ui operator"></div><div class="ui second_operand"></div></div>  <span class="span_command_spec"> ) </span>';
 	ret += '<div class="ui block_commands">';
 	ret += '</div>';
 	ret += '<span> </span>';
@@ -22,6 +22,7 @@ export function renderCommand (command, function_obj) {
 	
 	var el = $(ret);
 	el.data('command', command);
+	el.find('.block_commands').data('command', command);
 
 	addHandlers(command, function_obj, el);
 
@@ -126,7 +127,9 @@ function addHandlers (command, function_obj, repeatNtimes_dom) {
 
 	repeatNtimes_dom.find('.button_remove_command').on('click', function() {
 		if (CommandsManagement.removeCommand(command, function_obj, repeatNtimes_dom)) {
-			repeatNtimes_dom.fadeOut();
+			repeatNtimes_dom.fadeOut(400, function() {
+				repeatNtimes_dom.remove();
+			});
 		}
 	});
 }

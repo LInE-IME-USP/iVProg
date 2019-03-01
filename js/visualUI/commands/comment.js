@@ -30,7 +30,9 @@ function addHandlers (command, function_obj, comment_dom) {
 
 	comment_dom.find('.button_remove_command').on('click', function() {
 		if (CommandsManagement.removeCommand(command, function_obj, comment_dom)) {
-			comment_dom.fadeOut();
+			comment_dom.fadeOut(400, function() {
+				comment_dom.remove();
+			});
 		}
 	});
 }

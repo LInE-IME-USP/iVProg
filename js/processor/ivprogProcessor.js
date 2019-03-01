@@ -116,7 +116,6 @@ export class IVProgProcessor {
     } else {
       const val = this.ast.functions.find( v => v.name === name);
       if (!!!val) {
-        // TODO: better error message;
         throw ProcessorErrorFactory.function_missing(name);
       }
       return val;
@@ -139,13 +138,14 @@ export class IVProgProcessor {
     }
     funcStore.insertStore('$', returnStoreObject);
     const newFuncStore$ = this.associateParameters(func.formalParameters, actualParameters, store, funcStore);
+    const outerRef = this;
     return newFuncStore$.then(sto => {
       this.context.push(Context.FUNCTION);
       this.stores.push(sto);
       return this.executeCommands(sto, func.variablesDeclarations)
-        .then(stoWithVars => this.executeCommands(stoWithVars, func.commands)).then(finalSto => {
-          this.stores.pop();
-          this.context.pop();
+        .then(stoWithVars => outerRef.executeCommands(stoWithVars, func.commands)).then(finalSto => {
+          outerRef.stores.pop();
+          outerRef.context.pop();
           return finalSto;
         });
     });
@@ -209,7 +209,6 @@ export class IVProgProcessor {
   }
 
   executeCommand (store, cmd) {
-
     if(this.forceKill) {
       return Promise.reject("FORCED_KILL!");
     } else if (store.mode === Modes.PAUSE) {
@@ -232,10 +231,10 @@ export class IVProgProcessor {
       return this.executeReturn(store, cmd);
     } else if (cmd instanceof Commands.IfThenElse) {
       return this.executeIfThenElse(store, cmd);
-    } else if (cmd instanceof Commands.While) {
-      return this.executeWhile(store, cmd);
     } else if (cmd instanceof Commands.DoWhile) {
       return this.executeDoWhile(store, cmd);
+    } else if (cmd instanceof Commands.While) {
+      return this.executeWhile(store, cmd);
     } else if (cmd instanceof Commands.For) {
       return this.executeFor(store, cmd);
     } else if (cmd instanceof Commands.Switch) {
@@ -413,7 +412,7 @@ export class IVProgProcessor {
             return store;
           }
         } else {
-          return Promise.reject(ProcessorErrorFactory.loop_condition_type_full(cmd.sourceInfo));
+          return Promise.reject(ProcessorErrorFactory.loop_condition_type_full(cmd.expression.toString(), cmd.sourceInfo));
         }
       })
       
@@ -439,7 +438,7 @@ export class IVProgProcessor {
             return Promise.resolve(store);
           }
         } else {
-          return Promise.reject(ProcessorErrorFactory.if_condition_type_full(cmd.sourceInfo));
+          return Promise.reject(ProcessorErrorFactory.if_condition_type_full(cmd.condition.toString(), cmd.sourceInfo));
         }
       });
     } catch (error) {
@@ -456,6 +455,7 @@ export class IVProgProcessor {
       return $value.then(vl => {
 
         if(vl === null && funcType.isCompatible(Types.VOID)) {
+          store.mode = Modes.RETURN;
           return Promise.resolve(store);
         }
 
@@ -694,7 +694,6 @@ export class IVProgProcessor {
     }
     const func = this.findFunction(exp.id);
     if(Types.VOID.isCompatible(func.returnType)) {
-      // TODO: better error message
       return Promise.reject(ProcessorErrorFactory.void_in_expression_full(exp.id, exp.sourceInfo));
     }
     const $newStore = this.runFunction(func, exp.actualParameters, store);

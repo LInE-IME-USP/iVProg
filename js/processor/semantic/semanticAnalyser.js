@@ -57,7 +57,6 @@ export class SemanticAnalyser {
   }
 
   findFunction (name) {
-    console.log(name);
     if(name.match(/^\$.+$/)) {
       const fun = LanguageDefinedFunction.getFunction(name);
       if(!!!fun) {
@@ -347,7 +346,7 @@ export class SemanticAnalyser {
     if (cmd instanceof While) {
       const resultType = this.evaluateExpressionType(cmd.expression);
       if (!resultType.isCompatible(Types.BOOLEAN)) {
-        throw ProcessorErrorFactory.loop_condition_type_full(cmd.sourceInfo);
+        throw ProcessorErrorFactory.loop_condition_type_full(cmd.expression.toString(), cmd.sourceInfo);
       }
       this.checkCommands(type, cmd.commands, optional);
       return false;
@@ -355,7 +354,7 @@ export class SemanticAnalyser {
       this.checkCommand(type, cmd.assignment, optional);
       const resultType = this.evaluateExpressionType(cmd.condition);
       if (!resultType.isCompatible(Types.BOOLEAN)) {
-        throw ProcessorErrorFactory.for_condition_type_full(cmd.sourceInfo);
+        throw ProcessorErrorFactory.for_condition_type_full(cmd.condition.toString(), cmd.sourceInfo);
       }
       this.checkCommand(type, cmd.increment, optional);
       this.checkCommands(type, cmd.commands, optional);
@@ -440,7 +439,7 @@ export class SemanticAnalyser {
     } else if (cmd instanceof IfThenElse) {
       const resultType = this.evaluateExpressionType(cmd.condition);
       if (!resultType.isCompatible(Types.BOOLEAN)) {
-        throw ProcessorErrorFactory.if_condition_type_full(cmd.sourceInfo);
+        throw ProcessorErrorFactory.if_condition_type_full(cmd.condition.toString(), cmd.sourceInfo);
       }
       if(cmd.ifFalse instanceof IfThenElse) {
         return this.checkCommands(type, cmd.ifTrue.commands, optional) && this.checkCommand(type, cmd.ifFalse, optional);

@@ -9,12 +9,12 @@ import * as ConditionalExpressionManagement from './conditional_expression';
 import * as ContextualizedMenu from './contextualized_menu';
 
 export function createFloatingCommand () {
-	return $('<div class="ui whiletrue created_element"> <i class="ui icon small sync"></i> <span> ' + LocalizedStrings.getUI('text_code_while') + ' ( x < 10 ) { } </span></div>');
+	return $('<div class="ui whiletrue created_element"> <i class="ui icon small sync"></i> <span> ' + LocalizedStrings.getUI('text_code_while') + ' ( x < 10 ) <br> </span></div>');
 }
 
 export function renderCommand (command, function_obj) {
 	var ret = '';
-	ret += '<div class="ui whiletrue command_container"> <i class="ui icon small random command_drag"></i> <i class="ui icon times red button_remove_command"></i> <div class="ui context_menu"></div>  <span class="span_command_spec"> ' + LocalizedStrings.getUI('text_code_while') + ' </span>';
+	ret += '<div class="ui whiletrue command_container"> <i class="ui icon small sync command_drag"></i> <i class="ui icon times red button_remove_command"></i> <div class="ui context_menu"></div>  <span class="span_command_spec"> ' + LocalizedStrings.getUI('text_code_while') + ' </span>';
 	ret += '<span class="span_command_spec"> ( </span> <div class="conditional_expression"></div> <span class="span_command_spec"> ) </span>';
 	ret += ' </span>';
 	ret += '<div class="ui block_commands">';
@@ -24,6 +24,7 @@ export function renderCommand (command, function_obj) {
 
 	var el = $(ret);
 	el.data('command', command);
+	el.find('.block_commands').data('command', command);
 
 	addHandlers(command, function_obj, el);
 
@@ -44,7 +45,9 @@ function addHandlers (command, function_obj, whiletrue_dom) {
 
 	whiletrue_dom.find('.button_remove_command').on('click', function() {
 		if (CommandsManagement.removeCommand(command, function_obj, whiletrue_dom)) {
-			whiletrue_dom.fadeOut();
+			whiletrue_dom.fadeOut(400, function() {
+				whiletrue_dom.remove();
+			});
 		}
 	});
 }

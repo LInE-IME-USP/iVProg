@@ -419,7 +419,9 @@ function addHandlers (command, function_obj, attribution_dom) {
 
 	attribution_dom.find('.button_remove_command').on('click', function() {
 		if (CommandsManagement.removeCommand(command, function_obj, attribution_dom)) {
-			attribution_dom.fadeOut();
+			attribution_dom.fadeOut(400, function() {
+				attribution_dom.remove();
+			});
 		}
 	});
 
