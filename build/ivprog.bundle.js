@@ -103,7 +103,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /*! exports provided: version, default */
 /***/ (function(module) {
 
-module.exports = {"version":"2019_03_01 13_44"};
+module.exports = {"version":"2019_03_04 11_00"};
 
 /***/ }),
 
@@ -187,7 +187,7 @@ module.exports =
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// Generated from /tmp/tmp-8968Xo5t2xDXm8hW/ivprog.g4 by ANTLR 4.7
+// Generated from /tmp/tmp-7216faoN8USqhOOg/ivprog.g4 by ANTLR 4.7
 // jshint ignore: start
 var antlr4 = __webpack_require__(2);
 
@@ -769,7 +769,7 @@ module.exports =
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// Generated from /tmp/tmp-8968f8EVvXgSZh3d/ivprog.g4 by ANTLR 4.7
+// Generated from /tmp/tmp-721664w1agw7QR9g/ivprog.g4 by ANTLR 4.7
 // jshint ignore: start
 var antlr4 = __webpack_require__(2);
 
@@ -1409,7 +1409,7 @@ module.exports =
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// Generated from /tmp/tmp-8968NW1IW7LG9m8z/ivprog.g4 by ANTLR 4.7
+// Generated from /tmp/tmp-72166QyyDqKitOY8/ivprog.g4 by ANTLR 4.7
 // jshint ignore: start
 var antlr4 = __webpack_require__(2);
 
@@ -27814,6 +27814,9 @@ function initVisualUI() {
   jquery__WEBPACK_IMPORTED_MODULE_0___default()('.expand_button').on('click', function () {
     full_screen();
   });
+  jquery__WEBPACK_IMPORTED_MODULE_0___default()('.help_button').on('click', function () {
+    window.open('https://www.usp.br/line/ivprog/', '_blank');
+  });
   jquery__WEBPACK_IMPORTED_MODULE_0___default()('.main_title h2').prop('title', _services_localizedStringsService__WEBPACK_IMPORTED_MODULE_3__["LocalizedStrings"].getUI('text_ivprog_description'));
 }
 var is_iassign = false;
@@ -27935,7 +27938,6 @@ function updateSequenceFunction(oldIndex, newIndex) {
 
 function runCodeAssessment() {
   window.studentGrade = null;
-  studentTemp = null;
   var strCode = _code_generator__WEBPACK_IMPORTED_MODULE_7__["generate"]();
 
   if (strCode == null) {
