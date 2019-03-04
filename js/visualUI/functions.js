@@ -718,6 +718,9 @@ export function initVisualUI () {
   $('.expand_button').on('click', () => {
     full_screen();
   });
+  $('.help_button').on('click', () => {
+    window.open('https://www.usp.br/line/ivprog/', '_blank');
+  });
   $('.main_title h2').prop('title', LocalizedStrings.getUI('text_ivprog_description'));
 }
 
@@ -846,7 +849,6 @@ function updateSequenceFunction (oldIndex, newIndex) {
 function runCodeAssessment () {
   
   window.studentGrade = null;
-  studentTemp = null;
   const strCode = CodeManagement.generate();
   if (strCode == null) {
     return;
