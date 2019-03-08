@@ -1,6 +1,5 @@
 import { Decimal } from 'decimal.js';
 import line_i18n from 'line-i18n'
-import { IVProgParser } from "./../ast/ivprogParser";
 import { SemanticAnalyser } from "./../processor/semantic/semanticAnalyser";
 import { IVProgProcessor } from "./../processor/ivprogProcessor";
 import { InputTest } from "./../util/inputTest";
