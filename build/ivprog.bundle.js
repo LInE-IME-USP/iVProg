@@ -103,7 +103,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /*! exports provided: version, default */
 /***/ (function(module) {
 
-module.exports = {"version":"2019_03_04 11_00"};
+module.exports = {"version":"2019_03_08 15_20"};
 
 /***/ }),
 
@@ -187,7 +187,7 @@ module.exports =
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// Generated from /tmp/tmp-7216faoN8USqhOOg/ivprog.g4 by ANTLR 4.7
+// Generated from /tmp/tmp-9862DJGIKBZUDJtp/ivprog.g4 by ANTLR 4.7
 // jshint ignore: start
 var antlr4 = __webpack_require__(2);
 
@@ -769,7 +769,7 @@ module.exports =
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// Generated from /tmp/tmp-721664w1agw7QR9g/ivprog.g4 by ANTLR 4.7
+// Generated from /tmp/tmp-9862rPfDVVsBZYmp/ivprog.g4 by ANTLR 4.7
 // jshint ignore: start
 var antlr4 = __webpack_require__(2);
 
@@ -1409,7 +1409,7 @@ module.exports =
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// Generated from /tmp/tmp-72166QyyDqKitOY8/ivprog.g4 by ANTLR 4.7
+// Generated from /tmp/tmp-9862Mhpq1cFEJAoj/ivprog.g4 by ANTLR 4.7
 // jshint ignore: start
 var antlr4 = __webpack_require__(2);
 
@@ -2067,7 +2067,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! exports provided: token_missing_one, token_missing_two, eos_missing, invalid_type, invalid_array_dimension, invalid_array_size, extra_lines, invalid_main_return, invalid_var_declaration, invalid_break_command, invalid_terminal, const_not_init, id_missing, invalid_id_format, main_missing, invalid_global_var, not_implemented, function_missing, function_missing_full, invalid_parameters_size_full, invalid_parameters_size, invalid_ref_full, invalid_ref, invalid_parameter_type_full, invalid_parameter_type, unknown_command_full, unknown_command, loop_condition_type_full, loop_condition_type, endless_loop_full, endless_loop, for_condition_type_full, for_condition_type, if_condition_type_full, if_condition_type, invalid_return_type_full, invalid_return_type, invalid_void_return_full, invalid_void_return, unexpected_break_command_full, unexpected_break_command, invalid_dimension, void_in_expression_full, void_in_expression, invalid_array_access_full, invalid_array_access, invalid_matrix_access_full, invalid_matrix_access, matrix_column_outbounds_full, matrix_column_outbounds, matrix_line_outbounds_full, matrix_line_outbounds, vector_line_outbounds_full, vector_line_outbounds, vector_not_matrix_full, vector_not_matrix, invalid_infix_op_full, invalid_infix_op, invalid_unary_op_full, invalid_unary_op, unknown_op, duplicate_function, duplicate_variable, main_parameters, symbol_not_found_full, symbol_not_found, array_dimension_not_int_full, array_dimension_not_int, array_dimension_not_positive_full, array_dimension_not_positive, incompatible_types_full, incompatible_types, incompatible_types_array_full, incompatible_types_array, invalid_case_type_full, invalid_case_type, function_no_return, invalid_array_literal_type_full, invalid_array_literal_type, invalid_array_literal_line_full, invalid_array_literal_line, invalid_array_literal_column_full, invalid_array_literal_column, exceeded_input_request, test_case_few_reads, test_case_failed, test_case_failed_exception, invalid_type_conversion, default */
 /***/ (function(module) {
 
-module.exports = {"token_missing_one":"Erro de sintaxe: Espera-se $0, mas encontrou-se $1 na linha:$2, coluna:$3","token_missing_two":"Erro de sintaxe: Esperava-se $0 ou $1 mas encontrou-se $2 na liha:$3, coluna: $4","eos_missing":"Falta uma nova linha ou ; na linha: $0, coluna: $1","invalid_type":"$0 na linha: $1, coluna: $2 é um tipo inválido. Os tipos válidos são: $3","invalid_array_dimension":"A dimensão inválida na linha: $0, coluna: $1. Insira um $2 ou identificador válido do mesmo tipo.","invalid_array_size":"O tamnho do vetor/matriz excede o máximo de 2 na linha $0","extra_lines":"Nenhum texto é permitido após '}' em 'programa {...}'","invalid_main_return":"A função $0 deve retornar $1 na linha $2","invalid_var_declaration":"Erro na linha $0. Variáveis só podem ser declarados no corpo principal da função e de preferência nas primeiras linhas.","invalid_break_command":"Erro na linha $0. O comando $1 não pode ser usado fora de uma estrutura de repetição ou 'escolha...caso'","invalid_terminal":"Não é possível utilizar $0 na expressão da linha: $1, coluna: $2. Tente um valor númerico, variável ou chamada de função.","const_not_init":"Erro na linha: $0, coluna: $1. Uma variável declarada como const deve ser inicializada","id_missing":"Esperava-se um identificador, mas encontrou-se $0 na linha: $1, coluna: $2","invalid_id_format":"$0 na linha: $1, coluna: $2 não é um identificador válido. O símbolo '.' não é permitido neste contexto.","main_missing":"A função principal não foi encontrada","invalid_global_var":"Erro crítico: Chamada inválida da função initGlobal fora do contexto BASE","not_implemented":"Erro interno crítico: A função definida pelo sistema $0 não foi implementada.","function_missing":"A função $0 não foi encontrada","function_missing_full":"A função $0 na linha: $1, coluna: $2 não foi encontrada","invalid_parameters_size_full":"Erro na linha $0: a quantidade de parâmetros fornecidos à função $1 está incorreta. Esperava-se $2, encontrou-se $3.","invalid_parameters_size":"A quantidade de parâmetros fornecidos à função $0 está incorreta. Esperava-se $1, encontrou-se $2","invalid_ref_full":"A expressão $0 fornecida como parâmetro para a função $1 na linha $2 não é válida para esta função. Use uma variável ou posição de vetor.","invalid_ref":"A expressão $0 fornecida como parâmetro para a função $1 não é válida para esta função. Use uma variável ou posição de vetor.","invalid_parameter_type_full":"A expressão $0 fornecida como parâmetro para a função $1 na linha $2 não é compatível com o tipo esperado.","invalid_parameter_type":"A expressão $0 fornecida como parâmetro para a função $1 não é compatível com o tipo esperado.","unknown_command_full":"Erro interno crítico: comando desconhecido encontrado na linha $0","unknown_command":"Erro interno crítico: comando desconhecido encontrado!","loop_condition_type_full":"Erro na linha: $0, coluna $1: a condição $2 do laço de repetição deve ser do tipo lógico","loop_condition_type":"A condição $0 do laço de repetição deve ser do tipo lógico","endless_loop_full":"Possível laço infinito detectado no seu código. Verifique a linha $0","endless_loop":"Possível laço infinito detectado no seu código.","for_condition_type_full":"Erro na linha: $0, coluna $1: a condição de parada $2 do comando para(...) deve ser do tipo lógico","for_condition_type":"A condição de parada $0 do comando para(...) deve ser do tipo lógico","if_condition_type_full":"Erro na linha: $0, coluna $1: a condição $2 do comando se...senao deve ser do tipo lógico","if_condition_type":"A condição $0 do comando se...senao deve ser do tipo lógico","invalid_return_type_full":"Erro na linha $0: a expressão não produz um tipo compatível com a função $1. Tipo esperado: $2.","invalid_return_type":"A expressão não produz um tipo compatível com a função $0. Tipo esperado: $1.","invalid_void_return_full":"Erro na linha $0: a função $1 não pode retornar uma expressão vazia, use uma espressão do tipo $2","invalid_void_return":"A função $0 não pode retornar uma expressão vazia, use uma espressão do tipo $1","unexpected_break_command_full":"Erro interno crítico: comando pare encontrado fora do contexto de um laço/escolha..caso na linha $0","unexpected_break_command":"Erro interno crítico: comando pare encontrado fora do contexto de um laço/escolha..caso","invalid_dimension":"As dimensões de um vetor/matriz devem ser do tipo inteiro","void_in_expression_full":"Erro na linha: $0, coluna: $1: a função $2 não pode ser utilizada em uma expressão pois seu tipo de retorno é vazio","void_in_expression":"A função $0 não pode ser utilizada em uma expressão pois seu tipo de retorno é vazio","invalid_array_access_full":"Identificador $0 na linha: $1, coluna: $2 não se refere a um vetor/matriz válido","invalid_array_access":"Identificador $0 não se refere a um vetor/matriz válido","invalid_matrix_access_full":"Identificador $0 na linha: $1, coluna: $2 não se refere a uma matriz válida","invalid_matrix_access":"Identificador $0 não se refere a uma matriz válida","matrix_column_outbounds_full":"Erro na linha $0: número de colunas $1 é inválido para a matriz $2 que possui $3 colunas","matrix_column_outbounds":"Número de colunas $0 é inválido para a matriz $1 que possui $2 colunas","matrix_line_outbounds_full":"Erro na linha $0: número de linhas $1 é inválido para a matriz $2 que possui $3 linhas","matrix_line_outbounds":"Número de linhas $0 é inválido para a matriz $1 que possui $2 linhas","vector_line_outbounds_full":"Erro na linha $0: número de linhas $1 é inválido para a matriz $2 que possui $3 linhas","vector_line_outbounds":"Número de linhas $0 é inválido para a matriz $1 que possui $2 linhas","vector_not_matrix_full":"Erro na linha $0: $1 não é uma matriz","vector_not_matrix":"$1 não é uma matriz","invalid_infix_op_full":"Erro na linha $0: não é possível aplicar a operação $1 entre os tipos $2 e $3","invalid_infix_op":"Não é possível aplicar a operação $0 entre os tipos $1 e $2","invalid_unary_op_full":"Erro na linha $0: não é possível aplicar a operação $1 ao tipo $2","invalid_unary_op":"Não é possível aplicar a operação $0 ao tipo $1","unknown_op":"Erro interno crítico: Operação $0 desconhecida","duplicate_function":"A função $0 na linha: $1, coluna: $2 já foi definida anteriormente.","duplicate_variable":"A variável $0 na linha: $1, coluna: $2 já foi declarada anteriormente.","main_parameters":"A função inicio não pode ter parâmetros.","symbol_not_found_full":"A variável $0 na linha: $1, coluna: $2 não foi declarada","symbol_not_found":"A variável $0 não foi declarada","array_dimension_not_int_full":"As dimensões de um vetor/matriz na linha: $0 devem ser do tipo inteiro.","array_dimension_not_int":"As dimensões de um vetor/matriz devem ser do tipo inteiro.","array_dimension_not_positive_full":"As dimensões de um vetor/matriz na linha: $0 devem ser valores positivos.","array_dimension_not_positive":"As dimensões de um vetor/matriz devem ser valores positivos.","incompatible_types_full":"O tipo $0 não é compatível com o tipo resultante da expressão na linha $1","incompatible_types":"O tipo $0 não é compatível com o tipo resultante da expressão fornecida.","incompatible_types_array_full":"A expressão $0 é incompatível com o tipo $1 na linha: $2, coluna: $3.","incompatible_types_array":"A expressão $0 é incompatível com o tipo $1.","invalid_case_type_full":"O caso $0 na linha $1 é incompatível com o tipo $2.","invalid_case_type":"O caso $0 é incompatível com o tipo $1.","function_no_return":"A função $0 não possui um retorno acessível. Toda função deve ter ao menos um retorno no seu corpo principal.","invalid_array_literal_type_full":"Erro na linha $0: a expressão $1 não resulta em um tipo compatível.","invalid_array_literal_type":"A expressão $0 não resulta em um tipo compatível.","invalid_array_literal_line_full":"Erro na linha $0: esperava-se $1 linhas mas encontrou $2.","invalid_array_literal_line":"Esperava-se $0 linhas mas encontrou $1.","invalid_array_literal_column_full":"Erro na linha $0: esperava-se $1 colunas mas encontrou $2.","invalid_array_literal_column":"Esperava-se $0 colunas mas encontrou $1.","exceeded_input_request":"A quantidade de leituras requisitadas execedeu a quantidade de entradas disponíveis.","test_case_few_reads":"Caso de teste $0 falhou: ainda restam entradas!","test_case_failed":"Caso de teste $0 falhou: entradas:<$1>; saída esperada:<$2>; saída:<$3>","test_case_failed_exception":"Caso de teste $0 falhou: $1","invalid_type_conversion":"O valor $0 não pode ser convertido para o tipo $1"};
+module.exports = {"token_missing_one":"Erro de sintaxe: Espera-se $0, mas encontrou-se $1 na linha:$2, coluna:$3","token_missing_two":"Erro de sintaxe: Esperava-se $0 ou $1 mas encontrou-se $2 na liha:$3, coluna: $4","eos_missing":"Falta uma nova linha ou ; na linha: $0, coluna: $1","invalid_type":"$0 na linha: $1, coluna: $2 é um tipo inválido. Os tipos válidos são: $3","invalid_array_dimension":"A dimensão inválida na linha: $0, coluna: $1. Insira um $2 ou identificador válido do mesmo tipo.","invalid_array_size":"O tamnho do vetor/matriz excede o máximo de 2 na linha $0","extra_lines":"Nenhum texto é permitido após '}' em 'programa {...}'","invalid_main_return":"A função $0 deve retornar $1 na linha $2","invalid_var_declaration":"Erro na linha $0. Variáveis só podem ser declarados no corpo principal da função e de preferência nas primeiras linhas.","invalid_break_command":"Erro na linha $0. O comando $1 não pode ser usado fora de uma estrutura de repetição ou 'escolha...caso'","invalid_terminal":"Não é possível utilizar $0 na expressão da linha: $1, coluna: $2. Tente um valor númerico, variável ou chamada de função.","const_not_init":"Erro na linha: $0, coluna: $1. Uma variável declarada como const deve ser inicializada","id_missing":"Esperava-se um identificador, mas encontrou-se $0 na linha: $1, coluna: $2","invalid_id_format":"$0 na linha: $1, coluna: $2 não é um identificador válido. O símbolo '.' não é permitido neste contexto.","main_missing":"A função principal não foi encontrada","invalid_global_var":"Erro crítico: Chamada inválida da função initGlobal fora do contexto BASE","not_implemented":"Erro interno crítico: A função definida pelo sistema $0 não foi implementada.","function_missing":"A função $0 não foi encontrada","function_missing_full":"A função $0 na linha: $1, coluna: $2 não foi encontrada","invalid_parameters_size_full":"Erro na linha $0: a quantidade de parâmetros fornecidos à função $1 está incorreta. Esperava-se $2, encontrou-se $3.","invalid_parameters_size":"A quantidade de parâmetros fornecidos à função $0 está incorreta. Esperava-se $1, encontrou-se $2","invalid_ref_full":"A expressão $0 fornecida como parâmetro para a função $1 na linha $2 não é válida para esta função. Use uma variável ou posição de vetor.","invalid_ref":"A expressão $0 fornecida como parâmetro para a função $1 não é válida para esta função. Use uma variável ou posição de vetor.","invalid_parameter_type_full":"A expressão $0 fornecida como parâmetro para a função $1 na linha $2 não é compatível com o tipo esperado.","invalid_parameter_type":"A expressão $0 fornecida como parâmetro para a função $1 não é compatível com o tipo esperado.","unknown_command_full":"Erro interno crítico: comando desconhecido encontrado na linha $0","unknown_command":"Erro interno crítico: comando desconhecido encontrado!","loop_condition_type_full":"Erro na linha: $0, coluna $1: a condição $2 do laço de repetição deve ser do tipo lógico","loop_condition_type":"A condição $0 do laço de repetição deve ser do tipo lógico","endless_loop_full":"Possível laço infinito detectado no seu código. Verifique a linha $0","endless_loop":"Possível laço infinito detectado no seu código.","for_condition_type_full":"Erro na linha: $0, coluna $1: a condição de parada $2 do comando para(...) deve ser do tipo lógico","for_condition_type":"A condição de parada $0 do comando para(...) deve ser do tipo lógico","if_condition_type_full":"Erro na linha: $0, coluna $1: a condição $2 do comando se...senao deve ser do tipo lógico","if_condition_type":"A condição $0 do comando se...senao deve ser do tipo lógico","invalid_return_type_full":"Erro na linha $0: a expressão não produz um tipo compatível com a função $1. Tipo esperado: $2.","invalid_return_type":"A expressão não produz um tipo compatível com a função $0. Tipo esperado: $1.","invalid_void_return_full":"Erro na linha $0: a função $1 não pode retornar uma expressão vazia, use uma espressão do tipo $2","invalid_void_return":"A função $0 não pode retornar uma expressão vazia, use uma espressão do tipo $1","unexpected_break_command_full":"Erro interno crítico: comando pare encontrado fora do contexto de um laço/escolha..caso na linha $0","unexpected_break_command":"Erro interno crítico: comando pare encontrado fora do contexto de um laço/escolha..caso","invalid_dimension":"As dimensões de um vetor/matriz devem ser do tipo inteiro","void_in_expression_full":"Erro na linha: $0, coluna: $1: a função $2 não pode ser utilizada em uma expressão pois seu tipo de retorno é vazio","void_in_expression":"A função $0 não pode ser utilizada em uma expressão pois seu tipo de retorno é vazio","invalid_array_access_full":"Identificador $0 na linha: $1, coluna: $2 não se refere a um vetor/matriz válido","invalid_array_access":"Identificador $0 não se refere a um vetor/matriz válido","invalid_matrix_access_full":"Identificador $0 na linha: $1, coluna: $2 não se refere a uma matriz válida","invalid_matrix_access":"Identificador $0 não se refere a uma matriz válida","matrix_column_outbounds_full":"Erro na linha $0: número de colunas $1 é inválido para a matriz $2 que possui $3 colunas","matrix_column_outbounds":"Número de colunas $0 é inválido para a matriz $1 que possui $2 colunas","matrix_line_outbounds_full":"Erro na linha $0: número de linhas $1 é inválido para a matriz $2 que possui $3 linhas","matrix_line_outbounds":"Número de linhas $0 é inválido para a matriz $1 que possui $2 linhas","vector_line_outbounds_full":"Erro na linha $0: número de linhas $1 é inválido para a matriz $2 que possui $3 linhas","vector_line_outbounds":"Número de linhas $0 é inválido para a matriz $1 que possui $2 linhas","vector_not_matrix_full":"Erro na linha $0: $1 não é uma matriz","vector_not_matrix":"$1 não é uma matriz","invalid_infix_op_full":"Erro na linha $0: não é possível aplicar a operação $1 entre os tipos $2 e $3","invalid_infix_op":"Não é possível aplicar a operação $0 entre os tipos $1 e $2","invalid_unary_op_full":"Erro na linha $0: não é possível aplicar a operação $1 ao tipo $2","invalid_unary_op":"Não é possível aplicar a operação $0 ao tipo $1","unknown_op":"Erro interno crítico: Operação $0 desconhecida","duplicate_function":"A função $0 na linha: $1, coluna: $2 já foi definida anteriormente.","duplicate_variable":"A variável $0 na linha: $1, coluna: $2 já foi declarada anteriormente.","main_parameters":"A função inicio não pode ter parâmetros.","symbol_not_found_full":"A variável $0 na linha: $1, coluna: $2 não foi declarada","symbol_not_found":"A variável $0 não foi declarada","array_dimension_not_int_full":"As dimensões de um vetor/matriz na linha: $0 devem ser do tipo inteiro.","array_dimension_not_int":"As dimensões de um vetor/matriz devem ser do tipo inteiro.","array_dimension_not_positive_full":"As dimensões de um vetor/matriz na linha: $0 devem ser valores positivos.","array_dimension_not_positive":"As dimensões de um vetor/matriz devem ser valores positivos.","incompatible_types_full":"O tipo $0 não é compatível com o tipo resultante da expressão na linha $1","incompatible_types":"O tipo $0 não é compatível com o tipo resultante da expressão fornecida.","incompatible_types_array_full":"A expressão $0 é incompatível com o tipo $1 na linha: $2, coluna: $3.","incompatible_types_array":"A expressão $0 é incompatível com o tipo $1.","invalid_case_type_full":"O caso $0 na linha $1 é incompatível com o tipo $2.","invalid_case_type":"O caso $0 é incompatível com o tipo $1.","function_no_return":"A função $0 não possui um retorno acessível. Toda função deve ter ao menos um retorno no seu corpo principal.","invalid_array_literal_type_full":"Erro na linha $0: a expressão $1 não resulta em um tipo compatível.","invalid_array_literal_type":"A expressão $0 não resulta em um tipo compatível.","invalid_array_literal_line_full":"Erro na linha $0: esperava-se $1 linhas mas encontrou $2.","invalid_array_literal_line":"Esperava-se $0 linhas mas encontrou $1.","invalid_array_literal_column_full":"Erro na linha $0: esperava-se $1 colunas mas encontrou $2.","invalid_array_literal_column":"Esperava-se $0 colunas mas encontrou $1.","exceeded_input_request":"A quantidade de leituras requisitadas execedeu a quantidade de entradas disponíveis.","test_case_few_reads":"Caso de teste $0 falhou: ainda restam entradas!","test_case_failed":"Caso de teste $0 falhou: <ul> <li>entrada(s): $1</li> <li>saída(s) esperada(s): $2</li> <li>saída(s): $3</li></ul>","test_case_failed_exception":"Caso de teste $0 falhou: $1","invalid_type_conversion":"O valor $0 não pode ser convertido para o tipo $1"};
 
 /***/ }),
 
@@ -2101,10 +2101,10 @@ var _ui_json__WEBPACK_IMPORTED_MODULE_2___namespace = /*#__PURE__*/__webpack_req
 /*!******************************!*\
   !*** ./i18n/pt/message.json ***!
   \******************************/
-/*! exports provided: test_case_success, test_case_duration, default */
+/*! exports provided: test_case_success, test_case_duration, test_suite_grade, default */
 /***/ (function(module) {
 
-module.exports = {"test_case_success":"Caso de teste $0: OK","test_case_duration":"Levou $0ms"};
+module.exports = {"test_case_success":"Caso de teste $0: OK","test_case_duration":"Levou $0ms","test_suite_grade":"A sua solução alcançou $0% da nota."};
 
 /***/ }),
 
@@ -3576,15 +3576,17 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;function _type
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "IVProgAssessment", function() { return IVProgAssessment; });
-/* harmony import */ var _ast_ivprogParser__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./../ast/ivprogParser */ "./js/ast/ivprogParser.js");
-/* harmony import */ var _processor_semantic_semanticAnalyser__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./../processor/semantic/semanticAnalyser */ "./js/processor/semantic/semanticAnalyser.js");
-/* harmony import */ var _processor_ivprogProcessor__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./../processor/ivprogProcessor */ "./js/processor/ivprogProcessor.js");
-/* harmony import */ var _util_inputTest__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./../util/inputTest */ "./js/util/inputTest.js");
-/* harmony import */ var _util_outputTest__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./../util/outputTest */ "./js/util/outputTest.js");
-/* harmony import */ var _services_localizedStringsService__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../services/localizedStringsService */ "./js/services/localizedStringsService.js");
-/* harmony import */ var decimal_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! decimal.js */ "./node_modules/decimal.js/decimal.js");
-/* harmony import */ var decimal_js__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(decimal_js__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var _util_config__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../util/config */ "./js/util/config.js");
+/* harmony import */ var decimal_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! decimal.js */ "./node_modules/decimal.js/decimal.js");
+/* harmony import */ var decimal_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(decimal_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var line_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! line-i18n */ "./node_modules/line-i18n/dist/index.js");
+/* harmony import */ var _ast_ivprogParser__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./../ast/ivprogParser */ "./js/ast/ivprogParser.js");
+/* harmony import */ var _processor_semantic_semanticAnalyser__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./../processor/semantic/semanticAnalyser */ "./js/processor/semantic/semanticAnalyser.js");
+/* harmony import */ var _processor_ivprogProcessor__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./../processor/ivprogProcessor */ "./js/processor/ivprogProcessor.js");
+/* harmony import */ var _util_inputTest__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./../util/inputTest */ "./js/util/inputTest.js");
+/* harmony import */ var _util_outputTest__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./../util/outputTest */ "./js/util/outputTest.js");
+/* harmony import */ var _io_domConsole__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./../io/domConsole */ "./js/io/domConsole.js");
+/* harmony import */ var _services_localizedStringsService__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../services/localizedStringsService */ "./js/services/localizedStringsService.js");
+/* harmony import */ var _util_config__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../util/config */ "./js/util/config.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -3599,7 +3601,10 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 
 
-var LocalizedStrings = _services_localizedStringsService__WEBPACK_IMPORTED_MODULE_5__["getInstance"]();
+
+
+var LocalizedStrings = _services_localizedStringsService__WEBPACK_IMPORTED_MODULE_8__["getInstance"]();
+var StringTypes = line_i18n__WEBPACK_IMPORTED_MODULE_1__["default"].StringTypes;
 var IVProgAssessment =
 /*#__PURE__*/
 function () {
@@ -3618,20 +3623,25 @@ function () {
 
       try {
         // try and show error messages through domconsole
-        var parser = _ast_ivprogParser__WEBPACK_IMPORTED_MODULE_0__["IVProgParser"].createParser(this.textCode);
-        var semantic = new _processor_semantic_semanticAnalyser__WEBPACK_IMPORTED_MODULE_1__["SemanticAnalyser"](parser.parseTree());
+        var parser = _ast_ivprogParser__WEBPACK_IMPORTED_MODULE_2__["IVProgParser"].createParser(this.textCode);
+        var semantic = new _processor_semantic_semanticAnalyser__WEBPACK_IMPORTED_MODULE_3__["SemanticAnalyser"](parser.parseTree());
         var validTree = semantic.analyseTree(); // loop test cases and show messages through domconsole
 
         var partialTests = this.testCases.map(function (t, name) {
-          return _this.partialEvaluateTestCase(new _processor_ivprogProcessor__WEBPACK_IMPORTED_MODULE_2__["IVProgProcessor"](validTree), t.input, t.output, name);
+          return _this.partialEvaluateTestCase(new _processor_ivprogProcessor__WEBPACK_IMPORTED_MODULE_4__["IVProgProcessor"](validTree), t.input, t.output, name);
         });
         var testResult = partialTests.reduce(function (acc, curr) {
           return acc.then(curr);
         }, Promise.resolve(0));
         return testResult.then(function (total) {
-          return Promise.resolve(total / _this.testCases.length);
+          var grade = total / _this.testCases.length;
+          var channel = grade == 1 ? _io_domConsole__WEBPACK_IMPORTED_MODULE_7__["DOMConsole"].INFO : _io_domConsole__WEBPACK_IMPORTED_MODULE_7__["DOMConsole"].ERR;
+
+          _this.writeToConsole(channel, StringTypes.MESSAGE, "test_suite_grade", grade * 100);
+
+          return Promise.resolve(grade);
         }).catch(function (err) {
-          _this.domConsole.err("Erro durante a execução do programa"); // try and show error messages through domconsole
+          _this.domConsole.err("Erro inesperado durante o cálculo da nota."); // try and show error messages through domconsole
 
 
           _this.domConsole.err(err.message);
@@ -3639,7 +3649,7 @@ function () {
           return Promise.resolve(0);
         });
       } catch (error) {
-        this.domConsole.err("Erro durante a execução do programa"); // try and show error messages through domconsole
+        this.domConsole.err("Erro inesperado durante a execução do programa"); // try and show error messages through domconsole
 
         this.domConsole.err(error.message);
         return Promise.resolve(0);
@@ -3647,10 +3657,10 @@ function () {
     }
   }, {
     key: "evaluateTestCase",
-    value: function evaluateTestCase(prog, inputList, outputList, name, accumulator) {
+    value: function evaluateTestCase(prog, inputList, expectedOutputs, name, accumulator) {
       var outerThis = this;
-      var input = new _util_inputTest__WEBPACK_IMPORTED_MODULE_3__["InputTest"](inputList);
-      var output = new _util_outputTest__WEBPACK_IMPORTED_MODULE_4__["OutputTest"]();
+      var input = new _util_inputTest__WEBPACK_IMPORTED_MODULE_5__["InputTest"](inputList);
+      var output = new _util_outputTest__WEBPACK_IMPORTED_MODULE_6__["OutputTest"]();
       prog.registerInput(input);
       prog.registerOutput(output);
       var startTime = Date.now();
@@ -3659,26 +3669,32 @@ function () {
 
         if (input.inputList.length !== input.index) {
           outerThis.showErrorMessage('test_case_few_reads', name + 1);
-          outerThis.showMessage('test_case_duration', millis);
-          return Promise.resolve(accumulator + 1 * (input.index / inputList.length));
-        } else if (output.list.length < outputList.length) {
-          outerThis.showErrorMessage('test_case_failed', name + 1, inputList.join(','), outputList.join(','), output.list.join(','));
-          outerThis.showMessage('test_case_duration', millis);
-          return Promise.resolve(accumulator + 1 * (output.list.length / outputList.length));
-        } else if (output.list.length > outputList.length) {
-          outerThis.showErrorMessage('test_case_failed', name + 1, inputList.join(','), outputList.join(','), output.list.join(','));
-          outerThis.showMessage('test_case_duration', millis);
-          return Promise.resolve(accumulator + 1 * (outputList.length / output.list.length));
+          outerThis.showInfoMessage('test_case_duration', millis);
+          return Promise.resolve(accumulator + input.index / inputList.length);
+        } else if (output.list.length != expectedOutputs.length) {
+          outerThis.showErrorMessage('test_case_failed', name + 1, inputList.join(','), expectedOutputs.join(','), output.list.join(','));
+          outerThis.showInfoMessage('test_case_duration', millis); // must check for a partial match of the generated output
+
+          var numMatchedOutputs = output.list.reduce(function (acc, actualOutput, index) {
+            if (outerThis.checkOutputValues(actualOutput, expectedOutputs[index])) {
+              return acc + 1;
+            } else {
+              return acc;
+            }
+          }, 0);
+          var maxLength = Math.max(expectedOutputs.length, output.list.length);
+          return Promise.resolve(accumulator + numMatchedOutputs / maxLength);
         } else {
-          var isOk = outerThis.checkOutput(output.list, outputList);
+          var isOk = outerThis.checkOutputLists(output.list, expectedOutputs);
 
           if (!isOk) {
-            outerThis.showErrorMessage('test_case_failed', name + 1, inputList.join(','), outputList.join(','), output.list.join(','));
-            outerThis.showMessage('test_case_duration', millis);
+            console.log("not ok.");
+            outerThis.showErrorMessage('test_case_failed', name + 1, inputList.join(','), expectedOutputs.join(','), output.list.join(','));
+            outerThis.showInfoMessage('test_case_duration', millis);
             return Promise.resolve(accumulator);
           } else {
-            outerThis.showMessage('test_case_success', name + 1);
-            outerThis.showMessage('test_case_duration', millis);
+            outerThis.showInfoMessage('test_case_success', name + 1);
+            outerThis.showInfoMessage('test_case_duration', millis);
             return Promise.resolve(accumulator + 1);
           }
         }
@@ -3689,42 +3705,53 @@ function () {
     }
   }, {
     key: "partialEvaluateTestCase",
-    value: function partialEvaluateTestCase(prog, inputList, outputList, name) {
-      return this.evaluateTestCase.bind(this, prog, inputList, outputList, name);
+    value: function partialEvaluateTestCase(prog, inputList, expectedOutputs, name) {
+      return this.evaluateTestCase.bind(this, prog, inputList, expectedOutputs, name);
     }
   }, {
-    key: "checkOutput",
-    value: function checkOutput(aList, bList) {
-      for (var i = 0; i < aList.length; i++) {
-        var outValue = aList[i];
-        var castNumberA = parseFloat(outValue);
+    key: "checkOutputLists",
+    value: function checkOutputLists(actualOutputs, expectedOutputs) {
+      for (var i = 0; i < actualOutputs.length; i++) {
+        var outValue = actualOutputs[i];
+        var expectedValue = expectedOutputs[i];
 
-        if (!Number.isNaN(castNumberA)) {
-          var castNumberB = parseFloat(bList[i]);
-
-          if (Number.isNaN(castNumberB)) {
-            return false;
-          }
-
-          castNumberA = new decimal_js__WEBPACK_IMPORTED_MODULE_6__["Decimal"](castNumberA);
-          castNumberB = new decimal_js__WEBPACK_IMPORTED_MODULE_6__["Decimal"](castNumberB);
-          var decimalPlaces = Math.min(castNumberB.dp(), _util_config__WEBPACK_IMPORTED_MODULE_7__["Config"].decimalPlaces);
-          decimal_js__WEBPACK_IMPORTED_MODULE_6__["Decimal"].set({
-            rounding: decimal_js__WEBPACK_IMPORTED_MODULE_6__["Decimal"].ROUND_FLOOR
-          });
-          castNumberA = new decimal_js__WEBPACK_IMPORTED_MODULE_6__["Decimal"](castNumberA.toFixed(decimalPlaces));
-          castNumberB = new decimal_js__WEBPACK_IMPORTED_MODULE_6__["Decimal"](castNumberB.toFixed(decimalPlaces));
-          var aEqualsB = castNumberA.eq(castNumberB);
-          decimal_js__WEBPACK_IMPORTED_MODULE_6__["Decimal"].set({
-            rounding: decimal_js__WEBPACK_IMPORTED_MODULE_6__["Decimal"].ROUND_HALF_UP
-          });
-
-          if (!aEqualsB) {
-            return false;
-          }
-        } else if (outValue != bList[i]) {
+        if (!this.checkOutputValues(outValue, expectedValue)) {
           return false;
         }
+      }
+
+      return true;
+    }
+  }, {
+    key: "checkOutputValues",
+    value: function checkOutputValues(actualValue, expectedValue) {
+      var castNumberA = parseFloat(actualValue);
+
+      if (!Number.isNaN(castNumberA)) {
+        var castNumberB = parseFloat(expectedValue);
+
+        if (Number.isNaN(castNumberB)) {
+          return false;
+        }
+
+        castNumberA = new decimal_js__WEBPACK_IMPORTED_MODULE_0__["Decimal"](castNumberA);
+        castNumberB = new decimal_js__WEBPACK_IMPORTED_MODULE_0__["Decimal"](castNumberB);
+        var decimalPlaces = Math.min(castNumberB.dp(), _util_config__WEBPACK_IMPORTED_MODULE_9__["Config"].decimalPlaces);
+        decimal_js__WEBPACK_IMPORTED_MODULE_0__["Decimal"].set({
+          rounding: decimal_js__WEBPACK_IMPORTED_MODULE_0__["Decimal"].ROUND_FLOOR
+        });
+        castNumberA = new decimal_js__WEBPACK_IMPORTED_MODULE_0__["Decimal"](castNumberA.toFixed(decimalPlaces));
+        castNumberB = new decimal_js__WEBPACK_IMPORTED_MODULE_0__["Decimal"](castNumberB.toFixed(decimalPlaces));
+        var aEqualsB = castNumberA.eq(castNumberB);
+        decimal_js__WEBPACK_IMPORTED_MODULE_0__["Decimal"].set({
+          rounding: decimal_js__WEBPACK_IMPORTED_MODULE_0__["Decimal"].ROUND_HALF_UP
+        });
+
+        if (!aEqualsB) {
+          return false;
+        }
+      } else if (actualValue != expectedValue) {
+        return false;
       }
 
       return true;
@@ -3739,13 +3766,44 @@ function () {
       this.domConsole.err(LocalizedStrings.getError(errorID, args));
     }
   }, {
-    key: "showMessage",
-    value: function showMessage(msgID) {
+    key: "showInfoMessage",
+    value: function showInfoMessage(msgID) {
       for (var _len2 = arguments.length, args = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
         args[_key2 - 1] = arguments[_key2];
       }
 
       this.domConsole.info(LocalizedStrings.getMessage(msgID, args));
+    }
+  }, {
+    key: "writeToConsole",
+    value: function writeToConsole(channel, msgType, msgID) {
+      var msg = LocalizedStrings.getString(msgID, msgType);
+
+      for (var _len3 = arguments.length, args = new Array(_len3 > 3 ? _len3 - 3 : 0), _key3 = 3; _key3 < _len3; _key3++) {
+        args[_key3 - 3] = arguments[_key3];
+      }
+
+      msg = LocalizedStrings.processString(msg, args);
+
+      switch (channel) {
+        case _io_domConsole__WEBPACK_IMPORTED_MODULE_7__["DOMConsole"].ERR:
+          {
+            this.domConsole.err(msg);
+            break;
+          }
+
+        case _io_domConsole__WEBPACK_IMPORTED_MODULE_7__["DOMConsole"].INFO:
+          {
+            this.domConsole.info(msg);
+            break;
+          }
+
+        case _io_domConsole__WEBPACK_IMPORTED_MODULE_7__["DOMConsole"].USER:
+          {
+            this.domConsole.write(msg);
+            break;
+          }
+      }
     }
   }]);
 

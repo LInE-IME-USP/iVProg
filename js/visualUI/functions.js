@@ -8,7 +8,6 @@ import * as CommandsManagement from './commands';
 import * as CodeManagement from './code_generator';
 import * as VariableValueMenu from './commands/variable_value_menu';
 import { DOMConsole } from './../io/domConsole';
-import { IVProgParser } from './../ast/ivprogParser';
 import { IVProgProcessor } from './../processor/ivprogProcessor';
 import WatchJS from 'melanke-watchjs';
 import { SemanticAnalyser } from '../processor/semantic/semanticAnalyser';
@@ -884,9 +883,7 @@ function runCode () {
     domConsole = new DOMConsole("#ivprog-term");
   $("#ivprog-term").slideDown(500);
   try {
-    const parser = IVProgParser.createParser(strCode);
-    const analyser = new SemanticAnalyser(parser.parseTree());
-    const data = analyser.analyseTree();
+    const data = SemanticAnalyser.analyseFromSource(strCode);
     const proc = new IVProgProcessor(data);
     proc.registerInput(domConsole);
     proc.registerOutput(domConsole);

@@ -1,4 +1,5 @@
 {
   "test_case_success": "Caso de teste $0: OK",
-  "test_case_duration": "Levou $0ms"
+  "test_case_duration": "Levou $0ms",
+  "test_suite_grade": "A sua solução alcançou $0% da nota."
 }
