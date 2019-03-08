@@ -24,10 +24,7 @@ export class IVProgAssessment {
 
   runTest () {
     try {
-      // try and show error messages through domconsole
-      const parser = IVProgParser.createParser(this.textCode);
-      const semantic = new SemanticAnalyser(parser.parseTree());
-      const validTree = semantic.analyseTree();
+      const validTree = SemanticAnalyser.analyseFromSource(this.textCode);
       // loop test cases and show messages through domconsole
       const partialTests = this.testCases.map( (t, name) => {
         return this.partialEvaluateTestCase(new IVProgProcessor(validTree), t.input, t.output, name);
