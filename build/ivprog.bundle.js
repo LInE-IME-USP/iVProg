@@ -103,7 +103,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /*! exports provided: version, default */
 /***/ (function(module) {
 
-module.exports = {"version":"2019_03_04 11_00"};
+module.exports = {"version":"2019_03_08 10_12"};
 
 /***/ }),
 
@@ -187,7 +187,7 @@ module.exports =
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// Generated from /tmp/tmp-7216faoN8USqhOOg/ivprog.g4 by ANTLR 4.7
+// Generated from /tmp/tmp-5143Dax57D3hs8E7/ivprog.g4 by ANTLR 4.7
 // jshint ignore: start
 var antlr4 = __webpack_require__(2);
 
@@ -769,7 +769,7 @@ module.exports =
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// Generated from /tmp/tmp-721664w1agw7QR9g/ivprog.g4 by ANTLR 4.7
+// Generated from /tmp/tmp-514332u7HxCzQUHa/ivprog.g4 by ANTLR 4.7
 // jshint ignore: start
 var antlr4 = __webpack_require__(2);
 
@@ -1409,7 +1409,7 @@ module.exports =
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// Generated from /tmp/tmp-72166QyyDqKitOY8/ivprog.g4 by ANTLR 4.7
+// Generated from /tmp/tmp-5143zj5z2yxqpA46/ivprog.g4 by ANTLR 4.7
 // jshint ignore: start
 var antlr4 = __webpack_require__(2);
 
@@ -2101,10 +2101,10 @@ var _ui_json__WEBPACK_IMPORTED_MODULE_2___namespace = /*#__PURE__*/__webpack_req
 /*!******************************!*\
   !*** ./i18n/pt/message.json ***!
   \******************************/
-/*! exports provided: test_case_success, test_case_duration, default */
+/*! exports provided: test_case_success, test_case_duration, test_suite_grade, default */
 /***/ (function(module) {
 
-module.exports = {"test_case_success":"Caso de teste $0: OK","test_case_duration":"Levou $0ms"};
+module.exports = {"test_case_success":"Caso de teste $0: OK","test_case_duration":"Levou $0ms","test_suite_grade":"A sua solução alcançou $0% da nota."};
 
 /***/ }),
 
@@ -3576,15 +3576,17 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;function _type
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "IVProgAssessment", function() { return IVProgAssessment; });
-/* harmony import */ var _ast_ivprogParser__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./../ast/ivprogParser */ "./js/ast/ivprogParser.js");
-/* harmony import */ var _processor_semantic_semanticAnalyser__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./../processor/semantic/semanticAnalyser */ "./js/processor/semantic/semanticAnalyser.js");
-/* harmony import */ var _processor_ivprogProcessor__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./../processor/ivprogProcessor */ "./js/processor/ivprogProcessor.js");
-/* harmony import */ var _util_inputTest__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./../util/inputTest */ "./js/util/inputTest.js");
-/* harmony import */ var _util_outputTest__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./../util/outputTest */ "./js/util/outputTest.js");
-/* harmony import */ var _services_localizedStringsService__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../services/localizedStringsService */ "./js/services/localizedStringsService.js");
-/* harmony import */ var decimal_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! decimal.js */ "./node_modules/decimal.js/decimal.js");
-/* harmony import */ var decimal_js__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(decimal_js__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var _util_config__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../util/config */ "./js/util/config.js");
+/* harmony import */ var decimal_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! decimal.js */ "./node_modules/decimal.js/decimal.js");
+/* harmony import */ var decimal_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(decimal_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var line_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! line-i18n */ "./node_modules/line-i18n/dist/index.js");
+/* harmony import */ var _ast_ivprogParser__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./../ast/ivprogParser */ "./js/ast/ivprogParser.js");
+/* harmony import */ var _processor_semantic_semanticAnalyser__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./../processor/semantic/semanticAnalyser */ "./js/processor/semantic/semanticAnalyser.js");
+/* harmony import */ var _processor_ivprogProcessor__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./../processor/ivprogProcessor */ "./js/processor/ivprogProcessor.js");
+/* harmony import */ var _util_inputTest__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./../util/inputTest */ "./js/util/inputTest.js");
+/* harmony import */ var _util_outputTest__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./../util/outputTest */ "./js/util/outputTest.js");
+/* harmony import */ var _io_domConsole__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./../io/domConsole */ "./js/io/domConsole.js");
+/* harmony import */ var _services_localizedStringsService__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../services/localizedStringsService */ "./js/services/localizedStringsService.js");
+/* harmony import */ var _util_config__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../util/config */ "./js/util/config.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -3599,7 +3601,10 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 
 
-var LocalizedStrings = _services_localizedStringsService__WEBPACK_IMPORTED_MODULE_5__["getInstance"]();
+
+
+var LocalizedStrings = _services_localizedStringsService__WEBPACK_IMPORTED_MODULE_8__["getInstance"]();
+var StringTypes = line_i18n__WEBPACK_IMPORTED_MODULE_1__["default"].StringTypes;
 var IVProgAssessment =
 /*#__PURE__*/
 function () {
@@ -3618,20 +3623,25 @@ function () {
 
       try {
         // try and show error messages through domconsole
-        var parser = _ast_ivprogParser__WEBPACK_IMPORTED_MODULE_0__["IVProgParser"].createParser(this.textCode);
-        var semantic = new _processor_semantic_semanticAnalyser__WEBPACK_IMPORTED_MODULE_1__["SemanticAnalyser"](parser.parseTree());
+        var parser = _ast_ivprogParser__WEBPACK_IMPORTED_MODULE_2__["IVProgParser"].createParser(this.textCode);
+        var semantic = new _processor_semantic_semanticAnalyser__WEBPACK_IMPORTED_MODULE_3__["SemanticAnalyser"](parser.parseTree());
         var validTree = semantic.analyseTree(); // loop test cases and show messages through domconsole
 
         var partialTests = this.testCases.map(function (t, name) {
-          return _this.partialEvaluateTestCase(new _processor_ivprogProcessor__WEBPACK_IMPORTED_MODULE_2__["IVProgProcessor"](validTree), t.input, t.output, name);
+          return _this.partialEvaluateTestCase(new _processor_ivprogProcessor__WEBPACK_IMPORTED_MODULE_4__["IVProgProcessor"](validTree), t.input, t.output, name);
         });
         var testResult = partialTests.reduce(function (acc, curr) {
           return acc.then(curr);
         }, Promise.resolve(0));
         return testResult.then(function (total) {
-          return Promise.resolve(total / _this.testCases.length);
+          var grade = total / _this.testCases.length;
+          var channel = grade == 1 ? _io_domConsole__WEBPACK_IMPORTED_MODULE_7__["DOMConsole"].INFO : _io_domConsole__WEBPACK_IMPORTED_MODULE_7__["DOMConsole"].ERR;
+
+          _this.writeToConsole(channel, StringTypes.MESSAGE, "test_suite_grade", grade * 100);
+
+          return Promise.resolve(grade);
         }).catch(function (err) {
-          _this.domConsole.err("Erro durante a execução do programa"); // try and show error messages through domconsole
+          _this.domConsole.err("Erro inesperado durante o cálculo da nota."); // try and show error messages through domconsole
 
 
           _this.domConsole.err(err.message);
@@ -3639,7 +3649,7 @@ function () {
           return Promise.resolve(0);
         });
       } catch (error) {
-        this.domConsole.err("Erro durante a execução do programa"); // try and show error messages through domconsole
+        this.domConsole.err("Erro inesperado durante a execução do programa"); // try and show error messages through domconsole
 
         this.domConsole.err(error.message);
         return Promise.resolve(0);
@@ -3647,10 +3657,10 @@ function () {
     }
   }, {
     key: "evaluateTestCase",
-    value: function evaluateTestCase(prog, inputList, outputList, name, accumulator) {
+    value: function evaluateTestCase(prog, inputList, expectedOutputs, name, accumulator) {
       var outerThis = this;
-      var input = new _util_inputTest__WEBPACK_IMPORTED_MODULE_3__["InputTest"](inputList);
-      var output = new _util_outputTest__WEBPACK_IMPORTED_MODULE_4__["OutputTest"]();
+      var input = new _util_inputTest__WEBPACK_IMPORTED_MODULE_5__["InputTest"](inputList);
+      var output = new _util_outputTest__WEBPACK_IMPORTED_MODULE_6__["OutputTest"]();
       prog.registerInput(input);
       prog.registerOutput(output);
       var startTime = Date.now();
@@ -3659,26 +3669,32 @@ function () {
 
         if (input.inputList.length !== input.index) {
           outerThis.showErrorMessage('test_case_few_reads', name + 1);
-          outerThis.showMessage('test_case_duration', millis);
-          return Promise.resolve(accumulator + 1 * (input.index / inputList.length));
-        } else if (output.list.length < outputList.length) {
-          outerThis.showErrorMessage('test_case_failed', name + 1, inputList.join(','), outputList.join(','), output.list.join(','));
-          outerThis.showMessage('test_case_duration', millis);
-          return Promise.resolve(accumulator + 1 * (output.list.length / outputList.length));
-        } else if (output.list.length > outputList.length) {
-          outerThis.showErrorMessage('test_case_failed', name + 1, inputList.join(','), outputList.join(','), output.list.join(','));
-          outerThis.showMessage('test_case_duration', millis);
-          return Promise.resolve(accumulator + 1 * (outputList.length / output.list.length));
+          outerThis.showInfoMessage('test_case_duration', millis);
+          return Promise.resolve(accumulator + input.index / inputList.length);
+        } else if (output.list.length != expectedOutputs.length) {
+          outerThis.showErrorMessage('test_case_failed', name + 1, inputList.join(','), expectedOutputs.join(','), output.list.join(','));
+          outerThis.showInfoMessage('test_case_duration', millis); // must check for a partial match of the generated output
+
+          var numMatchedOutputs = output.list.reduce(function (acc, actualOutput, index) {
+            if (outerThis.checkOutputValues(actualOutput, expectedOutputs[index])) {
+              return acc + 1;
+            } else {
+              return acc;
+            }
+          }, 0);
+          var maxLength = Math.max(expectedOutputs.length, output.list.length);
+          return Promise.resolve(accumulator + numMatchedOutputs / maxLength);
         } else {
-          var isOk = outerThis.checkOutput(output.list, outputList);
+          var isOk = outerThis.checkOutputLists(output.list, expectedOutputs);
 
           if (!isOk) {
-            outerThis.showErrorMessage('test_case_failed', name + 1, inputList.join(','), outputList.join(','), output.list.join(','));
-            outerThis.showMessage('test_case_duration', millis);
+            console.log("not ok.");
+            outerThis.showErrorMessage('test_case_failed', name + 1, inputList.join(','), expectedOutputs.join(','), output.list.join(','));
+            outerThis.showInfoMessage('test_case_duration', millis);
             return Promise.resolve(accumulator);
           } else {
-            outerThis.showMessage('test_case_success', name + 1);
-            outerThis.showMessage('test_case_duration', millis);
+            outerThis.showInfoMessage('test_case_success', name + 1);
+            outerThis.showInfoMessage('test_case_duration', millis);
             return Promise.resolve(accumulator + 1);
           }
         }
@@ -3689,42 +3705,53 @@ function () {
     }
   }, {
     key: "partialEvaluateTestCase",
-    value: function partialEvaluateTestCase(prog, inputList, outputList, name) {
-      return this.evaluateTestCase.bind(this, prog, inputList, outputList, name);
+    value: function partialEvaluateTestCase(prog, inputList, expectedOutputs, name) {
+      return this.evaluateTestCase.bind(this, prog, inputList, expectedOutputs, name);
     }
   }, {
-    key: "checkOutput",
-    value: function checkOutput(aList, bList) {
-      for (var i = 0; i < aList.length; i++) {
-        var outValue = aList[i];
-        var castNumberA = parseFloat(outValue);
+    key: "checkOutputLists",
+    value: function checkOutputLists(actualOutputs, expectedOutputs) {
+      for (var i = 0; i < actualOutputs.length; i++) {
+        var outValue = actualOutputs[i];
+        var expectedValue = expectedOutputs[i];
 
-        if (!Number.isNaN(castNumberA)) {
-          var castNumberB = parseFloat(bList[i]);
-
-          if (Number.isNaN(castNumberB)) {
-            return false;
-          }
-
-          castNumberA = new decimal_js__WEBPACK_IMPORTED_MODULE_6__["Decimal"](castNumberA);
-          castNumberB = new decimal_js__WEBPACK_IMPORTED_MODULE_6__["Decimal"](castNumberB);
-          var decimalPlaces = Math.min(castNumberB.dp(), _util_config__WEBPACK_IMPORTED_MODULE_7__["Config"].decimalPlaces);
-          decimal_js__WEBPACK_IMPORTED_MODULE_6__["Decimal"].set({
-            rounding: decimal_js__WEBPACK_IMPORTED_MODULE_6__["Decimal"].ROUND_FLOOR
-          });
-          castNumberA = new decimal_js__WEBPACK_IMPORTED_MODULE_6__["Decimal"](castNumberA.toFixed(decimalPlaces));
-          castNumberB = new decimal_js__WEBPACK_IMPORTED_MODULE_6__["Decimal"](castNumberB.toFixed(decimalPlaces));
-          var aEqualsB = castNumberA.eq(castNumberB);
-          decimal_js__WEBPACK_IMPORTED_MODULE_6__["Decimal"].set({
-            rounding: decimal_js__WEBPACK_IMPORTED_MODULE_6__["Decimal"].ROUND_HALF_UP
-          });
-
-          if (!aEqualsB) {
-            return false;
-          }
-        } else if (outValue != bList[i]) {
+        if (!this.checkOutputValues(outValue, expectedValue)) {
           return false;
         }
+      }
+
+      return true;
+    }
+  }, {
+    key: "checkOutputValues",
+    value: function checkOutputValues(actualValue, expectedValue) {
+      var castNumberA = parseFloat(actualValue);
+
+      if (!Number.isNaN(castNumberA)) {
+        var castNumberB = parseFloat(expectedValue);
+
+        if (Number.isNaN(castNumberB)) {
+          return false;
+        }
+
+        castNumberA = new decimal_js__WEBPACK_IMPORTED_MODULE_0__["Decimal"](castNumberA);
+        castNumberB = new decimal_js__WEBPACK_IMPORTED_MODULE_0__["Decimal"](castNumberB);
+        var decimalPlaces = Math.min(castNumberB.dp(), _util_config__WEBPACK_IMPORTED_MODULE_9__["Config"].decimalPlaces);
+        decimal_js__WEBPACK_IMPORTED_MODULE_0__["Decimal"].set({
+          rounding: decimal_js__WEBPACK_IMPORTED_MODULE_0__["Decimal"].ROUND_FLOOR
+        });
+        castNumberA = new decimal_js__WEBPACK_IMPORTED_MODULE_0__["Decimal"](castNumberA.toFixed(decimalPlaces));
+        castNumberB = new decimal_js__WEBPACK_IMPORTED_MODULE_0__["Decimal"](castNumberB.toFixed(decimalPlaces));
+        var aEqualsB = castNumberA.eq(castNumberB);
+        decimal_js__WEBPACK_IMPORTED_MODULE_0__["Decimal"].set({
+          rounding: decimal_js__WEBPACK_IMPORTED_MODULE_0__["Decimal"].ROUND_HALF_UP
+        });
+
+        if (!aEqualsB) {
+          return false;
+        }
+      } else if (actualValue != expectedValue) {
+        return false;
       }
 
       return true;
@@ -3739,13 +3766,44 @@ function () {
       this.domConsole.err(LocalizedStrings.getError(errorID, args));
     }
   }, {
-    key: "showMessage",
-    value: function showMessage(msgID) {
+    key: "showInfoMessage",
+    value: function showInfoMessage(msgID) {
       for (var _len2 = arguments.length, args = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
         args[_key2 - 1] = arguments[_key2];
       }
 
       this.domConsole.info(LocalizedStrings.getMessage(msgID, args));
+    }
+  }, {
+    key: "writeToConsole",
+    value: function writeToConsole(channel, msgType, msgID) {
+      var msg = LocalizedStrings.getString(msgID, msgType);
+
+      for (var _len3 = arguments.length, args = new Array(_len3 > 3 ? _len3 - 3 : 0), _key3 = 3; _key3 < _len3; _key3++) {
+        args[_key3 - 3] = arguments[_key3];
+      }
+
+      msg = LocalizedStrings.processString(msg, args);
+
+      switch (channel) {
+        case _io_domConsole__WEBPACK_IMPORTED_MODULE_7__["DOMConsole"].ERR:
+          {
+            this.domConsole.err(msg);
+            break;
+          }
+
+        case _io_domConsole__WEBPACK_IMPORTED_MODULE_7__["DOMConsole"].INFO:
+          {
+            this.domConsole.info(msg);
+            break;
+          }
+
+        case _io_domConsole__WEBPACK_IMPORTED_MODULE_7__["DOMConsole"].USER:
+          {
+            this.domConsole.write(msg);
+            break;
+          }
+      }
     }
   }]);
 
