@@ -7,6 +7,7 @@ import * as VariablesManagement from '../variables';
 import * as VariableValueMenu from './variable_value_menu';
 import * as VariableValueMenuManagement from './variable_value_menu';
 import * as CommandsManagement from '../commands';
+import * as ExpressionManagement from './generic_expression';
 
 export function createFloatingCommand () {
 	return $('<div class="ui attribution created_element"> <i class="ui icon small arrow left"></i> <span> x = 1 + 1 </span></div>');
@@ -21,15 +22,15 @@ export function renderCommand (command, function_obj) {
 	VariableValueMenu.renderMenu(command, command.variable, el.find('.var_attributed'), function_obj);
 
 	if (!command.expression || command.expression.length < 1) {
-		var exp = new Models.ExpressionElement(Models.EXPRESSION_ELEMENTS.op_exp, [Models.ARITHMETIC_TYPES.none, 
-		new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.all, null, null, null, true)]);
-
+		var exp = new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.all, null, null, null, true);
 		command.expression.push(exp);
 	}
 
 	addHandlers(command, function_obj, el);
 
-	renderExpressionElements(command, function_obj, el);
+	ExpressionManagement.renderExpression(command, function_obj, el.find('.expression_elements'), command.expression);
+
+	//renderExpressionElements(command, function_obj, el);
 
 	return el;
 

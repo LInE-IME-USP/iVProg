@@ -15,7 +15,7 @@ export const EXPRESSION_TYPES = Object.freeze({exp_conditional:"exp_conditional"
 
 export const ARITHMETIC_COMPARISON = Object.freeze({greater_than:"greater_than", less_than:"less_than", equals_to:"equals_to", not_equals_to:"not_equals_to", greater_than_or_equals_to:"greater_than_or_equals_to", less_than_or_equals_to:"less_than_or_equals_to"});
 
-export const LOGIC_COMPARISON = Object.freeze({equals_to:"equals_to", not_equals_to:"not_equals_to", and:"and", or:"or"});
+export const LOGIC_COMPARISON = Object.freeze({equals_to:"equals_to", not_equals_to:"not_equals_to", and:"and", or:"or", not:"not"});
 
 export const SYSTEM_FUNCTIONS_CATEGORIES = Object.freeze({math:"math", text:"text_t", arrangement:"arrangement", conversion:"conversion"});
 
@@ -98,6 +98,14 @@ export class Attribution {
     this.type = COMMAND_TYPES.attribution;
     this.variable = variable;
     this.expression = expression;
+  }
+}
+
+export class ExpressionOperator {
+
+  constructor (type_op, item) {
+    this.type_op = type_op; // Logic, Arithmetic OR Relational
+    this.item = item;
   }
 }
 

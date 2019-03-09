@@ -103,7 +103,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /*! exports provided: version, default */
 /***/ (function(module) {
 
-module.exports = {"version":"2019_03_04 11_00"};
+module.exports = {"version":"2019_03_09 09_55"};
 
 /***/ }),
 
@@ -187,7 +187,7 @@ module.exports =
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// Generated from /tmp/tmp-7216faoN8USqhOOg/ivprog.g4 by ANTLR 4.7
+// Generated from /tmp/tmp-12804W9XBaRoQdtLr/ivprog.g4 by ANTLR 4.7
 // jshint ignore: start
 var antlr4 = __webpack_require__(2);
 
@@ -769,7 +769,7 @@ module.exports =
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// Generated from /tmp/tmp-721664w1agw7QR9g/ivprog.g4 by ANTLR 4.7
+// Generated from /tmp/tmp-12804Gub146VJXPQZ/ivprog.g4 by ANTLR 4.7
 // jshint ignore: start
 var antlr4 = __webpack_require__(2);
 
@@ -1409,7 +1409,7 @@ module.exports =
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// Generated from /tmp/tmp-72166QyyDqKitOY8/ivprog.g4 by ANTLR 4.7
+// Generated from /tmp/tmp-12804UdSoUzzaDsiS/ivprog.g4 by ANTLR 4.7
 // jshint ignore: start
 var antlr4 = __webpack_require__(2);
 
@@ -24473,6 +24473,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _variables__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../variables */ "./js/visualUI/variables.js");
 /* harmony import */ var _variable_value_menu__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./variable_value_menu */ "./js/visualUI/commands/variable_value_menu.js");
 /* harmony import */ var _commands__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../commands */ "./js/visualUI/commands.js");
+/* harmony import */ var _generic_expression__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./generic_expression */ "./js/visualUI/commands/generic_expression.js");
+
 
 
 
@@ -24491,12 +24493,13 @@ function renderCommand(command, function_obj) {
   _variable_value_menu__WEBPACK_IMPORTED_MODULE_6__["renderMenu"](command, command.variable, el.find('.var_attributed'), function_obj);
 
   if (!command.expression || command.expression.length < 1) {
-    var exp = new _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["ExpressionElement"](_ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_ELEMENTS"].op_exp, [_ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["ARITHMETIC_TYPES"].none, new _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["VariableValueMenu"](_variable_value_menu__WEBPACK_IMPORTED_MODULE_6__["VAR_OR_VALUE_TYPES"].all, null, null, null, true)]);
+    var exp = new _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["VariableValueMenu"](_variable_value_menu__WEBPACK_IMPORTED_MODULE_6__["VAR_OR_VALUE_TYPES"].all, null, null, null, true);
     command.expression.push(exp);
   }
 
   addHandlers(command, function_obj, el);
-  renderExpressionElements(command, function_obj, el);
+  _generic_expression__WEBPACK_IMPORTED_MODULE_8__["renderExpression"](command, function_obj, el.find('.expression_elements'), command.expression); //renderExpressionElements(command, function_obj, el);
+
   return el;
 }
 function manageExpressionElements(command, ref_object, dom_object, menu_var_or_value, function_obj, selectedItem, expression_element) {
@@ -25401,6 +25404,579 @@ function addHandlers(command, function_obj, functioncall_dom) {
 
 /***/ }),
 
+/***/ "./js/visualUI/commands/generic_expression.js":
+/*!****************************************************!*\
+  !*** ./js/visualUI/commands/generic_expression.js ***!
+  \****************************************************/
+/*! exports provided: renderExpression */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "renderExpression", function() { return renderExpression; });
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _types__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../types */ "./js/visualUI/types.js");
+/* harmony import */ var _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../ivprog_elements */ "./js/visualUI/ivprog_elements.js");
+/* harmony import */ var _services_localizedStringsService__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../services/localizedStringsService */ "./js/services/localizedStringsService.js");
+/* harmony import */ var _globals__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../globals */ "./js/visualUI/globals.js");
+/* harmony import */ var _variables__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../variables */ "./js/visualUI/variables.js");
+/* harmony import */ var _variable_value_menu__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./variable_value_menu */ "./js/visualUI/commands/variable_value_menu.js");
+/* harmony import */ var melanke_watchjs__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! melanke-watchjs */ "./node_modules/melanke-watchjs/src/watch.js");
+/* harmony import */ var melanke_watchjs__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(melanke_watchjs__WEBPACK_IMPORTED_MODULE_7__);
+
+
+
+
+
+
+
+
+function renderExpression(command, function_obj, div_to_render, expression_array) {
+  div_to_render.empty();
+
+  if (command.type === _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["COMMAND_TYPES"].attribution) {
+    melanke_watchjs__WEBPACK_IMPORTED_MODULE_7___default.a.unwatch(command.variable);
+    melanke_watchjs__WEBPACK_IMPORTED_MODULE_7___default.a.watch(command.variable, function () {
+      renderExpression(command, function_obj, div_to_render, expression_array);
+    }, 0);
+
+    if (command.variable.content) {
+      var types_included = [];
+
+      if (command.variable.content.type == _types__WEBPACK_IMPORTED_MODULE_1__["Types"].INTEGER || command.variable.content.type == _types__WEBPACK_IMPORTED_MODULE_1__["Types"].REAL) {
+        types_included.push(_ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_arithmetic);
+      } else if (command.variable.content.type == _types__WEBPACK_IMPORTED_MODULE_1__["Types"].BOOLEAN) {
+        types_included.push(_ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_conditional);
+        types_included.push(_ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_logic);
+        types_included.push(_ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_arithmetic);
+      } else if (command.variable.content.type == _types__WEBPACK_IMPORTED_MODULE_1__["Types"].TEXT) {
+        types_included.push(_ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_conditional);
+        types_included.push(_ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_logic);
+        types_included.push(_ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_arithmetic);
+      } else {
+        console.log('NÃO RECONHECI! VEJA: ', command.variable.content.type);
+      }
+
+      renderElements(command, function_obj, div_to_render, expression_array, types_included);
+    } else {
+      div_to_render.text('selecione uma variável');
+    }
+  }
+}
+
+function renderElements(command, function_obj, div_to_render, expression_array, types_included) {
+  if (expression_array.length > 0) {
+    if (!expression_array[0].type_op) {
+      renderStartAddOperator(div_to_render, types_included, expression_array, command, function_obj, 0);
+    }
+  }
+
+  var i = 0;
+
+  for (i = 0; i < expression_array.length; i++) {
+    if (expression_array[i].type == "var_value") {
+      var div_temp = jquery__WEBPACK_IMPORTED_MODULE_0___default()('<div class="single_element_expression" data-index="' + i + '"></div>');
+      _variable_value_menu__WEBPACK_IMPORTED_MODULE_6__["renderMenu"](command, expression_array[i], div_temp, function_obj);
+      div_to_render.append(div_temp);
+    } else if (expression_array[i] == '(' || expression_array[i] == ')') {
+      renderParenthesis(div_to_render, expression_array[i], command, function_obj, i, expression_array);
+    } else {
+      renderOperatorMenu(command, function_obj, div_to_render, expression_array[i], types_included, i, expression_array);
+    }
+  }
+
+  renderFinalAddElements(div_to_render, types_included, expression_array, command, function_obj, i);
+  renderAddParenthesis(command, function_obj, div_to_render, expression_array, types_included);
+}
+
+window.parentheses_activate = false;
+window.open_or_close = null;
+
+function renderAddParenthesis(command, function_obj, div_to_render, expression_array, types_included) {
+  var addParentheses = jquery__WEBPACK_IMPORTED_MODULE_0___default()('<div class="single_element_expression add_parentheses"><i class="icons"><b style="font-style: normal;">( )</b><i class="corner add icon blue" style="font-size: .6em;right: -3px;bottom: -2px;"></i></i></div>');
+  div_to_render.append(addParentheses);
+  addParentheses.popup({
+    content: "Adicionar parênteses",
+    delay: {
+      show: 750,
+      hide: 0
+    }
+  });
+  addParentheses.on('click', function (mouse_event) {
+    // verificar se já está ativado
+    if (window.parentheses_activate) {
+      return;
+    }
+
+    window.parentheses_activate = true;
+    window.open_or_close = "open";
+    div_to_render.find('.dropdown').addClass('disabled');
+    div_to_render.find('.ghost_element').addClass('temp_class');
+    div_to_render.find('.ghost_element').removeClass('ghost_element');
+    var floatingObject = jquery__WEBPACK_IMPORTED_MODULE_0___default()('<div class="floating_parenthesis"> ( </div>');
+    floatingObject.draggable().appendTo("body");
+    floatingObject.css("position", "absolute");
+    mouse_event.type = "mousedown.draggable";
+    mouse_event.target = floatingObject[0];
+    floatingObject.css("left", mouse_event.pageX + 10);
+    floatingObject.css("top", mouse_event.pageY + 10);
+    floatingObject.trigger(mouse_event);
+    div_to_render.on('mousemove', function (evt) {
+      var actual_target = null;
+
+      if (jquery__WEBPACK_IMPORTED_MODULE_0___default()(evt.target).hasClass('single_element_expression')) {
+        actual_target = jquery__WEBPACK_IMPORTED_MODULE_0___default()(evt.target);
+      } else {
+        actual_target = jquery__WEBPACK_IMPORTED_MODULE_0___default()(evt.target).closest('.single_element_expression');
+      }
+
+      if (jquery__WEBPACK_IMPORTED_MODULE_0___default()(evt.target).hasClass('temp_class') || actual_target.length < 1 || actual_target.hasClass('add_parentheses') || actual_target.hasClass('rendered_parentheses') || jquery__WEBPACK_IMPORTED_MODULE_0___default()(evt.target).hasClass('parentheses_ghost') || jquery__WEBPACK_IMPORTED_MODULE_0___default()(evt.target).hasClass('expression_elements')) {
+        return;
+      }
+
+      renderGhostParentheses(actual_target, command, function_obj, div_to_render, expression_array);
+    });
+    div_to_render.on('mouseleave', function (evt) {
+      /*window.open_parentheses.remove();
+      window.close_parentheses.remove();*/
+    });
+    var floating;
+    jquery__WEBPACK_IMPORTED_MODULE_0___default()('body').on('mouseup', function (evt) {
+      if (window.open_or_close == "open") {
+        window.open_or_close = "close";
+        floatingObject.remove();
+        floating = jquery__WEBPACK_IMPORTED_MODULE_0___default()('<div class="floating_parenthesis"> ) </div>');
+        floating.draggable().appendTo("body");
+        floating.css("position", "absolute");
+        floating.css("left", evt.pageX + 10);
+        floating.css("top", evt.pageY + 10);
+        jquery__WEBPACK_IMPORTED_MODULE_0___default()('body').on('mousemove', function (evts) {
+          floating.css("left", evts.pageX + 10);
+          floating.css("top", evts.pageY + 10);
+        });
+      } else {
+        floating.remove();
+        div_to_render.find('.temp_class').addClass('ghost_element');
+        div_to_render.find('.temp_class').removeClass('temp_class');
+        div_to_render.off('mousemove');
+        div_to_render.off('mouseleave');
+        jquery__WEBPACK_IMPORTED_MODULE_0___default()('body').off('mouseup');
+        setTimeout(function () {
+          window.parentheses_activate = false;
+        }, 50);
+        window.open_parentheses.remove();
+        window.close_parentheses.remove();
+        var all_el = jquery__WEBPACK_IMPORTED_MODULE_0___default()(evt.target).parentsUntil('.command_container');
+        var is_correct = false;
+
+        for (var j = 0; j < all_el.length; j++) {
+          if (jquery__WEBPACK_IMPORTED_MODULE_0___default()(all_el.get(j)).is(div_to_render)) {
+            is_correct = true;
+            break;
+          }
+        }
+
+        if (is_correct) {
+          expression_array.splice(window.inserir_open, 0, '(');
+          expression_array.splice(window.inserir_close, 0, ')');
+          renderExpression(command, function_obj, div_to_render, expression_array);
+        }
+
+        window.inserir_open = -1;
+        window.inserir_close = -1;
+      }
+    });
+  });
+}
+
+window.open_parentheses = jquery__WEBPACK_IMPORTED_MODULE_0___default()('<div class="parentheses_ghost">(</div>');
+window.close_parentheses = jquery__WEBPACK_IMPORTED_MODULE_0___default()('<div class="parentheses_ghost">)</div>');
+window.inserir_open = -1;
+window.inserir_close = -1;
+
+function renderGhostParentheses(actual_target, command, function_obj, div_to_render, expression_array) {
+  /*window.open_parentheses.remove();
+  window.close_parentheses.remove();*/
+  var index_in_array = actual_target.data('index');
+
+  if (expression_array[index_in_array] == '(' || expression_array[index_in_array] == ')') {
+    return;
+  } // Tratando a situação quando é na primeira posição:
+
+
+  if (index_in_array == 0) {
+    if (expression_array[index_in_array].type == "var_value") {
+      if (window.open_or_close == "open") {
+        window.open_parentheses.insertBefore(actual_target);
+        window.inserir_open = index_in_array;
+      }
+
+      if (expression_array.length == 1) {
+        if (window.open_or_close == "close") {
+          window.close_parentheses.insertAfter(actual_target);
+          window.inserir_close = index_in_array + 2;
+        }
+      } else {
+        var count_opened = 0;
+        var count_closed = 0;
+
+        for (var i = 1; i < expression_array.length; i++) {
+          if (expression_array[i] == '(') {
+            count_opened++;
+          }
+
+          if (expression_array[i] == ')') {
+            count_closed++;
+          }
+
+          if (count_opened != count_closed) {} else {
+            if (count_opened > 0) {
+              if (window.open_or_close == "close") {
+                window.close_parentheses.insertAfter(div_to_render.find('.single_element_expression[data-index="' + i + '"]'));
+                window.inserir_close = i + 2;
+              }
+
+              break;
+            } else {
+              if (expression_array[i].type == "var_value") {
+                if (window.open_or_close == "close") {
+                  window.close_parentheses.insertAfter(div_to_render.find('.single_element_expression[data-index="' + i + '"]'));
+                  window.inserir_close = i + 2;
+                }
+
+                break;
+              }
+            }
+          }
+        }
+      }
+    } else if (expression_array[index_in_array].type_op) {
+      if (window.open_or_close == "open") {
+        window.open_parentheses.insertBefore(actual_target);
+        window.inserir_open = index_in_array;
+      }
+
+      var count_opened = 0;
+      var count_closed = 0;
+
+      for (var i = 1; i < expression_array.length; i++) {
+        // $('.slide-link[data-slide="0"]')
+        if (expression_array[i] == '(') {
+          count_opened++;
+        }
+
+        if (expression_array[i] == ')') {
+          count_closed++;
+        }
+
+        if (count_opened != count_closed) {} else {
+          if (count_opened > 0) {
+            if (expression_array[i].type == "var_value") {
+              window.close_parentheses.insertAfter(div_to_render.find('.single_element_expression[data-index="' + i + '"]'));
+              window.inserir_close = i + 2;
+            }
+
+            break;
+          } else {
+            if (expression_array[i].type == "var_value") {
+              if (expression_array[i].type == "var_value") {
+                window.close_parentheses.insertAfter(div_to_render.find('.single_element_expression[data-index="' + i + '"]'));
+                window.inserir_close = i + 2;
+              }
+
+              break;
+            }
+          }
+        }
+      }
+    }
+
+    return;
+  } // Tratando quando não é no índice 0:
+
+
+  if (expression_array[index_in_array].type == "var_value") {
+    if (window.open_or_close == "open") {
+      window.open_parentheses.insertBefore(actual_target);
+      window.inserir_open = index_in_array;
+    }
+
+    if (window.open_or_close == "close") {
+      window.close_parentheses.insertAfter(actual_target);
+      window.inserir_close = index_in_array + 2;
+    }
+
+    return;
+  }
+
+  if (expression_array[index_in_array].type_op) {
+    // buscar para a esquerda primeiro:
+    if (expression_array[index_in_array - 1] == '(') {
+      if (window.open_or_close == "open") {
+        window.open_parentheses.insertBefore(actual_target);
+        window.inserir_open = index_in_array;
+      }
+    } else if (expression_array[index_in_array - 1] == ')') {
+      // buscar a abertura
+      var count_opened = 0;
+      var count_closed = 0;
+
+      for (var j = index_in_array - 1; j >= 0; j--) {
+        if (expression_array[j] == '(') {
+          count_opened++;
+        }
+
+        if (expression_array[j] == ')') {
+          count_closed++;
+        }
+
+        if (count_opened != count_closed) {} else {
+          if (count_closed > 0) {
+            if (window.open_or_close == "open") {
+              window.open_parentheses.insertBefore(div_to_render.find('.single_element_expression[data-index="' + j + '"]'));
+              window.inserir_open = j;
+            }
+
+            break;
+          }
+        }
+      }
+    } else if (expression_array[index_in_array - 1].type == "var_value") {
+      if (window.open_or_close == "open") {
+        window.open_parentheses.insertBefore(div_to_render.find('.single_element_expression[data-index="' + (index_in_array - 1) + '"]'));
+        window.inserir_open = index_in_array - 1;
+      }
+    } // buscar para a direita agora:
+
+
+    if (expression_array[index_in_array + 1] == '(') {
+      // buscar o fechamento:
+      var count_opened = 0;
+      var count_closed = 0;
+
+      for (var j = index_in_array + 1; j < expression_array.length; j++) {
+        if (expression_array[j] == '(') {
+          count_opened++;
+        }
+
+        if (expression_array[j] == ')') {
+          count_closed++;
+        }
+
+        if (count_opened != count_closed) {} else {
+          if (count_opened > 0) {
+            if (window.open_or_close == "close") {
+              window.close_parentheses.insertAfter(div_to_render.find('.single_element_expression[data-index="' + j + '"]'));
+              window.inserir_close = j + 2;
+            }
+
+            break;
+          }
+        }
+      }
+    } else if (expression_array[index_in_array + 1].type == "var_value") {
+      if (window.open_or_close == "close") {
+        window.close_parentheses.insertAfter(div_to_render.find('.single_element_expression[data-index="' + (index_in_array + 1) + '"]'));
+        window.inserir_close = index_in_array + 3;
+      }
+    }
+  }
+}
+
+function renderParenthesis(div_to_render, expression_content, command, function_obj, position, expression_array) {
+  var ghost_parenthesis = jquery__WEBPACK_IMPORTED_MODULE_0___default()('<div class="single_element_expression" data-index="' + position + '">' + expression_content + '</div>');
+  div_to_render.append(ghost_parenthesis);
+}
+
+function renderStartAddOperator(div_to_render, types_included, expression_array, command, function_obj, position) {
+  var menu_final = '<div class="ui dropdown disabled usepointer"><div class="text"> + </div><i class="dropdown icon"></i><div class="menu">';
+
+  if (types_included.indexOf(_ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_arithmetic) >= 0) {
+    if (types_included.length > 1) {
+      menu_final += '<div class="item"><i class="dropdown icon"></i>Aritméticos<div class="menu">';
+      menu_final += getArithmeticOperators();
+      menu_final += '</div></div>';
+    } else {
+      menu_final += getArithmeticOperators();
+    }
+  }
+
+  if (types_included.indexOf(_ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_logic) >= 0) {
+    if (types_included.length > 1) {
+      menu_final += '<div class="item"><i class="dropdown icon"></i>Lógicos<div class="menu">';
+      menu_final += getLogicOperators();
+      menu_final += '</div></div>';
+    } else {
+      menu_final += getLogicOperators();
+    }
+  }
+
+  if (types_included.indexOf(_ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_conditional) >= 0) {
+    if (types_included.length > 1) {
+      menu_final += '<div class="item"><i class="dropdown icon"></i>Relacionais<div class="menu">';
+      menu_final += getRelationalOperators();
+      menu_final += '</div></div>';
+    } else {
+      menu_final += getRelationalOperators();
+    }
+  }
+
+  menu_final += '</div></div>';
+  menu_final = jquery__WEBPACK_IMPORTED_MODULE_0___default()(menu_final);
+  var div_temp = jquery__WEBPACK_IMPORTED_MODULE_0___default()('<div class="single_element_expression ghost_element"></div>');
+  div_temp.append(menu_final);
+  div_to_render.append(div_temp);
+  menu_final.dropdown('set selected', _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["ARITHMETIC_TYPES"].minus);
+  div_temp.on('click', function () {
+    var sera = position;
+
+    if (types_included.indexOf(_ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_arithmetic) >= 0) {
+      expression_array.splice(sera, 0, new _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["ExpressionOperator"](_ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_arithmetic, _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["ARITHMETIC_TYPES"].minus));
+    } else if (types_included.indexOf(_ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_logic) >= 0) {
+      expression_array.splice(sera, 0, new _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["ExpressionOperator"](_ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_logic, _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["LOGIC_COMPARISON"].equals_to));
+    } else if (types_included.indexOf(_ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_conditional) >= 0) {
+      expression_array.splice(sera, 0, new _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["ExpressionOperator"](_ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_conditional, _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["ARITHMETIC_COMPARISON"].greater_than));
+    }
+
+    renderExpression(command, function_obj, div_to_render, expression_array);
+  });
+}
+
+function renderFinalAddElements(div_to_render, types_included, expression_array, command, function_obj, position) {
+  var menu_final = '<div class="ui dropdown disabled usepointer"><div class="text"> + </div><i class="dropdown icon"></i><div class="menu">';
+
+  if (types_included.indexOf(_ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_arithmetic) >= 0) {
+    if (types_included.length > 1) {
+      menu_final += '<div class="item"><i class="dropdown icon"></i>Aritméticos<div class="menu">';
+      menu_final += getArithmeticOperators();
+      menu_final += '</div></div>';
+    } else {
+      menu_final += getArithmeticOperators();
+    }
+  }
+
+  if (types_included.indexOf(_ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_logic) >= 0) {
+    if (types_included.length > 1) {
+      menu_final += '<div class="item"><i class="dropdown icon"></i>Lógicos<div class="menu">';
+      menu_final += getLogicOperators();
+      menu_final += '</div></div>';
+    } else {
+      menu_final += getLogicOperators();
+    }
+  }
+
+  if (types_included.indexOf(_ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_conditional) >= 0) {
+    if (types_included.length > 1) {
+      menu_final += '<div class="item"><i class="dropdown icon"></i>Relacionais<div class="menu">';
+      menu_final += getRelationalOperators();
+      menu_final += '</div></div>';
+    } else {
+      menu_final += getRelationalOperators();
+    }
+  }
+
+  menu_final += '</div></div>';
+  menu_final = jquery__WEBPACK_IMPORTED_MODULE_0___default()(menu_final);
+  var div_temp = jquery__WEBPACK_IMPORTED_MODULE_0___default()('<div class="single_element_expression ghost_element"></div>');
+  div_temp.append(menu_final);
+  div_to_render.append(div_temp);
+  menu_final.dropdown('set selected', _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["ARITHMETIC_TYPES"].plus);
+  div_temp.on('click', function () {
+    var sera = position;
+
+    if (types_included.indexOf(_ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_arithmetic) >= 0) {
+      expression_array.splice(sera, 0, new _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["ExpressionOperator"](_ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_arithmetic, _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["ARITHMETIC_TYPES"].plus));
+    } else if (types_included.indexOf(_ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_logic) >= 0) {
+      expression_array.splice(sera, 0, new _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["ExpressionOperator"](_ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_logic, _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["LOGIC_COMPARISON"].equals_to));
+    } else if (types_included.indexOf(_ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_conditional) >= 0) {
+      expression_array.splice(sera, 0, new _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["ExpressionOperator"](_ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_conditional, _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["ARITHMETIC_COMPARISON"].greater_than));
+    }
+
+    expression_array.splice(sera + 1, 0, new _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["VariableValueMenu"](_variable_value_menu__WEBPACK_IMPORTED_MODULE_6__["VAR_OR_VALUE_TYPES"].all, null, null, null, true));
+    renderExpression(command, function_obj, div_to_render, expression_array);
+  });
+}
+
+function renderOperatorMenu(command, function_obj, div_to_render, expression_element, types_included, position, expression_array) {
+  var menu_final = '<div class="ui dropdown"><div class="text"> + </div><i class="dropdown icon"></i><div class="menu">';
+
+  if (types_included.indexOf(_ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_arithmetic) >= 0) {
+    if (types_included.length > 1) {
+      menu_final += '<div class="item"><i class="dropdown icon"></i>Aritméticos<div class="menu">';
+      menu_final += getArithmeticOperators();
+      menu_final += '</div></div>';
+    } else {
+      menu_final += getArithmeticOperators();
+    }
+  }
+
+  if (types_included.indexOf(_ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_logic) >= 0) {
+    if (types_included.length > 1) {
+      menu_final += '<div class="item"><i class="dropdown icon"></i>Lógicos<div class="menu">';
+      menu_final += getLogicOperators();
+      menu_final += '</div></div>';
+    } else {
+      menu_final += getLogicOperators();
+    }
+  }
+
+  if (types_included.indexOf(_ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_conditional) >= 0) {
+    if (types_included.length > 1) {
+      menu_final += '<div class="item"><i class="dropdown icon"></i>Relacionais<div class="menu">';
+      menu_final += getRelationalOperators();
+      menu_final += '</div></div>';
+    } else {
+      menu_final += getRelationalOperators();
+    }
+  }
+
+  menu_final += '</div></div>';
+  menu_final = jquery__WEBPACK_IMPORTED_MODULE_0___default()(menu_final);
+  var div_temp = jquery__WEBPACK_IMPORTED_MODULE_0___default()('<div class="single_element_expression" data-index="' + position + '"></div>');
+  div_temp.append(menu_final);
+  div_to_render.append(div_temp);
+  menu_final.dropdown({
+    onChange: function onChange(value, text, $selectedItem) {
+      expression_element.item = $selectedItem.data('value');
+      expression_element.type_op = $selectedItem.data('type');
+    }
+  });
+  menu_final.dropdown('set selected', expression_element.item);
+}
+
+function getArithmeticOperators() {
+  var arithmetic_operators;
+  arithmetic_operators = '<div class="item" data-type="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_arithmetic + '" data-value="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["ARITHMETIC_TYPES"].plus + '">+</div>';
+  arithmetic_operators += '<div class="item" data-type="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_arithmetic + '" data-value="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["ARITHMETIC_TYPES"].minus + '">-</div>';
+  arithmetic_operators += '<div class="item" data-type="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_arithmetic + '" data-value="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["ARITHMETIC_TYPES"].multiplication + '">*</div>';
+  arithmetic_operators += '<div class="item" data-type="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_arithmetic + '" data-value="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["ARITHMETIC_TYPES"].division + '">/</div>';
+  arithmetic_operators += '<div class="item" data-type="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_arithmetic + '" data-value="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["ARITHMETIC_TYPES"].module + '">%</div>';
+  return arithmetic_operators;
+}
+
+function getLogicOperators() {
+  var logic_operators;
+  logic_operators = '<div class="item" data-type="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_logic + '" data-value="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["LOGIC_COMPARISON"].equals_to + '">==</div>';
+  logic_operators += '<div class="item" data-type="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_logic + '" data-value="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["LOGIC_COMPARISON"].not_equals_to + '">!=</div>';
+  logic_operators += '<div class="item" data-type="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_logic + '" data-value="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["LOGIC_COMPARISON"].and + '">&&</div>';
+  logic_operators += '<div class="item" data-type="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_logic + '" data-value="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["LOGIC_COMPARISON"].or + '">||</div>';
+  return logic_operators;
+}
+
+function getRelationalOperators() {
+  var relational_operators;
+  relational_operators = '<div class="item" data-type="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_conditional + '" data-value="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["ARITHMETIC_COMPARISON"].greater_than + '">></div>';
+  relational_operators += '<div class="item" data-type="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_conditional + '" data-value="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["ARITHMETIC_COMPARISON"].less_than + '"><</div>';
+  relational_operators += '<div class="item" data-type="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_conditional + '" data-value="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["ARITHMETIC_COMPARISON"].equals_to + '">==</div>';
+  relational_operators += '<div class="item" data-type="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_conditional + '" data-value="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["ARITHMETIC_COMPARISON"].not_equals_to + '">!=</div>';
+  relational_operators += '<div class="item" data-type="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_conditional + '" data-value="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["ARITHMETIC_COMPARISON"].greater_than_or_equals_to + '">>=</div>';
+  relational_operators += '<div class="item" data-type="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_conditional + '" data-value="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["ARITHMETIC_COMPARISON"].less_than_or_equals_to + '"><=</div>';
+  return relational_operators;
+}
+
+/***/ }),
+
 /***/ "./js/visualUI/commands/iftrue.js":
 /*!****************************************!*\
   !*** ./js/visualUI/commands/iftrue.js ***!
@@ -25924,15 +26500,14 @@ function renderMenu(command, ref_object, dom_object, function_obj) {
     menu_var_or_value += '<div class="item" data-option="' + VAR_OR_VALUE_TYPES.only_function + '"><i class="dropdown icon"></i>' + _services_localizedStringsService__WEBPACK_IMPORTED_MODULE_3__["LocalizedStrings"].getUI('btn_function');
     menu_var_or_value += '<div class="menu menu_only_functions">';
     menu_var_or_value += '</div></div>';
-
-    if (command.type == _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["COMMAND_TYPES"].attribution) {
-      menu_var_or_value += '<div class="item"><i class="dropdown icon"></i>' + _services_localizedStringsService__WEBPACK_IMPORTED_MODULE_3__["LocalizedStrings"].getUI('text_change');
-      menu_var_or_value += '<div class="menu">';
-      menu_var_or_value += '<div class="item" data-exp="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_ELEMENTS"].exp_op_exp + '">EXP OP EXP</div>';
-      menu_var_or_value += '<div class="item" data-exp="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_ELEMENTS"].op_exp + '">OP EXP</div>';
-      menu_var_or_value += '<div class="item" data-exp="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_ELEMENTS"].par_exp_par + '">( EXP )</div>';
-      menu_var_or_value += '</div></div>';
-    }
+    /*		if (command.type == Models.COMMAND_TYPES.attribution) {
+    			menu_var_or_value += '<div class="item"><i class="dropdown icon"></i>' + LocalizedStrings.getUI('text_change');
+    			menu_var_or_value += '<div class="menu">';
+    			menu_var_or_value += '<div class="item" data-exp="'+Models.EXPRESSION_ELEMENTS.exp_op_exp+'">EXP OP EXP</div>';
+    			menu_var_or_value += '<div class="item" data-exp="'+Models.EXPRESSION_ELEMENTS.op_exp+'">OP EXP</div>';
+    			menu_var_or_value += '<div class="item" data-exp="'+Models.EXPRESSION_ELEMENTS.par_exp_par+'">( EXP )</div>';
+    			menu_var_or_value += '</div></div>';
+    		}*/
   }
 
   menu_var_or_value += '</div></div>';
@@ -26139,15 +26714,14 @@ function variableValueMenuCode(command, variable_obj, dom_object, function_obj, 
       dom_object.append(parameters_menu);
       var context_menu = '<div class="ui dropdown context_menu_clear"><div class="text"></div><i class="dropdown icon"></i><div class="menu">';
       context_menu += '<div class="item" data-clear="true">' + _services_localizedStringsService__WEBPACK_IMPORTED_MODULE_3__["LocalizedStrings"].getUI('btn_clear') + '</div>';
-
-      if (command.type == _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["COMMAND_TYPES"].attribution) {
-        context_menu += '<div class="item"><i class="dropdown icon"></i>' + _services_localizedStringsService__WEBPACK_IMPORTED_MODULE_3__["LocalizedStrings"].getUI('text_change');
-        context_menu += '<div class="menu">';
-        context_menu += '<div class="item" data-exp="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_ELEMENTS"].exp_op_exp + '">EXP OP EXP</div>';
-        context_menu += '<div class="item" data-exp="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_ELEMENTS"].op_exp + '">OP EXP</div>';
-        context_menu += '<div class="item" data-exp="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_ELEMENTS"].par_exp_par + '">( EXP )</div>';
-        context_menu += '</div></div>';
-      }
+      /*if (command.type == Models.COMMAND_TYPES.attribution) {
+      	context_menu += '<div class="item"><i class="dropdown icon"></i>' + LocalizedStrings.getUI('text_change');
+      	context_menu += '<div class="menu">';
+      	context_menu += '<div class="item" data-exp="'+Models.EXPRESSION_ELEMENTS.exp_op_exp+'">EXP OP EXP</div>';
+      	context_menu += '<div class="item" data-exp="'+Models.EXPRESSION_ELEMENTS.op_exp+'">OP EXP</div>';
+      	context_menu += '<div class="item" data-exp="'+Models.EXPRESSION_ELEMENTS.par_exp_par+'">( EXP )</div>';
+      	context_menu += '</div></div>';
+      }*/
 
       context_menu += '</div></div>';
       context_menu = jquery__WEBPACK_IMPORTED_MODULE_0___default()(context_menu);
@@ -26202,15 +26776,14 @@ function variableValueMenuCode(command, variable_obj, dom_object, function_obj, 
 
       var context_menu = '<div class="ui dropdown context_menu_clear"><div class="text"></div><i class="dropdown icon"></i><div class="menu">';
       context_menu += '<div class="item" data-clear="true">' + _services_localizedStringsService__WEBPACK_IMPORTED_MODULE_3__["LocalizedStrings"].getUI('btn_clear') + '</div>';
-
-      if (command.type == _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["COMMAND_TYPES"].attribution) {
-        context_menu += '<div class="item"><i class="dropdown icon"></i>' + _services_localizedStringsService__WEBPACK_IMPORTED_MODULE_3__["LocalizedStrings"].getUI('text_change');
-        context_menu += '<div class="menu">';
-        context_menu += '<div class="item" data-exp="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_ELEMENTS"].exp_op_exp + '">EXP OP EXP</div>';
-        context_menu += '<div class="item" data-exp="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_ELEMENTS"].op_exp + '">OP EXP</div>';
-        context_menu += '<div class="item" data-exp="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_ELEMENTS"].par_exp_par + '">( EXP )</div>';
-        context_menu += '</div></div>';
-      }
+      /*if (command.type == Models.COMMAND_TYPES.attribution) {
+      	context_menu += '<div class="item"><i class="dropdown icon"></i>' + LocalizedStrings.getUI('text_change');
+      	context_menu += '<div class="menu">';
+      	context_menu += '<div class="item" data-exp="'+Models.EXPRESSION_ELEMENTS.exp_op_exp+'">EXP OP EXP</div>';
+      	context_menu += '<div class="item" data-exp="'+Models.EXPRESSION_ELEMENTS.op_exp+'">OP EXP</div>';
+      	context_menu += '<div class="item" data-exp="'+Models.EXPRESSION_ELEMENTS.par_exp_par+'">( EXP )</div>';
+      	context_menu += '</div></div>';
+      }*/
 
       context_menu += '</div></div>';
       context_menu = jquery__WEBPACK_IMPORTED_MODULE_0___default()(context_menu);
@@ -26248,15 +26821,14 @@ function variableValueMenuCode(command, variable_obj, dom_object, function_obj, 
       dom_object.append(variable_render);
       var context_menu = '<div class="ui dropdown context_menu_clear"><div class="text"></div><i class="dropdown icon"></i><div class="menu">';
       context_menu += '<div class="item" data-clear="true">' + _services_localizedStringsService__WEBPACK_IMPORTED_MODULE_3__["LocalizedStrings"].getUI('btn_clear') + '</div>';
-
-      if (command.type == _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["COMMAND_TYPES"].attribution) {
-        context_menu += '<div class="item"><i class="dropdown icon"></i>' + _services_localizedStringsService__WEBPACK_IMPORTED_MODULE_3__["LocalizedStrings"].getUI('text_change');
-        context_menu += '<div class="menu">';
-        context_menu += '<div class="item" data-exp="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_ELEMENTS"].exp_op_exp + '">EXP OP EXP</div>';
-        context_menu += '<div class="item" data-exp="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_ELEMENTS"].op_exp + '">OP EXP</div>';
-        context_menu += '<div class="item" data-exp="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_ELEMENTS"].par_exp_par + '">( EXP )</div>';
-        context_menu += '</div></div>';
-      }
+      /*if (command.type == Models.COMMAND_TYPES.attribution) {
+      	context_menu += '<div class="item"><i class="dropdown icon"></i>' + LocalizedStrings.getUI('text_change');
+      	context_menu += '<div class="menu">';
+      	context_menu += '<div class="item" data-exp="'+Models.EXPRESSION_ELEMENTS.exp_op_exp+'">EXP OP EXP</div>';
+      	context_menu += '<div class="item" data-exp="'+Models.EXPRESSION_ELEMENTS.op_exp+'">OP EXP</div>';
+      	context_menu += '<div class="item" data-exp="'+Models.EXPRESSION_ELEMENTS.par_exp_par+'">( EXP )</div>';
+      	context_menu += '</div></div>';
+      }*/
 
       context_menu += '</div></div>';
       context_menu = jquery__WEBPACK_IMPORTED_MODULE_0___default()(context_menu);
@@ -26297,15 +26869,14 @@ function variableValueMenuCode(command, variable_obj, dom_object, function_obj, 
       dom_object.append(variable_render);
       var context_menu = '<div class="ui dropdown context_menu_clear"><div class="text"></div><i class="dropdown icon"></i><div class="menu">';
       context_menu += '<div class="item" data-clear="true">' + _services_localizedStringsService__WEBPACK_IMPORTED_MODULE_3__["LocalizedStrings"].getUI('btn_clear') + '</div>';
-
-      if (command.type == _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["COMMAND_TYPES"].attribution) {
-        context_menu += '<div class="item"><i class="dropdown icon"></i>' + _services_localizedStringsService__WEBPACK_IMPORTED_MODULE_3__["LocalizedStrings"].getUI('text_change');
-        context_menu += '<div class="menu">';
-        context_menu += '<div class="item" data-exp="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_ELEMENTS"].exp_op_exp + '">EXP OP EXP</div>';
-        context_menu += '<div class="item" data-exp="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_ELEMENTS"].op_exp + '">OP EXP</div>';
-        context_menu += '<div class="item" data-exp="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_ELEMENTS"].par_exp_par + '">( EXP )</div>';
-        context_menu += '</div></div>';
-      }
+      /*if (command.type == Models.COMMAND_TYPES.attribution) {
+      	context_menu += '<div class="item"><i class="dropdown icon"></i>' + LocalizedStrings.getUI('text_change');
+      	context_menu += '<div class="menu">';
+      	context_menu += '<div class="item" data-exp="'+Models.EXPRESSION_ELEMENTS.exp_op_exp+'">EXP OP EXP</div>';
+      	context_menu += '<div class="item" data-exp="'+Models.EXPRESSION_ELEMENTS.op_exp+'">OP EXP</div>';
+      	context_menu += '<div class="item" data-exp="'+Models.EXPRESSION_ELEMENTS.par_exp_par+'">( EXP )</div>';
+      	context_menu += '</div></div>';
+      }*/
 
       context_menu += '</div></div>';
       context_menu = jquery__WEBPACK_IMPORTED_MODULE_0___default()(context_menu);
@@ -26349,17 +26920,16 @@ function variableValueMenuCode(command, variable_obj, dom_object, function_obj, 
       dom_object.append(variable_render);
       var context_menu = '<div class="ui dropdown context_menu_clear"><div class="text"></div><i class="dropdown icon"></i><div class="menu">';
       context_menu += '<div class="item" data-clear="true">' + _services_localizedStringsService__WEBPACK_IMPORTED_MODULE_3__["LocalizedStrings"].getUI('btn_clear') + '</div>';
-
-      if (command.type == _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["COMMAND_TYPES"].attribution && !dom_object.hasClass('var_attributed')) {
-        console.log('dom_object6');
-        console.log(dom_object);
-        context_menu += '<div class="item"><i class="dropdown icon"></i>' + _services_localizedStringsService__WEBPACK_IMPORTED_MODULE_3__["LocalizedStrings"].getUI('text_change');
-        context_menu += '<div class="menu">';
-        context_menu += '<div class="item" data-exp="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_ELEMENTS"].exp_op_exp + '">EXP OP EXP</div>';
-        context_menu += '<div class="item" data-exp="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_ELEMENTS"].op_exp + '">OP EXP</div>';
-        context_menu += '<div class="item" data-exp="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_ELEMENTS"].par_exp_par + '">( EXP )</div>';
-        context_menu += '</div></div>';
-      }
+      /*if (command.type == Models.COMMAND_TYPES.attribution && !dom_object.hasClass('var_attributed')) {
+      	console.log('dom_object6');
+      	console.log(dom_object);
+      	context_menu += '<div class="item"><i class="dropdown icon"></i>' + LocalizedStrings.getUI('text_change');
+      	context_menu += '<div class="menu">';
+      	context_menu += '<div class="item" data-exp="'+Models.EXPRESSION_ELEMENTS.exp_op_exp+'">EXP OP EXP</div>';
+      	context_menu += '<div class="item" data-exp="'+Models.EXPRESSION_ELEMENTS.op_exp+'">OP EXP</div>';
+      	context_menu += '<div class="item" data-exp="'+Models.EXPRESSION_ELEMENTS.par_exp_par+'">( EXP )</div>';
+      	context_menu += '</div></div>';
+      }*/
 
       context_menu += '</div></div>';
       context_menu = jquery__WEBPACK_IMPORTED_MODULE_0___default()(context_menu);
@@ -26393,15 +26963,14 @@ function variableValueMenuCode(command, variable_obj, dom_object, function_obj, 
     dom_object.append(variable_render);
     var context_menu = '<div class="ui dropdown context_menu_clear"><div class="text"></div><i class="dropdown icon"></i><div class="menu">';
     context_menu += '<div class="item" data-clear="true">' + _services_localizedStringsService__WEBPACK_IMPORTED_MODULE_3__["LocalizedStrings"].getUI('btn_clear') + '</div>';
-
-    if (command.type == _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["COMMAND_TYPES"].attribution) {
-      context_menu += '<div class="item"><i class="dropdown icon"></i>' + _services_localizedStringsService__WEBPACK_IMPORTED_MODULE_3__["LocalizedStrings"].getUI('text_change');
-      context_menu += '<div class="menu">';
-      context_menu += '<div class="item" data-exp="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_ELEMENTS"].exp_op_exp + '">EXP OP EXP</div>';
-      context_menu += '<div class="item" data-exp="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_ELEMENTS"].op_exp + '">OP EXP</div>';
-      context_menu += '<div class="item" data-exp="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_ELEMENTS"].par_exp_par + '">( EXP )</div>';
-      context_menu += '</div></div>';
-    }
+    /*if (command.type == Models.COMMAND_TYPES.attribution) {
+    	context_menu += '<div class="item"><i class="dropdown icon"></i>' + LocalizedStrings.getUI('text_change');
+    	context_menu += '<div class="menu">';
+    	context_menu += '<div class="item" data-exp="'+Models.EXPRESSION_ELEMENTS.exp_op_exp+'">EXP OP EXP</div>';
+    	context_menu += '<div class="item" data-exp="'+Models.EXPRESSION_ELEMENTS.op_exp+'">OP EXP</div>';
+    	context_menu += '<div class="item" data-exp="'+Models.EXPRESSION_ELEMENTS.par_exp_par+'">( EXP )</div>';
+    	context_menu += '</div></div>';
+    }*/
 
     context_menu += '</div></div>';
     context_menu = jquery__WEBPACK_IMPORTED_MODULE_0___default()(context_menu);
@@ -26637,15 +27206,14 @@ function openInputToFunction(command, ref_object, dom_object, menu_var_or_value,
 
     var context_menu = '<div class="ui dropdown context_menu_clear"><div class="text"></div><i class="dropdown icon"></i><div class="menu">';
     context_menu += '<div class="item" data-clear="true">' + _services_localizedStringsService__WEBPACK_IMPORTED_MODULE_3__["LocalizedStrings"].getUI('btn_clear') + '</div>';
-
-    if (command.type == _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["COMMAND_TYPES"].attribution) {
-      context_menu += '<div class="item"><i class="dropdown icon"></i>' + _services_localizedStringsService__WEBPACK_IMPORTED_MODULE_3__["LocalizedStrings"].getUI('text_change');
-      context_menu += '<div class="menu">';
-      context_menu += '<div class="item" data-exp="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_ELEMENTS"].exp_op_exp + '">EXP OP EXP</div>';
-      context_menu += '<div class="item" data-exp="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_ELEMENTS"].op_exp + '">OP EXP</div>';
-      context_menu += '<div class="item" data-exp="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_ELEMENTS"].par_exp_par + '">( EXP )</div>';
-      context_menu += '</div></div>';
-    }
+    /*if (command.type == Models.COMMAND_TYPES.attribution) {
+    	context_menu += '<div class="item"><i class="dropdown icon"></i>' + LocalizedStrings.getUI('text_change');
+    	context_menu += '<div class="menu">';
+    	context_menu += '<div class="item" data-exp="'+Models.EXPRESSION_ELEMENTS.exp_op_exp+'">EXP OP EXP</div>';
+    	context_menu += '<div class="item" data-exp="'+Models.EXPRESSION_ELEMENTS.op_exp+'">OP EXP</div>';
+    	context_menu += '<div class="item" data-exp="'+Models.EXPRESSION_ELEMENTS.par_exp_par+'">( EXP )</div>';
+    	context_menu += '</div></div>';
+    }*/
 
     context_menu += '</div></div>';
     context_menu = jquery__WEBPACK_IMPORTED_MODULE_0___default()(context_menu);
@@ -26687,15 +27255,14 @@ function openInputToFunction(command, ref_object, dom_object, menu_var_or_value,
     dom_object.append(parameters_menu);
     var context_menu = '<div class="ui dropdown context_menu_clear"><div class="text"></div><i class="dropdown icon"></i><div class="menu">';
     context_menu += '<div class="item" data-clear="true">' + _services_localizedStringsService__WEBPACK_IMPORTED_MODULE_3__["LocalizedStrings"].getUI('btn_clear') + '</div>';
-
-    if (command.type == _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["COMMAND_TYPES"].attribution) {
-      context_menu += '<div class="item"><i class="dropdown icon"></i>' + _services_localizedStringsService__WEBPACK_IMPORTED_MODULE_3__["LocalizedStrings"].getUI('text_change');
-      context_menu += '<div class="menu">';
-      context_menu += '<div class="item" data-exp="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_ELEMENTS"].exp_op_exp + '">EXP OP EXP</div>';
-      context_menu += '<div class="item" data-exp="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_ELEMENTS"].op_exp + '">OP EXP</div>';
-      context_menu += '<div class="item" data-exp="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_ELEMENTS"].par_exp_par + '">( EXP )</div>';
-      context_menu += '</div></div>';
-    }
+    /*if (command.type == Models.COMMAND_TYPES.attribution) {
+    	context_menu += '<div class="item"><i class="dropdown icon"></i>' + LocalizedStrings.getUI('text_change');
+    	context_menu += '<div class="menu">';
+    	context_menu += '<div class="item" data-exp="'+Models.EXPRESSION_ELEMENTS.exp_op_exp+'">EXP OP EXP</div>';
+    	context_menu += '<div class="item" data-exp="'+Models.EXPRESSION_ELEMENTS.op_exp+'">OP EXP</div>';
+    	context_menu += '<div class="item" data-exp="'+Models.EXPRESSION_ELEMENTS.par_exp_par+'">( EXP )</div>';
+    	context_menu += '</div></div>';
+    }*/
 
     context_menu += '</div></div>';
     context_menu = jquery__WEBPACK_IMPORTED_MODULE_0___default()(context_menu);
@@ -26722,10 +27289,10 @@ function openInputToFunction(command, ref_object, dom_object, menu_var_or_value,
       selectOnKeydown: false
     });
   }
+  /*if (command.type == Models.COMMAND_TYPES.attribution) {
+  	AttribuitionsManagement.renderMenuOperations(command, ref_object, dom_object, menu_var_or_value, function_obj);
+  }*/
 
-  if (command.type == _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["COMMAND_TYPES"].attribution) {
-    _attribution__WEBPACK_IMPORTED_MODULE_6__["renderMenuOperations"](command, ref_object, dom_object, menu_var_or_value, function_obj);
-  }
 }
 
 function openInputToVariable(command, ref_object, dom_object, menu_var_or_value, function_obj, variable_selected, expression_element) {
@@ -26761,17 +27328,16 @@ function openInputToVariable(command, ref_object, dom_object, menu_var_or_value,
 
   var context_menu = '<div class="ui dropdown context_menu_clear"><div class="text"></div><i class="dropdown icon"></i><div class="menu">';
   context_menu += '<div class="item" data-clear="true">' + _services_localizedStringsService__WEBPACK_IMPORTED_MODULE_3__["LocalizedStrings"].getUI('btn_clear') + '</div>';
-
-  if (command.type == _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["COMMAND_TYPES"].attribution && !dom_object.hasClass('var_attributed')) {
-    console.log("dom_object 10: ");
-    console.log(dom_object);
-    context_menu += '<div class="item"><i class="dropdown icon"></i>' + _services_localizedStringsService__WEBPACK_IMPORTED_MODULE_3__["LocalizedStrings"].getUI('text_change');
-    context_menu += '<div class="menu">';
-    context_menu += '<div class="item" data-exp="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_ELEMENTS"].exp_op_exp + '">EXP OP EXP</div>';
-    context_menu += '<div class="item" data-exp="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_ELEMENTS"].op_exp + '">OP EXP</div>';
-    context_menu += '<div class="item" data-exp="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_ELEMENTS"].par_exp_par + '">( EXP )</div>';
-    context_menu += '</div></div>';
-  }
+  /*if (command.type == Models.COMMAND_TYPES.attribution && !dom_object.hasClass('var_attributed')) {
+  	console.log("dom_object 10: ");
+  	console.log(dom_object);
+  	context_menu += '<div class="item"><i class="dropdown icon"></i>' + LocalizedStrings.getUI('text_change');
+  	context_menu += '<div class="menu">';
+  	context_menu += '<div class="item" data-exp="'+Models.EXPRESSION_ELEMENTS.exp_op_exp+'">EXP OP EXP</div>';
+  	context_menu += '<div class="item" data-exp="'+Models.EXPRESSION_ELEMENTS.op_exp+'">OP EXP</div>';
+  	context_menu += '<div class="item" data-exp="'+Models.EXPRESSION_ELEMENTS.par_exp_par+'">( EXP )</div>';
+  	context_menu += '</div></div>';
+  }*/
 
   context_menu += '</div></div>';
   context_menu = jquery__WEBPACK_IMPORTED_MODULE_0___default()(context_menu);
@@ -26801,10 +27367,9 @@ function openInputToVariable(command, ref_object, dom_object, menu_var_or_value,
     },
     selectOnKeydown: false
   });
-
-  if (command.type == _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["COMMAND_TYPES"].attribution) {
-    _attribution__WEBPACK_IMPORTED_MODULE_6__["renderMenuOperations"](command, ref_object, dom_object, menu_var_or_value, function_obj, variable_selected);
-  }
+  /*if (command.type == Models.COMMAND_TYPES.attribution) {
+  	AttribuitionsManagement.renderMenuOperations(command, ref_object, dom_object, menu_var_or_value, function_obj, variable_selected);
+  }*/
 }
 
 function openInputToValue(command, ref_object, dom_object, menu_var_or_value, function_obj, expression_element) {
@@ -26821,15 +27386,14 @@ function openInputToValue(command, ref_object, dom_object, menu_var_or_value, fu
   field.val(ref_object.content);
   var context_menu = '<div class="ui dropdown context_menu_clear"><div class="text"></div><i class="dropdown icon"></i><div class="menu">';
   context_menu += '<div class="item" data-clear="true">' + _services_localizedStringsService__WEBPACK_IMPORTED_MODULE_3__["LocalizedStrings"].getUI('btn_clear') + '</div>';
-
-  if (command.type == _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["COMMAND_TYPES"].attribution) {
-    context_menu += '<div class="item"><i class="dropdown icon"></i>' + _services_localizedStringsService__WEBPACK_IMPORTED_MODULE_3__["LocalizedStrings"].getUI('text_change');
-    context_menu += '<div class="menu">';
-    context_menu += '<div class="item" data-exp="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_ELEMENTS"].exp_op_exp + '">EXP OP EXP</div>';
-    context_menu += '<div class="item" data-exp="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_ELEMENTS"].op_exp + '">OP EXP</div>';
-    context_menu += '<div class="item" data-exp="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_ELEMENTS"].par_exp_par + '">( EXP )</div>';
-    context_menu += '</div></div>';
-  }
+  /*if (command.type == Models.COMMAND_TYPES.attribution) {
+  	context_menu += '<div class="item"><i class="dropdown icon"></i>' + LocalizedStrings.getUI('text_change');
+  	context_menu += '<div class="menu">';
+  	context_menu += '<div class="item" data-exp="'+Models.EXPRESSION_ELEMENTS.exp_op_exp+'">EXP OP EXP</div>';
+  	context_menu += '<div class="item" data-exp="'+Models.EXPRESSION_ELEMENTS.op_exp+'">OP EXP</div>';
+  	context_menu += '<div class="item" data-exp="'+Models.EXPRESSION_ELEMENTS.par_exp_par+'">( EXP )</div>';
+  	context_menu += '</div></div>';
+  }*/
 
   context_menu += '</div></div>';
   context_menu = jquery__WEBPACK_IMPORTED_MODULE_0___default()(context_menu);
@@ -26912,10 +27476,9 @@ function openInputToValue(command, ref_object, dom_object, menu_var_or_value, fu
     dom_object.append('<span class="menu_var_or_value_dom"> </span>');
     openInputToValue(command, ref_object, dom_object, menu_var_or_value, function_obj, expression_element);
   });
-
-  if (command.type == _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["COMMAND_TYPES"].attribution) {
-    _attribution__WEBPACK_IMPORTED_MODULE_6__["renderMenuOperations"](command, ref_object, dom_object, menu_var_or_value, function_obj);
-  }
+  /*if (command.type == Models.COMMAND_TYPES.attribution) {
+  	AttribuitionsManagement.renderMenuOperations(command, ref_object, dom_object, menu_var_or_value, function_obj);
+  }*/
 }
 
 jquery__WEBPACK_IMPORTED_MODULE_0___default.a.fn.textWidth = function (text, font) {
@@ -27519,35 +28082,38 @@ function renderFunction(function_obj) {
     });
   }
 
-  var teste = '.ui.sticky.sticky_cont_' + cont;
-  jquery__WEBPACK_IMPORTED_MODULE_0___default()(teste).sticky({
-    context: '.ui.bottom.attached.segment.commands_list_div.commands_cont_' + cont,
-    scrollContext: '.ivprog_visual_panel',
-    observeChanges: true,
-    offset: 40,
-    onStick: function onStick(evt) {
-      jquery__WEBPACK_IMPORTED_MODULE_0___default()(teste).css('top', '20px', 'important');
-    },
-    onBottom: function onBottom(evt) {
-      jquery__WEBPACK_IMPORTED_MODULE_0___default()(teste).css('top', '20px', 'important');
-    },
-    onUnstick: function onUnstick(evt) {
-      jquery__WEBPACK_IMPORTED_MODULE_0___default()(teste).css('top', '20px', 'important');
-    },
-    onReposition: function onReposition(evt) {
-      jquery__WEBPACK_IMPORTED_MODULE_0___default()(teste).css('top', '20px', 'important');
-    },
-    onScroll: function onScroll(evt) {
-      jquery__WEBPACK_IMPORTED_MODULE_0___default()(teste).css('top', '20px', 'important');
+  if (function_obj.commands.length > 0) {
+    var teste = '.ui.sticky.sticky_cont_' + cont;
+    jquery__WEBPACK_IMPORTED_MODULE_0___default()(teste).sticky({
+      context: '.ui.bottom.attached.segment.commands_list_div.commands_cont_' + cont,
+      scrollContext: '.ivprog_visual_panel',
+      observeChanges: true,
+      offset: 40,
+      onStick: function onStick(evt) {
+        jquery__WEBPACK_IMPORTED_MODULE_0___default()(teste).css('top', '20px', 'important');
+      },
+      onBottom: function onBottom(evt) {
+        jquery__WEBPACK_IMPORTED_MODULE_0___default()(teste).css('top', '20px', 'important');
+      },
+      onUnstick: function onUnstick(evt) {
+        jquery__WEBPACK_IMPORTED_MODULE_0___default()(teste).css('top', '20px', 'important');
+      },
+      onReposition: function onReposition(evt) {
+        jquery__WEBPACK_IMPORTED_MODULE_0___default()(teste).css('top', '20px', 'important');
+      },
+      onScroll: function onScroll(evt) {
+        jquery__WEBPACK_IMPORTED_MODULE_0___default()(teste).css('top', '20px', 'important');
 
-      if (!isVisible(jquery__WEBPACK_IMPORTED_MODULE_0___default()(teste), jquery__WEBPACK_IMPORTED_MODULE_0___default()(teste).parent())) {
-        jquery__WEBPACK_IMPORTED_MODULE_0___default()(teste).removeClass('fixed');
+        if (!isVisible(jquery__WEBPACK_IMPORTED_MODULE_0___default()(teste), jquery__WEBPACK_IMPORTED_MODULE_0___default()(teste).parent())) {
+          jquery__WEBPACK_IMPORTED_MODULE_0___default()(teste).removeClass('fixed');
+        }
+      },
+      onTop: function onTop(evt) {
+        jquery__WEBPACK_IMPORTED_MODULE_0___default()(teste).css('top', '20px', 'important');
       }
-    },
-    onTop: function onTop(evt) {
-      jquery__WEBPACK_IMPORTED_MODULE_0___default()(teste).css('top', '20px', 'important');
-    }
-  });
+    });
+  }
+
   cont++;
   return appender;
 }
@@ -29338,7 +29904,7 @@ jquery__WEBPACK_IMPORTED_MODULE_0___default.a.fn.textWidth = function (text, fon
 /*!****************************************!*\
   !*** ./js/visualUI/ivprog_elements.js ***!
   \****************************************/
-/*! exports provided: COMMAND_TYPES, ARITHMETIC_TYPES, EXPRESSION_ELEMENTS, EXPRESSION_TYPES, ARITHMETIC_COMPARISON, LOGIC_COMPARISON, SYSTEM_FUNCTIONS_CATEGORIES, Variable, Function, SystemFunction, Comment, Break, Reader, Writer, Attribution, ExpressionElement, ConditionalExpression, LogicExpression, ArithmeticExpression, IfTrue, RepeatNTimes, WhileTrue, DoWhileTrue, Switch, Return, SwitchCase, FunctionCall, VariableValueMenu, FunctionCallMenu, Program */
+/*! exports provided: COMMAND_TYPES, ARITHMETIC_TYPES, EXPRESSION_ELEMENTS, EXPRESSION_TYPES, ARITHMETIC_COMPARISON, LOGIC_COMPARISON, SYSTEM_FUNCTIONS_CATEGORIES, Variable, Function, SystemFunction, Comment, Break, Reader, Writer, Attribution, ExpressionOperator, ExpressionElement, ConditionalExpression, LogicExpression, ArithmeticExpression, IfTrue, RepeatNTimes, WhileTrue, DoWhileTrue, Switch, Return, SwitchCase, FunctionCall, VariableValueMenu, FunctionCallMenu, Program */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -29358,6 +29924,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Reader", function() { return Reader; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Writer", function() { return Writer; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Attribution", function() { return Attribution; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ExpressionOperator", function() { return ExpressionOperator; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ExpressionElement", function() { return ExpressionElement; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ConditionalExpression", function() { return ConditionalExpression; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LogicExpression", function() { return LogicExpression; });
@@ -29435,7 +30002,8 @@ var LOGIC_COMPARISON = Object.freeze({
   equals_to: "equals_to",
   not_equals_to: "not_equals_to",
   and: "and",
-  or: "or"
+  or: "or",
+  not: "not"
 });
 var SYSTEM_FUNCTIONS_CATEGORIES = Object.freeze({
   math: "math",
@@ -29529,6 +30097,13 @@ var Attribution = function Attribution(variable) {
   this.type = COMMAND_TYPES.attribution;
   this.variable = variable;
   this.expression = expression;
+};
+var ExpressionOperator = function ExpressionOperator(type_op, item) {
+  _classCallCheck(this, ExpressionOperator);
+
+  this.type_op = type_op; // Logic, Arithmetic OR Relational
+
+  this.item = item;
 };
 var ExpressionElement = function ExpressionElement(type_exp) {
   var itens = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
@@ -31443,7 +32018,7 @@ __webpack_require__(/*! ./polyfills/fromcodepoint */ "./node_modules/antlr4/poly
 
 // Vacuum all input from a string and then treat it like a buffer.
 
-function _loadString(stream, decodeToUnicodeCodePoints) {
+function _loadString(stream) {
 	stream._index = 0;
 	stream.data = [];
 	if (stream.decodeToUnicodeCodePoints) {
@@ -34161,7 +34736,7 @@ Recognizer.ruleIndexMapCache = {};
 
 
 Recognizer.prototype.checkVersion = function(toolVersion) {
-    var runtimeVersion = "4.7.1";
+    var runtimeVersion = "4.7.2";
     if (runtimeVersion!==toolVersion) {
         console.log("ANTLR runtime and generated code versions disagree: "+runtimeVersion+"!="+toolVersion);
     }
@@ -39312,10 +39887,6 @@ ParserATNSimulator.prototype.closure_ = function(config, configs, closureBusy, c
         var continueCollecting = collectPredicates && !(t instanceof ActionTransition);
         var c = this.getEpsilonTarget(config, t, continueCollecting, depth === 0, fullCtx, treatEofAsEpsilon);
         if (c!==null) {
-			if (!t.isEpsilon && closureBusy.add(c)!==c){
-				// avoid infinite recursion for EOF* and EOF+
-				continue;
-			}
             var newDepth = depth;
             if ( config.state instanceof RuleStopState) {
                 // target fell off end of rule; mark resulting c as having dipped into outer context
@@ -39323,12 +39894,6 @@ ParserATNSimulator.prototype.closure_ = function(config, configs, closureBusy, c
                 // track how far we dip into outer context.  Might
                 // come in handy and we avoid evaluating context dependent
                 // preds if this is > 0.
-
-                if (closureBusy.add(c)!==c) {
-                    // avoid infinite recursion for right-recursive rules
-                    continue;
-                }
-
 				if (this._dfa !== null && this._dfa.precedenceDfa) {
 					if (t.outermostPrecedenceReturn === this._dfa.atnStartState.ruleIndex) {
 						c.precedenceFilterSuppressed = true;
@@ -39336,15 +39901,25 @@ ParserATNSimulator.prototype.closure_ = function(config, configs, closureBusy, c
 				}
 
                 c.reachesIntoOuterContext += 1;
+                if (closureBusy.add(c)!==c) {
+                    // avoid infinite recursion for right-recursive rules
+                    continue;
+                }
                 configs.dipsIntoOuterContext = true; // TODO: can remove? only care when we add to set per middle of this method
                 newDepth -= 1;
                 if (this.debug) {
                     console.log("dips into outer ctx: " + c);
                 }
-            } else if (t instanceof RuleTransition) {
-                // latch when newDepth goes negative - once we step out of the entry context we can't return
-                if (newDepth >= 0) {
-                    newDepth += 1;
+            } else {
+                if (!t.isEpsilon && closureBusy.add(c)!==c){
+                    // avoid infinite recursion for EOF* and EOF+
+                    continue;
+                }
+                if (t instanceof RuleTransition) {
+                    // latch when newDepth goes negative - once we step out of the entry context we can't return
+                    if (newDepth >= 0) {
+                        newDepth += 1;
+                    }
                 }
             }
             this.closureCheckingStopState(c, configs, closureBusy, continueCollecting, fullCtx, newDepth, treatEofAsEpsilon);
@@ -42982,7 +43557,11 @@ ParseTreeVisitor.prototype.visit = function(ctx) {
 };
 
 ParseTreeVisitor.prototype.visitChildren = function(ctx) {
-  return this.visit(ctx.children);
+	if (ctx.children) {
+		return this.visit(ctx.children);
+	} else {
+		return null;
+	}
 }
 
 ParseTreeVisitor.prototype.visitTerminal = function(node) {
@@ -43316,16 +43895,15 @@ exports.ParseTreeWalker = Tree.ParseTreeWalker;
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_RESULT__;/*! decimal.js v10.0.1 https://github.com/MikeMcl/decimal.js/LICENCE */
-;(function (globalScope) {
+var __WEBPACK_AMD_DEFINE_RESULT__;;(function (globalScope) {
   'use strict';
 
 
   /*
-   *  decimal.js v10.0.1
+   *  decimal.js v10.1.1
    *  An arbitrary-precision Decimal type for JavaScript.
    *  https://github.com/MikeMcl/decimal.js
-   *  Copyright (c) 2017 Michael Mclaughlin <M8ch88l@gmail.com>
+   *  Copyright (c) 2019 Michael Mclaughlin <M8ch88l@gmail.com>
    *  MIT Licence
    */
 
@@ -45428,7 +46006,6 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/*! decimal.js v10.0.1 https://github.com/Mike
   P.toHexadecimal = P.toHex = function (sd, rm) {
     return toStringBinary(this, 16, sd, rm);
   };
-
 
 
   /*
@@ -47577,8 +48154,27 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/*! decimal.js v10.0.1 https://github.com/Mike
       // Duplicate.
       if (v instanceof Decimal) {
         x.s = v.s;
-        x.e = v.e;
-        x.d = (v = v.d) ? v.slice() : v;
+
+        if (external) {
+          if (!v.d || v.e > Decimal.maxE) {
+
+            // Infinity.
+            x.e = NaN;
+            x.d = null;
+          } else if (v.e < Decimal.minE) {
+
+            // Zero.
+            x.e = 0;
+            x.d = [0];
+          } else {
+            x.e = v.e;
+            x.d = v.d.slice();
+          }
+        } else {
+          x.e = v.e;
+          x.d = v.d ? v.d.slice() : v.d;
+        }
+
         return;
       }
 
@@ -47602,8 +48198,23 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/*! decimal.js v10.0.1 https://github.com/Mike
         // Fast path for small integers.
         if (v === ~~v && v < 1e7) {
           for (e = 0, i = v; i >= 10; i /= 10) e++;
-          x.e = e;
-          x.d = [v];
+
+          if (external) {
+            if (e > Decimal.maxE) {
+              x.e = NaN;
+              x.d = null;
+            } else if (e < Decimal.minE) {
+              x.e = 0;
+              x.d = [0];
+            } else {
+              x.e = e;
+              x.d = [v];
+            }
+          } else {
+            x.e = e;
+            x.d = [v];
+          }
+
           return;
 
         // Infinity, NaN.

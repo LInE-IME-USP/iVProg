@@ -404,34 +404,37 @@ export function renderFunction (function_obj) {
     });
   }
 
-  var teste  = '.ui.sticky.sticky_cont_'+cont;
-  $(teste).sticky({
-    context: '.ui.bottom.attached.segment.commands_list_div.commands_cont_'+cont,
-    scrollContext: '.ivprog_visual_panel',
-    observeChanges: true,
-    offset: 40,
-    onStick: function (evt) {
-      $(teste).css('top', '20px', 'important');
-    }, 
-    onBottom: function (evt) {
-      $(teste).css('top', '20px', 'important');
-    },
-    onUnstick: function (evt) {
-      $(teste).css('top', '20px', 'important');
-    },
-    onReposition: function (evt) {
-      $(teste).css('top', '20px', 'important');
-    },
-    onScroll: function (evt) {
-      $(teste).css('top', '20px', 'important');
-      if (!isVisible($(teste), $(teste).parent())) {
-        $(teste).removeClass('fixed');
+  if (function_obj.commands.length > 0) {
+    var teste  = '.ui.sticky.sticky_cont_'+cont;
+    $(teste).sticky({
+      context: '.ui.bottom.attached.segment.commands_list_div.commands_cont_'+cont,
+      scrollContext: '.ivprog_visual_panel',
+      observeChanges: true,
+      offset: 40,
+      onStick: function (evt) {
+        $(teste).css('top', '20px', 'important');
+      }, 
+      onBottom: function (evt) {
+        $(teste).css('top', '20px', 'important');
+      },
+      onUnstick: function (evt) {
+        $(teste).css('top', '20px', 'important');
+      },
+      onReposition: function (evt) {
+        $(teste).css('top', '20px', 'important');
+      },
+      onScroll: function (evt) {
+        $(teste).css('top', '20px', 'important');
+        if (!isVisible($(teste), $(teste).parent())) {
+          $(teste).removeClass('fixed');
+        }
+      },
+      onTop: function (evt) {
+        $(teste).css('top', '20px', 'important');
       }
-    },
-    onTop: function (evt) {
-      $(teste).css('top', '20px', 'important');
-    }
-  });
+    });
+  }
+  
   cont ++;
 
   return appender;
