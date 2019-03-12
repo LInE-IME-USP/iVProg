@@ -103,7 +103,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /*! exports provided: version, default */
 /***/ (function(module) {
 
-module.exports = {"version":"2019_03_08 15_20"};
+module.exports = {"version":"2019_03_12 16_36"};
 
 /***/ }),
 
@@ -187,7 +187,7 @@ module.exports =
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// Generated from /tmp/tmp-9862DJGIKBZUDJtp/ivprog.g4 by ANTLR 4.7
+// Generated from /tmp/tmp-10202T0qKg2cXqfRv/ivprog.g4 by ANTLR 4.7
 // jshint ignore: start
 var antlr4 = __webpack_require__(2);
 
@@ -769,7 +769,7 @@ module.exports =
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// Generated from /tmp/tmp-9862rPfDVVsBZYmp/ivprog.g4 by ANTLR 4.7
+// Generated from /tmp/tmp-10202G3RB1RJrVie3/ivprog.g4 by ANTLR 4.7
 // jshint ignore: start
 var antlr4 = __webpack_require__(2);
 
@@ -1409,7 +1409,7 @@ module.exports =
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// Generated from /tmp/tmp-9862Mhpq1cFEJAoj/ivprog.g4 by ANTLR 4.7
+// Generated from /tmp/tmp-10202IpGkGRDUSoaJ/ivprog.g4 by ANTLR 4.7
 // jshint ignore: start
 var antlr4 = __webpack_require__(2);
 
@@ -1874,7 +1874,7 @@ __webpack_require__.r(__webpack_exports__);
   $length: "comprimento",
   $uppercase: "caixa_alta",
   $lowercase: "caixa_baixa",
-  $charAt: "char_at",
+  $charAt: "texto_na_posicao",
   $isReal: "e_real",
   $isInt: "e_inteiro",
   $isBool: "e_logico",
@@ -3579,14 +3579,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var decimal_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! decimal.js */ "./node_modules/decimal.js/decimal.js");
 /* harmony import */ var decimal_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(decimal_js__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var line_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! line-i18n */ "./node_modules/line-i18n/dist/index.js");
-/* harmony import */ var _ast_ivprogParser__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./../ast/ivprogParser */ "./js/ast/ivprogParser.js");
-/* harmony import */ var _processor_semantic_semanticAnalyser__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./../processor/semantic/semanticAnalyser */ "./js/processor/semantic/semanticAnalyser.js");
-/* harmony import */ var _processor_ivprogProcessor__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./../processor/ivprogProcessor */ "./js/processor/ivprogProcessor.js");
-/* harmony import */ var _util_inputTest__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./../util/inputTest */ "./js/util/inputTest.js");
-/* harmony import */ var _util_outputTest__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./../util/outputTest */ "./js/util/outputTest.js");
-/* harmony import */ var _io_domConsole__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./../io/domConsole */ "./js/io/domConsole.js");
-/* harmony import */ var _services_localizedStringsService__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../services/localizedStringsService */ "./js/services/localizedStringsService.js");
-/* harmony import */ var _util_config__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../util/config */ "./js/util/config.js");
+/* harmony import */ var _processor_semantic_semanticAnalyser__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./../processor/semantic/semanticAnalyser */ "./js/processor/semantic/semanticAnalyser.js");
+/* harmony import */ var _processor_ivprogProcessor__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./../processor/ivprogProcessor */ "./js/processor/ivprogProcessor.js");
+/* harmony import */ var _util_inputTest__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./../util/inputTest */ "./js/util/inputTest.js");
+/* harmony import */ var _util_outputTest__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./../util/outputTest */ "./js/util/outputTest.js");
+/* harmony import */ var _io_domConsole__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./../io/domConsole */ "./js/io/domConsole.js");
+/* harmony import */ var _services_localizedStringsService__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../services/localizedStringsService */ "./js/services/localizedStringsService.js");
+/* harmony import */ var _util_config__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../util/config */ "./js/util/config.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -3602,8 +3601,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 
 
-
-var LocalizedStrings = _services_localizedStringsService__WEBPACK_IMPORTED_MODULE_8__["getInstance"]();
+var LocalizedStrings = _services_localizedStringsService__WEBPACK_IMPORTED_MODULE_7__["getInstance"]();
 var StringTypes = line_i18n__WEBPACK_IMPORTED_MODULE_1__["default"].StringTypes;
 var IVProgAssessment =
 /*#__PURE__*/
@@ -3622,20 +3620,17 @@ function () {
       var _this = this;
 
       try {
-        // try and show error messages through domconsole
-        var parser = _ast_ivprogParser__WEBPACK_IMPORTED_MODULE_2__["IVProgParser"].createParser(this.textCode);
-        var semantic = new _processor_semantic_semanticAnalyser__WEBPACK_IMPORTED_MODULE_3__["SemanticAnalyser"](parser.parseTree());
-        var validTree = semantic.analyseTree(); // loop test cases and show messages through domconsole
+        var validTree = _processor_semantic_semanticAnalyser__WEBPACK_IMPORTED_MODULE_2__["SemanticAnalyser"].analyseFromSource(this.textCode); // loop test cases and show messages through domconsole
 
         var partialTests = this.testCases.map(function (t, name) {
-          return _this.partialEvaluateTestCase(new _processor_ivprogProcessor__WEBPACK_IMPORTED_MODULE_4__["IVProgProcessor"](validTree), t.input, t.output, name);
+          return _this.partialEvaluateTestCase(new _processor_ivprogProcessor__WEBPACK_IMPORTED_MODULE_3__["IVProgProcessor"](validTree), t.input, t.output, name);
         });
         var testResult = partialTests.reduce(function (acc, curr) {
           return acc.then(curr);
         }, Promise.resolve(0));
         return testResult.then(function (total) {
           var grade = total / _this.testCases.length;
-          var channel = grade == 1 ? _io_domConsole__WEBPACK_IMPORTED_MODULE_7__["DOMConsole"].INFO : _io_domConsole__WEBPACK_IMPORTED_MODULE_7__["DOMConsole"].ERR;
+          var channel = grade == 1 ? _io_domConsole__WEBPACK_IMPORTED_MODULE_6__["DOMConsole"].INFO : _io_domConsole__WEBPACK_IMPORTED_MODULE_6__["DOMConsole"].ERR;
 
           _this.writeToConsole(channel, StringTypes.MESSAGE, "test_suite_grade", grade * 100);
 
@@ -3659,8 +3654,8 @@ function () {
     key: "evaluateTestCase",
     value: function evaluateTestCase(prog, inputList, expectedOutputs, name, accumulator) {
       var outerThis = this;
-      var input = new _util_inputTest__WEBPACK_IMPORTED_MODULE_5__["InputTest"](inputList);
-      var output = new _util_outputTest__WEBPACK_IMPORTED_MODULE_6__["OutputTest"]();
+      var input = new _util_inputTest__WEBPACK_IMPORTED_MODULE_4__["InputTest"](inputList);
+      var output = new _util_outputTest__WEBPACK_IMPORTED_MODULE_5__["OutputTest"]();
       prog.registerInput(input);
       prog.registerOutput(output);
       var startTime = Date.now();
@@ -3736,16 +3731,10 @@ function () {
 
         castNumberA = new decimal_js__WEBPACK_IMPORTED_MODULE_0__["Decimal"](castNumberA);
         castNumberB = new decimal_js__WEBPACK_IMPORTED_MODULE_0__["Decimal"](castNumberB);
-        var decimalPlaces = Math.min(castNumberB.dp(), _util_config__WEBPACK_IMPORTED_MODULE_9__["Config"].decimalPlaces);
-        decimal_js__WEBPACK_IMPORTED_MODULE_0__["Decimal"].set({
-          rounding: decimal_js__WEBPACK_IMPORTED_MODULE_0__["Decimal"].ROUND_FLOOR
-        });
-        castNumberA = new decimal_js__WEBPACK_IMPORTED_MODULE_0__["Decimal"](castNumberA.toFixed(decimalPlaces));
-        castNumberB = new decimal_js__WEBPACK_IMPORTED_MODULE_0__["Decimal"](castNumberB.toFixed(decimalPlaces));
+        var decimalPlaces = Math.min(castNumberB.dp(), _util_config__WEBPACK_IMPORTED_MODULE_8__["Config"].decimalPlaces);
+        castNumberA = new decimal_js__WEBPACK_IMPORTED_MODULE_0__["Decimal"](castNumberA.toFixed(decimalPlaces, decimal_js__WEBPACK_IMPORTED_MODULE_0__["Decimal"].ROUND_FLOOR));
+        castNumberB = new decimal_js__WEBPACK_IMPORTED_MODULE_0__["Decimal"](castNumberB.toFixed(decimalPlaces, decimal_js__WEBPACK_IMPORTED_MODULE_0__["Decimal"].ROUND_FLOOR));
         var aEqualsB = castNumberA.eq(castNumberB);
-        decimal_js__WEBPACK_IMPORTED_MODULE_0__["Decimal"].set({
-          rounding: decimal_js__WEBPACK_IMPORTED_MODULE_0__["Decimal"].ROUND_HALF_UP
-        });
 
         if (!aEqualsB) {
           return false;
@@ -3786,19 +3775,19 @@ function () {
       msg = LocalizedStrings.processString(msg, args);
 
       switch (channel) {
-        case _io_domConsole__WEBPACK_IMPORTED_MODULE_7__["DOMConsole"].ERR:
+        case _io_domConsole__WEBPACK_IMPORTED_MODULE_6__["DOMConsole"].ERR:
           {
             this.domConsole.err(msg);
             break;
           }
 
-        case _io_domConsole__WEBPACK_IMPORTED_MODULE_7__["DOMConsole"].INFO:
+        case _io_domConsole__WEBPACK_IMPORTED_MODULE_6__["DOMConsole"].INFO:
           {
             this.domConsole.info(msg);
             break;
           }
 
-        case _io_domConsole__WEBPACK_IMPORTED_MODULE_7__["DOMConsole"].USER:
+        case _io_domConsole__WEBPACK_IMPORTED_MODULE_6__["DOMConsole"].USER:
           {
             this.domConsole.write(msg);
             break;
@@ -8939,73 +8928,31 @@ function () {
       var _this4 = this;
 
       this.context.push(_context__WEBPACK_IMPORTED_MODULE_5__["Context"].BREAKABLE);
-
-      var auxCaseFun = function auxCaseFun(promise, switchExp, aCase) {
-        return promise.then(function (result) {
-          var sto = result.sto;
-
-          if (_this4.ignoreSwitchCases(sto)) {
-            return Promise.resolve(result);
-          } else if (result.wasTrue || aCase.isDefault) {
-            var $newSto = _this4.executeCommands(result.sto, aCase.commands);
-
-            return $newSto.then(function (nSto) {
-              return Promise.resolve({
-                wasTrue: true,
-                sto: nSto
-              });
+      var outerRef = this;
+      var caseSequence = cmd.cases.reduce(function (prev, next) {
+        return prev.then(function (tuple) {
+          if (outerRef.ignoreSwitchCases(tuple[1])) {
+            return Promise.resolve(tuple);
+          } else if (tuple[0] || next.isDefault) {
+            return outerRef.executeCommands(tuple[1], next.commands).then(function (nSto) {
+              return Promise.resolve([true, nSto]);
             });
           } else {
-            var $value = _this4.evaluateExpression(sto, new _ast_expressions___WEBPACK_IMPORTED_MODULE_11__["InfixApp"](_ast_operators__WEBPACK_IMPORTED_MODULE_7__["Operators"].EQ, switchExp, aCase.expression));
-
-            return $value.then(function (vl) {
-              if (vl.value) {
-                var _$newSto = _this4.executeCommands(result.sto, aCase.commands);
-
-                return _$newSto.then(function (nSto) {
-                  return Promise.resolve({
-                    wasTrue: true,
-                    sto: nSto
-                  });
+            return outerRef.evaluateExpression(tuple[1], new _ast_expressions___WEBPACK_IMPORTED_MODULE_11__["InfixApp"](_ast_operators__WEBPACK_IMPORTED_MODULE_7__["Operators"].EQ, cmd.expression, next.expression)).then(function (equalityResult) {
+              if (equalityResult.value) {
+                return _this4.executeCommands(tuple[1], next.commands).then(function (nSto) {
+                  return Promise.resolve([true, nSto]);
                 });
               } else {
-                return Promise.resolve({
-                  wasTrue: false,
-                  sto: sto
-                });
+                return Promise.resolve(tuple);
               }
             });
           }
         });
-      };
-
-      try {
-        var breakLoop = false;
-        var $result = Promise.resolve({
-          wasTrue: false,
-          sto: store
-        });
-
-        for (var index = 0; index < cmd.cases.length && !breakLoop; index++) {
-          var aCase = cmd.cases[index];
-          $result = auxCaseFun($result, cmd.expression, aCase);
-          $result.then(function (r) {
-            return breakLoop = _this4.ignoreSwitchCases(r.sto);
-          });
-        }
-
-        return $result.then(function (r) {
-          _this4.context.pop();
-
-          if (r.sto.mode === _modes__WEBPACK_IMPORTED_MODULE_4__["Modes"].BREAK) {
-            r.sto.mode = _modes__WEBPACK_IMPORTED_MODULE_4__["Modes"].RUN;
-          }
-
-          return r.sto;
-        });
-      } catch (error) {
-        return Promise.reject(error);
-      }
+      }, Promise.resolve([false, store]));
+      return caseSequence.then(function (tuple) {
+        return tuple[1];
+      });
     }
   }, {
     key: "executeFor",
@@ -10695,6 +10642,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _typeSystem_multiType__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../typeSystem/multiType */ "./js/typeSystem/multiType.js");
 /* harmony import */ var _util_config__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../util/config */ "./js/util/config.js");
 /* harmony import */ var _store_store__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../store/store */ "./js/processor/store/store.js");
+/* harmony import */ var _ast_ivprogParser__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../../ast/ivprogParser */ "./js/ast/ivprogParser.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -10713,9 +10661,19 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 
 
+
 var SemanticAnalyser =
 /*#__PURE__*/
 function () {
+  _createClass(SemanticAnalyser, null, [{
+    key: "analyseFromSource",
+    value: function analyseFromSource(stringCode) {
+      var parser = _ast_ivprogParser__WEBPACK_IMPORTED_MODULE_12__["IVProgParser"].createParser(stringCode);
+      var semantic = new SemanticAnalyser(parser.parseTree());
+      return semantic.analyseTree();
+    }
+  }]);
+
   function SemanticAnalyser(ast) {
     _classCallCheck(this, SemanticAnalyser);
 
@@ -27247,19 +27205,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _code_generator__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./code_generator */ "./js/visualUI/code_generator.js");
 /* harmony import */ var _commands_variable_value_menu__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./commands/variable_value_menu */ "./js/visualUI/commands/variable_value_menu.js");
 /* harmony import */ var _io_domConsole__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./../io/domConsole */ "./js/io/domConsole.js");
-/* harmony import */ var _ast_ivprogParser__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./../ast/ivprogParser */ "./js/ast/ivprogParser.js");
-/* harmony import */ var _processor_ivprogProcessor__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./../processor/ivprogProcessor */ "./js/processor/ivprogProcessor.js");
-/* harmony import */ var melanke_watchjs__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! melanke-watchjs */ "./node_modules/melanke-watchjs/src/watch.js");
-/* harmony import */ var melanke_watchjs__WEBPACK_IMPORTED_MODULE_12___default = /*#__PURE__*/__webpack_require__.n(melanke_watchjs__WEBPACK_IMPORTED_MODULE_12__);
-/* harmony import */ var _processor_semantic_semanticAnalyser__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../processor/semantic/semanticAnalyser */ "./js/processor/semantic/semanticAnalyser.js");
-/* harmony import */ var _assessment_ivprogAssessment__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../assessment/ivprogAssessment */ "./js/assessment/ivprogAssessment.js");
-/* harmony import */ var _algorithm__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./algorithm */ "./js/visualUI/algorithm.js");
-/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./utils */ "./js/visualUI/utils.js");
-/* harmony import */ var _ima_version_json__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./../../.ima_version.json */ "./.ima_version.json");
-var _ima_version_json__WEBPACK_IMPORTED_MODULE_17___namespace = /*#__PURE__*/__webpack_require__.t(/*! ./../../.ima_version.json */ "./.ima_version.json", 1);
-/* harmony import */ var _Sortable_js__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ../Sortable.js */ "./js/Sortable.js");
-/* harmony import */ var _Sortable_js__WEBPACK_IMPORTED_MODULE_18___default = /*#__PURE__*/__webpack_require__.n(_Sortable_js__WEBPACK_IMPORTED_MODULE_18__);
-
+/* harmony import */ var _processor_ivprogProcessor__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./../processor/ivprogProcessor */ "./js/processor/ivprogProcessor.js");
+/* harmony import */ var melanke_watchjs__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! melanke-watchjs */ "./node_modules/melanke-watchjs/src/watch.js");
+/* harmony import */ var melanke_watchjs__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(melanke_watchjs__WEBPACK_IMPORTED_MODULE_11__);
+/* harmony import */ var _processor_semantic_semanticAnalyser__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../processor/semantic/semanticAnalyser */ "./js/processor/semantic/semanticAnalyser.js");
+/* harmony import */ var _assessment_ivprogAssessment__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../assessment/ivprogAssessment */ "./js/assessment/ivprogAssessment.js");
+/* harmony import */ var _algorithm__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./algorithm */ "./js/visualUI/algorithm.js");
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./utils */ "./js/visualUI/utils.js");
+/* harmony import */ var _ima_version_json__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./../../.ima_version.json */ "./.ima_version.json");
+var _ima_version_json__WEBPACK_IMPORTED_MODULE_16___namespace = /*#__PURE__*/__webpack_require__.t(/*! ./../../.ima_version.json */ "./.ima_version.json", 1);
+/* harmony import */ var _Sortable_js__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../Sortable.js */ "./js/Sortable.js");
+/* harmony import */ var _Sortable_js__WEBPACK_IMPORTED_MODULE_17___default = /*#__PURE__*/__webpack_require__.n(_Sortable_js__WEBPACK_IMPORTED_MODULE_17__);
 
 
 
@@ -27280,7 +27236,7 @@ var _ima_version_json__WEBPACK_IMPORTED_MODULE_17___namespace = /*#__PURE__*/__w
 
 var counter_new_functions = 0;
 var counter_new_parameters = 0;
-var ivprog_version = _ima_version_json__WEBPACK_IMPORTED_MODULE_17__.version;
+var ivprog_version = _ima_version_json__WEBPACK_IMPORTED_MODULE_16__.version;
 var globalChangeListeners = [];
 var functionsChangeListeners = [];
 var domConsole = null;
@@ -27325,36 +27281,36 @@ program.addFunction(mainFunction);
 window.program_obj = program;
 window.generator = _code_generator__WEBPACK_IMPORTED_MODULE_7__["generate"];
 window.runCodeAssessment = runCodeAssessment;
-window.renderAlgorithm = _algorithm__WEBPACK_IMPORTED_MODULE_15__["renderAlgorithm"];
+window.renderAlgorithm = _algorithm__WEBPACK_IMPORTED_MODULE_14__["renderAlgorithm"];
 window.insertContext = false;
-window.watchW = melanke_watchjs__WEBPACK_IMPORTED_MODULE_12___default.a;
-melanke_watchjs__WEBPACK_IMPORTED_MODULE_12___default.a.watch(window.program_obj.globals, function () {
+window.watchW = melanke_watchjs__WEBPACK_IMPORTED_MODULE_11___default.a;
+melanke_watchjs__WEBPACK_IMPORTED_MODULE_11___default.a.watch(window.program_obj.globals, function () {
   if (window.insertContext) {
     setTimeout(function () {
-      _algorithm__WEBPACK_IMPORTED_MODULE_15__["renderAlgorithm"]();
+      _algorithm__WEBPACK_IMPORTED_MODULE_14__["renderAlgorithm"]();
       globalChangeListeners.forEach(function (x) {
         return x();
       });
     }, 300);
     window.insertContext = false;
   } else {
-    _algorithm__WEBPACK_IMPORTED_MODULE_15__["renderAlgorithm"]();
+    _algorithm__WEBPACK_IMPORTED_MODULE_14__["renderAlgorithm"]();
     globalChangeListeners.forEach(function (x) {
       return x();
     });
   }
 }, 1);
-melanke_watchjs__WEBPACK_IMPORTED_MODULE_12___default.a.watch(window.program_obj.functions, function () {
+melanke_watchjs__WEBPACK_IMPORTED_MODULE_11___default.a.watch(window.program_obj.functions, function () {
   if (window.insertContext) {
     setTimeout(function () {
-      _algorithm__WEBPACK_IMPORTED_MODULE_15__["renderAlgorithm"]();
+      _algorithm__WEBPACK_IMPORTED_MODULE_14__["renderAlgorithm"]();
       functionsChangeListeners.forEach(function (x) {
         return x();
       });
     }, 300);
     window.insertContext = false;
   } else {
-    _algorithm__WEBPACK_IMPORTED_MODULE_15__["renderAlgorithm"]();
+    _algorithm__WEBPACK_IMPORTED_MODULE_14__["renderAlgorithm"]();
     functionsChangeListeners.forEach(function (x) {
       return x();
     });
@@ -28005,7 +27961,7 @@ function runCodeAssessment() {
   toggleConsole(true);
   if (domConsole == null) domConsole = new _io_domConsole__WEBPACK_IMPORTED_MODULE_9__["DOMConsole"]("#ivprog-term");
   jquery__WEBPACK_IMPORTED_MODULE_0___default()("#ivprog-term").slideDown(500);
-  var runner = new _assessment_ivprogAssessment__WEBPACK_IMPORTED_MODULE_14__["IVProgAssessment"](strCode, testCases, domConsole);
+  var runner = new _assessment_ivprogAssessment__WEBPACK_IMPORTED_MODULE_13__["IVProgAssessment"](strCode, testCases, domConsole);
   runner.runTest().then(function (grade) {
     if (!is_iassign) {
       parent.getEvaluationCallback(grade);
@@ -28029,10 +27985,8 @@ function runCode() {
   jquery__WEBPACK_IMPORTED_MODULE_0___default()("#ivprog-term").slideDown(500);
 
   try {
-    var parser = _ast_ivprogParser__WEBPACK_IMPORTED_MODULE_10__["IVProgParser"].createParser(strCode);
-    var analyser = new _processor_semantic_semanticAnalyser__WEBPACK_IMPORTED_MODULE_13__["SemanticAnalyser"](parser.parseTree());
-    var data = analyser.analyseTree();
-    var proc = new _processor_ivprogProcessor__WEBPACK_IMPORTED_MODULE_11__["IVProgProcessor"](data);
+    var data = _processor_semantic_semanticAnalyser__WEBPACK_IMPORTED_MODULE_12__["SemanticAnalyser"].analyseFromSource(strCode);
+    var proc = new _processor_ivprogProcessor__WEBPACK_IMPORTED_MODULE_10__["IVProgProcessor"](data);
     proc.registerInput(domConsole);
     proc.registerOutput(domConsole);
     jquery__WEBPACK_IMPORTED_MODULE_0___default()("#ivprog-term").addClass('ivprog-term-active');
@@ -28196,12 +28150,12 @@ function updateParameterName(parameter_var, new_name, parameter_obj_dom, functio
 
   if (isValidIdentifier(new_name)) {
     if (variableNameAlreadyExists(new_name, function_obj)) {
-      _utils__WEBPACK_IMPORTED_MODULE_16__["renderErrorMessage"](parameter_obj_dom.find('.parameter_div_edit'), _services_localizedStringsService__WEBPACK_IMPORTED_MODULE_3__["LocalizedStrings"].getUI('inform_valid_variable_duplicated'));
+      _utils__WEBPACK_IMPORTED_MODULE_15__["renderErrorMessage"](parameter_obj_dom.find('.parameter_div_edit'), _services_localizedStringsService__WEBPACK_IMPORTED_MODULE_3__["LocalizedStrings"].getUI('inform_valid_variable_duplicated'));
     } else {
       parameter_var.name = new_name;
     }
   } else {
-    _utils__WEBPACK_IMPORTED_MODULE_16__["renderErrorMessage"](parameter_obj_dom.find('.parameter_div_edit'), _services_localizedStringsService__WEBPACK_IMPORTED_MODULE_3__["LocalizedStrings"].getUI('inform_valid_name'));
+    _utils__WEBPACK_IMPORTED_MODULE_15__["renderErrorMessage"](parameter_obj_dom.find('.parameter_div_edit'), _services_localizedStringsService__WEBPACK_IMPORTED_MODULE_3__["LocalizedStrings"].getUI('inform_valid_name'));
   }
 }
 
@@ -28232,12 +28186,12 @@ function updateFunctionName(function_var, new_name, function_obj_dom) {
 
   if (isValidIdentifier(new_name)) {
     if (functionNameAlreadyExists(new_name)) {
-      _utils__WEBPACK_IMPORTED_MODULE_16__["renderErrorMessage"](function_obj_dom.find('.function_name_div'), _services_localizedStringsService__WEBPACK_IMPORTED_MODULE_3__["LocalizedStrings"].getUI('inform_valid_name_duplicated'));
+      _utils__WEBPACK_IMPORTED_MODULE_15__["renderErrorMessage"](function_obj_dom.find('.function_name_div'), _services_localizedStringsService__WEBPACK_IMPORTED_MODULE_3__["LocalizedStrings"].getUI('inform_valid_name_duplicated'));
     } else {
       function_var.name = new_name;
     }
   } else {
-    _utils__WEBPACK_IMPORTED_MODULE_16__["renderErrorMessage"](function_obj_dom.find('.function_name_div'), _services_localizedStringsService__WEBPACK_IMPORTED_MODULE_3__["LocalizedStrings"].getUI('inform_valid_name'));
+    _utils__WEBPACK_IMPORTED_MODULE_15__["renderErrorMessage"](function_obj_dom.find('.function_name_div'), _services_localizedStringsService__WEBPACK_IMPORTED_MODULE_3__["LocalizedStrings"].getUI('inform_valid_name'));
   }
 }
 

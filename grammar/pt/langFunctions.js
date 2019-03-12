@@ -11,7 +11,7 @@ export default {
   $length: "comprimento",
   $uppercase: "caixa_alta",
   $lowercase: "caixa_baixa",
-  $charAt: "char_at",
+  $charAt: "texto_na_posicao",
   $isReal: "e_real",
   $isInt: "e_inteiro",
   $isBool: "e_logico",

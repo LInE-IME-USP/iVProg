@@ -118,11 +118,9 @@ export class IVProgAssessment {
       castNumberA = new Decimal(castNumberA);
       castNumberB = new Decimal(castNumberB);
       const decimalPlaces = Math.min(castNumberB.dp(), Config.decimalPlaces);
-      Decimal.set({ rounding: Decimal.ROUND_FLOOR});
-      castNumberA = new Decimal(castNumberA.toFixed(decimalPlaces));
-      castNumberB = new Decimal(castNumberB.toFixed(decimalPlaces));
+      castNumberA = new Decimal(castNumberA.toFixed(decimalPlaces, Decimal.ROUND_FLOOR));
+      castNumberB = new Decimal(castNumberB.toFixed(decimalPlaces, Decimal.ROUND_FLOOR));
       const aEqualsB = castNumberA.eq(castNumberB);
-      Decimal.set({ rounding: Decimal.ROUND_HALF_UP});
       if (!aEqualsB) {
         return false;
       }
