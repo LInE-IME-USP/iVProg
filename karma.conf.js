@@ -1,4 +1,3 @@
-const webpackConfig = require('./webpack.config.js');
 process.env.CHROME_BIN = '/snap/bin/chromium';
  
 module.exports = function(config) {
@@ -9,7 +8,7 @@ module.exports = function(config) {
     exclude: [],
     //files/patterns to load in the browser
     files: [
-      {pattern: 'tests/*.spec.js',watched:true,served:true,included:true}
+     'tests/*.spec.js'
       /*parameters*/
           //watched: if autoWatch is true all files that have set watched to true will be watched for changes
           //served: should the files be served by Karma's webserver?
@@ -21,9 +20,9 @@ module.exports = function(config) {
     ],
     
     //executes the tests whenever one of watched files changes
-    autoWatch: true,
+    autoWatch: false,
     //if true, Karma will run tests and then exit browser
-    singleRun:false,
+    singleRun: true,
     //if true, Karma fails on running empty test-suites
     failOnEmptyTestSuite:false,
     //reduce the kind of information passed to the bash
@@ -34,7 +33,7 @@ module.exports = function(config) {
     //list of browsers to launch and capture
     browsers: ['ChromeHeadless'/*,'PhantomJS','Firefox','Edge','ChromeCanary','Opera','IE','Safari'*/],
     //list of reporters to use
-    reporters: ['mocha','kjhtml'/*,'dots','progress','spec'*/],
+    reporters: ['mocha' /*,'kjhtml','dots','progress','spec'*/],
     
     //address that the server will listen on, '0.0.0.0' is default
     listenAddress: '0.0.0.0',
@@ -47,7 +46,7 @@ module.exports = function(config) {
     //how long does Karma wait for a browser to reconnect, 2000 is default
     browserDisconnectTimeout: 5000,
     //how long will Karma wait for a message from a browser before disconnecting from it, 10000 is default
-    browserNoActivityTimeout: 10000,
+    browserNoActivityTimeout: 60000,
     //timeout for capturing a browser, 60000 is default
     captureTimeout: 60000,
  
@@ -68,22 +67,49 @@ module.exports = function(config) {
  
     /*karma-webpack config*/
     //pass your webpack configuration for karma
-    webpack: webpackConfig,
+    webpack: {
+      node: {
+        fs: 'empty',
+      },
+      module: {
+        rules: [
+            {
+              test: /\.js$/,
+              exclude: /(node_modules)/,
+              use: {
+                loader: "babel-loader",
+                options: {
+                  presets: ["@babel/preset-env"]
+                }
+              }
+            },
+            {
+              test: /\.g4$/,
+              exclude: /(node_modules)/,
+              use: {
+                loader:'antlr4-webpack-loader'
+              }
+            }
+        ]
+    },
+    },
     preprocessors: {
       //use webpack to support require() in test-suits .js files
       //use babel-loader from webpack to compile es2015 features in .js files
       //add webpack as preprocessor
-      './tests/*.js': ['webpack']
+      'tests/*.spec.js': ['webpack']
     },
     webpackMiddleware: {
       //turn off webpack bash output when run the tests
       noInfo: true,
-      stats: 'errors-only'
+      stats: {
+        chunks: false
+      }
     },
  
     /*karma-mocha-reporter config*/
     mochaReporter: {
-      output: 'noFailures'  //full, autowatch, minimal
+      output: 'full'  //full, autowatch, minimal
     }
   });
 };
