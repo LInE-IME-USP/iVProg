@@ -4,10 +4,10 @@
   "description": "IMA para o ensino de programação",
   "main": "js/main.js",
   "scripts": {
-    "start": "http-server",
+    "start": "http-server ./build",
     "build": "webpack --mode=development",
     "watch": "webpack --watch --mode=development",
-    "compile": "webpack --mode=production"
+    "compile": "webpack --mode=production && tar -zcvf ivprog.tar.gz build/"
   },
   "repository": {
     "type": "git",
@@ -29,7 +29,9 @@
     "@babel/preset-env": "^7.3.4",
     "antlr4-webpack-loader": "^0.1.1",
     "babel-loader": "^8.0.5",
-    "html-webpack-plugin": "^3.2.0",
+    "clean-webpack-plugin": "^2.0.1",
+    "copy-webpack-plugin": "^5.0.1",
+    "html-webpack-plugin": "^4.0.0-beta.5",
     "jasmine-core": "^3.3.0",
     "karma": "^4.0.1",
     "karma-chrome-launcher": "^2.2.0",
