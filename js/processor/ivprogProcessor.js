@@ -284,10 +284,11 @@ export class IVProgProcessor {
           return outerRef.executeCommands(tuple[1], next.commands)
             .then(nSto => Promise.resolve([true, nSto]));
         } else {
-          return outerRef.evaluateExpression(tuple[1],
-            new Expressions.InfixApp(Operators.EQ, cmd.expression, next.expression)
-            ).then(equalityResult => {
-              if (equalityResult.value) {
+          const equalityInfixApp = new Expressions.InfixApp(Operators.EQ, cmd.expression, next.expression);
+          equalityInfixApp.sourceInfo = next.sourceInfo;
+          return outerRef.evaluateExpression(tuple[1],equalityInfixApp).then(stoObj => stoObj.value)
+            .then(isEqual => {
+              if (isEqual) {
                 return this.executeCommands(tuple[1], next.commands)
                   .then(nSto => Promise.resolve([true, nSto]));
               } else {
