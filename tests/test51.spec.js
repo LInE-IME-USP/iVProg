@@ -8,7 +8,7 @@ describe('A invalid relational operation inside an if', function () {
 
     funcao inicio() {
       inteiro a = 5
-      se ( a * 2.3 > 8) {
+      se ( a * 2.3 > "um texto") {
         a = 8
       } senao {
         a = -1

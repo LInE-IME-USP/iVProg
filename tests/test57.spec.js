@@ -25,7 +25,7 @@ describe('Is_Real function ', function () {
     const exec = new IVProgProcessor(sem.analyseTree());
     exec.registerOutput(out);
     exec.interpretAST().then(_ => {
-      expect(out.list).toEqual([true]);
+      expect(out.list).toEqual(["verdadeiro"]);
       done();
     }).catch(err => done(err));
   });

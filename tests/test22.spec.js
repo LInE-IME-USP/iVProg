@@ -8,7 +8,7 @@ describe('An assignment to a variable', function () {
   const input = `programa {
 
     funcao inicio() {
-      inteiro a
+      logico a
       a = 5.5
     }
   }`;
