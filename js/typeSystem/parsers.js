@@ -40,11 +40,13 @@ export function toBool (str) {
 export function convertBoolToString (bool) {
   const lexer = LanguageService.getCurrentLexer();
   const instance = new lexer(null);
+  let result = null;
   if (bool) {
-    return instance.literalNames[lexer.RK_TRUE];
+    result = instance.literalNames[lexer.RK_TRUE];
   } else {
-    return instance.literalNames[lexer.RK_FALSE];
+    result = instance.literalNames[lexer.RK_FALSE];
   }
+  return result.replace(/'/g,"");
 }
 
 export function convertToString(value, type) {

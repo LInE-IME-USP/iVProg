@@ -1,13 +1,12 @@
 var path = require('path');
-var webpack = require('webpack');
+var HtmlWebpackPlugin = require('html-webpack-plugin');
 var UpdateVersionPlugin = require('./updateVersionPlugin');
 
 module.exports = {
-    entry: './js/main.js',
-    mode: 'development',
+    entry: path.resolve(__dirname, 'js/main.js'),
     output: {
         path: path.resolve(__dirname, 'build'),
-        filename: 'ivprog.bundle.js',
+        filename: '[name].[contenthash].js',
         library: 'ivprogCore',
         libraryTarget: 'umd'
     },
@@ -38,12 +37,22 @@ module.exports = {
     stats: {
         colors: true
     },
-    plugins: [new UpdateVersionPlugin()],
-    /*optimization: {
+    plugins: [
+      new UpdateVersionPlugin(),
+      new HtmlWebpackPlugin({
+        template: 'templates/index.html',
+        filename: '../index.html'
+      }),
+      new HtmlWebpackPlugin({
+        template: 'templates/runner.html',
+        filename: '../runner.html'
+      })
+    ],
+    optimization: {
         splitChunks: {
             chunks: 'all'
         }
-    },*/
+    },
     devtool: 'source-map',
     watchOptions: {
         ignored: path.resolve(__dirname, '.ima_version.json')
