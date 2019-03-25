@@ -11,8 +11,8 @@ describe('The semantic analyser', function () {
       a = aNumber()
     }
 
-    funcao inteiro aNumber () {
-      retorne 3
+    funcao logico aNumber () {
+      retorne verdadeiro
     }
   }`;
 

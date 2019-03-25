@@ -25,6 +25,8 @@
     }
   </style>
   <title></title>
+  <script src="js/jquery-3.3.1.min.js"></script>
+  <script type="text/javascript" src="js/jquery.json-editor.min.js"></script>
 </head>
 <body>
     <div style="padding-top: 50px;content: ''"></div>
@@ -67,12 +69,9 @@
   
 </body>
 
-<script src="js/jquery-3.3.1.min.js"></script>
-
-<script type="text/javascript" src="js/jquery.json-editor.min.js"></script>
-<script type="text/javascript" src="build/ivprog.bundle.js"></script>
-
 <script>
-  ivprogCore.runner();
+  ( function () {
+    ivprogCore.runner();
+  })();
 </script>
 </html>
