@@ -7,7 +7,8 @@
     "start": "http-server ./build",
     "build": "webpack --mode=development",
     "watch": "webpack --watch --mode=development",
-    "compile": "webpack --mode=production && tar -zcvf ivprog.tar.gz build/"
+    "compile": "webpack --mode=production && tar -zcvf ivprog.tar.gz build/",
+    "test": "./node_modules/karma/bin/karma start"
   },
   "repository": {
     "type": "git",

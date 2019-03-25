@@ -1,6 +1,6 @@
 #compiled files
 /build
-
+.ima_version.json
 # dependencies
 /node_modules
 
