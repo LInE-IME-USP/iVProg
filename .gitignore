@@ -1,6 +1,7 @@
 #compiled files
 /build
 .ima_version.json
+ivprog.tar.gz
 # dependencies
 /node_modules
 
