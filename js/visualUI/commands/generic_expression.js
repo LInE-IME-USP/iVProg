@@ -45,20 +45,34 @@ export function renderExpression (command, function_obj, div_to_render, expressi
 
 function renderElements (command, function_obj, div_to_render, expression_array, types_included) {
 
-	if (expression_array.length > 0) {
+	/*if (expression_array.length > 0) {
 		if (!expression_array[0].type_op) {
 			renderStartAddOperator(div_to_render, types_included, expression_array, command, function_obj, 0);
 		}
-	}
+	}*/
 
 	var i = 0;
 	for (i = 0; i < expression_array.length; i++) {
 		if (expression_array[i].type == "var_value") {
 			var div_temp = $('<div class="single_element_expression" data-index="'+i+'"></div>');
+			if (i == 0) {
+				if (expression_array.length > 0  && !expression_array[1].type_op) {
+					renderStartAddOperator(div_temp, types_included, expression_array, command, function_obj, 0);
+				}
+			}
 			VariableValueMenuManagement.renderMenu(command, expression_array[i], div_temp, function_obj);
 			div_to_render.append(div_temp);
 		} else if (expression_array[i] == '(' || expression_array[i] == ')') {
-			renderParenthesis(div_to_render, expression_array[i], command, function_obj, i, expression_array);
+			if (expression_array[i] == ')') {
+				renderFinalAddElements(div_to_render, types_included, expression_array, command, function_obj, i);
+				renderParenthesis(div_to_render, expression_array[i], command, function_obj, i, expression_array);
+			} else if (expression_array[i] == '(' && !expression_array[i + 1].type_op) {
+				renderParenthesis(div_to_render, expression_array[i], command, function_obj, i, expression_array);
+				renderStartAddOperator(div_to_render, types_included, expression_array, command, function_obj, i + 1);
+			} else {
+				renderParenthesis(div_to_render, expression_array[i], command, function_obj, i, expression_array);
+			}
+
 		} else {
 			renderOperatorMenu(command, function_obj, div_to_render, expression_array[i], types_included, i, expression_array);
 		}
@@ -90,6 +104,8 @@ function renderAddParenthesis (command, function_obj, div_to_render, expression_
 			return;
 		}
 
+		div_to_render.find('.usepointer').off('click');
+
 		window.parentheses_activate = true;
 
 		window.open_or_close = "open";
@@ -120,7 +136,6 @@ function renderAddParenthesis (command, function_obj, div_to_render, expression_
 				|| actual_target.length < 1 
 				|| actual_target.hasClass('add_parentheses')
 				|| actual_target.hasClass('rendered_parentheses')
-				|| $(evt.target).hasClass('parentheses_ghost')
 				|| $(evt.target).hasClass('expression_elements')) {
 				return;
 			}
@@ -142,6 +157,26 @@ function renderAddParenthesis (command, function_obj, div_to_render, expression_
 
 				floatingObject.remove();
 
+				var comando_que_esta = $(evt.target).closest('.command_container');
+				var comando_certo = div_to_render.closest('.command_container');
+				if (!comando_que_esta.is(comando_certo)) {
+
+					window.parentheses_activate = false;
+					div_to_render.find('.temp_class').addClass('ghost_element');
+					div_to_render.find('.temp_class').removeClass('temp_class');
+					div_to_render.off('mousemove');
+					div_to_render.off('mouseleave');
+					$('body').off('mouseup');
+					window.open_parentheses.remove();
+					window.close_parentheses.remove();
+					window.inserir_open = -1;
+					window.inserir_close = -1;
+					window.open_or_close = null;
+					renderExpression(command, function_obj, div_to_render, expression_array);
+
+					return;
+				}
+
 				floating = $('<div class="floating_parenthesis"> ) </div>');
 				floating.draggable().appendTo("body");
 				floating.css("position", "absolute");
@@ -157,9 +192,6 @@ function renderAddParenthesis (command, function_obj, div_to_render, expression_
 
 				floating.remove();
 				
-				div_to_render.find('.temp_class').addClass('ghost_element');
-				div_to_render.find('.temp_class').removeClass('temp_class');
-				
 				div_to_render.off('mousemove');
 				div_to_render.off('mouseleave');
 				$('body').off('mouseup');
@@ -168,28 +200,23 @@ function renderAddParenthesis (command, function_obj, div_to_render, expression_
 					window.parentheses_activate = false;
 				}, 50);
 
-				window.open_parentheses.remove();
-				window.close_parentheses.remove();
-
-				var all_el = $(evt.target).parentsUntil('.command_container');
-
+				var comando_que_esta = $(evt.target).closest('.command_container');
+				var comando_certo = div_to_render.closest('.command_container');
 				var is_correct = false;
-				
-				for (var j = 0; j < all_el.length; j++) {
-					if ($(all_el.get(j)).is(div_to_render)) {
-						is_correct = true;
-						break;
-					}
+				if (comando_que_esta.is(comando_certo)) {
+					is_correct = true;
 				}
 
 				if (is_correct) {
 					expression_array.splice(window.inserir_open, 0, '(');
 					expression_array.splice(window.inserir_close, 0, ')');
-					renderExpression(command, function_obj, div_to_render, expression_array);
 				}
 
 				window.inserir_open = -1;
 				window.inserir_close = -1;
+				window.open_or_close = null;
+
+				renderExpression(command, function_obj, div_to_render, expression_array);
 
 			}
 
@@ -212,6 +239,12 @@ function renderGhostParentheses (actual_target, command, function_obj, div_to_re
 		return;
 	}
 
+	if (window.open_or_close == "close") {
+		if (index_in_array < window.inserir_open) {
+			return;
+		}
+	}
+
 	// Tratando a situação quando é na primeira posição:
 
 	if (index_in_array == 0) {
@@ -222,16 +255,16 @@ function renderGhostParentheses (actual_target, command, function_obj, div_to_re
 				window.inserir_open = index_in_array;
 			}
 
-			if (expression_array.length == 1) {
+			/*if (expression_array.length == 1) {
 				if (window.open_or_close == "close") {
 					window.close_parentheses.insertAfter(actual_target);
 					window.inserir_close = index_in_array + 2;
-				}
+				}*/
 
-			} else {
+			//} else {
 				var count_opened = 0;
 				var count_closed = 0;
-				for (var i = 1; i < expression_array.length; i++) {
+				for (var i = 0; i < expression_array.length; i++) {
 					if ((expression_array[i] == '(')) {
 						count_opened ++;
 					}
@@ -258,7 +291,7 @@ function renderGhostParentheses (actual_target, command, function_obj, div_to_re
 					}
 
 				}
-			}
+			//}
 
 		} else if (expression_array[index_in_array].type_op) {
 
@@ -437,11 +470,16 @@ function renderStartAddOperator (div_to_render, types_included, expression_array
 	div_temp.on('click', function() {
 		var sera = position;
 
+		console.log('será inserido em: ', sera);
+
 		if (types_included.indexOf(Models.EXPRESSION_TYPES.exp_arithmetic) >= 0) {
+			console.log('p1');
 			expression_array.splice(sera, 0, new Models.ExpressionOperator(Models.EXPRESSION_TYPES.exp_arithmetic,Models.ARITHMETIC_TYPES.minus));
 		} else if (types_included.indexOf(Models.EXPRESSION_TYPES.exp_logic) >= 0) {
+			console.log('p2');
 			expression_array.splice(sera, 0, new Models.ExpressionOperator(Models.EXPRESSION_TYPES.exp_logic,Models.LOGIC_COMPARISON.equals_to));
 		} else if (types_included.indexOf(Models.EXPRESSION_TYPES.exp_conditional) >= 0) {
+			console.log('p3');
 			expression_array.splice(sera, 0, new Models.ExpressionOperator(Models.EXPRESSION_TYPES.exp_conditional,Models.ARITHMETIC_COMPARISON.greater_than));
 		}
 

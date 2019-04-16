@@ -103,7 +103,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /*! exports provided: version, default */
 /***/ (function(module) {
 
-module.exports = {"version":"2019_03_09 09_55"};
+module.exports = {"version":"2019_03_14 15_44"};
 
 /***/ }),
 
@@ -187,7 +187,7 @@ module.exports =
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// Generated from /tmp/tmp-12804W9XBaRoQdtLr/ivprog.g4 by ANTLR 4.7
+// Generated from /tmp/tmp-1782yRQvnNM5ZHBF/ivprog.g4 by ANTLR 4.7
 // jshint ignore: start
 var antlr4 = __webpack_require__(2);
 
@@ -769,7 +769,7 @@ module.exports =
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// Generated from /tmp/tmp-12804Gub146VJXPQZ/ivprog.g4 by ANTLR 4.7
+// Generated from /tmp/tmp-17823CKm15QJnmLm/ivprog.g4 by ANTLR 4.7
 // jshint ignore: start
 var antlr4 = __webpack_require__(2);
 
@@ -1409,7 +1409,7 @@ module.exports =
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// Generated from /tmp/tmp-12804UdSoUzzaDsiS/ivprog.g4 by ANTLR 4.7
+// Generated from /tmp/tmp-17826p8ez5mZyJT9/ivprog.g4 by ANTLR 4.7
 // jshint ignore: start
 var antlr4 = __webpack_require__(2);
 
@@ -25466,21 +25466,35 @@ function renderExpression(command, function_obj, div_to_render, expression_array
 }
 
 function renderElements(command, function_obj, div_to_render, expression_array, types_included) {
-  if (expression_array.length > 0) {
-    if (!expression_array[0].type_op) {
-      renderStartAddOperator(div_to_render, types_included, expression_array, command, function_obj, 0);
-    }
-  }
-
+  /*if (expression_array.length > 0) {
+  	if (!expression_array[0].type_op) {
+  		renderStartAddOperator(div_to_render, types_included, expression_array, command, function_obj, 0);
+  	}
+  }*/
   var i = 0;
 
   for (i = 0; i < expression_array.length; i++) {
     if (expression_array[i].type == "var_value") {
       var div_temp = jquery__WEBPACK_IMPORTED_MODULE_0___default()('<div class="single_element_expression" data-index="' + i + '"></div>');
+
+      if (i == 0) {
+        if (expression_array.length > 0 && !expression_array[1].type_op) {
+          renderStartAddOperator(div_temp, types_included, expression_array, command, function_obj, 0);
+        }
+      }
+
       _variable_value_menu__WEBPACK_IMPORTED_MODULE_6__["renderMenu"](command, expression_array[i], div_temp, function_obj);
       div_to_render.append(div_temp);
     } else if (expression_array[i] == '(' || expression_array[i] == ')') {
-      renderParenthesis(div_to_render, expression_array[i], command, function_obj, i, expression_array);
+      if (expression_array[i] == ')') {
+        renderFinalAddElements(div_to_render, types_included, expression_array, command, function_obj, i);
+        renderParenthesis(div_to_render, expression_array[i], command, function_obj, i, expression_array);
+      } else if (expression_array[i] == '(' && !expression_array[i + 1].type_op) {
+        renderParenthesis(div_to_render, expression_array[i], command, function_obj, i, expression_array);
+        renderStartAddOperator(div_to_render, types_included, expression_array, command, function_obj, i + 1);
+      } else {
+        renderParenthesis(div_to_render, expression_array[i], command, function_obj, i, expression_array);
+      }
     } else {
       renderOperatorMenu(command, function_obj, div_to_render, expression_array[i], types_included, i, expression_array);
     }
@@ -25509,6 +25523,7 @@ function renderAddParenthesis(command, function_obj, div_to_render, expression_a
       return;
     }
 
+    div_to_render.find('.usepointer').off('click');
     window.parentheses_activate = true;
     window.open_or_close = "open";
     div_to_render.find('.dropdown').addClass('disabled');
@@ -25531,7 +25546,7 @@ function renderAddParenthesis(command, function_obj, div_to_render, expression_a
         actual_target = jquery__WEBPACK_IMPORTED_MODULE_0___default()(evt.target).closest('.single_element_expression');
       }
 
-      if (jquery__WEBPACK_IMPORTED_MODULE_0___default()(evt.target).hasClass('temp_class') || actual_target.length < 1 || actual_target.hasClass('add_parentheses') || actual_target.hasClass('rendered_parentheses') || jquery__WEBPACK_IMPORTED_MODULE_0___default()(evt.target).hasClass('parentheses_ghost') || jquery__WEBPACK_IMPORTED_MODULE_0___default()(evt.target).hasClass('expression_elements')) {
+      if (jquery__WEBPACK_IMPORTED_MODULE_0___default()(evt.target).hasClass('temp_class') || actual_target.length < 1 || actual_target.hasClass('add_parentheses') || actual_target.hasClass('rendered_parentheses') || jquery__WEBPACK_IMPORTED_MODULE_0___default()(evt.target).hasClass('expression_elements')) {
         return;
       }
 
@@ -25546,6 +25561,25 @@ function renderAddParenthesis(command, function_obj, div_to_render, expression_a
       if (window.open_or_close == "open") {
         window.open_or_close = "close";
         floatingObject.remove();
+        var comando_que_esta = jquery__WEBPACK_IMPORTED_MODULE_0___default()(evt.target).closest('.command_container');
+        var comando_certo = div_to_render.closest('.command_container');
+
+        if (!comando_que_esta.is(comando_certo)) {
+          window.parentheses_activate = false;
+          div_to_render.find('.temp_class').addClass('ghost_element');
+          div_to_render.find('.temp_class').removeClass('temp_class');
+          div_to_render.off('mousemove');
+          div_to_render.off('mouseleave');
+          jquery__WEBPACK_IMPORTED_MODULE_0___default()('body').off('mouseup');
+          window.open_parentheses.remove();
+          window.close_parentheses.remove();
+          window.inserir_open = -1;
+          window.inserir_close = -1;
+          window.open_or_close = null;
+          renderExpression(command, function_obj, div_to_render, expression_array);
+          return;
+        }
+
         floating = jquery__WEBPACK_IMPORTED_MODULE_0___default()('<div class="floating_parenthesis"> ) </div>');
         floating.draggable().appendTo("body");
         floating.css("position", "absolute");
@@ -25557,34 +25591,29 @@ function renderAddParenthesis(command, function_obj, div_to_render, expression_a
         });
       } else {
         floating.remove();
-        div_to_render.find('.temp_class').addClass('ghost_element');
-        div_to_render.find('.temp_class').removeClass('temp_class');
         div_to_render.off('mousemove');
         div_to_render.off('mouseleave');
         jquery__WEBPACK_IMPORTED_MODULE_0___default()('body').off('mouseup');
         setTimeout(function () {
           window.parentheses_activate = false;
         }, 50);
-        window.open_parentheses.remove();
-        window.close_parentheses.remove();
-        var all_el = jquery__WEBPACK_IMPORTED_MODULE_0___default()(evt.target).parentsUntil('.command_container');
+        var comando_que_esta = jquery__WEBPACK_IMPORTED_MODULE_0___default()(evt.target).closest('.command_container');
+        var comando_certo = div_to_render.closest('.command_container');
         var is_correct = false;
 
-        for (var j = 0; j < all_el.length; j++) {
-          if (jquery__WEBPACK_IMPORTED_MODULE_0___default()(all_el.get(j)).is(div_to_render)) {
-            is_correct = true;
-            break;
-          }
+        if (comando_que_esta.is(comando_certo)) {
+          is_correct = true;
         }
 
         if (is_correct) {
           expression_array.splice(window.inserir_open, 0, '(');
           expression_array.splice(window.inserir_close, 0, ')');
-          renderExpression(command, function_obj, div_to_render, expression_array);
         }
 
         window.inserir_open = -1;
         window.inserir_close = -1;
+        window.open_or_close = null;
+        renderExpression(command, function_obj, div_to_render, expression_array);
       }
     });
   });
@@ -25602,6 +25631,12 @@ function renderGhostParentheses(actual_target, command, function_obj, div_to_ren
 
   if (expression_array[index_in_array] == '(' || expression_array[index_in_array] == ')') {
     return;
+  }
+
+  if (window.open_or_close == "close") {
+    if (index_in_array < window.inserir_open) {
+      return;
+    }
   } // Tratando a situação quando é na primeira posição:
 
 
@@ -25611,46 +25646,47 @@ function renderGhostParentheses(actual_target, command, function_obj, div_to_ren
         window.open_parentheses.insertBefore(actual_target);
         window.inserir_open = index_in_array;
       }
+      /*if (expression_array.length == 1) {
+      	if (window.open_or_close == "close") {
+      		window.close_parentheses.insertAfter(actual_target);
+      		window.inserir_close = index_in_array + 2;
+      	}*/
+      //} else {
 
-      if (expression_array.length == 1) {
-        if (window.open_or_close == "close") {
-          window.close_parentheses.insertAfter(actual_target);
-          window.inserir_close = index_in_array + 2;
+
+      var count_opened = 0;
+      var count_closed = 0;
+
+      for (var i = 0; i < expression_array.length; i++) {
+        if (expression_array[i] == '(') {
+          count_opened++;
         }
-      } else {
-        var count_opened = 0;
-        var count_closed = 0;
 
-        for (var i = 1; i < expression_array.length; i++) {
-          if (expression_array[i] == '(') {
-            count_opened++;
-          }
+        if (expression_array[i] == ')') {
+          count_closed++;
+        }
 
-          if (expression_array[i] == ')') {
-            count_closed++;
-          }
+        if (count_opened != count_closed) {} else {
+          if (count_opened > 0) {
+            if (window.open_or_close == "close") {
+              window.close_parentheses.insertAfter(div_to_render.find('.single_element_expression[data-index="' + i + '"]'));
+              window.inserir_close = i + 2;
+            }
 
-          if (count_opened != count_closed) {} else {
-            if (count_opened > 0) {
+            break;
+          } else {
+            if (expression_array[i].type == "var_value") {
               if (window.open_or_close == "close") {
                 window.close_parentheses.insertAfter(div_to_render.find('.single_element_expression[data-index="' + i + '"]'));
                 window.inserir_close = i + 2;
               }
 
               break;
-            } else {
-              if (expression_array[i].type == "var_value") {
-                if (window.open_or_close == "close") {
-                  window.close_parentheses.insertAfter(div_to_render.find('.single_element_expression[data-index="' + i + '"]'));
-                  window.inserir_close = i + 2;
-                }
-
-                break;
-              }
             }
           }
         }
-      }
+      } //}
+
     } else if (expression_array[index_in_array].type_op) {
       if (window.open_or_close == "open") {
         window.open_parentheses.insertBefore(actual_target);
@@ -25830,12 +25866,16 @@ function renderStartAddOperator(div_to_render, types_included, expression_array,
   menu_final.dropdown('set selected', _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["ARITHMETIC_TYPES"].minus);
   div_temp.on('click', function () {
     var sera = position;
+    console.log('será inserido em: ', sera);
 
     if (types_included.indexOf(_ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_arithmetic) >= 0) {
+      console.log('p1');
       expression_array.splice(sera, 0, new _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["ExpressionOperator"](_ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_arithmetic, _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["ARITHMETIC_TYPES"].minus));
     } else if (types_included.indexOf(_ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_logic) >= 0) {
+      console.log('p2');
       expression_array.splice(sera, 0, new _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["ExpressionOperator"](_ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_logic, _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["LOGIC_COMPARISON"].equals_to));
     } else if (types_included.indexOf(_ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_conditional) >= 0) {
+      console.log('p3');
       expression_array.splice(sera, 0, new _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["ExpressionOperator"](_ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_conditional, _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["ARITHMETIC_COMPARISON"].greater_than));
     }
 
