@@ -1,4 +1,3 @@
-import $ from 'jquery';
 import { Types } from './types';
 import * as Models from './ivprog_elements';
 import { LocalizedStrings } from './../services/localizedStringsService';
@@ -15,8 +14,6 @@ import { IVProgAssessment } from '../assessment/ivprogAssessment';
 import * as AlgorithmManagement from './algorithm';
 import * as Utils from './utils';
 import VersionInfo from './../../.ima_version.json';
-
-import '../Sortable.js'; 
 
 var counter_new_functions = 0;
 var counter_new_parameters = 0;

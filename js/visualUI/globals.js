@@ -1,14 +1,8 @@
-import $ from 'jquery';
-import jQuery from 'jquery';
 import { Types } from './types';
 import * as Models from './ivprog_elements';
 import { LocalizedStrings } from './../services/localizedStringsService';
 import * as Utils from './utils';
 
-
-window.jQuery = jQuery;
-
-import '../semantic/semantic.min.js';
 
 var counter_new_globals = 0;
 

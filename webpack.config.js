@@ -56,11 +56,8 @@ module.exports = {
       }),
       /*new ChangeScriptSourcePlugin(),*/
       new CopyPlugin([
-        {from:"js/semantic/", to:path.resolve(__dirname, 'build/css')},
         {from:"css/ivprog-visual-1.0.css", to:path.resolve(__dirname, 'build/css')},
         {from:"css/ivprog-term.css", to:path.resolve(__dirname, 'build/css')},
-        {from:'js/jquery-3.3.1.min.js', to:path.resolve(__dirname, 'build/js')},
-        {from:'js/semantic/semantic.min.js', to:path.resolve(__dirname, 'build/js')},
         {from:'js/semantic/semantic-buttons.js', to:path.resolve(__dirname, 'build/js')},
         {from:'js/jquery-ui.js', to:path.resolve(__dirname, 'build/js')},
         {from:'js/Sortable.js', to:path.resolve(__dirname, 'build/js')},

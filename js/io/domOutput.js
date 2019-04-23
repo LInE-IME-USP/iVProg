@@ -1,5 +1,4 @@
 import { Output } from './output';
-import $ from 'jquery';
 
 export class DOMOutput extends Output {
 
