@@ -25,6 +25,7 @@ var ivprog_version = VersionInfo.version;
 const globalChangeListeners = [];
 const functionsChangeListeners = [];
 let domConsole = null;
+let _testCases = [];
 window.studentGrade = null;
 window.LocalizedStrings = LocalizedStrings;
 const program = new Models.Program();
@@ -723,6 +724,16 @@ export function initVisualUI () {
   $('.main_title h2').prop('title', LocalizedStrings.getUI('text_ivprog_description'));
 }
 
+export function setTestCases (testCases) {
+  _testCases = testCases;
+}
+
+export function getTestCases () {
+  // Deep clone of test cases to avoid unauthorized modification
+  // TODO: It may be not possible to use this once custom test are fully implemented 
+  return JSON.parse(JSON.stringify(_testCases));
+}
+
 var is_iassign = false;
 
 $( document ).ready(function() {
@@ -858,7 +869,7 @@ function runCodeAssessment () {
   if(domConsole == null)
     domConsole = new DOMConsole("#ivprog-term");
   $("#ivprog-term").slideDown(500);
-  const runner = new IVProgAssessment(strCode, testCases, domConsole);
+  const runner = new IVProgAssessment(strCode, _testCases, domConsole);
 
   runner.runTest().then(grade => {
     if (!is_iassign) {

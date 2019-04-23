@@ -114,7 +114,7 @@ function getEvaluation () {
 }
 
 
-var testCases = null;
+//var testCases = null;
 var settingsDataTypes = null;
 var settingsCommands = null;
 var settingsFunctions = null;
@@ -142,27 +142,33 @@ function getiLMContent () {
 }
 
 function prepareActivityToEdit (ilm_cont) {
-    var content = JSON.parse(ilm_cont.split('\n::algorithm::')[0]);
-    testCases = content.testcases;
-    settingsDataTypes = content.settings_data_types;
-    settingsCommands = content.settings_commands;
-    settingsFunctions = content.settings_functions;
+    //var content = JSON.parse(ilm_cont.split('\n::algorithm::')[0]);
+    // Ver arquivo js/util/iassignHelpers.js
+    var content = ivprogCore.prepareActivityToStudentHelper(ilm_cont);
+    var testCases = ivprogCore.getTestCases();
+    settingsDataTypes = content.settingsDataTypes;
+    settingsCommands = content.settingsCommands;
+    settingsFunctions = content.settingsFunctions;
 
     for (var i = 0; i < testCases.length; i++) {
         addTestCase(testCases[i]);
     }
 
-    if (ilm_cont.split('\n::algorithm::')[1]) {
-        algorithm_in_ilm = ilm_cont.split('\n::algorithm::')[1].split('\n::logs::')[0];
+    if (content.algorithmInIlm != null) {
+        algorithm_in_ilm = content.algorithmInIlm;
         $("input[name='include_algo']").prop('checked', true);
         includePreviousAlgorithm();
         renderAlgorithm();
     }
 }
 
-function includePreviousAlgorithm () {
+function parsePreviousAlgorithm () {
     window.program_obj.functions = JSON.parse(algorithm_in_ilm).functions;
     window.program_obj.globals = JSON.parse(algorithm_in_ilm).globals;
+}
+
+function includePreviousAlgorithm () {
+    parsePreviousAlgorithm();
 
     window.watchW.watch(window.program_obj.globals, function(){
       if (window.insertContext) {
@@ -207,14 +213,16 @@ function includePreviousAlgorithm () {
 }
 
 function prepareActivityToStudent (ilm_cont) {
-    var content = JSON.parse(ilm_cont.split('\n::algorithm::')[0]);
-    testCases = content.testcases;
-    settingsDataTypes = content.settings_data_types;
-    settingsCommands = content.settings_commands;
-    settingsFunctions = content.settings_functions;
+    // Ver arquivo js/util/iassignHelpers.js
+    var content = ivprogCore.prepareActivityToStudentHelper(ilm_cont);
+    // Casos de testes agora são delegados ao tratamento apropriado pela função acima
+    // var testCases = content.testcases;
+    settingsDataTypes = content.settingsDataTypes;
+    settingsCommands = content.settingsCommands;
+    settingsFunctions = content.settingsFunctions;
 
-    if (ilm_cont.split('\n::algorithm::')[1]) {
-        algorithm_in_ilm = ilm_cont.split('\n::algorithm::')[1].split('\n::logs::')[0];
+    if (content.algorithmInIlm != null) {
+        algorithm_in_ilm = content.algorithmInIlm;
         includePreviousAlgorithm();
     }
     $('.assessment_button').removeClass('disabled');
@@ -230,23 +238,24 @@ function prepareEnvironment () {
 
 $(document).ready(function() {
 
+    // Disable by default...
+    $('.assessment_button').addClass('disabled');
+
     // Se iLM_PARAM_SendAnswer for false, então trata-se de resolução de atividade,
     // portanto, a "DIV" de resolução é liberada
     if (iLMparameters.iLM_PARAM_SendAnswer == 'false') {
         //$('.resolucao').css("display","block");
         getiLMContent();
 
-
-        $( document ).ready(function() {
-            $('.div_to_body').mousemove(function(e) {
-                trackingMatrix.push(adCoords(e, 0));
-            });
-
-            $('.div_to_body').click(function(e) {
-                trackingMatrix.push(adCoords(e, 1));                    
-            });
-
+        $('.div_to_body').mousemove(function(e) {
+            trackingMatrix.push(adCoords(e, 0));
         });
+
+        $('.div_to_body').click(function(e) {
+            trackingMatrix.push(adCoords(e, 1));                    
+        });
+
+        
 
     } else {
         // Caso não esteja em modo de resolução de atividade, a visualização no momento
@@ -259,10 +268,11 @@ $(document).ready(function() {
             getiLMContent();
         }
     }
-
-    if (!testCases) {
-        $('.assessment_button').addClass('disabled');
+    if (inIframe()) {
+        orderIcons();
+        orderWidth();
     }
+    // renderAlgorithm();
 
 });
 
@@ -445,14 +455,14 @@ function adCoords(e, code){
     }
 }
 
-$( document ).ready(function() {
+// $( document ).ready(function() {
 
-    if (inIframe()) {
-        orderIcons();
-        orderWidth();
-    }
-    renderAlgorithm();
-});
+//     if (inIframe()) {
+//         orderIcons();
+//         orderWidth();
+//     }
+//     renderAlgorithm();
+// });
 
 function orderWidth() {
     $('.ui.raised.container.segment.div_to_body').css('width', '100%');
