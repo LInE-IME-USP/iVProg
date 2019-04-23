@@ -146,6 +146,7 @@ export class SemanticAnalyser {
   }
 
   evaluateExpressionType (expression) {
+    // TODO: Throw operator error in case type == UNDEFINED
     if(expression instanceof UnaryApp) {
       const op = expression.op;
       const resultType = this.evaluateExpressionType(expression.left);
