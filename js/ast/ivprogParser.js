@@ -987,7 +987,7 @@ export class IVProgParser {
       this.pos++;
       const not = convertFromString('not');
       const exp1 = this.parseExpressionRel();
-      finalExp = new Expressions.UnaryApp(not, exp1);
+      const finalExp = new Expressions.UnaryApp(not, exp1);
       finalExp.sourceInfo = SourceInfo.createSourceInfo(opToken);
       return finalExp;
       
