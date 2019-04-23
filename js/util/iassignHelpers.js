@@ -1,4 +1,7 @@
-import { setTestCases } from "../visualUI/functions";
+import { setTestCases, getTestCases } from "../visualUI/functions";
+import { generate } from "../visualUI/code_generator";
+import { IVProgAssessment } from "../assessment/ivprogAssessment";
+import { TestConsole } from "./testConsole";
 
 export function prepareActivityToStudentHelper (ilm_cont) {
   const content = JSON.parse(ilm_cont.split('\n::algorithm::')[0]);
@@ -16,5 +19,15 @@ export function prepareActivityToStudentHelper (ilm_cont) {
     settingsCommands: settingsCommands,
     settingsFunctions: settingsFunctions,
     algorithmInIlm: algorithm_in_ilm
+  }
+}
+
+export function autoEval (callback) {
+  const code = generate();
+  if (code == null) {
+    return callback(-1);
+  } else {
+    const autoAssessment = new IVProgAssessment(code, getTestCases(), new TestConsole([]));
+    autoAssessment.runTest().then( grade => callback(grade)).catch(err => console.log(err))
   }
 }

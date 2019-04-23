@@ -12,6 +12,7 @@ var iLMparameters = {
     iLM_PARAM_SendAnswer: getParameterByName("iLM_PARAM_SendAnswer"),
     iLM_PARAM_AssignmentURL: getParameterByName("iLM_PARAM_AssignmentURL"),
     iLM_PARAM_Assignment: getParameterByName("iLM_PARAM_Assignment"),
+    iLM_PARAM_TeacherAutoEval: getParameterByName("iLM_PARAM_TeacherAutoEval"),
     lang: getParameterByName("lang", "pt")
 };
 
@@ -127,8 +128,13 @@ function getiLMContent () {
     // O parâmetro "iLM_PARAM_Assignment" fornece o URL do endereço que deve ser
     // requisitado via AJAX para a captura dos dados da atividade
     $.get(iLMparameters.iLM_PARAM_Assignment, function (data) {
-        // Aluno está trabalhando em alguma atividade:
-        if (iLMparameters.iLM_PARAM_SendAnswer == 'false') {
+        //professor invocou a avaliação automática dos exercícios do bloco
+        if (iLMparameters.iLM_PARAM_TeacherAutoEval == 'true') {
+            teacherAutoEval(data);
+            //não deve exibir nenhuma interface...
+            return;
+        } else if (iLMparameters.iLM_PARAM_SendAnswer == 'false') {
+            // Aluno está trabalhando em alguma atividade:
             previousContent = data;
             prepareActivityToStudent(data);
         } else { // Professor está editando uma atividade:
@@ -254,25 +260,21 @@ $(document).ready(function() {
         $('.div_to_body').click(function(e) {
             trackingMatrix.push(adCoords(e, 1));                    
         });
-
-        
-
-    } else {
+    } else if (iLMparameters.iLM_PARAM_Assignment) {
         // Caso não esteja em modo de resolução de atividade, a visualização no momento
         // é para a elaboração de atividade:
         //$('.elaboracao').css("display","block");
 
         // Se possuir o parâmetro iLMparameters.iLM_PARAM_Assignment, o professor
         // está editando uma atividade:
-        if (iLMparameters.iLM_PARAM_Assignment) {
-            getiLMContent();
-        }
+        getiLMContent();
+    } else {
+        renderAlgorithm();
     }
     if (inIframe()) {
         orderIcons();
         orderWidth();
     }
-    // renderAlgorithm();
 
 });
 
@@ -506,5 +508,21 @@ function full_screen() {
         }
     } else {
         $('.expand_button').addClass('disabled');
+    }
+}
+
+function teacherAutoEval (data) {
+    // Ver arquivo js/util/iassignHelpers.js
+    var content = ivprogCore.prepareActivityToStudentHelper(data);
+    // Casos de testes agora são delegados ao tratamento apropriado pela função acima
+    // var testCases = content.testcases;
+    settingsDataTypes = content.settingsDataTypes;
+    settingsCommands = content.settingsCommands;
+    settingsFunctions = content.settingsFunctions;
+
+    if (content.algorithmInIlm != null) {
+        algorithm_in_ilm = content.algorithmInIlm;
+        parsePreviousAlgorithm();
+        ivprogCore.autoEval(parent.getEvaluationCallback);
     }
 }
