@@ -113,7 +113,40 @@
   <script src="js/Sortable.js"></script>
   <script src="js/iassign-integration-functions.js"></script>
   <script>
+    var mouseX;
+    var mouseY;
     $(document).ready(() => {
+      var $buttons = $('.ivprog_format .button'), 
+        handler = {
+          activate: function () {
+            $(this)
+              .addClass('active')
+              .siblings()
+              .removeClass('active');
+          }
+        };
+
+      $buttons.on('click', handler.activate);
+
+      $('.ivprog_format_info').popup(
+        {
+          popup: $('.custom.popup'),
+          on: 'click'
+        });
+
+      $(".data_types_dropdown").dropdown();
+
+      $('.ui.dropdown').dropdown();
+
+      $('.ivprog_visual_panel').removeClass("loading");
+
+      $(document).mousemove(function (e) {
+        var parentOffset = $('.ivprog_visual_panel').offset();;
+        mouseX = e.pageX - parentOffset.left + 300;
+        mouseY = e.pageY - parentOffset.top + 100;
+        /*$('.created_element').css('top', mouseY);
+        $('.created_element').css('left', mouseX);*/
+      });
       ivprogCore.LocalizedStrings.updateTagText();
       ivprogCore.initVisualUI();
       prepareEnvironment();
