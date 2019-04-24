@@ -3,7 +3,6 @@ import * as Models from './ivprog_elements';
 import { LocalizedStrings } from './../services/localizedStringsService';
 import * as Utils from './utils';
 
-
 var counter_new_globals = 0;
 
 export function addGlobal (program, is_from_click = false) {

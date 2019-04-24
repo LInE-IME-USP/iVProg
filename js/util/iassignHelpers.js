@@ -3,31 +3,66 @@ import { generate } from "../visualUI/code_generator";
 import { IVProgAssessment } from "../assessment/ivprogAssessment";
 import { TestConsole } from "./testConsole";
 
+function parseActivityData (data) {
+  let algorithm_in_ilm = null;
+  if (data.split('\n::algorithm::')[1]) {
+    algorithm_in_ilm = data.split('\n::algorithm::')[1].split('\n::logs::')[0];
+    // TODO: restore logs
+  }
+  let content = JSON.parse(data.split('\n::algorithm::')[0]);
+  content['algorithm_in_ilm'] = algorithm_in_ilm;
+  return content;
+}
+
 export function prepareActivityToStudentHelper (ilm_cont) {
-  const content = JSON.parse(ilm_cont.split('\n::algorithm::')[0]);
+  const content = parseActivityData(ilm_cont);
   const testCases = content.testcases;
   setTestCases(testCases);
-  const settingsDataTypes = content.settings_data_types;
-  const settingsCommands = content.settings_commands;
-  const settingsFunctions = content.settings_functions;
-  let algorithm_in_ilm = null;
-  if (ilm_cont.split('\n::algorithm::')[1]) {
-      algorithm_in_ilm = ilm_cont.split('\n::algorithm::')[1].split('\n::logs::')[0];
-  }
+
   return {
-    settingsDataTypes: settingsDataTypes,
-    settingsCommands: settingsCommands,
-    settingsFunctions: settingsFunctions,
-    algorithmInIlm: algorithm_in_ilm
+    settingsDataTypes: content.settings_data_types,
+    settingsCommands: content.settings_commands,
+    settingsFunctions: content.settings_functions,
+    algorithmInIlm: content.algorithm_in_ilm
   }
 }
 
-export function autoEval (callback) {
+export function autoEval (originalData, callback) {
   const code = generate();
+  const original = parseActivityData(originalData);
   if (code == null) {
     return callback(-1);
   } else {
+    if (!compareTestcases(original.testcases, getTestCases())) {
+      return callback(-2);
+    }
     const autoAssessment = new IVProgAssessment(code, getTestCases(), new TestConsole([]));
     autoAssessment.runTest().then( grade => callback(grade)).catch(err => console.log(err))
+  }
+}
+
+function compareTestcases (original, student) {
+  if (original.length != student.length) {
+    return false;
+  }
+  for (let i = 0; i < original.length; ++i) {
+    const elementO = original[i];
+    const elementS = student[i];
+    if(!compareArray(elementO.input, elementS.input)) {
+      return false;
+    }
+    if(!compareArray(elementO.output, elementS.output)) {
+      return false;
+    }
+  }
+}
+
+function compareArray (a, b) {
+  for (let i = 0; i < a.length; ++i) {
+    const elementA = a[i];
+    const elementB = b[i];
+    if (elementA != elementB) {
+      return false;
+    }
   }
 }
