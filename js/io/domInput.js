@@ -1,5 +1,4 @@
 import {Input} from './input';
-import $ from 'jquery';
 
 export class DOMInput extends Input{
 

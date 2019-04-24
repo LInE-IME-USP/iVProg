@@ -1,9 +1,4 @@
-import $ from 'jquery';
-import { Types } from '../types';
-import * as Models from '../ivprog_elements';
 import { LocalizedStrings } from '../../services/localizedStringsService';
-import * as GlobalsManagement from '../globals';
-import * as VariablesManagement from '../variables';
 import * as CommandsManagement from '../commands';
 import * as VariableValueMenu from './variable_value_menu';
 import * as ContextualizedMenu from './contextualized_menu';
