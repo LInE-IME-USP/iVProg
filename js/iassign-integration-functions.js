@@ -69,13 +69,14 @@ function getAnswer () {
 function prepareTestCases () {
   var ret = ' \n "testcases" : [ '
   var test_cases_array = $('form[name="test_cases"]').serializeArray();
+  console.log(test_cases_array);
   for (var i = 0; i < test_cases_array.length; i = i + 2) {
     ret += '\n{ ';
     ret += '\n "input": [';
     var inps = test_cases_array[i].value.match(/[^\r\n]+/g);
     if (inps) {
       for (var j = 0; j < inps.length; j++) {
-        ret += '"' + inps[j] + '"';
+        ret += '"' + inps[j].trim() + '"';
         if ((j + 1) < inps.length) {
           ret += ', ';
         }
@@ -85,7 +86,7 @@ function prepareTestCases () {
     var outs = test_cases_array[i+1].value.match(/[^\r\n]+/g);
     if (outs) {
       for (var j = 0; j < outs.length; j++) {
-        ret += '"' + outs[j] + '"';
+        ret += '"' + outs[j].trim() + '"';
         if ((j + 1) < outs.length) {
           ret += ', ';
         }
@@ -273,11 +274,11 @@ function iassingIntegration () {
   // Disable by default...
   $('.assessment_button').addClass('disabled');
 
+  prepareEnvironment();
   if (inIframe()) {
     orderIcons();
     orderWidth();
   }
-  prepareEnvironment();
 }
 
 // Função para preparar a interface para o professor criar atividade:

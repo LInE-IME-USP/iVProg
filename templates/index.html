@@ -4,18 +4,14 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <title></title>
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css" 
-      integrity="sha256-9mbkOfVho3ZPXfM7W8sV2SndrGDuh7wuyLjtsWeTI1Q=" 
-      crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.0/semantic.min.css" integrity="sha256-9mbkOfVho3ZPXfM7W8sV2SndrGDuh7wuyLjtsWeTI1Q=" crossorigin="anonymous" />
     <link rel="stylesheet" type="text/css" href="css/ivprog-visual-1.0.css">
     <link rel="stylesheet" type="text/css" href="css/ivprog-term.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"
-      integrity="sha256-t8GepnyPmw9t+foMh3mKNvcorqNHamSKtKRxxpUEgFI="
-      crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"
       integrity="sha256-KM512VNnjElC30ehFwehXjx1YCHPiQkOPmqnrWtpccM="
       crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.0/semantic.min.js" integrity="sha256-x1fC6BXl6BwnUhfQqqqC0Fd/n12wH+u8u9va6+E7xaA=" crossorigin="anonymous"></script>
     <script src="js/Sortable.js"></script>
     <script src="js/iassign-integration-functions.js"></script>
   </head>
@@ -104,7 +100,7 @@
       </div>
 
     </div>
-
+    <script src="js/iassign-integration-functions.js"></script>
   </div>
   </body>
   <script>
@@ -143,7 +139,6 @@
         $('.created_element').css('left', mouseX);*/
       });
       ivprogCore.LocalizedStrings.updateTagText();
-      
       iassingIntegration();
       if (iLMparameters.iLM_PARAM_TeacherAutoEval == null) {
         ivprogCore.initVisualUI();
