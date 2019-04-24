@@ -2,11 +2,6 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-    <meta http-equiv="cache-control" content="no-cache">
-    <meta http-equiv="cache-control" content="no-store">
-    <meta http-equiv="cache-control" content="max-age=0">
-    <meta http-equiv="expires" content="-1">
-    <meta http-equiv="pragma" content="no-cache">
     <title></title>
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css" 
@@ -18,7 +13,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"
       integrity="sha256-t8GepnyPmw9t+foMh3mKNvcorqNHamSKtKRxxpUEgFI="
       crossorigin="anonymous"></script>
-    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"
+      integrity="sha256-KM512VNnjElC30ehFwehXjx1YCHPiQkOPmqnrWtpccM="
+      crossorigin="anonymous"></script>
+    <script src="js/Sortable.js"></script>
+    <script src="js/iassign-integration-functions.js"></script>
   </head>
   <body>
 
@@ -108,10 +107,6 @@
 
   </div>
   </body>
-  <script src="js/jquery-ui.js"></script>
-  <script src="js/semantic-buttons.js"></script>
-  <script src="js/Sortable.js"></script>
-  <script src="js/iassign-integration-functions.js"></script>
   <script>
     var mouseX;
     var mouseY;
@@ -148,8 +143,9 @@
         $('.created_element').css('left', mouseX);*/
       });
       ivprogCore.LocalizedStrings.updateTagText();
+      
+      iassingIntegration();
       ivprogCore.initVisualUI();
-      prepareEnvironment();
     });
   </script>
 </html>

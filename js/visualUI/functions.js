@@ -681,7 +681,7 @@ function addSortableHandler (element, id_function) {
 
 export function initVisualUI () {
   // MUST USE CONST, LET, OR VAR !!!!!!
-  const mainDiv = $('#visual-main-div');
+  // const mainDiv = $('#visual-main-div');
   // fill mainDiv with functions and globals...
   // renderAlgorithm()...
   $('.add_function_button').on('click', () => {
@@ -719,21 +719,6 @@ export function initVisualUI () {
     window.open('https://www.usp.br/line/ivprog/', '_blank');
   });
   $('.main_title h2').prop('title', LocalizedStrings.getUI('text_ivprog_description'));
-}
-
-export function setTestCases (testCases) {
-  _testCases = testCases;
-}
-
-export function getTestCases () {
-  // Deep clone of test cases to avoid unauthorized modification
-  // TODO: It may be not possible to use this once custom test are fully implemented 
-  return JSON.parse(JSON.stringify(_testCases));
-}
-
-var is_iassign = false;
-
-$( document ).ready(function() {
 
   var time_show = 750;
   $('.visual_coding_button').popup({
@@ -834,8 +819,19 @@ $( document ).ready(function() {
        updateSequenceGlobals(evt.oldIndex, evt.newIndex);
     }
   });
+}
 
-});
+export function setTestCases (testCases) {
+  _testCases = testCases;
+}
+
+export function getTestCases () {
+  // Deep clone of test cases to avoid unauthorized modification
+  // TODO: It may be not possible to use this once custom test are fully implemented 
+  return JSON.parse(JSON.stringify(_testCases));
+}
+
+var is_iassign = false;
 
 function updateSequenceParameters (oldIndex, newIndex, function_obj) {
   function_obj.parameters_list.splice(newIndex, 0, function_obj.parameters_list.splice(oldIndex, 1)[0]);

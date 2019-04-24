@@ -58,8 +58,6 @@ module.exports = {
       new CopyPlugin([
         {from:"css/ivprog-visual-1.0.css", to:path.resolve(__dirname, 'build/css')},
         {from:"css/ivprog-term.css", to:path.resolve(__dirname, 'build/css')},
-        {from:'js/semantic/semantic-buttons.js', to:path.resolve(__dirname, 'build/js')},
-        {from:'js/jquery-ui.js', to:path.resolve(__dirname, 'build/js')},
         {from:'js/Sortable.js', to:path.resolve(__dirname, 'build/js')},
         {from:'js/iassign-integration-functions.js', to:path.resolve(__dirname, 'build/js')},
         /*{from:'index.html', to:path.resolve(__dirname, 'build')},

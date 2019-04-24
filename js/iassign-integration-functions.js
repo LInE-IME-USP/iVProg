@@ -237,15 +237,6 @@ function prepareActivityToStudent (ilm_cont) {
 
 // Função para organizar se para criação, visualização ou resolução de atividade
 function prepareEnvironment () {
-    if ((iLMparameters.iLM_PARAM_AssignmentURL == "true") && (iLMparameters.iLM_PARAM_SendAnswer == "true")) {
-        prepareActivityCreation();
-    }
-}
-
-$(document).ready(function() {
-
-    // Disable by default...
-    $('.assessment_button').addClass('disabled');
 
     // Se iLM_PARAM_SendAnswer for false, então trata-se de resolução de atividade,
     // portanto, a "DIV" de resolução é liberada
@@ -271,12 +262,23 @@ $(document).ready(function() {
     } else {
         renderAlgorithm();
     }
+
+    if ((iLMparameters.iLM_PARAM_AssignmentURL == "true") && (iLMparameters.iLM_PARAM_SendAnswer == "true")) {
+        prepareActivityCreation();
+    }
+}
+
+function iassingIntegration () {
+
+    // Disable by default...
+    $('.assessment_button').addClass('disabled');
+
     if (inIframe()) {
         orderIcons();
         orderWidth();
     }
-
-});
+    prepareEnvironment();
+}
 
 // Função para preparar a interface para o professor criar atividade:
 function prepareActivityCreation () {
