@@ -867,12 +867,13 @@ div.ui.checkbox.transition.visible {
     border: 2px dotted #000000;
     box-shadow: 1px 1px;
     height: 28px;
+    border: 2px solid green;
 }
 .ghost_element, .ghost_parenthesis {
 	opacity: 0;
 }
 .expression_elements:hover .ghost_element, .expression_elements:hover .ghost_parenthesis {
-	opacity: .5;
+	
 }
 .ghost_element:hover, .ghost_parenthesis:hover {
 	opacity: 1.0 !important;
@@ -883,7 +884,7 @@ div.ui.checkbox.transition.visible {
 }
 
 .add_parentheses {
-	margin-left: 5px;
+	margin-left: 40px;
 }
 
 .temp_class {
@@ -924,4 +925,34 @@ div.ui.checkbox.transition.visible {
 	position: absolute;
     top: -15px;
     right: -5px;
+}
+
+.mouse_distance {
+
+}
+
+.mouse_distance_hidden {
+	display: none !important;
+}
+
+.mouse_distance_except {
+	display: inline !important;
+}
+
+.higher_element {
+	display: inline;
+	min-width: 10px !important;
+	min-height: 10px;
+
+    position: absolute;
+    z-index: 99;
+    margin-left: -10px;
+    margin-top: -5px;
+    padding-left: 5px;
+}
+
+.ghost_element {
+    border: 2px solid green !important;
+    box-shadow: #8f8f8f 2px 2px !important;
+    background: #d8ffd8 !important;
 }

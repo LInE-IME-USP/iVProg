@@ -38,9 +38,66 @@ export function renderExpression (command, function_obj, div_to_render, expressi
 
 		    renderElements(command, function_obj, div_to_render, expression_array, types_included);
 		} else {
-			div_to_render.text('selecione uma variável');
+			div_to_render.text(LocalizedStrings.getUI('var_menu_select_var').toLowerCase());
 		}
 	}
+
+	div_to_render.children('.mouse_distance').addClass('mouse_distance_hidden');
+	div_to_render.children('.higher_element').on('mousemove', function(evt) {
+		if (!window.open_or_close) {
+			$(this).css('position', 'relative', '!important');
+			$(this).children('.mouse_distance').css('opacity', '1');
+		}
+	});
+	div_to_render.children('.higher_element').on('mouseout', function(evt) {
+		if (!window.open_or_close) {
+			$(this).css('position', 'absolute', '!important');
+			$(this).children('.mouse_distance').css('opacity', '0');
+		}
+	});
+
+	/*var allfilhos = div_to_render.children('.mouse_distance');
+	console.log(allfilhos);
+	var boudings = [];
+	for (var i = 0; i < allfilhos.length; i++) {
+		boudings.push(allfilhos.get(i).getBoundingClientRect());
+	}
+
+	div_to_render.children('.mouse_distance').addClass('mouse_distance_hidden');
+	
+	div_to_render.on('mousemove mouseenter', function(evt) {
+		if (!window.open_or_close && command.variable.content) {
+
+			
+			var leftDistances = [];
+			var rightDistances = [];
+
+			for (var i = 0; i < allfilhos.length; i++) {
+				var leftD = Math.abs(boudings[i].left - evt.clientX);
+				leftDistances.push(leftD);
+				var rightD = Math.abs(boudings[i].right - evt.clientX);
+				rightDistances.push(rightD);
+			}
+
+			div_to_render.children('.mouse_distance').removeClass('mouse_distance_except');
+			div_to_render.children('.mouse_distance').addClass('mouse_distance_hidden');
+			
+			var menorLeft = Math.min.apply(null, leftDistances);
+			var indiceLeft = leftDistances.indexOf(menorLeft);
+
+			var menorRight = Math.min.apply(null, rightDistances);
+			var indiceRight = rightDistances.indexOf(menorRight);
+
+			if (menorRight < menorLeft) {
+				$(allfilhos.get(indiceRight)).removeClass('mouse_distance_hidden');
+				$(allfilhos.get(indiceRight)).addClass('mouse_distance_except');
+			} else {
+				$(allfilhos.get(indiceLeft)).removeClass('mouse_distance_hidden');
+				$(allfilhos.get(indiceLeft)).addClass('mouse_distance_except');
+			}
+		}
+	});*/
+
 }
 
 function renderElements (command, function_obj, div_to_render, expression_array, types_included) {
@@ -56,8 +113,9 @@ function renderElements (command, function_obj, div_to_render, expression_array,
 		if (expression_array[i].type == "var_value") {
 			var div_temp = $('<div class="single_element_expression" data-index="'+i+'"></div>');
 			if (i == 0) {
-				if (expression_array.length > 0  && !expression_array[1].type_op) {
-					renderStartAddOperator(div_temp, types_included, expression_array, command, function_obj, 0);
+				if (expression_array.length > 0  && !expression_array[0].type_op) {
+
+					renderStartAddOperator(div_to_render, types_included, expression_array, command, function_obj, 0);
 				}
 			}
 			VariableValueMenuManagement.renderMenu(command, expression_array[i], div_temp, function_obj);
@@ -462,15 +520,15 @@ function renderStartAddOperator (div_to_render, types_included, expression_array
 	menu_final += '</div></div>';
 
 	menu_final = $(menu_final);
-	var div_temp = $('<div class="single_element_expression ghost_element"></div>');
+	var div_temp = $('<div class="single_element_expression ghost_element mouse_distance"></div>');
 	div_temp.append(menu_final);
-	div_to_render.append(div_temp);
+	var div_higher = $('<div class="higher_element"></div>');
+	div_higher.append(div_temp);
+	div_to_render.append(div_higher);
 	menu_final.dropdown('set selected', Models.ARITHMETIC_TYPES.minus);
 
 	div_temp.on('click', function() {
 		var sera = position;
-
-		console.log('será inserido em: ', sera);
 
 		if (types_included.indexOf(Models.EXPRESSION_TYPES.exp_arithmetic) >= 0) {
 			console.log('p1');
@@ -520,9 +578,13 @@ function renderFinalAddElements (div_to_render, types_included, expression_array
 	menu_final += '</div></div>';
 
 	menu_final = $(menu_final);
-	var div_temp = $('<div class="single_element_expression ghost_element"></div>');
+	var div_temp = $('<div class="single_element_expression ghost_element mouse_distance"></div>');
+
+	var div_higher = $('<div class="higher_element"></div>');
+	div_higher.append(div_temp);
+	div_to_render.append(div_higher);
 	div_temp.append(menu_final);
-	div_to_render.append(div_temp);
+	//div_to_render.append(div_temp);
 	menu_final.dropdown('set selected', Models.ARITHMETIC_TYPES.plus);
 
 	div_temp.on('click', function() {
@@ -601,8 +663,9 @@ function getLogicOperators () {
 	var logic_operators;
 	logic_operators = '<div class="item" data-type="'+Models.EXPRESSION_TYPES.exp_logic+'" data-value="'+Models.LOGIC_COMPARISON.equals_to+'">==</div>';
 	logic_operators += '<div class="item" data-type="'+Models.EXPRESSION_TYPES.exp_logic+'" data-value="'+Models.LOGIC_COMPARISON.not_equals_to+'">!=</div>';
-	logic_operators += '<div class="item" data-type="'+Models.EXPRESSION_TYPES.exp_logic+'" data-value="'+Models.LOGIC_COMPARISON.and+'">&&</div>';
-	logic_operators += '<div class="item" data-type="'+Models.EXPRESSION_TYPES.exp_logic+'" data-value="'+Models.LOGIC_COMPARISON.or+'">||</div>';
+	logic_operators += '<div class="item" data-type="'+Models.EXPRESSION_TYPES.exp_logic+'" data-value="'+Models.LOGIC_COMPARISON.and+'">'+LocalizedStrings.getUI('and')+'</div>';
+	logic_operators += '<div class="item" data-type="'+Models.EXPRESSION_TYPES.exp_logic+'" data-value="'+Models.LOGIC_COMPARISON.or+'">'+LocalizedStrings.getUI('or')+'</div>';
+	logic_operators += '<div class="item" data-type="'+Models.EXPRESSION_TYPES.exp_logic+'" data-value="'+Models.LOGIC_COMPARISON.not+'">'+LocalizedStrings.getUI('not')+'</div>';
 	return logic_operators;
 }
 

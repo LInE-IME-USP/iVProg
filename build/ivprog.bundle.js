@@ -103,7 +103,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /*! exports provided: version, default */
 /***/ (function(module) {
 
-module.exports = {"version":"2019_03_14 15_44"};
+module.exports = {"version":"2019_04_29 09_57"};
 
 /***/ }),
 
@@ -187,7 +187,7 @@ module.exports =
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// Generated from /tmp/tmp-1782yRQvnNM5ZHBF/ivprog.g4 by ANTLR 4.7
+// Generated from /tmp/tmp-8955ezAWNeCZqSsf/ivprog.g4 by ANTLR 4.7
 // jshint ignore: start
 var antlr4 = __webpack_require__(2);
 
@@ -769,7 +769,7 @@ module.exports =
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// Generated from /tmp/tmp-17823CKm15QJnmLm/ivprog.g4 by ANTLR 4.7
+// Generated from /tmp/tmp-8955jN02K9nWoTjp/ivprog.g4 by ANTLR 4.7
 // jshint ignore: start
 var antlr4 = __webpack_require__(2);
 
@@ -1409,7 +1409,7 @@ module.exports =
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// Generated from /tmp/tmp-17826p8ez5mZyJT9/ivprog.g4 by ANTLR 4.7
+// Generated from /tmp/tmp-89559j3WqZYf2bRf/ivprog.g4 by ANTLR 4.7
 // jshint ignore: start
 var antlr4 = __webpack_require__(2);
 
@@ -22170,20 +22170,20 @@ function functionsCode(function_obj) {
   }
 
   for (var j = 0; j < function_obj.commands.length; j++) {
-    try {
-      ret += commandsCode(function_obj.commands[j]);
-    } catch (err) {
-      has_error = true;
-      console.error(err.message);
-      var todos = jquery__WEBPACK_IMPORTED_MODULE_0___default()('body').find('.command_container');
-
-      for (var i = 0; i < todos.length; i++) {
-        if (jquery__WEBPACK_IMPORTED_MODULE_0___default()(todos[i]).data('command') == function_obj.commands[j]) {
-          jquery__WEBPACK_IMPORTED_MODULE_0___default()(todos[i]).prepend(' <i class="ui icon red exclamation triangle error_icon"></i> ');
-          break;
-        }
-      }
-    }
+    //try {
+    ret += commandsCode(function_obj.commands[j]);
+    /*} catch (err) {
+    		has_error = true;
+    		console.error(err.message);
+    		var todos = $('body').find('.command_container');
+    		for (var i = 0; i < todos.length; i++) {
+    		if ($(todos[i]).data('command') == function_obj.commands[j]) {
+    			$( todos[i] ).prepend( ' <i class="ui icon red exclamation triangle error_icon"></i> ' );
+    			break;
+    		}
+    	}
+    	
+    }*/
   }
 
   ret += '\n\t}';
@@ -22628,32 +22628,22 @@ function attributionsCode(command_obj, indentation) {
   }
 
   ret += variableValueMenuCode(command_obj.variable) + ' = ';
+  /*for (var i = 0; i < command_obj.expression.length; i++) {
+  	ret += elementExpressionCode(command_obj.expression[i]);
+  }*/
 
-  for (var i = 0; i < command_obj.expression.length; i++) {
-    ret += elementExpressionCode(command_obj.expression[i]);
-  }
-
+  ret += elementExpressionCode(command_obj.expression);
   return ret;
 }
 
 function elementExpressionCode(expression_obj) {
   var ret = '';
 
-  for (var i = 0; i < expression_obj.itens.length; i++) {
-    if (expression_obj.itens[i].type) {
-      ret += variableValueMenuCode(expression_obj.itens[i]);
-    } else if (expression_obj.itens[i].type_exp) {
-      if (expression_obj.itens[i].type_exp == _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_ELEMENTS"].par_exp_par) {
-        ret += ' ( ';
-      }
-
-      ret += elementExpressionCode(expression_obj.itens[i]);
-
-      if (expression_obj.itens[i].type_exp == _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_ELEMENTS"].par_exp_par) {
-        ret += ' ) ';
-      }
-    } else {
-      switch (expression_obj.itens[i]) {
+  for (var i = 0; i < expression_obj.length; i++) {
+    if (expression_obj[i].type) {
+      ret += variableValueMenuCode(expression_obj[i]);
+    } else if (expression_obj[i].type_op) {
+      switch (expression_obj[i].item) {
         case _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["ARITHMETIC_TYPES"].plus:
           ret += ' + ';
           break;
@@ -22673,7 +22663,45 @@ function elementExpressionCode(expression_obj) {
         case _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["ARITHMETIC_TYPES"].module:
           ret += ' % ';
           break;
+
+        case _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["LOGIC_COMPARISON"].equals_to:
+          ret += ' == ';
+          break;
+
+        case _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["LOGIC_COMPARISON"].not_equals_to:
+          ret += ' != ';
+          break;
+
+        case _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["LOGIC_COMPARISON"].and:
+          ret += ' ' + _services_localizedStringsService__WEBPACK_IMPORTED_MODULE_3__["LocalizedStrings"].getUI('and') + ' ';
+          break;
+
+        case _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["LOGIC_COMPARISON"].or:
+          ret += ' ' + _services_localizedStringsService__WEBPACK_IMPORTED_MODULE_3__["LocalizedStrings"].getUI('or') + ' ';
+          break;
+
+        case _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["LOGIC_COMPARISON"].not:
+          ret += ' ' + _services_localizedStringsService__WEBPACK_IMPORTED_MODULE_3__["LocalizedStrings"].getUI('not') + ' ';
+          break;
+
+        case _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["ARITHMETIC_COMPARISON"].greater_than:
+          ret += ' > ';
+          break;
+
+        case _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["ARITHMETIC_COMPARISON"].less_than:
+          ret += ' < ';
+          break;
+
+        case _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["ARITHMETIC_COMPARISON"].greater_than_or_equals_to:
+          ret += ' >= ';
+          break;
+
+        case _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["ARITHMETIC_COMPARISON"].less_than_or_equals_to:
+          ret += ' <= ';
+          break;
       }
+    } else {
+      ret += ' ' + expression_obj[i] + ' ';
     }
   }
 
@@ -25460,9 +25488,58 @@ function renderExpression(command, function_obj, div_to_render, expression_array
 
       renderElements(command, function_obj, div_to_render, expression_array, types_included);
     } else {
-      div_to_render.text('selecione uma variável');
+      div_to_render.text(_services_localizedStringsService__WEBPACK_IMPORTED_MODULE_3__["LocalizedStrings"].getUI('var_menu_select_var').toLowerCase());
     }
   }
+
+  div_to_render.children('.mouse_distance').addClass('mouse_distance_hidden');
+  div_to_render.children('.higher_element').on('mousemove', function (evt) {
+    if (!window.open_or_close) {
+      jquery__WEBPACK_IMPORTED_MODULE_0___default()(this).css('position', 'relative', '!important');
+      jquery__WEBPACK_IMPORTED_MODULE_0___default()(this).children('.mouse_distance').css('opacity', '1');
+    }
+  });
+  div_to_render.children('.higher_element').on('mouseout', function (evt) {
+    if (!window.open_or_close) {
+      jquery__WEBPACK_IMPORTED_MODULE_0___default()(this).css('position', 'absolute', '!important');
+      jquery__WEBPACK_IMPORTED_MODULE_0___default()(this).children('.mouse_distance').css('opacity', '0');
+    }
+  });
+  /*var allfilhos = div_to_render.children('.mouse_distance');
+  console.log(allfilhos);
+  var boudings = [];
+  for (var i = 0; i < allfilhos.length; i++) {
+  	boudings.push(allfilhos.get(i).getBoundingClientRect());
+  }
+  	div_to_render.children('.mouse_distance').addClass('mouse_distance_hidden');
+  
+  div_to_render.on('mousemove mouseenter', function(evt) {
+  	if (!window.open_or_close && command.variable.content) {
+  			
+  		var leftDistances = [];
+  		var rightDistances = [];
+  			for (var i = 0; i < allfilhos.length; i++) {
+  			var leftD = Math.abs(boudings[i].left - evt.clientX);
+  			leftDistances.push(leftD);
+  			var rightD = Math.abs(boudings[i].right - evt.clientX);
+  			rightDistances.push(rightD);
+  		}
+  			div_to_render.children('.mouse_distance').removeClass('mouse_distance_except');
+  		div_to_render.children('.mouse_distance').addClass('mouse_distance_hidden');
+  		
+  		var menorLeft = Math.min.apply(null, leftDistances);
+  		var indiceLeft = leftDistances.indexOf(menorLeft);
+  			var menorRight = Math.min.apply(null, rightDistances);
+  		var indiceRight = rightDistances.indexOf(menorRight);
+  			if (menorRight < menorLeft) {
+  			$(allfilhos.get(indiceRight)).removeClass('mouse_distance_hidden');
+  			$(allfilhos.get(indiceRight)).addClass('mouse_distance_except');
+  		} else {
+  			$(allfilhos.get(indiceLeft)).removeClass('mouse_distance_hidden');
+  			$(allfilhos.get(indiceLeft)).addClass('mouse_distance_except');
+  		}
+  	}
+  });*/
 }
 
 function renderElements(command, function_obj, div_to_render, expression_array, types_included) {
@@ -25478,8 +25555,8 @@ function renderElements(command, function_obj, div_to_render, expression_array, 
       var div_temp = jquery__WEBPACK_IMPORTED_MODULE_0___default()('<div class="single_element_expression" data-index="' + i + '"></div>');
 
       if (i == 0) {
-        if (expression_array.length > 0 && !expression_array[1].type_op) {
-          renderStartAddOperator(div_temp, types_included, expression_array, command, function_obj, 0);
+        if (expression_array.length > 0 && !expression_array[0].type_op) {
+          renderStartAddOperator(div_to_render, types_included, expression_array, command, function_obj, 0);
         }
       }
 
@@ -25860,13 +25937,14 @@ function renderStartAddOperator(div_to_render, types_included, expression_array,
 
   menu_final += '</div></div>';
   menu_final = jquery__WEBPACK_IMPORTED_MODULE_0___default()(menu_final);
-  var div_temp = jquery__WEBPACK_IMPORTED_MODULE_0___default()('<div class="single_element_expression ghost_element"></div>');
+  var div_temp = jquery__WEBPACK_IMPORTED_MODULE_0___default()('<div class="single_element_expression ghost_element mouse_distance"></div>');
   div_temp.append(menu_final);
-  div_to_render.append(div_temp);
+  var div_higher = jquery__WEBPACK_IMPORTED_MODULE_0___default()('<div class="higher_element"></div>');
+  div_higher.append(div_temp);
+  div_to_render.append(div_higher);
   menu_final.dropdown('set selected', _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["ARITHMETIC_TYPES"].minus);
   div_temp.on('click', function () {
     var sera = position;
-    console.log('será inserido em: ', sera);
 
     if (types_included.indexOf(_ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_arithmetic) >= 0) {
       console.log('p1');
@@ -25918,9 +25996,12 @@ function renderFinalAddElements(div_to_render, types_included, expression_array,
 
   menu_final += '</div></div>';
   menu_final = jquery__WEBPACK_IMPORTED_MODULE_0___default()(menu_final);
-  var div_temp = jquery__WEBPACK_IMPORTED_MODULE_0___default()('<div class="single_element_expression ghost_element"></div>');
-  div_temp.append(menu_final);
-  div_to_render.append(div_temp);
+  var div_temp = jquery__WEBPACK_IMPORTED_MODULE_0___default()('<div class="single_element_expression ghost_element mouse_distance"></div>');
+  var div_higher = jquery__WEBPACK_IMPORTED_MODULE_0___default()('<div class="higher_element"></div>');
+  div_higher.append(div_temp);
+  div_to_render.append(div_higher);
+  div_temp.append(menu_final); //div_to_render.append(div_temp);
+
   menu_final.dropdown('set selected', _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["ARITHMETIC_TYPES"].plus);
   div_temp.on('click', function () {
     var sera = position;
@@ -25999,8 +26080,9 @@ function getLogicOperators() {
   var logic_operators;
   logic_operators = '<div class="item" data-type="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_logic + '" data-value="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["LOGIC_COMPARISON"].equals_to + '">==</div>';
   logic_operators += '<div class="item" data-type="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_logic + '" data-value="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["LOGIC_COMPARISON"].not_equals_to + '">!=</div>';
-  logic_operators += '<div class="item" data-type="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_logic + '" data-value="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["LOGIC_COMPARISON"].and + '">&&</div>';
-  logic_operators += '<div class="item" data-type="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_logic + '" data-value="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["LOGIC_COMPARISON"].or + '">||</div>';
+  logic_operators += '<div class="item" data-type="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_logic + '" data-value="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["LOGIC_COMPARISON"].and + '">' + _services_localizedStringsService__WEBPACK_IMPORTED_MODULE_3__["LocalizedStrings"].getUI('and') + '</div>';
+  logic_operators += '<div class="item" data-type="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_logic + '" data-value="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["LOGIC_COMPARISON"].or + '">' + _services_localizedStringsService__WEBPACK_IMPORTED_MODULE_3__["LocalizedStrings"].getUI('or') + '</div>';
+  logic_operators += '<div class="item" data-type="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_logic + '" data-value="' + _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["LOGIC_COMPARISON"].not + '">' + _services_localizedStringsService__WEBPACK_IMPORTED_MODULE_3__["LocalizedStrings"].getUI('not') + '</div>';
   return logic_operators;
 }
 
