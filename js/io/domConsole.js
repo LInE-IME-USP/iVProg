@@ -1,5 +1,3 @@
-import $ from 'jquery';
-
 export class DOMConsole {
 
   static get USER () {

@@ -1,9 +1,5 @@
-import $ from 'jquery';
-import { Types } from './types';
 import * as Models from './ivprog_elements';
 import { LocalizedStrings } from './../services/localizedStringsService';
-import * as GlobalsManagement from './globals';
-import * as VariablesManagement from './variables';
 import * as CommentsManagement from './commands/comment';
 import * as ReadersManagement from './commands/reader';
 import * as WritersManagement from './commands/writer';
@@ -18,8 +14,8 @@ import * as VariableValueMenuManagement from './commands/variable_value_menu';
 import * as BreaksManagement from './commands/break';
 import * as ReturnsManagement from './commands/return';
 
-var has_element_created_draged = false;
-var which_element_is_draged = null;
+// let has_element_created_draged = false;
+// let which_element_is_draged = null;
 
 export function removeCommand (command, function_obj, dom_obj) {
 	if (function_obj.commands.indexOf(command) > -1) {
@@ -574,14 +570,14 @@ function manageCommand (function_obj, function_container, event, command_type) {
 		}
 	}
 	if (!esta_correto) {
-		has_element_created_draged = false;
-		which_element_is_draged = null;
+		// has_element_created_draged = false;
+		// which_element_is_draged = null;
 		dragTrash(event);
 		return;
 	} else {
 		if (!esta_na_div_correta) {
-			has_element_created_draged = false;
-			which_element_is_draged = null;
+			// has_element_created_draged = false;
+			// which_element_is_draged = null;
 			dragTrash(event);
 			return;
 		}
@@ -689,8 +685,8 @@ function manageCommand (function_obj, function_container, event, command_type) {
 		}
 	}
 	
-	has_element_created_draged = false;
-	which_element_is_draged = null;
+	// has_element_created_draged = false;
+	// which_element_is_draged = null;
 
 	renderAlgorithm();
 }

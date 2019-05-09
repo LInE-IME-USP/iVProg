@@ -29,7 +29,7 @@ describe('Non initialized matrix', function () {
             mat[i][j] = j
           } senao se (j == 0) {
             mat[i][j] = i
-          } senao se (char_at(str1, i-1) == char_at(str2, j-1)) {
+          } senao se (texto_na_posicao(str1, i-1) == texto_na_posicao(str2, j-1)) {
             mat[i][j] = mat[i-1][j-1]
           } senao {
             mat[i][j] = 1 + Matematica.minimo({mat[i][j-1], mat[i-1][j], mat[i-1][j-1]})

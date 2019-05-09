@@ -30,7 +30,7 @@ describe('The LanguageService', function () {
     const exec = new IVProgProcessor(parser.parseTree());
     exec.registerOutput(output);
     exec.interpretAST().then(sto => {
-      expect(output.list).toEqual(['8.01']);
+      expect(output.list).toEqual([8.01]);
       LanguageService.setLang('pt');
       done();
     }).catch( err => done(err));

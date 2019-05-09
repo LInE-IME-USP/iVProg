@@ -1,12 +1,8 @@
-import $ from 'jquery';
-import { Types } from '../types';
 import * as Models from '../ivprog_elements';
 import { LocalizedStrings } from '../../services/localizedStringsService';
 import * as CommandsManagement from '../commands';
 import * as VariableValueMenuManagement from './variable_value_menu';
 import * as SwitchManagement from './switch';
-
-import * as RepeatNTimesManagement from './repeatNtimes';
 
 export function renderMenu (command, dom_where_render, function_obj, dom_command) {
 

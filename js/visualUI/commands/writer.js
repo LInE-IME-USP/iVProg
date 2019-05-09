@@ -1,15 +1,9 @@
-import $ from 'jquery';
-import { Types } from '../types';
 import * as Models from '../ivprog_elements';
 import { LocalizedStrings } from '../../services/localizedStringsService';
-import * as GlobalsManagement from '../globals';
-import * as VariablesManagement from '../variables';
 import * as VariableValueMenu from './variable_value_menu';
 import * as VariableValueMenuManagement from './variable_value_menu';
 import * as CommandsManagement from '../commands';
 import * as GenericExpressionManagement from './generic_expression';
-
-import '../../Sortable.js';
 
 export function createFloatingCommand () {
 	return $('<div class="ui writer created_element"> <i class="ui icon small upload"></i> <span> '+LocalizedStrings.getUI('text_command_write')+' var </span></div>');

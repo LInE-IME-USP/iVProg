@@ -186,10 +186,10 @@ export function createCastBoolFun () {
 export function createCastStringFun () {
   const castStringFun = function (store, _) {
     const val = store.applyStore('str');
-    let result = convertToString(val)
+    let result = convertToString(val, val.type);
     const temp = new StoreObject(Types.STRING, result);
-    sto.mode = Modes.RETURN;
-    return Promise.resolve(sto.updateStore("$", temp));
+    store.mode = Modes.RETURN;
+    return Promise.resolve(store.updateStore("$", temp));
   }
   const block = new Commands.CommandBlock([], [new Commands.SysCall(castStringFun)]);
   const func = new Commands.Function('$castString', Types.STRING,

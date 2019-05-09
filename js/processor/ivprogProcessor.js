@@ -275,51 +275,30 @@ export class IVProgProcessor {
 
   executeSwitch (store, cmd) {
     this.context.push(Context.BREAKABLE);
-    const auxCaseFun = (promise, switchExp, aCase) => {
-      return promise.then( result => {
-        const sto = result.sto;
-        if (this.ignoreSwitchCases(sto)) {
-          return Promise.resolve(result);
-        } else if (result.wasTrue || aCase.isDefault) {
-          const $newSto = this.executeCommands(result.sto,aCase.commands);
-          return $newSto.then(nSto => {
-            return Promise.resolve({wasTrue: true, sto: nSto});
-          });
+    const outerRef = this;
+    const caseSequence = cmd.cases.reduce( (prev,next) => {
+      return prev.then( tuple => {
+        if(outerRef.ignoreSwitchCases(tuple[1])) {
+          return Promise.resolve(tuple);
+        } else if(tuple[0] || next.isDefault) {
+          return outerRef.executeCommands(tuple[1], next.commands)
+            .then(nSto => Promise.resolve([true, nSto]));
         } else {
-          const $value = this.evaluateExpression(sto,
-            new Expressions.InfixApp(Operators.EQ, switchExp, aCase.expression));
-          return $value.then(vl => {
-            if (vl.value) {
-              const $newSto = this.executeCommands(result.sto,aCase.commands);
-              return $newSto.then(nSto => {
-                return Promise.resolve({wasTrue: true, sto: nSto});
-              });
-            } else {
-              return Promise.resolve({wasTrue: false, sto: sto});
-            }
+          const equalityInfixApp = new Expressions.InfixApp(Operators.EQ, cmd.expression, next.expression);
+          equalityInfixApp.sourceInfo = next.sourceInfo;
+          return outerRef.evaluateExpression(tuple[1],equalityInfixApp).then(stoObj => stoObj.value)
+            .then(isEqual => {
+              if (isEqual) {
+                return this.executeCommands(tuple[1], next.commands)
+                  .then(nSto => Promise.resolve([true, nSto]));
+              } else {
+                return Promise.resolve(tuple);
+              }
           });
         }
       });
-    }
-
-    try {
-      let breakLoop = false;
-      let $result = Promise.resolve({wasTrue: false, sto: store});
-      for (let index = 0; index < cmd.cases.length && !breakLoop; index++) {
-        const aCase = cmd.cases[index];
-        $result = auxCaseFun($result, cmd.expression, aCase);
-        $result.then( r => breakLoop = this.ignoreSwitchCases(r.sto));
-      }
-      return $result.then(r => {
-        this.context.pop();
-        if(r.sto.mode === Modes.BREAK) {
-          r.sto.mode = Modes.RUN;
-        }
-        return r.sto;
-      });
-    } catch (error) {
-      return Promise.reject(error);
-    }
+    }, Promise.resolve([false, store]));
+    return caseSequence.then(tuple => tuple[1]);
   }
 
   executeFor (store, cmd) {

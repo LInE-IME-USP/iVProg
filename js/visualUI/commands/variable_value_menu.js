@@ -1,11 +1,6 @@
-import $ from 'jquery';
-import { Types } from '../types';
 import * as Models from '../ivprog_elements';
 import { LocalizedStrings } from '../../services/localizedStringsService';
-import * as GlobalsManagement from '../globals';
-import * as VariablesManagement from '../variables';
 import * as AttribuitionsManagement from './attribution';
-import * as WritersManagement from './writer';
 import * as RepeatNTimesManagement from './repeatNtimes';
 
 export const VAR_OR_VALUE_TYPES = Object.freeze({only_variable: 1, only_value: 2, only_function: 3, variable_and_function: 4, variable_and_value_opt: 5,

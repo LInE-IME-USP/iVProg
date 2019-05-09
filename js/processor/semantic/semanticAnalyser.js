@@ -10,8 +10,15 @@ import { CompoundType } from '../../typeSystem/compoundType';
 import { MultiType } from '../../typeSystem/multiType';
 import { Config } from '../../util/config';
 import { Store } from '../store/store';
+import { IVProgParser } from '../../ast/ivprogParser';
 
 export class SemanticAnalyser {
+
+  static analyseFromSource (stringCode) {
+    const parser = IVProgParser.createParser(stringCode);
+    const semantic = new SemanticAnalyser(parser.parseTree());
+    return semantic.analyseTree();
+  }
 
   constructor(ast) {
     this.ast = ast;
@@ -139,6 +146,7 @@ export class SemanticAnalyser {
   }
 
   evaluateExpressionType (expression) {
+    // TODO: Throw operator error in case type == UNDEFINED
     if(expression instanceof UnaryApp) {
       const op = expression.op;
       const resultType = this.evaluateExpressionType(expression.left);

@@ -1,6 +1,4 @@
 
-import $ from 'jquery';
-
 export function renderErrorMessage (dom_obj_target, message_text) {
 
 	dom_obj_target.popup({
