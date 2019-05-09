@@ -3,6 +3,7 @@ import { LocalizedStrings } from '../../services/localizedStringsService';
 import * as VariableValueMenu from './variable_value_menu';
 import * as VariableValueMenuManagement from './variable_value_menu';
 import * as CommandsManagement from '../commands';
+import * as GenericExpressionManagement from './generic_expression';
 
 export function createFloatingCommand () {
 	return $('<div class="ui writer created_element"> <i class="ui icon small upload"></i> <span> '+LocalizedStrings.getUI('text_command_write')+' var </span></div>');
@@ -15,7 +16,11 @@ export function renderCommand (command, function_obj) {
 	var el = $(ret);
 	el.data('command', command);
 
-	for (var i = 0; i < command.content.length; i ++) {
+	//renderExpression (command, function_obj, div_to_render, expression_array)
+
+	GenericExpressionManagement.renderExpression(command, function_obj, el.find('.all_elements_write'), command.content);
+
+	/*for (var i = 0; i < command.content.length; i ++) {
 		var new_div_item = $( '<div class="var_value_menu_div"></div>' );
 		var div_parent_with_handler = $( '<div class="div_parent_handler"></div>' );
 		div_parent_with_handler.append($('<i class="ui icon ellipsis vertical inverted handler"></i>'));
@@ -32,7 +37,7 @@ export function renderCommand (command, function_obj) {
 
 	if (command.content.length == 0) {
 		addHandlerIconAdd(el.find('.all_elements_write'), command, function_obj);
-	}
+	}*/
 
 	addHandlers(command, function_obj, el);
 	return el;

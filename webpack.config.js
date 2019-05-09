@@ -60,6 +60,8 @@ module.exports = {
         {from:"css/ivprog-term.css", to:path.resolve(__dirname, 'build/css')},
         {from:'js/Sortable.js', to:path.resolve(__dirname, 'build/js')},
         {from:'js/iassign-integration-functions.js', to:path.resolve(__dirname, 'build/js')},
+        {from: 'img/trash-icon.png', to:path.resolve(__dirname, 'build/img')},
+        {from:'js/jquery.json-editor.min.js', to:path.resolve(__dirname, 'build/js')},
         /*{from:'index.html', to:path.resolve(__dirname, 'build')},
         {from:'runner.html', to:path.resolve(__dirname, 'build')},*/
       ])

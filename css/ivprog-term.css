@@ -36,6 +36,7 @@
   margin-top: -30px;
   position: relative;
   padding: 5px;
+  z-index: 999;
 }
 #ivprog-term i {
   margin-left: 5px;

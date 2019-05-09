@@ -61,14 +61,14 @@ export function renderMenu (command, ref_object, dom_object, function_obj, size_
 		menu_var_or_value += '<div class="menu menu_only_functions">';
 		menu_var_or_value += '</div></div>';
 
-		if (command.type == Models.COMMAND_TYPES.attribution) {
+/*		if (command.type == Models.COMMAND_TYPES.attribution) {
 			menu_var_or_value += '<div class="item"><i class="dropdown icon"></i>' + LocalizedStrings.getUI('text_change');
 			menu_var_or_value += '<div class="menu">';
 			menu_var_or_value += '<div class="item" data-exp="'+Models.EXPRESSION_ELEMENTS.exp_op_exp+'">EXP OP EXP</div>';
 			menu_var_or_value += '<div class="item" data-exp="'+Models.EXPRESSION_ELEMENTS.op_exp+'">OP EXP</div>';
 			menu_var_or_value += '<div class="item" data-exp="'+Models.EXPRESSION_ELEMENTS.par_exp_par+'">( EXP )</div>';
 			menu_var_or_value += '</div></div>';
-		}
+		}*/
 	}
 
     menu_var_or_value += '</div></div>';
@@ -289,14 +289,14 @@ function variableValueMenuCode (command, variable_obj, dom_object, function_obj,
 			var context_menu = '<div class="ui dropdown context_menu_clear"><div class="text"></div><i class="dropdown icon"></i><div class="menu">';
 			context_menu += '<div class="item" data-clear="true">'+LocalizedStrings.getUI('btn_clear')+'</div>';
 
-			if (command.type == Models.COMMAND_TYPES.attribution) {
+			/*if (command.type == Models.COMMAND_TYPES.attribution) {
 				context_menu += '<div class="item"><i class="dropdown icon"></i>' + LocalizedStrings.getUI('text_change');
 				context_menu += '<div class="menu">';
 				context_menu += '<div class="item" data-exp="'+Models.EXPRESSION_ELEMENTS.exp_op_exp+'">EXP OP EXP</div>';
 				context_menu += '<div class="item" data-exp="'+Models.EXPRESSION_ELEMENTS.op_exp+'">OP EXP</div>';
 				context_menu += '<div class="item" data-exp="'+Models.EXPRESSION_ELEMENTS.par_exp_par+'">( EXP )</div>';
 				context_menu += '</div></div>';
-			}
+			}*/
 
 			context_menu += '</div></div>';
 
@@ -359,14 +359,14 @@ function variableValueMenuCode (command, variable_obj, dom_object, function_obj,
 			var context_menu = '<div class="ui dropdown context_menu_clear"><div class="text"></div><i class="dropdown icon"></i><div class="menu">';
 			context_menu += '<div class="item" data-clear="true">'+LocalizedStrings.getUI('btn_clear')+'</div>';
 
-			if (command.type == Models.COMMAND_TYPES.attribution) {
+			/*if (command.type == Models.COMMAND_TYPES.attribution) {
 				context_menu += '<div class="item"><i class="dropdown icon"></i>' + LocalizedStrings.getUI('text_change');
 				context_menu += '<div class="menu">';
 				context_menu += '<div class="item" data-exp="'+Models.EXPRESSION_ELEMENTS.exp_op_exp+'">EXP OP EXP</div>';
 				context_menu += '<div class="item" data-exp="'+Models.EXPRESSION_ELEMENTS.op_exp+'">OP EXP</div>';
 				context_menu += '<div class="item" data-exp="'+Models.EXPRESSION_ELEMENTS.par_exp_par+'">( EXP )</div>';
 				context_menu += '</div></div>';
-			}
+			}*/
 
 			context_menu += '</div></div>';
 
@@ -419,14 +419,14 @@ function variableValueMenuCode (command, variable_obj, dom_object, function_obj,
 			var context_menu = '<div class="ui dropdown context_menu_clear"><div class="text"></div><i class="dropdown icon"></i><div class="menu">';
 			context_menu += '<div class="item" data-clear="true">'+LocalizedStrings.getUI('btn_clear')+'</div>';
 
-			if (command.type == Models.COMMAND_TYPES.attribution) {
+			/*if (command.type == Models.COMMAND_TYPES.attribution) {
 				context_menu += '<div class="item"><i class="dropdown icon"></i>' + LocalizedStrings.getUI('text_change');
 				context_menu += '<div class="menu">';
 				context_menu += '<div class="item" data-exp="'+Models.EXPRESSION_ELEMENTS.exp_op_exp+'">EXP OP EXP</div>';
 				context_menu += '<div class="item" data-exp="'+Models.EXPRESSION_ELEMENTS.op_exp+'">OP EXP</div>';
 				context_menu += '<div class="item" data-exp="'+Models.EXPRESSION_ELEMENTS.par_exp_par+'">( EXP )</div>';
 				context_menu += '</div></div>';
-			}
+			}*/
 
 			context_menu += '</div></div>';
 
@@ -480,14 +480,14 @@ function variableValueMenuCode (command, variable_obj, dom_object, function_obj,
 			var context_menu = '<div class="ui dropdown context_menu_clear"><div class="text"></div><i class="dropdown icon"></i><div class="menu">';
 			context_menu += '<div class="item" data-clear="true">'+LocalizedStrings.getUI('btn_clear')+'</div>';
 
-			if (command.type == Models.COMMAND_TYPES.attribution) {
+			/*if (command.type == Models.COMMAND_TYPES.attribution) {
 				context_menu += '<div class="item"><i class="dropdown icon"></i>' + LocalizedStrings.getUI('text_change');
 				context_menu += '<div class="menu">';
 				context_menu += '<div class="item" data-exp="'+Models.EXPRESSION_ELEMENTS.exp_op_exp+'">EXP OP EXP</div>';
 				context_menu += '<div class="item" data-exp="'+Models.EXPRESSION_ELEMENTS.op_exp+'">OP EXP</div>';
 				context_menu += '<div class="item" data-exp="'+Models.EXPRESSION_ELEMENTS.par_exp_par+'">( EXP )</div>';
 				context_menu += '</div></div>';
-			}
+			}*/
 
 			context_menu += '</div></div>';
 
@@ -542,7 +542,7 @@ function variableValueMenuCode (command, variable_obj, dom_object, function_obj,
 			var context_menu = '<div class="ui dropdown context_menu_clear"><div class="text"></div><i class="dropdown icon"></i><div class="menu">';
 			context_menu += '<div class="item" data-clear="true">'+LocalizedStrings.getUI('btn_clear')+'</div>';
 
-			if (command.type == Models.COMMAND_TYPES.attribution && !dom_object.hasClass('var_attributed')) {
+			/*if (command.type == Models.COMMAND_TYPES.attribution && !dom_object.hasClass('var_attributed')) {
 				console.log('dom_object6');
 				console.log(dom_object);
 				context_menu += '<div class="item"><i class="dropdown icon"></i>' + LocalizedStrings.getUI('text_change');
@@ -551,7 +551,7 @@ function variableValueMenuCode (command, variable_obj, dom_object, function_obj,
 				context_menu += '<div class="item" data-exp="'+Models.EXPRESSION_ELEMENTS.op_exp+'">OP EXP</div>';
 				context_menu += '<div class="item" data-exp="'+Models.EXPRESSION_ELEMENTS.par_exp_par+'">( EXP )</div>';
 				context_menu += '</div></div>';
-			}
+			}*/
 
 			context_menu += '</div></div>';
 
@@ -597,14 +597,14 @@ function variableValueMenuCode (command, variable_obj, dom_object, function_obj,
 		var context_menu = '<div class="ui dropdown context_menu_clear"><div class="text"></div><i class="dropdown icon"></i><div class="menu">';
 		context_menu += '<div class="item" data-clear="true">'+LocalizedStrings.getUI('btn_clear')+'</div>';
 
-		if (command.type == Models.COMMAND_TYPES.attribution) {
+		/*if (command.type == Models.COMMAND_TYPES.attribution) {
 			context_menu += '<div class="item"><i class="dropdown icon"></i>' + LocalizedStrings.getUI('text_change');
 			context_menu += '<div class="menu">';
 			context_menu += '<div class="item" data-exp="'+Models.EXPRESSION_ELEMENTS.exp_op_exp+'">EXP OP EXP</div>';
 			context_menu += '<div class="item" data-exp="'+Models.EXPRESSION_ELEMENTS.op_exp+'">OP EXP</div>';
 			context_menu += '<div class="item" data-exp="'+Models.EXPRESSION_ELEMENTS.par_exp_par+'">( EXP )</div>';
 			context_menu += '</div></div>';
-		}
+		}*/
 
 		context_menu += '</div></div>';
 
@@ -853,14 +853,14 @@ function openInputToFunction (command, ref_object, dom_object, menu_var_or_value
 		var context_menu = '<div class="ui dropdown context_menu_clear"><div class="text"></div><i class="dropdown icon"></i><div class="menu">';
 		context_menu += '<div class="item" data-clear="true">'+LocalizedStrings.getUI('btn_clear')+'</div>';
 
-		if (command.type == Models.COMMAND_TYPES.attribution) {
+		/*if (command.type == Models.COMMAND_TYPES.attribution) {
 			context_menu += '<div class="item"><i class="dropdown icon"></i>' + LocalizedStrings.getUI('text_change');
 			context_menu += '<div class="menu">';
 			context_menu += '<div class="item" data-exp="'+Models.EXPRESSION_ELEMENTS.exp_op_exp+'">EXP OP EXP</div>';
 			context_menu += '<div class="item" data-exp="'+Models.EXPRESSION_ELEMENTS.op_exp+'">OP EXP</div>';
 			context_menu += '<div class="item" data-exp="'+Models.EXPRESSION_ELEMENTS.par_exp_par+'">( EXP )</div>';
 			context_menu += '</div></div>';
-		}
+		}*/
 
 		context_menu += '</div></div>';
 
@@ -912,14 +912,14 @@ function openInputToFunction (command, ref_object, dom_object, menu_var_or_value
 		var context_menu = '<div class="ui dropdown context_menu_clear"><div class="text"></div><i class="dropdown icon"></i><div class="menu">';
 		context_menu += '<div class="item" data-clear="true">'+LocalizedStrings.getUI('btn_clear')+'</div>';
 
-		if (command.type == Models.COMMAND_TYPES.attribution) {
+		/*if (command.type == Models.COMMAND_TYPES.attribution) {
 			context_menu += '<div class="item"><i class="dropdown icon"></i>' + LocalizedStrings.getUI('text_change');
 			context_menu += '<div class="menu">';
 			context_menu += '<div class="item" data-exp="'+Models.EXPRESSION_ELEMENTS.exp_op_exp+'">EXP OP EXP</div>';
 			context_menu += '<div class="item" data-exp="'+Models.EXPRESSION_ELEMENTS.op_exp+'">OP EXP</div>';
 			context_menu += '<div class="item" data-exp="'+Models.EXPRESSION_ELEMENTS.par_exp_par+'">( EXP )</div>';
 			context_menu += '</div></div>';
-		}
+		}*/
 
 		context_menu += '</div></div>';
 
@@ -951,9 +951,9 @@ function openInputToFunction (command, ref_object, dom_object, menu_var_or_value
 		});
 	}
 
-	if (command.type == Models.COMMAND_TYPES.attribution) {
+	/*if (command.type == Models.COMMAND_TYPES.attribution) {
 		AttribuitionsManagement.renderMenuOperations(command, ref_object, dom_object, menu_var_or_value, function_obj);
-	}
+	}*/
 }
 
 function openInputToVariable (command, ref_object, dom_object, menu_var_or_value, function_obj, variable_selected, expression_element) {
@@ -995,7 +995,7 @@ function openInputToVariable (command, ref_object, dom_object, menu_var_or_value
 	var context_menu = '<div class="ui dropdown context_menu_clear"><div class="text"></div><i class="dropdown icon"></i><div class="menu">';
 	context_menu += '<div class="item" data-clear="true">'+LocalizedStrings.getUI('btn_clear')+'</div>';
 
-	if (command.type == Models.COMMAND_TYPES.attribution && !dom_object.hasClass('var_attributed')) {
+	/*if (command.type == Models.COMMAND_TYPES.attribution && !dom_object.hasClass('var_attributed')) {
 		console.log("dom_object 10: ");
 		console.log(dom_object);
 		context_menu += '<div class="item"><i class="dropdown icon"></i>' + LocalizedStrings.getUI('text_change');
@@ -1004,7 +1004,7 @@ function openInputToVariable (command, ref_object, dom_object, menu_var_or_value
 		context_menu += '<div class="item" data-exp="'+Models.EXPRESSION_ELEMENTS.op_exp+'">OP EXP</div>';
 		context_menu += '<div class="item" data-exp="'+Models.EXPRESSION_ELEMENTS.par_exp_par+'">( EXP )</div>';
 		context_menu += '</div></div>';
-	}
+	}*/
 
 	context_menu += '</div></div>';
 
@@ -1040,9 +1040,9 @@ function openInputToVariable (command, ref_object, dom_object, menu_var_or_value
 	  selectOnKeydown: false
 	});
 
-	if (command.type == Models.COMMAND_TYPES.attribution) {
+	/*if (command.type == Models.COMMAND_TYPES.attribution) {
 		AttribuitionsManagement.renderMenuOperations(command, ref_object, dom_object, menu_var_or_value, function_obj, variable_selected);
-	}
+	}*/
 }
 
 
@@ -1064,14 +1064,14 @@ function openInputToValue (command, ref_object, dom_object, menu_var_or_value, f
 	var context_menu = '<div class="ui dropdown context_menu_clear"><div class="text"></div><i class="dropdown icon"></i><div class="menu">';
 	context_menu += '<div class="item" data-clear="true">'+LocalizedStrings.getUI('btn_clear')+'</div>';
 
-	if (command.type == Models.COMMAND_TYPES.attribution) {
+	/*if (command.type == Models.COMMAND_TYPES.attribution) {
 		context_menu += '<div class="item"><i class="dropdown icon"></i>' + LocalizedStrings.getUI('text_change');
 		context_menu += '<div class="menu">';
 		context_menu += '<div class="item" data-exp="'+Models.EXPRESSION_ELEMENTS.exp_op_exp+'">EXP OP EXP</div>';
 		context_menu += '<div class="item" data-exp="'+Models.EXPRESSION_ELEMENTS.op_exp+'">OP EXP</div>';
 		context_menu += '<div class="item" data-exp="'+Models.EXPRESSION_ELEMENTS.par_exp_par+'">( EXP )</div>';
 		context_menu += '</div></div>';
-	}
+	}*/
 
 	context_menu += '</div></div>';
 
@@ -1163,9 +1163,9 @@ function openInputToValue (command, ref_object, dom_object, menu_var_or_value, f
 		openInputToValue(command, ref_object, dom_object, menu_var_or_value, function_obj, expression_element)
 	});
 
-	if (command.type == Models.COMMAND_TYPES.attribution) {
+	/*if (command.type == Models.COMMAND_TYPES.attribution) {
 		AttribuitionsManagement.renderMenuOperations(command, ref_object, dom_object, menu_var_or_value, function_obj);
-	}
+	}*/
 }
 
 

@@ -4,6 +4,7 @@ import * as CommandsManagement from '../commands';
 import * as ConditionalExpressionManagement from './conditional_expression';
 import * as VariableValueMenu from './variable_value_menu';
 import * as ContextualizedMenu from './contextualized_menu';
+import * as GenericExpressionManagement from './generic_expression';
 
 export function createFloatingCommand () {
 	return $('<div class="ui repeatNtimes created_element"> <i class="ui icon small sync"></i> <span> para (x = 0; x < 10; x ++) <br> </span></div>');
@@ -26,7 +27,9 @@ export function renderCommand (command, function_obj) {
 
 	VariableValueMenu.renderMenu(command, command.var_attribution, el.find('.variable_attribution'), function_obj);
 
-	ConditionalExpressionManagement.renderExpression(command, command.expression2, function_obj, el.find('.conditional_expression'));
+	//ConditionalExpressionManagement.renderExpression(command, command.expression2, function_obj, el.find('.conditional_expression'));
+
+	GenericExpressionManagement.renderExpression(command, function_obj, el.find('.conditional_expression'), command.expression2);
 
 	VariableValueMenu.renderMenu(command, command.var_incrementation, el.find('.incrementation_variable'), function_obj);	
 

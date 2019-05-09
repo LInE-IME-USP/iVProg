@@ -154,7 +154,7 @@ body {
 .expression_operand_1, .expression_operand_2, .operator, .div_comment_text, .value_rendered, .parameters_function_called, .parameters_function_called div, .expression_elements,
 .expression_element, .var_rendered, .menu_add_item, .component_element, .component_element, .conditional_expression, .variable_attribution, .attribution_expression, .var_value_expression,
 .incrementation_field, .incrementation_variable, .first_operand, .operator, .second_operand, .variable_to_switch, .variable_case, .button_remove_case, .editing_name_var, .parameter_div_edit,
-.all_elements_write, .container_var_element_control, .inline_add_command, .restart_expression, .div_parent_handler, .div_drag_writer {
+.all_elements_write, .container_var_element_control, .inline_add_command, .restart_expression, .div_parent_handler, .div_drag_writer, .single_element_expression, .ghost_parenthesis {
 	display: inline;
 }
 
@@ -559,7 +559,8 @@ div.function_name_div_updated:active,
 .incrementation_field .incrementation_variable,
 .incrementation_field .first_operand:not(:empty),
 .incrementation_field .operator:not(:empty),
-.incrementation_field .second_operand:not(:empty) {
+.incrementation_field .second_operand:not(:empty),
+.single_element_expression, .ghost_parenthesis {
 	background: #e8e8e8;
 	border-radius: 5px;
 	min-width: 40px;
@@ -860,11 +861,135 @@ div.ui.checkbox.transition.visible {
 }
 
 .ghost_div {
-
     height: 20px;
     background-color: #ffffff;
     margin: 5px;
     border: 2px dotted #000000;
     box-shadow: 1px 1px;
     height: 28px;
+    border: 2px solid green;
+}
+.ghost_element, .ghost_parenthesis {
+	opacity: 0;
+}
+.expression_elements:hover .ghost_element, .expression_elements:hover .ghost_parenthesis {
+	
+}
+.ghost_element:hover, .ghost_parenthesis:hover {
+	opacity: 1.0 !important;
+}
+
+.usepointer, .ghost_element, .ghost_parenthesis, .add_parentheses {
+	cursor: pointer !important;
+}
+
+.add_parentheses {
+	margin-left: 20px;
+}
+
+.temp_class {
+	opacity: 0;
+}
+
+.parentheses_ghost {
+	display: inline;
+	background-color: #2ecc40;
+	padding: 1px 4px;
+    font-size: 120%;
+    padding-bottom: 2px;
+    font-weight: bold;
+    margin: 0px 4px;
+    border-radius: 4px;
+    box-shadow: 4px black;
+    box-shadow: 1px 1px;
+    border: 1px solid gray;
+}
+
+.single_element_expression {
+	position: relative;
+}
+
+.floating_parenthesis {
+	padding: 3px 2px;
+    border: 1px solid gray;
+    background-color: #e8e8e8;
+    width: 30px;
+    text-align: center;
+    border-radius: 5px;
+    font-weight: bold;
+    box-shadow: 2px 2px grey;
+}
+
+.remove_element_expression {
+	display: inline;
+	position: absolute;
+    top: -15px;
+    right: -5px;
+}
+
+.mouse_distance {
+
+}
+
+.mouse_distance_hidden {
+	display: none !important;
+}
+
+.mouse_distance_except {
+	display: inline !important;
+}
+
+.higher_element {
+	display: inline;
+	min-width: 10px !important;
+	min-height: 10px;
+
+    position: absolute;
+    margin-left: -10px;
+    margin-top: -5px;
+    padding-left: 5px;
+}
+
+.ghost_element {
+    border: 2px solid green !important;
+    box-shadow: #8f8f8f 2px 2px !important;
+    background: #d8ffd8 !important;
+}
+
+.ui.button.green.add_expression {
+	padding: 2px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin-left: 5px;
+    padding-left: 10px;
+}
+.ui.button.green.add_expression i {
+	font-size: 110%;
+}
+.simple_add {
+	display: inline;
+}
+.lixeira {
+	position: absolute;
+	top: 300px;
+	left: 200px;
+	height: 100px;
+	background-image: url('../img/trash-icon.png');
+	width: 125px !important;
+    background-position: 0;
+    background-repeat: no-repeat;
+    display: none;
+}
+.lixeira .trash {
+	font-size: 3em;
+}
+.color_test {
+	background-color: green;
+}
+.parentheses_fixed {
+	background-color: #617063 !important;
+	color: white !important;
+}
+.parentheses_in_expression {
+	cursor: pointer;
 }
