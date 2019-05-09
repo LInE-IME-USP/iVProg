@@ -884,7 +884,7 @@ div.ui.checkbox.transition.visible {
 }
 
 .add_parentheses {
-	margin-left: 40px;
+	margin-left: 20px;
 }
 
 .temp_class {
@@ -945,7 +945,6 @@ div.ui.checkbox.transition.visible {
 	min-height: 10px;
 
     position: absolute;
-    z-index: 99;
     margin-left: -10px;
     margin-top: -5px;
     padding-left: 5px;
@@ -955,4 +954,42 @@ div.ui.checkbox.transition.visible {
     border: 2px solid green !important;
     box-shadow: #8f8f8f 2px 2px !important;
     background: #d8ffd8 !important;
+}
+
+.ui.button.green.add_expression {
+	padding: 2px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin-left: 5px;
+    padding-left: 10px;
+}
+.ui.button.green.add_expression i {
+	font-size: 110%;
+}
+.simple_add {
+	display: inline;
+}
+.lixeira {
+	position: absolute;
+	top: 300px;
+	left: 200px;
+	height: 100px;
+	background-image: url('../img/trash-icon.png');
+	width: 125px !important;
+    background-position: 0;
+    background-repeat: no-repeat;
+    display: none;
+}
+.lixeira .trash {
+	font-size: 3em;
+}
+.color_test {
+	background-color: green;
+}
+.parentheses_fixed {
+	background-color: #617063 !important;
+	color: white !important;
+}
+.parentheses_in_expression {
+	cursor: pointer;
 }

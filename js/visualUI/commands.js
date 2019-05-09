@@ -482,18 +482,18 @@ export function genericCreateCommand (command_type) {
 			return new Models.FunctionCall(new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.only_function, null, null, null, false), null);
 
 		case Models.COMMAND_TYPES.iftrue:
-			return new Models.IfTrue(new Models.ConditionalExpression(null), null, null);
+			return new Models.IfTrue([new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.all, null, null, null, true)]);
 
 		case Models.COMMAND_TYPES.repeatNtimes:
 			return new Models.RepeatNTimes(new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.only_variable, null, null, null, false), 
 											new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.only_variable, null, null, null, false),
-										     null, new Models.ConditionalExpression(null), null, null);
+										     null, [new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.all, null, null, null, true)], null, null);
 
 		case Models.COMMAND_TYPES.whiletrue:
-			return new Models.WhileTrue(new Models.ConditionalExpression(null), null);
+			return new Models.WhileTrue([new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.all, null, null, null, true)], null);
 
 		case Models.COMMAND_TYPES.dowhiletrue:
-			return new Models.DoWhileTrue(new Models.ConditionalExpression(null), null);
+			return new Models.DoWhileTrue([new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.all, null, null, null, true)], null);
 
 		case Models.COMMAND_TYPES.switch:
 
@@ -502,7 +502,7 @@ export function genericCreateCommand (command_type) {
 			return new Models.Switch(new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.variable_and_function, null, null, null, true), sc);
 
 		case Models.COMMAND_TYPES.return:
-			return new Models.Return(new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.all, null, null, null, true));
+			return new Models.Return([new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.all, null, null, null, true)]);
 	}
 }
 

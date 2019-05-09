@@ -103,7 +103,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /*! exports provided: version, default */
 /***/ (function(module) {
 
-module.exports = {"version":"2019_04_29 09_57"};
+module.exports = {"version":"2019_05_09 09_47"};
 
 /***/ }),
 
@@ -187,7 +187,7 @@ module.exports =
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// Generated from /tmp/tmp-8955ezAWNeCZqSsf/ivprog.g4 by ANTLR 4.7
+// Generated from /tmp/tmp-3012RFIgZZCz1wJy/ivprog.g4 by ANTLR 4.7
 // jshint ignore: start
 var antlr4 = __webpack_require__(2);
 
@@ -769,7 +769,7 @@ module.exports =
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// Generated from /tmp/tmp-8955jN02K9nWoTjp/ivprog.g4 by ANTLR 4.7
+// Generated from /tmp/tmp-3012Oblwk5XwjfGG/ivprog.g4 by ANTLR 4.7
 // jshint ignore: start
 var antlr4 = __webpack_require__(2);
 
@@ -1409,7 +1409,7 @@ module.exports =
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// Generated from /tmp/tmp-89559j3WqZYf2bRf/ivprog.g4 by ANTLR 4.7
+// Generated from /tmp/tmp-3012E51lJvULv625/ivprog.g4 by ANTLR 4.7
 // jshint ignore: start
 var antlr4 = __webpack_require__(2);
 
@@ -22248,7 +22248,7 @@ function returnsCode(command_obj, indentation) {
 
   if (command_obj.variable_value_menu) {
     try {
-      ret += ' ' + variableValueMenuCode(command_obj.variable_value_menu, true);
+      ret += ' ' + elementExpressionCode(command_obj.variable_value_menu); //ret += ' ' + variableValueMenuCode(command_obj.variable_value_menu, true);
     } catch (err) {}
   }
 
@@ -22331,15 +22331,15 @@ function repeatNtimesCode(command_obj, indentation) {
   ret += ' ; ';
 
   if (command_obj.expression2) {
-    switch (command_obj.expression2.expression.type) {
-      case _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_logic:
-        ret += logicExpressionCode(command_obj.expression2.expression);
-        break;
-
-      case _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_arithmetic:
-        ret += arithmeticExpressionCode(command_obj.expression2.expression);
-        break;
-    }
+    /*switch (command_obj.expression2.expression.type) {
+    	case Models.EXPRESSION_TYPES.exp_logic:
+    		ret += logicExpressionCode(command_obj.expression2.expression);
+    		break;
+    	case Models.EXPRESSION_TYPES.exp_arithmetic:
+    		ret += arithmeticExpressionCode(command_obj.expression2.expression);
+    		break;
+    }*/
+    ret += elementExpressionCode(command_obj.expression2);
   }
 
   ret += ' ; ';
@@ -22401,19 +22401,22 @@ function iftruesCode(command_obj, indentation) {
 
   ret += _services_localizedStringsService__WEBPACK_IMPORTED_MODULE_3__["LocalizedStrings"].getUI('text_if');
 
-  if (!command_obj.expression.expression) {
+  if (!command_obj.expression) {
     _utils__WEBPACK_IMPORTED_MODULE_7__["renderErrorMessage"](command_obj.expression.dom_object, _services_localizedStringsService__WEBPACK_IMPORTED_MODULE_3__["LocalizedStrings"].getUI('inform_valid_expression'));
+  } else {
+    ret += ' ( ';
+    ret += elementExpressionCode(command_obj.expression);
+    ret += ' ) ';
   }
+  /*switch (command_obj.expression.expression.type) {
+  	case Models.EXPRESSION_TYPES.exp_logic:
+  		ret += logicExpressionCode(command_obj.expression.expression);
+  		break;
+  	case Models.EXPRESSION_TYPES.exp_arithmetic:
+  		ret += arithmeticExpressionCode(command_obj.expression.expression);
+  		break;
+  }*/
 
-  switch (command_obj.expression.expression.type) {
-    case _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_logic:
-      ret += logicExpressionCode(command_obj.expression.expression);
-      break;
-
-    case _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_arithmetic:
-      ret += arithmeticExpressionCode(command_obj.expression.expression);
-      break;
-  }
 
   ret += ' { ';
 
@@ -22470,18 +22473,23 @@ function doWhilesCode(command_obj, indentation) {
 
   ret += '} ' + _services_localizedStringsService__WEBPACK_IMPORTED_MODULE_3__["LocalizedStrings"].getUI('text_code_while');
 
-  if (!command_obj.expression.expression) {
+  if (!command_obj.expression) {
     _utils__WEBPACK_IMPORTED_MODULE_7__["renderErrorMessage"](command_obj.expression.dom_object, _services_localizedStringsService__WEBPACK_IMPORTED_MODULE_3__["LocalizedStrings"].getUI('inform_valid_expression'));
   }
+  /*switch (command_obj.expression.expression.type) {
+  	case Models.EXPRESSION_TYPES.exp_logic:
+  		ret += logicExpressionCode(command_obj.expression.expression);
+  		break;
+  	case Models.EXPRESSION_TYPES.exp_arithmetic:
+  		ret += arithmeticExpressionCode(command_obj.expression.expression);
+  		break;
+  }*/
 
-  switch (command_obj.expression.expression.type) {
-    case _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_logic:
-      ret += logicExpressionCode(command_obj.expression.expression);
-      break;
 
-    case _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_arithmetic:
-      ret += arithmeticExpressionCode(command_obj.expression.expression);
-      break;
+  if (command_obj.expression) {
+    ret += ' ( ';
+    ret += elementExpressionCode(command_obj.expression);
+    ret += ' ) ';
   }
 
   return ret;
@@ -22496,18 +22504,23 @@ function whiletruesCode(command_obj, indentation) {
 
   ret += _services_localizedStringsService__WEBPACK_IMPORTED_MODULE_3__["LocalizedStrings"].getUI('text_code_while');
 
-  if (!command_obj.expression.expression) {
+  if (!command_obj.expression) {
     _utils__WEBPACK_IMPORTED_MODULE_7__["renderErrorMessage"](command_obj.expression.dom_object, _services_localizedStringsService__WEBPACK_IMPORTED_MODULE_3__["LocalizedStrings"].getUI('inform_valid_expression'));
   }
+  /*switch (command_obj.expression.expression.type) {
+  	case Models.EXPRESSION_TYPES.exp_logic:
+  		ret += logicExpressionCode(command_obj.expression.expression);
+  		break;
+  	case Models.EXPRESSION_TYPES.exp_arithmetic:
+  		ret += arithmeticExpressionCode(command_obj.expression.expression);
+  		break;
+  }*/
 
-  switch (command_obj.expression.expression.type) {
-    case _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_logic:
-      ret += logicExpressionCode(command_obj.expression.expression);
-      break;
 
-    case _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_arithmetic:
-      ret += arithmeticExpressionCode(command_obj.expression.expression);
-      break;
+  if (command_obj.expression) {
+    ret += ' ( ';
+    ret += elementExpressionCode(command_obj.expression);
+    ret += ' ) ';
   }
 
   ret += ' { ';
@@ -22791,15 +22804,14 @@ function writersCode(command_obj, indentation) {
   }
 
   ret += _services_localizedStringsService__WEBPACK_IMPORTED_MODULE_3__["LocalizedStrings"].getUI('text_command_write') + ' ( ';
+  /*for (var i = 0; i < command_obj.content.length; i++) {
+  	ret += variableValueMenuCode(command_obj.content[i]);
+  		if ((i + 1) < command_obj.content.length) {
+  		ret += ' + ';
+  	}
+  }*/
 
-  for (var i = 0; i < command_obj.content.length; i++) {
-    ret += variableValueMenuCode(command_obj.content[i]);
-
-    if (i + 1 < command_obj.content.length) {
-      ret += ' + ';
-    }
-  }
-
+  ret += elementExpressionCode(command_obj.content);
   ret += ' ) ';
   return ret;
 }
@@ -23731,23 +23743,23 @@ function genericCreateCommand(command_type) {
       return new _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["FunctionCall"](new _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["VariableValueMenu"](_commands_variable_value_menu__WEBPACK_IMPORTED_MODULE_16__["VAR_OR_VALUE_TYPES"].only_function, null, null, null, false), null);
 
     case _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["COMMAND_TYPES"].iftrue:
-      return new _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["IfTrue"](new _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["ConditionalExpression"](null), null, null);
+      return new _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["IfTrue"]([new _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["VariableValueMenu"](_commands_variable_value_menu__WEBPACK_IMPORTED_MODULE_16__["VAR_OR_VALUE_TYPES"].all, null, null, null, true)]);
 
     case _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["COMMAND_TYPES"].repeatNtimes:
-      return new _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["RepeatNTimes"](new _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["VariableValueMenu"](_commands_variable_value_menu__WEBPACK_IMPORTED_MODULE_16__["VAR_OR_VALUE_TYPES"].only_variable, null, null, null, false), new _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["VariableValueMenu"](_commands_variable_value_menu__WEBPACK_IMPORTED_MODULE_16__["VAR_OR_VALUE_TYPES"].only_variable, null, null, null, false), null, new _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["ConditionalExpression"](null), null, null);
+      return new _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["RepeatNTimes"](new _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["VariableValueMenu"](_commands_variable_value_menu__WEBPACK_IMPORTED_MODULE_16__["VAR_OR_VALUE_TYPES"].only_variable, null, null, null, false), new _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["VariableValueMenu"](_commands_variable_value_menu__WEBPACK_IMPORTED_MODULE_16__["VAR_OR_VALUE_TYPES"].only_variable, null, null, null, false), null, [new _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["VariableValueMenu"](_commands_variable_value_menu__WEBPACK_IMPORTED_MODULE_16__["VAR_OR_VALUE_TYPES"].all, null, null, null, true)], null, null);
 
     case _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["COMMAND_TYPES"].whiletrue:
-      return new _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["WhileTrue"](new _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["ConditionalExpression"](null), null);
+      return new _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["WhileTrue"]([new _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["VariableValueMenu"](_commands_variable_value_menu__WEBPACK_IMPORTED_MODULE_16__["VAR_OR_VALUE_TYPES"].all, null, null, null, true)], null);
 
     case _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["COMMAND_TYPES"].dowhiletrue:
-      return new _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["DoWhileTrue"](new _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["ConditionalExpression"](null), null);
+      return new _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["DoWhileTrue"]([new _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["VariableValueMenu"](_commands_variable_value_menu__WEBPACK_IMPORTED_MODULE_16__["VAR_OR_VALUE_TYPES"].all, null, null, null, true)], null);
 
     case _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["COMMAND_TYPES"].switch:
       var sc = [new _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["SwitchCase"](new _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["VariableValueMenu"](_commands_variable_value_menu__WEBPACK_IMPORTED_MODULE_16__["VAR_OR_VALUE_TYPES"].all, null, null, null, true))];
       return new _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["Switch"](new _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["VariableValueMenu"](_commands_variable_value_menu__WEBPACK_IMPORTED_MODULE_16__["VAR_OR_VALUE_TYPES"].variable_and_function, null, null, null, true), sc);
 
     case _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["COMMAND_TYPES"].return:
-      return new _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["Return"](new _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["VariableValueMenu"](_commands_variable_value_menu__WEBPACK_IMPORTED_MODULE_16__["VAR_OR_VALUE_TYPES"].all, null, null, null, true));
+      return new _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["Return"]([new _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["VariableValueMenu"](_commands_variable_value_menu__WEBPACK_IMPORTED_MODULE_16__["VAR_OR_VALUE_TYPES"].all, null, null, null, true)]);
   }
 }
 
@@ -25334,6 +25346,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _commands__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../commands */ "./js/visualUI/commands.js");
 /* harmony import */ var _conditional_expression__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./conditional_expression */ "./js/visualUI/commands/conditional_expression.js");
 /* harmony import */ var _contextualized_menu__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./contextualized_menu */ "./js/visualUI/commands/contextualized_menu.js");
+/* harmony import */ var _generic_expression__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./generic_expression */ "./js/visualUI/commands/generic_expression.js");
+
 
 
 
@@ -25357,8 +25371,11 @@ function renderCommand(command, function_obj) {
   el.data('command', command);
   el.find('.block_commands').data('command', command);
   addHandlers(command, function_obj, el);
-  _contextualized_menu__WEBPACK_IMPORTED_MODULE_8__["renderMenu"](command, el.find('.context_menu'), function_obj, el);
-  _conditional_expression__WEBPACK_IMPORTED_MODULE_7__["renderExpression"](command, command.expression, function_obj, el.find('.conditional_expression'));
+  _contextualized_menu__WEBPACK_IMPORTED_MODULE_8__["renderMenu"](command, el.find('.context_menu'), function_obj, el); //ConditionalExpressionManagement.renderExpression(command, command.expression, function_obj, el.find('.conditional_expression'));
+
+  if (command.expression) {
+    _generic_expression__WEBPACK_IMPORTED_MODULE_9__["renderExpression"](command, function_obj, el.find('.conditional_expression'), command.expression);
+  }
 
   if (command.commands_block) {
     for (var j = 0; j < command.commands_block.length; j++) {
@@ -25490,6 +25507,12 @@ function renderExpression(command, function_obj, div_to_render, expression_array
     } else {
       div_to_render.text(_services_localizedStringsService__WEBPACK_IMPORTED_MODULE_3__["LocalizedStrings"].getUI('var_menu_select_var').toLowerCase());
     }
+  } else {
+    var types_included = [];
+    types_included.push(_ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_conditional);
+    types_included.push(_ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_logic);
+    types_included.push(_ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_arithmetic);
+    renderElements(command, function_obj, div_to_render, expression_array, types_included);
   }
 
   div_to_render.children('.mouse_distance').addClass('mouse_distance_hidden');
@@ -25505,41 +25528,140 @@ function renderExpression(command, function_obj, div_to_render, expression_array
       jquery__WEBPACK_IMPORTED_MODULE_0___default()(this).children('.mouse_distance').css('opacity', '0');
     }
   });
-  /*var allfilhos = div_to_render.children('.mouse_distance');
-  console.log(allfilhos);
-  var boudings = [];
-  for (var i = 0; i < allfilhos.length; i++) {
-  	boudings.push(allfilhos.get(i).getBoundingClientRect());
+  var lixeira = jquery__WEBPACK_IMPORTED_MODULE_0___default()('<div class="lixeira" draggable="true"></div>');
+  div_to_render.find('.single_element_expression').on('mousedown', function (evt) {
+    window.posX = evt.clientX;
+    window.posY = evt.clientY;
+  });
+  Sortable.create(div_to_render[0], {
+    animation: 100,
+    ghostClass: 'ghost',
+    group: {
+      name: 'shared',
+      put: false // Do not allow items to be put into this list
+
+    },
+    draggable: '.single_element_expression',
+    sort: false,
+    filter: '.not_allowed',
+    onStart: function onStart(event) {
+      jquery__WEBPACK_IMPORTED_MODULE_0___default()('body').append(lixeira);
+      lixeira.css('display', 'block');
+      lixeira.css('top', window.posY + 70, '!important');
+      lixeira.css('left', window.posX - 20, '!important');
+    },
+    onMove: function onMove(event) {
+      lixeira.addClass('color_test');
+    },
+    onEnd: function onEnd(event) {
+      lixeira.remove();
+      div_to_render.find('.ghost').removeClass('ghost');
+    }
+  });
+  new Sortable(lixeira[0], {
+    group: 'shared',
+    animation: 150,
+    onAdd: function onAdd(evt) {
+      lixeira.css('display', 'none');
+      lixeira.find('.single_element_expression').remove();
+      lixeira.css('background-color', '');
+      lixeira.remove();
+      removeElement(evt, expression_array);
+      renderExpression(command, function_obj, div_to_render, expression_array);
+    }
+  });
+}
+
+function removeElement(event, expression_array) {
+  var indice = jquery__WEBPACK_IMPORTED_MODULE_0___default()(event.item).data('index');
+  var first = expression_array[0];
+  console.log('indice: ', indice);
+
+  if (expression_array[indice].type) {
+    // if is alone in expression:
+    if (expression_array.length == 1) {
+      //function_obj.commands.splice(function_obj.commands.indexOf(command), 1);
+      expression_array.splice(0, 1);
+    } else if (expression_array.length > 1) {
+      if (indice > 0 && expression_array[indice - 1].type_op) {
+        if (indice < expression_array.length && expression_array[indice - 2] == '(' && expression_array[indice + 1].type_op) {
+          expression_array.splice(indice + 1, 1);
+        }
+
+        expression_array.splice(indice, 1);
+        expression_array.splice(indice - 1, 1);
+
+        if (indice - 2 < expression_array.length && expression_array[indice - 2] == '(' && expression_array[indice - 1] == ')') {
+          expression_array.splice(indice - 1, 1);
+          expression_array.splice(indice - 2, 1);
+
+          if (indice - 3 >= 0 && indice - 3 < expression_array.length && expression_array[indice - 3].type_op) {
+            expression_array.splice(indice - 3, 1);
+          }
+        }
+      } else if (indice < expression_array.length - 1 && expression_array[indice + 1].type_op) {
+        expression_array.splice(indice + 1, 1);
+        expression_array.splice(indice, 1);
+      } else if (indice < expression_array.length - 1 && indice > 0 && expression_array[indice - 1] == '(' && expression_array[indice + 1] == ')') {
+        if (indice > 1 && expression_array[indice - 2].type_op) {
+          expression_array.splice(indice + 1, 1);
+          expression_array.splice(indice, 1);
+          expression_array.splice(indice - 1, 1);
+          expression_array.splice(indice - 2, 1);
+        } else if (indice < expression_array.length - 2 && expression_array[indice + 2].type_op) {
+          expression_array.splice(indice + 1, 1);
+          expression_array.splice(indice, 1);
+          expression_array.splice(indice - 1, 1);
+        } else {
+          expression_array.splice(indice + 1, 1);
+          expression_array.splice(indice, 1);
+          expression_array.splice(indice - 1, 1);
+        }
+      }
+    }
+  } else if (expression_array[indice].type_op) {// iVProg doesn't support operator remove
+  } else {
+    var opening = -1;
+    var closing = -1;
+
+    if (expression_array[indice] == '(') {
+      opening = indice;
+
+      for (var i = indice + 1; i < expression_array.length; i++) {
+        if (expression_array[i] == ')') {
+          closing = i;
+          break;
+        }
+      }
+    } else {
+      closing = indice;
+
+      for (var i = indice - 1; i >= 0; i--) {
+        if (expression_array[i] == '(') {
+          opening = i;
+          break;
+        }
+      }
+    }
+
+    if (expression_array[opening + 1].type_op) {
+      expression_array.splice(closing, 1);
+      expression_array.splice(opening + 1, 1);
+      expression_array.splice(opening, 1);
+    } else {
+      expression_array.splice(closing, 1);
+      expression_array.splice(opening, 1);
+    }
+  } // if expression is empty, add a new var value:
+
+
+  if (expression_array.length == 0) {
+    expression_array.push(new _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["VariableValueMenu"](_variable_value_menu__WEBPACK_IMPORTED_MODULE_6__["VAR_OR_VALUE_TYPES"].all, null, null, null, true));
   }
-  	div_to_render.children('.mouse_distance').addClass('mouse_distance_hidden');
-  
-  div_to_render.on('mousemove mouseenter', function(evt) {
-  	if (!window.open_or_close && command.variable.content) {
-  			
-  		var leftDistances = [];
-  		var rightDistances = [];
-  			for (var i = 0; i < allfilhos.length; i++) {
-  			var leftD = Math.abs(boudings[i].left - evt.clientX);
-  			leftDistances.push(leftD);
-  			var rightD = Math.abs(boudings[i].right - evt.clientX);
-  			rightDistances.push(rightD);
-  		}
-  			div_to_render.children('.mouse_distance').removeClass('mouse_distance_except');
-  		div_to_render.children('.mouse_distance').addClass('mouse_distance_hidden');
-  		
-  		var menorLeft = Math.min.apply(null, leftDistances);
-  		var indiceLeft = leftDistances.indexOf(menorLeft);
-  			var menorRight = Math.min.apply(null, rightDistances);
-  		var indiceRight = rightDistances.indexOf(menorRight);
-  			if (menorRight < menorLeft) {
-  			$(allfilhos.get(indiceRight)).removeClass('mouse_distance_hidden');
-  			$(allfilhos.get(indiceRight)).addClass('mouse_distance_except');
-  		} else {
-  			$(allfilhos.get(indiceLeft)).removeClass('mouse_distance_hidden');
-  			$(allfilhos.get(indiceLeft)).addClass('mouse_distance_except');
-  		}
-  	}
-  });*/
+
+  if (first != expression_array[0] && expression_array[0].type_op) {
+    expression_array.splice(0, 1);
+  }
 }
 
 function renderElements(command, function_obj, div_to_render, expression_array, types_included) {
@@ -25573,11 +25695,17 @@ function renderElements(command, function_obj, div_to_render, expression_array, 
         renderParenthesis(div_to_render, expression_array[i], command, function_obj, i, expression_array);
       }
     } else {
+      if (i == 0) {
+        console.log("NEGAÇÃO NO PRIMEIRO ELEMENTO");
+      } else if (expression_array[i - 1] == '(') {
+        console.log("NEGAÇÃO APÓS O PARÊNTESES");
+      }
+
       renderOperatorMenu(command, function_obj, div_to_render, expression_array[i], types_included, i, expression_array);
     }
   }
 
-  renderFinalAddElements(div_to_render, types_included, expression_array, command, function_obj, i);
+  renderFinalAddElements(div_to_render, types_included, expression_array, command, function_obj, i, true);
   renderAddParenthesis(command, function_obj, div_to_render, expression_array, types_included);
 }
 
@@ -25585,7 +25713,7 @@ window.parentheses_activate = false;
 window.open_or_close = null;
 
 function renderAddParenthesis(command, function_obj, div_to_render, expression_array, types_included) {
-  var addParentheses = jquery__WEBPACK_IMPORTED_MODULE_0___default()('<div class="single_element_expression add_parentheses"><i class="icons"><b style="font-style: normal;">( )</b><i class="corner add icon blue" style="font-size: .6em;right: -3px;bottom: -2px;"></i></i></div>');
+  var addParentheses = jquery__WEBPACK_IMPORTED_MODULE_0___default()('<div class="single_element_expression add_parentheses not_allowed"><i class="icons"><b style="font-style: normal;">( )</b><i class="corner add icon blue" style="font-size: .6em;right: -3px;bottom: -2px;"></i></i></div>');
   div_to_render.append(addParentheses);
   addParentheses.popup({
     content: "Adicionar parênteses",
@@ -25657,6 +25785,7 @@ function renderAddParenthesis(command, function_obj, div_to_render, expression_a
           return;
         }
 
+        window.open_parentheses.addClass('parentheses_fixed');
         floating = jquery__WEBPACK_IMPORTED_MODULE_0___default()('<div class="floating_parenthesis"> ) </div>');
         floating.draggable().appendTo("body");
         floating.css("position", "absolute");
@@ -25668,6 +25797,7 @@ function renderAddParenthesis(command, function_obj, div_to_render, expression_a
         });
       } else {
         floating.remove();
+        window.open_parentheses.removeClass('parentheses_fixed');
         div_to_render.off('mousemove');
         div_to_render.off('mouseleave');
         jquery__WEBPACK_IMPORTED_MODULE_0___default()('body').off('mouseup');
@@ -25898,7 +26028,7 @@ function renderGhostParentheses(actual_target, command, function_obj, div_to_ren
 }
 
 function renderParenthesis(div_to_render, expression_content, command, function_obj, position, expression_array) {
-  var ghost_parenthesis = jquery__WEBPACK_IMPORTED_MODULE_0___default()('<div class="single_element_expression" data-index="' + position + '">' + expression_content + '</div>');
+  var ghost_parenthesis = jquery__WEBPACK_IMPORTED_MODULE_0___default()('<div class="single_element_expression parentheses_in_expression" data-index="' + position + '">' + expression_content + '</div>');
   div_to_render.append(ghost_parenthesis);
 }
 
@@ -25944,24 +26074,27 @@ function renderStartAddOperator(div_to_render, types_included, expression_array,
   div_to_render.append(div_higher);
   menu_final.dropdown('set selected', _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["ARITHMETIC_TYPES"].minus);
   div_temp.on('click', function () {
-    var sera = position;
+    if (!window.open_or_close) {
+      var sera = position;
 
-    if (types_included.indexOf(_ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_arithmetic) >= 0) {
-      console.log('p1');
-      expression_array.splice(sera, 0, new _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["ExpressionOperator"](_ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_arithmetic, _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["ARITHMETIC_TYPES"].minus));
-    } else if (types_included.indexOf(_ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_logic) >= 0) {
-      console.log('p2');
-      expression_array.splice(sera, 0, new _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["ExpressionOperator"](_ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_logic, _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["LOGIC_COMPARISON"].equals_to));
-    } else if (types_included.indexOf(_ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_conditional) >= 0) {
-      console.log('p3');
-      expression_array.splice(sera, 0, new _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["ExpressionOperator"](_ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_conditional, _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["ARITHMETIC_COMPARISON"].greater_than));
+      if (types_included.indexOf(_ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_arithmetic) >= 0) {
+        console.log('p1');
+        expression_array.splice(sera, 0, new _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["ExpressionOperator"](_ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_arithmetic, _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["ARITHMETIC_TYPES"].minus));
+      } else if (types_included.indexOf(_ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_logic) >= 0) {
+        console.log('p2');
+        expression_array.splice(sera, 0, new _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["ExpressionOperator"](_ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_logic, _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["LOGIC_COMPARISON"].equals_to));
+      } else if (types_included.indexOf(_ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_conditional) >= 0) {
+        console.log('p3');
+        expression_array.splice(sera, 0, new _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["ExpressionOperator"](_ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_conditional, _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["ARITHMETIC_COMPARISON"].greater_than));
+      }
+
+      renderExpression(command, function_obj, div_to_render, expression_array);
     }
-
-    renderExpression(command, function_obj, div_to_render, expression_array);
   });
 }
 
 function renderFinalAddElements(div_to_render, types_included, expression_array, command, function_obj, position) {
+  var is_last = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : false;
   var menu_final = '<div class="ui dropdown disabled usepointer"><div class="text"> + </div><i class="dropdown icon"></i><div class="menu">';
 
   if (types_included.indexOf(_ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_arithmetic) >= 0) {
@@ -25996,25 +26129,44 @@ function renderFinalAddElements(div_to_render, types_included, expression_array,
 
   menu_final += '</div></div>';
   menu_final = jquery__WEBPACK_IMPORTED_MODULE_0___default()(menu_final);
-  var div_temp = jquery__WEBPACK_IMPORTED_MODULE_0___default()('<div class="single_element_expression ghost_element mouse_distance"></div>');
+  var div_temp = jquery__WEBPACK_IMPORTED_MODULE_0___default()('<div class="simple_add mouse_distance"></div>');
   var div_higher = jquery__WEBPACK_IMPORTED_MODULE_0___default()('<div class="higher_element"></div>');
-  div_higher.append(div_temp);
-  div_to_render.append(div_higher);
-  div_temp.append(menu_final); //div_to_render.append(div_temp);
+  var button = jquery__WEBPACK_IMPORTED_MODULE_0___default()('<button class="ui button green add_expression"><i class="plus circle inverted icon"></i></button>');
+  div_temp.append(button);
+
+  if (!is_last) {
+    div_higher.append(div_temp);
+    div_to_render.append(div_higher); //div_temp.append(menu_final);
+
+    div_temp.css('opacity', '0', '!important');
+  } else {
+    div_temp.removeClass('mouse_distance');
+    div_temp.css('opacity', '1', '!important'); //div_temp.append(menu_final);
+
+    div_to_render.append(div_temp);
+  }
 
   menu_final.dropdown('set selected', _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["ARITHMETIC_TYPES"].plus);
   div_temp.on('click', function () {
     var sera = position;
 
-    if (types_included.indexOf(_ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_arithmetic) >= 0) {
-      expression_array.splice(sera, 0, new _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["ExpressionOperator"](_ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_arithmetic, _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["ARITHMETIC_TYPES"].plus));
-    } else if (types_included.indexOf(_ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_logic) >= 0) {
-      expression_array.splice(sera, 0, new _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["ExpressionOperator"](_ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_logic, _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["LOGIC_COMPARISON"].equals_to));
-    } else if (types_included.indexOf(_ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_conditional) >= 0) {
-      expression_array.splice(sera, 0, new _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["ExpressionOperator"](_ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_conditional, _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["ARITHMETIC_COMPARISON"].greater_than));
+    if (expression_array[sera] == ')' && expression_array[sera - 1] == '(') {
+      expression_array.splice(sera, 0, new _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["VariableValueMenu"](_variable_value_menu__WEBPACK_IMPORTED_MODULE_6__["VAR_OR_VALUE_TYPES"].all, null, null, null, true));
+      renderExpression(command, function_obj, div_to_render, expression_array);
+      return;
     }
 
-    expression_array.splice(sera + 1, 0, new _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["VariableValueMenu"](_variable_value_menu__WEBPACK_IMPORTED_MODULE_6__["VAR_OR_VALUE_TYPES"].all, null, null, null, true));
+    if (types_included.indexOf(_ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_arithmetic) >= 0) {
+      expression_array.splice(sera, 0, new _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["ExpressionOperator"](_ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_arithmetic, _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["ARITHMETIC_TYPES"].plus));
+      expression_array.splice(sera + 1, 0, new _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["VariableValueMenu"](_variable_value_menu__WEBPACK_IMPORTED_MODULE_6__["VAR_OR_VALUE_TYPES"].all, null, null, null, true));
+    } else if (types_included.indexOf(_ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_logic) >= 0) {
+      expression_array.splice(sera, 0, new _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["ExpressionOperator"](_ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_logic, _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["LOGIC_COMPARISON"].equals_to));
+      expression_array.splice(sera + 1, 0, new _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["VariableValueMenu"](_variable_value_menu__WEBPACK_IMPORTED_MODULE_6__["VAR_OR_VALUE_TYPES"].all, null, null, null, true));
+    } else if (types_included.indexOf(_ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_conditional) >= 0) {
+      expression_array.splice(sera, 0, new _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["ExpressionOperator"](_ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["EXPRESSION_TYPES"].exp_conditional, _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["ARITHMETIC_COMPARISON"].greater_than));
+      expression_array.splice(sera + 1, 0, new _ivprog_elements__WEBPACK_IMPORTED_MODULE_2__["VariableValueMenu"](_variable_value_menu__WEBPACK_IMPORTED_MODULE_6__["VAR_OR_VALUE_TYPES"].all, null, null, null, true));
+    }
+
     renderExpression(command, function_obj, div_to_render, expression_array);
   });
 }
@@ -26054,7 +26206,7 @@ function renderOperatorMenu(command, function_obj, div_to_render, expression_ele
 
   menu_final += '</div></div>';
   menu_final = jquery__WEBPACK_IMPORTED_MODULE_0___default()(menu_final);
-  var div_temp = jquery__WEBPACK_IMPORTED_MODULE_0___default()('<div class="single_element_expression" data-index="' + position + '"></div>');
+  var div_temp = jquery__WEBPACK_IMPORTED_MODULE_0___default()('<div class="single_element_expression not_allowed" data-index="' + position + '"></div>');
   div_temp.append(menu_final);
   div_to_render.append(div_temp);
   menu_final.dropdown({
@@ -26119,6 +26271,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _variables__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../variables */ "./js/visualUI/variables.js");
 /* harmony import */ var _commands__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../commands */ "./js/visualUI/commands.js");
 /* harmony import */ var _conditional_expression__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./conditional_expression */ "./js/visualUI/commands/conditional_expression.js");
+/* harmony import */ var _generic_expression__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./generic_expression */ "./js/visualUI/commands/generic_expression.js");
+
 
 
 
@@ -26149,8 +26303,9 @@ function renderCommand(command, function_obj) {
   el.find('.data_block_if').data('command', command);
   el.find('.data_block_else').data('command', command);
   el.find('.commands_if').data('command', command);
-  addHandlers(command, function_obj, el);
-  _conditional_expression__WEBPACK_IMPORTED_MODULE_7__["renderExpression"](command, command.expression, function_obj, el.find('.conditional_expression'));
+  addHandlers(command, function_obj, el); //ConditionalExpressionManagement.renderExpression(command, command.expression, function_obj, el.find('.conditional_expression'));
+
+  _generic_expression__WEBPACK_IMPORTED_MODULE_8__["renderExpression"](command, function_obj, el.find('.conditional_expression'), command.expression);
 
   if (command.commands_block) {
     for (var j = 0; j < command.commands_block.length; j++) {
@@ -26255,6 +26410,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _conditional_expression__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./conditional_expression */ "./js/visualUI/commands/conditional_expression.js");
 /* harmony import */ var _variable_value_menu__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./variable_value_menu */ "./js/visualUI/commands/variable_value_menu.js");
 /* harmony import */ var _contextualized_menu__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./contextualized_menu */ "./js/visualUI/commands/contextualized_menu.js");
+/* harmony import */ var _generic_expression__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./generic_expression */ "./js/visualUI/commands/generic_expression.js");
+
 
 
 
@@ -26279,8 +26436,9 @@ function renderCommand(command, function_obj) {
   el.find('.block_commands').data('command', command);
   addHandlers(command, function_obj, el);
   _contextualized_menu__WEBPACK_IMPORTED_MODULE_9__["renderMenu"](command, el.find('.context_menu'), function_obj, el);
-  _variable_value_menu__WEBPACK_IMPORTED_MODULE_8__["renderMenu"](command, command.var_attribution, el.find('.variable_attribution'), function_obj);
-  _conditional_expression__WEBPACK_IMPORTED_MODULE_7__["renderExpression"](command, command.expression2, function_obj, el.find('.conditional_expression'));
+  _variable_value_menu__WEBPACK_IMPORTED_MODULE_8__["renderMenu"](command, command.var_attribution, el.find('.variable_attribution'), function_obj); //ConditionalExpressionManagement.renderExpression(command, command.expression2, function_obj, el.find('.conditional_expression'));
+
+  _generic_expression__WEBPACK_IMPORTED_MODULE_10__["renderExpression"](command, function_obj, el.find('.conditional_expression'), command.expression2);
   _variable_value_menu__WEBPACK_IMPORTED_MODULE_8__["renderMenu"](command, command.var_incrementation, el.find('.incrementation_variable'), function_obj);
 
   if (command.expression1) {
@@ -26408,6 +26566,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _variables__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../variables */ "./js/visualUI/variables.js");
 /* harmony import */ var _variable_value_menu__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./variable_value_menu */ "./js/visualUI/commands/variable_value_menu.js");
 /* harmony import */ var _commands__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../commands */ "./js/visualUI/commands.js");
+/* harmony import */ var _generic_expression__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./generic_expression */ "./js/visualUI/commands/generic_expression.js");
+
 
 
 
@@ -26420,14 +26580,15 @@ function createFloatingCommand() {
   return jquery__WEBPACK_IMPORTED_MODULE_0___default()('<div class="ui return created_element"> <i class="ui icon small reply"></i> <span> ' + _services_localizedStringsService__WEBPACK_IMPORTED_MODULE_3__["LocalizedStrings"].getUI('text_return') + ' </span></div>');
 }
 function renderCommand(command, function_obj) {
-  var el = jquery__WEBPACK_IMPORTED_MODULE_0___default()('<div class="ui return command_container"> <i class="ui icon small reply command_drag"></i> <i class="ui icon times red button_remove_command"></i> <span class="span_command_spec"> ' + _services_localizedStringsService__WEBPACK_IMPORTED_MODULE_3__["LocalizedStrings"].getUI('text_return') + ' </span>  <div class="var_value_menu_div"></div></div>');
+  var el = jquery__WEBPACK_IMPORTED_MODULE_0___default()('<div class="ui return command_container"> <i class="ui icon small reply command_drag"></i> <i class="ui icon times red button_remove_command"></i> <span class="span_command_spec"> ' + _services_localizedStringsService__WEBPACK_IMPORTED_MODULE_3__["LocalizedStrings"].getUI('text_return') + ' </span>  <div class="expression_elements"></div></div>');
   el.data('command', command);
   addHandlers(command, function_obj, el);
 
   if (function_obj.return_type != _types__WEBPACK_IMPORTED_MODULE_1__["Types"].VOID) {
-    _variable_value_menu__WEBPACK_IMPORTED_MODULE_6__["renderMenu"](command, command.variable_value_menu, el.find('.var_value_menu_div'), function_obj);
+    //VariableValueMenu.renderMenu(command, command.variable_value_menu, el.find('.var_value_menu_div'), function_obj);
+    _generic_expression__WEBPACK_IMPORTED_MODULE_8__["renderExpression"](command, function_obj, el.find('.expression_elements'), command.variable_value_menu);
   } else {
-    el.find('.var_value_menu_div').remove();
+    el.find('.expression_elements').remove();
     command.variable_value_menu = null;
   }
 
@@ -27632,6 +27793,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _commands__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../commands */ "./js/visualUI/commands.js");
 /* harmony import */ var _conditional_expression__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./conditional_expression */ "./js/visualUI/commands/conditional_expression.js");
 /* harmony import */ var _contextualized_menu__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./contextualized_menu */ "./js/visualUI/commands/contextualized_menu.js");
+/* harmony import */ var _generic_expression__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./generic_expression */ "./js/visualUI/commands/generic_expression.js");
+
 
 
 
@@ -27657,8 +27820,9 @@ function renderCommand(command, function_obj) {
   el.data('command', command);
   el.find('.block_commands').data('command', command);
   addHandlers(command, function_obj, el);
-  _contextualized_menu__WEBPACK_IMPORTED_MODULE_8__["renderMenu"](command, el.find('.context_menu'), function_obj, el);
-  _conditional_expression__WEBPACK_IMPORTED_MODULE_7__["renderExpression"](command, command.expression, function_obj, el.find('.conditional_expression'));
+  _contextualized_menu__WEBPACK_IMPORTED_MODULE_8__["renderMenu"](command, el.find('.context_menu'), function_obj, el); //ConditionalExpressionManagement.renderExpression(command, command.expression, function_obj, el.find('.conditional_expression'));
+
+  _generic_expression__WEBPACK_IMPORTED_MODULE_9__["renderExpression"](command, function_obj, el.find('.conditional_expression'), command.expression);
 
   if (command.commands_block) {
     for (var j = 0; j < command.commands_block.length; j++) {
@@ -27702,8 +27866,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _variables__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../variables */ "./js/visualUI/variables.js");
 /* harmony import */ var _variable_value_menu__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./variable_value_menu */ "./js/visualUI/commands/variable_value_menu.js");
 /* harmony import */ var _commands__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../commands */ "./js/visualUI/commands.js");
-/* harmony import */ var _Sortable_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../Sortable.js */ "./js/Sortable.js");
-/* harmony import */ var _Sortable_js__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_Sortable_js__WEBPACK_IMPORTED_MODULE_8__);
+/* harmony import */ var _generic_expression__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./generic_expression */ "./js/visualUI/commands/generic_expression.js");
+/* harmony import */ var _Sortable_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../Sortable.js */ "./js/Sortable.js");
+/* harmony import */ var _Sortable_js__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(_Sortable_js__WEBPACK_IMPORTED_MODULE_9__);
+
 
 
 
@@ -27721,23 +27887,23 @@ function renderCommand(command, function_obj) {
   var ret = '';
   ret += '<div class="ui writer command_container"> <i class="ui icon small upload command_drag"></i> <i class="ui icon times red button_remove_command"></i> <span class="span_command_spec">' + _services_localizedStringsService__WEBPACK_IMPORTED_MODULE_3__["LocalizedStrings"].getUI('text_command_write') + ' ( </span><div class="all_elements_write"></div> <span class="close_parentheses span_command_spec">)</span> </div>';
   var el = jquery__WEBPACK_IMPORTED_MODULE_0___default()(ret);
-  el.data('command', command);
+  el.data('command', command); //renderExpression (command, function_obj, div_to_render, expression_array)
 
-  for (var i = 0; i < command.content.length; i++) {
-    var new_div_item = jquery__WEBPACK_IMPORTED_MODULE_0___default()('<div class="var_value_menu_div"></div>');
-    var div_parent_with_handler = jquery__WEBPACK_IMPORTED_MODULE_0___default()('<div class="div_parent_handler"></div>');
-    div_parent_with_handler.append(jquery__WEBPACK_IMPORTED_MODULE_0___default()('<i class="ui icon ellipsis vertical inverted handler"></i>'));
-    div_parent_with_handler.append(new_div_item);
-    div_parent_with_handler.append(jquery__WEBPACK_IMPORTED_MODULE_0___default()('<i class="white inverted icon times handler"></i>'));
-    el.find('.all_elements_write').append(div_parent_with_handler);
-    _variable_value_menu__WEBPACK_IMPORTED_MODULE_6__["renderMenu"](command, command.content[i], new_div_item, function_obj);
-    addHandlerIconAdd(el.find('.all_elements_write'), command, function_obj);
-    addHandlersManager(command, function_obj, el, div_parent_with_handler, command.content[i]);
+  _generic_expression__WEBPACK_IMPORTED_MODULE_8__["renderExpression"](command, function_obj, el.find('.all_elements_write'), command.content);
+  /*for (var i = 0; i < command.content.length; i ++) {
+  	var new_div_item = $( '<div class="var_value_menu_div"></div>' );
+  	var div_parent_with_handler = $( '<div class="div_parent_handler"></div>' );
+  	div_parent_with_handler.append($('<i class="ui icon ellipsis vertical inverted handler"></i>'));
+  	div_parent_with_handler.append(new_div_item);
+  	div_parent_with_handler.append($('<i class="white inverted icon times handler"></i>'));
+  		el.find('.all_elements_write').append(div_parent_with_handler);
+  	VariableValueMenu.renderMenu(command, command.content[i], new_div_item, function_obj);
+  		addHandlerIconAdd(el.find('.all_elements_write'), command, function_obj);
+  		addHandlersManager(command, function_obj, el, div_parent_with_handler, command.content[i]);
   }
-
-  if (command.content.length == 0) {
-    addHandlerIconAdd(el.find('.all_elements_write'), command, function_obj);
-  }
+  	if (command.content.length == 0) {
+  	addHandlerIconAdd(el.find('.all_elements_write'), command, function_obj);
+  }*/
 
   addHandlers(command, function_obj, el);
   return el;

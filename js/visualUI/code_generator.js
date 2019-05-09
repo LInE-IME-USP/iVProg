@@ -165,7 +165,8 @@ function returnsCode (command_obj, indentation) {
 
 	if (command_obj.variable_value_menu) {
 		try {
-			ret += ' ' + variableValueMenuCode(command_obj.variable_value_menu, true);
+			ret += ' ' + elementExpressionCode(command_obj.variable_value_menu);
+			//ret += ' ' + variableValueMenuCode(command_obj.variable_value_menu, true);
 		} catch(err) {}
 	}
 
@@ -251,14 +252,16 @@ function repeatNtimesCode (command_obj, indentation) {
 
 
 	if (command_obj.expression2) {
-		switch (command_obj.expression2.expression.type) {
+		/*switch (command_obj.expression2.expression.type) {
 			case Models.EXPRESSION_TYPES.exp_logic:
 				ret += logicExpressionCode(command_obj.expression2.expression);
 				break;
 			case Models.EXPRESSION_TYPES.exp_arithmetic:
 				ret += arithmeticExpressionCode(command_obj.expression2.expression);
 				break;
-		}
+		}*/
+
+		ret += elementExpressionCode(command_obj.expression2);
 	}
 
 	ret += ' ; ';
@@ -315,18 +318,22 @@ function iftruesCode (command_obj, indentation) {
 
 	ret += LocalizedStrings.getUI('text_if');
 
-	if (!command_obj.expression.expression) {
+	if (!command_obj.expression) {
 		Utils.renderErrorMessage(command_obj.expression.dom_object, LocalizedStrings.getUI('inform_valid_expression'));
+	} else {
+		ret += ' ( ';
+		ret += elementExpressionCode(command_obj.expression);
+		ret += ' ) ';
 	}
 
-	switch (command_obj.expression.expression.type) {
+	/*switch (command_obj.expression.expression.type) {
 		case Models.EXPRESSION_TYPES.exp_logic:
 			ret += logicExpressionCode(command_obj.expression.expression);
 			break;
 		case Models.EXPRESSION_TYPES.exp_arithmetic:
 			ret += arithmeticExpressionCode(command_obj.expression.expression);
 			break;
-	}
+	}*/
 
 	ret += ' { ';
 
@@ -382,17 +389,23 @@ function doWhilesCode (command_obj, indentation) {
 
 	ret += '} ' + LocalizedStrings.getUI('text_code_while');
 
-	if (!command_obj.expression.expression) {
+	if (!command_obj.expression) {
 		Utils.renderErrorMessage(command_obj.expression.dom_object, LocalizedStrings.getUI('inform_valid_expression'));
 	}
 
-	switch (command_obj.expression.expression.type) {
+	/*switch (command_obj.expression.expression.type) {
 		case Models.EXPRESSION_TYPES.exp_logic:
 			ret += logicExpressionCode(command_obj.expression.expression);
 			break;
 		case Models.EXPRESSION_TYPES.exp_arithmetic:
 			ret += arithmeticExpressionCode(command_obj.expression.expression);
 			break;
+	}*/
+
+	if (command_obj.expression) {
+		ret += ' ( ';
+		ret += elementExpressionCode(command_obj.expression);
+		ret += ' ) ';
 	}
 
 	return ret;
@@ -408,17 +421,22 @@ function whiletruesCode (command_obj, indentation) {
 
 	ret += LocalizedStrings.getUI('text_code_while');
 
-	if (!command_obj.expression.expression) {
+	if (!command_obj.expression) {
 		Utils.renderErrorMessage(command_obj.expression.dom_object, LocalizedStrings.getUI('inform_valid_expression'));
 	}
 
-	switch (command_obj.expression.expression.type) {
+	/*switch (command_obj.expression.expression.type) {
 		case Models.EXPRESSION_TYPES.exp_logic:
 			ret += logicExpressionCode(command_obj.expression.expression);
 			break;
 		case Models.EXPRESSION_TYPES.exp_arithmetic:
 			ret += arithmeticExpressionCode(command_obj.expression.expression);
 			break;
+	}*/
+	if (command_obj.expression) {
+		ret += ' ( ';
+		ret += elementExpressionCode(command_obj.expression);
+		ret += ' ) ';
 	}
 
 	ret += ' { ';
@@ -714,13 +732,15 @@ function writersCode (command_obj, indentation) {
 	
 	ret += LocalizedStrings.getUI('text_command_write') + ' ( ';
 
-	for (var i = 0; i < command_obj.content.length; i++) {
+	/*for (var i = 0; i < command_obj.content.length; i++) {
 		ret += variableValueMenuCode(command_obj.content[i]);
 
 		if ((i + 1) < command_obj.content.length) {
 			ret += ' + ';
 		}
-	}
+	}*/
+
+	ret += elementExpressionCode(command_obj.content);
 
 	ret += ' ) ';
 	return ret;

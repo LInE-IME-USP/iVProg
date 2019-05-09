@@ -40,6 +40,12 @@ export function renderExpression (command, function_obj, div_to_render, expressi
 		} else {
 			div_to_render.text(LocalizedStrings.getUI('var_menu_select_var').toLowerCase());
 		}
+	} else {
+		var types_included = [];
+		types_included.push(Models.EXPRESSION_TYPES.exp_conditional);
+		types_included.push(Models.EXPRESSION_TYPES.exp_logic);
+		types_included.push(Models.EXPRESSION_TYPES.exp_arithmetic);
+		renderElements(command, function_obj, div_to_render, expression_array, types_included);
 	}
 
 	div_to_render.children('.mouse_distance').addClass('mouse_distance_hidden');
@@ -55,49 +61,147 @@ export function renderExpression (command, function_obj, div_to_render, expressi
 			$(this).children('.mouse_distance').css('opacity', '0');
 		}
 	});
+	var lixeira = $('<div class="lixeira" draggable="true"></div>');
 
-	/*var allfilhos = div_to_render.children('.mouse_distance');
-	console.log(allfilhos);
-	var boudings = [];
-	for (var i = 0; i < allfilhos.length; i++) {
-		boudings.push(allfilhos.get(i).getBoundingClientRect());
-	}
-
-	div_to_render.children('.mouse_distance').addClass('mouse_distance_hidden');
+	div_to_render.find('.single_element_expression').on('mousedown', function (evt) {
+		window.posX = evt.clientX;
+		window.posY = evt.clientY;
+	});
 	
-	div_to_render.on('mousemove mouseenter', function(evt) {
-		if (!window.open_or_close && command.variable.content) {
+	Sortable.create(div_to_render[0], {
+	    animation: 100,
+	    ghostClass: 'ghost',
+	    group: {
+	        name: 'shared',
+	        put: false // Do not allow items to be put into this list
+	    },
+	    draggable: '.single_element_expression',
+	    sort: false,
+	    filter: '.not_allowed',
+	    
+	    onStart: function(event) {
+	    	$('body').append(lixeira);
+	    	lixeira.css('display', 'block');
+			lixeira.css('top', window.posY + 70, '!important');
+			lixeira.css('left', window.posX - 20, '!important');
+	    },
+	    onMove: function(event) {
+	    	lixeira.addClass('color_test');
+	    },
+	    onEnd: function(event) {
+	    	lixeira.remove();
+	    	div_to_render.find('.ghost').removeClass('ghost');
+	    }
+  	});
+  	new Sortable(lixeira[0], {
+	    group: 'shared',
+	    animation: 150,
+	    onAdd: function (evt) {
+	       lixeira.css('display', 'none');
+	       lixeira.find('.single_element_expression').remove();
+	       lixeira.css('background-color', '');
+	       lixeira.remove();
+	       removeElement(evt, expression_array);
+	       renderExpression(command, function_obj, div_to_render, expression_array);
+	    }
+	});
+}
 
-			
-			var leftDistances = [];
-			var rightDistances = [];
+function removeElement (event, expression_array) {
+	var indice = $(event.item).data('index');
+	var first = expression_array[0];
+	console.log('indice: ', indice);
+	if (expression_array[indice].type) {
+		// if is alone in expression:
+		if (expression_array.length == 1) {
+			//function_obj.commands.splice(function_obj.commands.indexOf(command), 1);
+			expression_array.splice(0, 1);
+		} else if (expression_array.length > 1) {
+			if (indice > 0 && expression_array[indice - 1].type_op) {
+				if (indice < (expression_array.length) 
+					&& expression_array[indice - 2] == '('
+					&& expression_array[indice + 1].type_op) {
+					expression_array.splice(indice + 1, 1);
+				}
+				expression_array.splice(indice, 1);
+				expression_array.splice(indice - 1, 1);
+				if (indice - 2 < (expression_array.length) 
+					&& expression_array[indice - 2] == '('
+					&& expression_array[indice - 1] == ')') {
+					expression_array.splice(indice - 1, 1);
+					expression_array.splice(indice - 2, 1);
+					if (indice - 3 >= 0 && indice - 3 < expression_array.length
+						&& expression_array[indice - 3].type_op ) {
+						expression_array.splice(indice - 3, 1);
+					}
+				}
+			} else if (indice < (expression_array.length - 1) &&  expression_array[indice + 1].type_op) {
+				expression_array.splice(indice + 1, 1);
+				expression_array.splice(indice, 1);
+			} else if (indice < (expression_array.length - 1) && indice > 0 
+				&& expression_array[indice -1] == '(' && expression_array[indice +1] == ')') {
+				if (indice > 1
+					&& expression_array[indice - 2].type_op) {
+					expression_array.splice(indice + 1, 1);
+					expression_array.splice(indice, 1);
+					expression_array.splice(indice - 1, 1);
+					expression_array.splice(indice - 2, 1);
 
-			for (var i = 0; i < allfilhos.length; i++) {
-				var leftD = Math.abs(boudings[i].left - evt.clientX);
-				leftDistances.push(leftD);
-				var rightD = Math.abs(boudings[i].right - evt.clientX);
-				rightDistances.push(rightD);
-			}
+				} else if (indice < (expression_array.length - 2) 
+					&& expression_array[indice + 2].type_op) {
+					expression_array.splice(indice + 1, 1);
+					expression_array.splice(indice, 1);
+					expression_array.splice(indice - 1, 1);
 
-			div_to_render.children('.mouse_distance').removeClass('mouse_distance_except');
-			div_to_render.children('.mouse_distance').addClass('mouse_distance_hidden');
-			
-			var menorLeft = Math.min.apply(null, leftDistances);
-			var indiceLeft = leftDistances.indexOf(menorLeft);
-
-			var menorRight = Math.min.apply(null, rightDistances);
-			var indiceRight = rightDistances.indexOf(menorRight);
-
-			if (menorRight < menorLeft) {
-				$(allfilhos.get(indiceRight)).removeClass('mouse_distance_hidden');
-				$(allfilhos.get(indiceRight)).addClass('mouse_distance_except');
-			} else {
-				$(allfilhos.get(indiceLeft)).removeClass('mouse_distance_hidden');
-				$(allfilhos.get(indiceLeft)).addClass('mouse_distance_except');
+				} else {
+					expression_array.splice(indice + 1, 1);
+					expression_array.splice(indice, 1);
+					expression_array.splice(indice - 1, 1);
+				}
 			}
 		}
-	});*/
 
+	} else if (expression_array[indice].type_op) {
+		// iVProg doesn't support operator remove
+	} else {
+		
+		var opening = -1;
+		var closing = -1;
+
+		if (expression_array[indice] == '(') {
+			opening = indice;
+			for (var i = indice + 1; i < expression_array.length; i++) {
+				if (expression_array[i] == ')') {
+					closing = i;
+					break;
+				}
+			}
+		} else {
+			closing = indice;
+			for (var i = indice - 1; i >= 0; i--) {
+				if (expression_array[i] == '(') {
+					opening = i;
+					break;
+				}
+			}
+		}
+
+		if (expression_array[opening + 1].type_op) {
+			expression_array.splice(closing, 1);
+			expression_array.splice(opening + 1, 1);
+			expression_array.splice(opening, 1);
+		} else {
+			expression_array.splice(closing, 1);
+			expression_array.splice(opening, 1);
+		}
+	}
+	// if expression is empty, add a new var value:
+	if (expression_array.length == 0) {
+		expression_array.push(new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.all, null, null, null, true));
+	}
+	if (first != expression_array[0] && expression_array[0].type_op) {
+		expression_array.splice(0, 1);
+	}
 }
 
 function renderElements (command, function_obj, div_to_render, expression_array, types_included) {
@@ -132,11 +236,16 @@ function renderElements (command, function_obj, div_to_render, expression_array,
 			}
 
 		} else {
+			if (i == 0) {
+				console.log("NEGAÇÃO NO PRIMEIRO ELEMENTO");
+			} else if (expression_array[i - 1] == '(') {
+				console.log("NEGAÇÃO APÓS O PARÊNTESES");
+			}
 			renderOperatorMenu(command, function_obj, div_to_render, expression_array[i], types_included, i, expression_array);
 		}
 	}
 
-	renderFinalAddElements(div_to_render, types_included, expression_array, command, function_obj, i);
+	renderFinalAddElements(div_to_render, types_included, expression_array, command, function_obj, i, true);
 
 	renderAddParenthesis(command, function_obj, div_to_render, expression_array, types_included);
 
@@ -145,7 +254,7 @@ function renderElements (command, function_obj, div_to_render, expression_array,
 window.parentheses_activate = false;
 window.open_or_close = null;
 function renderAddParenthesis (command, function_obj, div_to_render, expression_array, types_included) {
-	var addParentheses = $('<div class="single_element_expression add_parentheses"><i class="icons"><b style="font-style: normal;">( )</b><i class="corner add icon blue" style="font-size: .6em;right: -3px;bottom: -2px;"></i></i></div>');
+	var addParentheses = $('<div class="single_element_expression add_parentheses not_allowed"><i class="icons"><b style="font-style: normal;">( )</b><i class="corner add icon blue" style="font-size: .6em;right: -3px;bottom: -2px;"></i></i></div>');
 	div_to_render.append(addParentheses);
 	addParentheses.popup({
 	    content : "Adicionar parênteses",
@@ -235,6 +344,9 @@ function renderAddParenthesis (command, function_obj, div_to_render, expression_
 					return;
 				}
 
+
+				window.open_parentheses.addClass('parentheses_fixed');
+
 				floating = $('<div class="floating_parenthesis"> ) </div>');
 				floating.draggable().appendTo("body");
 				floating.css("position", "absolute");
@@ -249,6 +361,8 @@ function renderAddParenthesis (command, function_obj, div_to_render, expression_
 			} else {
 
 				floating.remove();
+
+				window.open_parentheses.removeClass('parentheses_fixed');
 				
 				div_to_render.off('mousemove');
 				div_to_render.off('mouseleave');
@@ -484,7 +598,7 @@ function renderGhostParentheses (actual_target, command, function_obj, div_to_re
 }
 
 function renderParenthesis (div_to_render, expression_content, command, function_obj, position, expression_array) {
-	var ghost_parenthesis = $('<div class="single_element_expression" data-index="'+position+'">'+expression_content+'</div>');
+	var ghost_parenthesis = $('<div class="single_element_expression parentheses_in_expression" data-index="'+position+'">'+expression_content+'</div>');
 	div_to_render.append(ghost_parenthesis);
 }
 
@@ -528,24 +642,26 @@ function renderStartAddOperator (div_to_render, types_included, expression_array
 	menu_final.dropdown('set selected', Models.ARITHMETIC_TYPES.minus);
 
 	div_temp.on('click', function() {
-		var sera = position;
+		if (!window.open_or_close) {
+			var sera = position;
 
-		if (types_included.indexOf(Models.EXPRESSION_TYPES.exp_arithmetic) >= 0) {
-			console.log('p1');
-			expression_array.splice(sera, 0, new Models.ExpressionOperator(Models.EXPRESSION_TYPES.exp_arithmetic,Models.ARITHMETIC_TYPES.minus));
-		} else if (types_included.indexOf(Models.EXPRESSION_TYPES.exp_logic) >= 0) {
-			console.log('p2');
-			expression_array.splice(sera, 0, new Models.ExpressionOperator(Models.EXPRESSION_TYPES.exp_logic,Models.LOGIC_COMPARISON.equals_to));
-		} else if (types_included.indexOf(Models.EXPRESSION_TYPES.exp_conditional) >= 0) {
-			console.log('p3');
-			expression_array.splice(sera, 0, new Models.ExpressionOperator(Models.EXPRESSION_TYPES.exp_conditional,Models.ARITHMETIC_COMPARISON.greater_than));
+			if (types_included.indexOf(Models.EXPRESSION_TYPES.exp_arithmetic) >= 0) {
+				console.log('p1');
+				expression_array.splice(sera, 0, new Models.ExpressionOperator(Models.EXPRESSION_TYPES.exp_arithmetic,Models.ARITHMETIC_TYPES.minus));
+			} else if (types_included.indexOf(Models.EXPRESSION_TYPES.exp_logic) >= 0) {
+				console.log('p2');
+				expression_array.splice(sera, 0, new Models.ExpressionOperator(Models.EXPRESSION_TYPES.exp_logic,Models.LOGIC_COMPARISON.equals_to));
+			} else if (types_included.indexOf(Models.EXPRESSION_TYPES.exp_conditional) >= 0) {
+				console.log('p3');
+				expression_array.splice(sera, 0, new Models.ExpressionOperator(Models.EXPRESSION_TYPES.exp_conditional,Models.ARITHMETIC_COMPARISON.greater_than));
+			}
+
+			renderExpression(command, function_obj, div_to_render, expression_array);
 		}
-
-		renderExpression(command, function_obj, div_to_render, expression_array);
 	});
 }
 
-function renderFinalAddElements (div_to_render, types_included, expression_array, command, function_obj, position) {
+function renderFinalAddElements (div_to_render, types_included, expression_array, command, function_obj, position, is_last = false) {
 
 	var menu_final = '<div class="ui dropdown disabled usepointer"><div class="text"> + </div><i class="dropdown icon"></i><div class="menu">';
 	if (types_included.indexOf(Models.EXPRESSION_TYPES.exp_arithmetic) >= 0) {
@@ -578,26 +694,46 @@ function renderFinalAddElements (div_to_render, types_included, expression_array
 	menu_final += '</div></div>';
 
 	menu_final = $(menu_final);
-	var div_temp = $('<div class="single_element_expression ghost_element mouse_distance"></div>');
-
+	var div_temp = $('<div class="simple_add mouse_distance"></div>');
 	var div_higher = $('<div class="higher_element"></div>');
-	div_higher.append(div_temp);
-	div_to_render.append(div_higher);
-	div_temp.append(menu_final);
-	//div_to_render.append(div_temp);
+
+	var button = $('<button class="ui button green add_expression"><i class="plus circle inverted icon"></i></button>');
+	div_temp.append(button);
+
+	if (!is_last) {
+		div_higher.append(div_temp);
+		div_to_render.append(div_higher);
+		//div_temp.append(menu_final);
+		div_temp.css('opacity', '0', '!important');
+	} else {
+		div_temp.removeClass('mouse_distance');
+		div_temp.css('opacity', '1', '!important');
+		//div_temp.append(menu_final);
+		div_to_render.append(div_temp);
+	}
+	
+
 	menu_final.dropdown('set selected', Models.ARITHMETIC_TYPES.plus);
 
 	div_temp.on('click', function() {
 		var sera = position;
 
+		if (expression_array[sera] == ')' && expression_array[sera - 1] == '(') {
+			expression_array.splice(sera, 0, new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.all, null, null, null, true));
+			renderExpression(command, function_obj, div_to_render, expression_array);
+			return;
+		}
+
 		if (types_included.indexOf(Models.EXPRESSION_TYPES.exp_arithmetic) >= 0) {
 			expression_array.splice(sera, 0, new Models.ExpressionOperator(Models.EXPRESSION_TYPES.exp_arithmetic,Models.ARITHMETIC_TYPES.plus));
+			expression_array.splice(sera + 1, 0, new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.all, null, null, null, true));
 		} else if (types_included.indexOf(Models.EXPRESSION_TYPES.exp_logic) >= 0) {
 			expression_array.splice(sera, 0, new Models.ExpressionOperator(Models.EXPRESSION_TYPES.exp_logic,Models.LOGIC_COMPARISON.equals_to));
+			expression_array.splice(sera + 1, 0, new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.all, null, null, null, true));
 		} else if (types_included.indexOf(Models.EXPRESSION_TYPES.exp_conditional) >= 0) {
 			expression_array.splice(sera, 0, new Models.ExpressionOperator(Models.EXPRESSION_TYPES.exp_conditional,Models.ARITHMETIC_COMPARISON.greater_than));
+			expression_array.splice(sera + 1, 0, new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.all, null, null, null, true));
 		}
-		expression_array.splice(sera + 1, 0, new Models.VariableValueMenu(VariableValueMenuManagement.VAR_OR_VALUE_TYPES.all, null, null, null, true));
 
 		renderExpression(command, function_obj, div_to_render, expression_array);
 	});
@@ -636,7 +772,7 @@ function renderOperatorMenu (command, function_obj, div_to_render, expression_el
 	menu_final += '</div></div>';
 
 	menu_final = $(menu_final);
-	var div_temp = $('<div class="single_element_expression" data-index="'+position+'"></div>');
+	var div_temp = $('<div class="single_element_expression not_allowed" data-index="'+position+'"></div>');
 	div_temp.append(menu_final);
 	div_to_render.append(div_temp);
 	menu_final.dropdown({
