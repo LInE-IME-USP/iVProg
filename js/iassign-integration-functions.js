@@ -239,19 +239,26 @@ function prepareActivityToStudent (ilm_cont) {
 // Função para organizar se para criação, visualização ou resolução de atividade
 function prepareEnvironment () {
 
+  $('.div_to_body').click(function(e) {
+    // trackingMatrix.push(adCoords(e, 1));
+    console.log("Log click");
+    ivprogCore.registerClick(e.pageX, e.pageY, e.target.classList['value']);
+  });
+
   // Se iLM_PARAM_SendAnswer for false, então trata-se de resolução de atividade,
   // portanto, a "DIV" de resolução é liberada
   if (iLMparameters.iLM_PARAM_SendAnswer == 'false') {
     //$('.resolucao').css("display","block");
     getiLMContent();
 
-    $('.div_to_body').mousemove(function(e) {
-        trackingMatrix.push(adCoords(e, 0));
-    });
+    // $('.div_to_body').mousemove(function(e) {
+    //     trackingMatrix.push(adCoords(e, 0));
+    // });
 
-    $('.div_to_body').click(function(e) {
-        trackingMatrix.push(adCoords(e, 1));                    
-    });
+    // $('.div_to_body').click(function(e) {
+    //   // trackingMatrix.push(adCoords(e, 1));
+    //   ivprogCore.registerClick(e.pageX, e.pageY, e.target.classList['value']);
+    // });
   } else if (iLMparameters.iLM_PARAM_Assignment) {
     // Caso não esteja em modo de resolução de atividade, a visualização no momento
     // é para a elaboração de atividade:
@@ -436,20 +443,21 @@ function prepareTableSettings (div_el) {
 }
 
 function getTrackingLogs () {
-  var ret = "";
-  for (var i = 0; i < trackingMatrix.length; ++i) {
-    ret += "\n" + trackingMatrix[i][0] + "," + trackingMatrix[i][1] + "," + trackingMatrix[i][2];
-    if (trackingMatrix[i][3] === 1) {
-      ret += ',' + trackingMatrix[i][3] + ',"' + trackingMatrix[i][4] + '"';
-    }
-  }
-  return ret;
+  return ivprogCore.getLogsAsString();
+  // var ret = "";
+  // for (var i = 0; i < trackingMatrix.length; ++i) {
+  //   ret += "\n" + trackingMatrix[i][0] + "," + trackingMatrix[i][1] + "," + trackingMatrix[i][2];
+  //   if (trackingMatrix[i][3] === 1) {
+  //     ret += ',' + trackingMatrix[i][3] + ',"' + trackingMatrix[i][4] + '"';
+  //   }
+  // }
+  // return ret;
 }
 
 // Tracking mouse movements
-var trackingMatrix = [];
+// var trackingMatrix = [];
 
-function adCoords(e, code){
+/* function adCoords(e, code){
   var x = e.pageX; 
   var y = e.pageY;
   if (code === 1) {
@@ -457,7 +465,7 @@ function adCoords(e, code){
   } else {
     return [x, y, code];
   }
-}
+} */
 
 // $( document ).ready(function() {
 
