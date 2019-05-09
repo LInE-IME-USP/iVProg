@@ -204,7 +204,11 @@ export function resultTypeAfterUnaryOp (operator, leftExpressionType) {
     if(leftExpressionType instanceof MultiType){
       return leftExpressionType;
     }
-    return unaryMap.get(operator)[leftExpressionType.ord];
+    const resultType = unaryMap.get(operator)[leftExpressionType.ord];
+    if (resultType == null) {
+      return Types.UNDEFINED;
+    }
+    return resultType;
   } catch (e) {
     if (e instanceof TypeError) {
       return Types.UNDEFINED;

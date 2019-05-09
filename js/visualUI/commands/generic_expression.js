@@ -1,9 +1,6 @@
-import $ from 'jquery';
 import { Types } from '../types';
 import * as Models from '../ivprog_elements';
 import { LocalizedStrings } from '../../services/localizedStringsService';
-import * as GlobalsManagement from '../globals';
-import * as VariablesManagement from '../variables';
 import * as VariableValueMenuManagement from './variable_value_menu';
 import WatchJS from 'melanke-watchjs';
 
@@ -79,16 +76,16 @@ export function renderExpression (command, function_obj, div_to_render, expressi
 	    sort: false,
 	    filter: '.not_allowed',
 	    
-	    onStart: function(event) {
+	    onStart: function() {
 	    	$('body').append(lixeira);
 	    	lixeira.css('display', 'block');
 			lixeira.css('top', window.posY + 70, '!important');
 			lixeira.css('left', window.posX - 20, '!important');
 	    },
-	    onMove: function(event) {
+	    onMove: function() {
 	    	lixeira.addClass('color_test');
 	    },
-	    onEnd: function(event) {
+	    onEnd: function() {
 	    	lixeira.remove();
 	    	div_to_render.find('.ghost').removeClass('ghost');
 	    }
@@ -309,7 +306,7 @@ function renderAddParenthesis (command, function_obj, div_to_render, expression_
 			renderGhostParentheses(actual_target, command, function_obj, div_to_render, expression_array);
 		});
 
-		div_to_render.on('mouseleave', function(evt) {
+		div_to_render.on('mouseleave', function() {
 			/*window.open_parentheses.remove();
 			window.close_parentheses.remove();*/
 		});
