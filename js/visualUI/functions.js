@@ -210,6 +210,7 @@ function addHandlers (function_obj, function_container) {
       function_obj.commands.push(new_cmd);
 
       CommandsManagement.renderCommand(new_cmd, function_container.find('.commands_list_div'), 3, function_obj);
+      registerUserEvent(function_obj.name, ActionTypes.INSERT_COMMAND, $(this).data('command'), '/', 0);
     } else {
       CommandsManagement.createFloatingCommand(function_obj, function_container, $(this).data('command'), evt);
     }
