@@ -906,7 +906,7 @@ div.ui.checkbox.transition.visible {
 }
 
 .single_element_expression {
-	position: relative;
+	/*position: relative;*/
 }
 
 .floating_parenthesis {
