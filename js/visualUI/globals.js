@@ -2,6 +2,7 @@ import { Types } from './types';
 import * as Models from './ivprog_elements';
 import { LocalizedStrings } from './../services/localizedStringsService';
 import * as Utils from './utils';
+import { registerUserEvent, registerSystemEvent, ActionTypes } from "./../services/userLog";
 
 var counter_new_globals = 0;
 
@@ -12,6 +13,7 @@ export function addGlobal (program, is_from_click = false) {
 
 	program.addGlobal(new_global);
 
+	registerUserEvent(new_global.name, ActionTypes.INSERT_GLOBAL_VAR);
 	var newe = renderGlobal(new_global);
 
 	if (is_from_click) {
@@ -23,6 +25,7 @@ export function addGlobal (program, is_from_click = false) {
 
 function toggleConstant (global_var) {
 	global_var.is_constant = !global_var.is_constant;
+	registerUserEvent(global_var.name, ActionTypes.SET_GLOBAL_CONST);
 }
 
 function updateName (global_var, new_name, global_obj_dom) {
@@ -35,6 +38,7 @@ function updateName (global_var, new_name, global_obj_dom) {
 		if (globalNameAlreadyExists(new_name)) {
 			Utils.renderErrorMessage(global_obj_dom.find('.editing_name_var'), LocalizedStrings.getUI('inform_valid_global_duplicated'));
 		} else {
+			registerUserEvent(global_var.name, ActionTypes.RENAME_GLOBAL_VAR, new_name);
 			global_var.name = new_name;
 		}
 	} else {
@@ -63,7 +67,8 @@ function updateType (global_var, new_type, new_dimensions = 0) {
 		global_var.rows = new_dimensions;
 		global_var.columns = 2;
 	}
-
+	registerUserEvent(global_var.name, ActionTypes.CHANGE_VAR_TYPE, new_type,
+		new_dimensions, global_var.rows, global_var.columns);
 	updateInitialValues(global_var);
 }
 
@@ -73,6 +78,7 @@ function removeGlobal (global_var, global_container) {
 		window.insertContext = true;
 	  window.program_obj.globals.splice(index, 1);
 	}
+	registerUserEvent(global_var.name, ActionTypes.REMOVE_GLOBAL_VAR);
 	global_container.children().off();
 	global_container.off();
 	global_container.fadeOut();
@@ -127,6 +133,8 @@ function updateInitialValues (global_var) {
 			global_var.value = [[true, true], [true, true]];
 		}
 	}
+	registerSystemEvent(function_name, ActionTypes.CHANGE_GLOBAL_VALUE, global_var.name,
+		global_var.value);
 }
 
 function alternateBooleanGlobalValue (global_var, value_container) {
@@ -335,51 +343,75 @@ function renderValues (global_var, global_container) {
 
 	ret.find( ".boolean_simple_type" ).on('click', function(e){
 		alternateBooleanGlobalValue(global_var, this.parentNode);
+		registerUserEvent(global_var.name, ActionTypes.CHANGE_GLOBAL_VALUE, global_var.value);
 	});
 	ret.find( ".simple_var" ).on('click', function(e){
+		registerUserEvent(global_var.name, ActionTypes.ENTER_CHANGE_GLOBAL_VALUE);
 		enableGlobalValueUpdate(global_var, this.parentNode);
 	});
 
 	ret.find( ".boolean_vector_var" ).on('click', function(e){
 		alternateBooleanGlobalVectorValue(global_var, $(this).data('index'), this.parentNode);
+		registerUserEvent(global_var.name, ActionTypes.CHANGE_GLOBAL_VALUE, global_var.value);
 	});
 	ret.find( ".vector_var" ).on('click', function(e){
+		registerUserEvent(global_var.name, ActionTypes.ENTER_CHANGE_GLOBAL_VALUE);
 		enableGlobalVectorValueUpdate(global_var, $(this).data('index'), this.parentNode);
 	});
 	ret.find( ".remove_global_vector_column" ).on('click', function(e){
 		removeGlobalColumnVector(global_var);
 		global_container.find( ".div_valor_var" ).html('');
+		registerUserEvent(global_var.name, ActionTypes.CHANGE_GLOBAL_TYPE,
+			global_var.type, global_var.dimensions, global_var.rows, global_var.columns);
+		registerSystemEvent(global_var.name, ActionTypes.CHANGE_GLOBAL_VALUE, global_var.value);
 		renderValues(global_var, global_container);
 	});
 	ret.find( ".add_global_vector_column" ).on('click', function(e){
 		addGlobalColumnVector(global_var);
+		registerUserEvent(global_var.name, ActionTypes.CHANGE_GLOBAL_TYPE,
+			global_var.type, global_var.dimensions, global_var.rows, global_var.columns);
+		registerSystemEvent(global_var.name, ActionTypes.CHANGE_GLOBAL_VALUE, global_var.value);
 		global_container.find( ".div_valor_var" ).html('');
 		renderValues(global_var, global_container);
 	});
 	ret.find( ".remove_global_matrix_column" ).on('click', function(e){
 		removeColumnGlobalMatrix(global_var);
+		registerUserEvent(global_var.name, ActionTypes.CHANGE_GLOBAL_TYPE,
+			global_var.type, global_var.dimensions, global_var.rows, global_var.columns);
+		registerSystemEvent(global_var.name, ActionTypes.CHANGE_GLOBAL_VALUE, global_var.value);
 		global_container.find( ".div_valor_var" ).html('');
 		renderValues(global_var, global_container);
 	});
 	ret.find( ".add_global_matrix_column" ).on('click', function(e){
 		addColumnGlobalMatrix(global_var);
+		registerUserEvent(global_var.name, ActionTypes.CHANGE_GLOBAL_TYPE,
+			global_var.type, global_var.dimensions, global_var.rows, global_var.columns);
+		registerSystemEvent(global_var.name, ActionTypes.CHANGE_GLOBAL_VALUE, global_var.value);
 		global_container.find( ".div_valor_var" ).html('');
 		renderValues(global_var, global_container);
 	});
 	ret.find( ".remove_global_matrix_line" ).on('click', function(e){
 		removeLineGlobalMatrix(global_var);
+		registerUserEvent(global_var.name, ActionTypes.CHANGE_GLOBAL_TYPE,
+			global_var.type, global_var.dimensions, global_var.rows, global_var.columns);
+		registerSystemEvent(global_var.name, ActionTypes.CHANGE_GLOBAL_VALUE, global_var.value);
 		global_container.find( ".div_valor_var" ).html('');
 		renderValues(global_var, global_container);
 	});
 	ret.find( ".add_global_matrix_line" ).on('click', function(e){
 		addLineGlobalMatrix(global_var);
+		registerUserEvent(global_var.name, ActionTypes.CHANGE_GLOBAL_TYPE,
+			global_var.type, global_var.dimensions, global_var.rows, global_var.columns);
+		registerSystemEvent(global_var.name, ActionTypes.CHANGE_GLOBAL_VALUE, global_var.value);
 		global_container.find( ".div_valor_var" ).html('');
 		renderValues(global_var, global_container);
 	});
 	ret.find( ".boolean_matrix_var" ).on('click', function(e){
 		alternateBooleanGlobalMatrixValue(global_var, $(this).data('row'), $(this).data('index'), this.parentNode);
+		registerUserEvent(global_var.name, ActionTypes.CHANGE_GLOBAL_VALUE, global_var.value);
 	});
 	ret.find( ".matrix_var" ).on('click', function(e){
+		registerUserEvent(global_var.name, ActionTypes.ENTER_CHANGE_GLOBAL_VALUE);
 		enableGlobalMatrixValueUpdate(global_var, $(this).data('row'), $(this).data('index'), this.parentNode);
 	});
 	global_container.find( ".div_valor_var" ).append(ret);
@@ -405,12 +437,13 @@ function addHandlers (global_container) {
 
 	// Manage global name: 
 	global_container.find( ".enable_edit_name_parameter" ).on('click', function(e){
+		registerUserEvent(global_var.name, ActionTypes.ENTER_CHANGE_GLOBAL_NAME);
 		enableNameUpdate(global_container);
 	});
 
 	// Menu to change type:
 	global_container.find('.ui.dropdown.global_type').dropdown({
-	    onChange: function(value, text, $selectedItem) {
+	    onChange: function(_, __, $selectedItem) {
 	    	if ($selectedItem.data('dimensions')) {
 	    		updateType(global_var, Types[$selectedItem.data('type')], $selectedItem.data('dimensions'));
 	    	} else {
@@ -564,6 +597,7 @@ function enableGlobalMatrixValueUpdate (global_var, row, index, parent_node) {
 				}
 				parent_node.find('.span_value_variable').text(global_var.value[row][index]);
 			}
+			registerUserEvent(global_var.name, ActionTypes.CHANGE_GLOBAL_VALUE, global_var.value);
 		} else {
 			if (global_var.type == Types.REAL) {
 				parent_node.find('.span_value_variable').text(global_var.value[row][index].toFixed(1));
@@ -599,6 +633,7 @@ function enableGlobalMatrixValueUpdate (global_var, row, index, parent_node) {
 					}
 					parent_node.find('.span_value_variable').text(global_var.value[row][index]);
 				}
+				registerUserEvent(global_var.name, ActionTypes.CHANGE_GLOBAL_VALUE, global_var.value);
 			} else {
 				if (global_var.type == Types.REAL) {
 					parent_node.find('.span_value_variable').text(global_var.value[row][index].toFixed(1));
@@ -608,6 +643,7 @@ function enableGlobalMatrixValueUpdate (global_var, row, index, parent_node) {
 			}
 			if (global_var.type == Types.TEXT) {
 				global_var.value[row][index] = input_field.val();
+				registerUserEvent(global_var.name, ActionTypes.CHANGE_GLOBAL_VALUE, global_var.value);
 				parent_node.find('.span_value_variable').text(global_var.value[row][index]);
 			}
 			input_field.off();
@@ -659,20 +695,21 @@ function enableGlobalValueUpdate (global_var, parent_node) {
 	}
 
 	input_field.on('input', function() {
-	    var inputWidth = input_field.textWidth()+10;
-	    opened_input_value_global_ar = input_field;
-	    input_field.focus();
+		var inputWidth = input_field.textWidth()+10;
+		opened_input_value_global_ar = input_field;
+		input_field.focus();
 
-	    var tmpStr = input_field.val();
+	  var tmpStr = input_field.val();
 		input_field.val('');
 		input_field.val(tmpStr);
 
-	    input_field.css({
-	        width: inputWidth
-	    })
+		input_field.css({
+				width: inputWidth
+		})
 	}).trigger('input');
 
 	input_field.focusout(function() {
+		let changed = false;
 		/// update array:
 		if (input_field.val().trim()) {
 			if (global_var.type == Types.REAL) {
@@ -687,6 +724,7 @@ function enableGlobalValueUpdate (global_var, parent_node) {
 				parent_node.find('.span_value_variable').text(global_var.value);
 				
 			}
+			changed = true;
 		} else {
 			if (global_var.type == Types.REAL) {
 				parent_node.find('.span_value_variable').text(global_var.value.toFixed(1));
@@ -696,7 +734,11 @@ function enableGlobalValueUpdate (global_var, parent_node) {
 		}
 		if (global_var.type == Types.TEXT) {
 			global_var.value = input_field.val();
+			changed = true;
 			parent_node.find('.span_value_variable').text(global_var.value);
+		}
+		if (changed) {
+			registerUserEvent(global_var.name, ActionTypes.CHANGE_GLOBAL_VALUE, global_var.value);
 		}
 		input_field.off();
 		input_field.remove();
@@ -708,7 +750,8 @@ function enableGlobalValueUpdate (global_var, parent_node) {
 	});
 
 	input_field.on('keydown', function(e) {
-		var code = e.keyCode || e.which;
+		const code = e.keyCode || e.which;
+		let changed = true;
 		if(code == 13) {
 			if (input_field.val().trim()) {
 				if (global_var.type == Types.REAL) {
@@ -722,6 +765,7 @@ function enableGlobalValueUpdate (global_var, parent_node) {
 					}
 					parent_node.find('.span_value_variable').text(global_var.value);
 				}
+				changed = true;
 			} else {
 				if (global_var.type == Types.REAL) {
 					parent_node.find('.span_value_variable').text(global_var.value.toFixed(1));
@@ -731,7 +775,11 @@ function enableGlobalValueUpdate (global_var, parent_node) {
 			}
 			if (global_var.type == Types.TEXT) {
 				global_var.value = input_field.val();
+				changed = true;
 				parent_node.find('.span_value_variable').text(global_var.value);
+			}
+			if (changed) {
+				registerUserEvent(global_var.name, ActionTypes.CHANGE_GLOBAL_VALUE, global_var.value);
 			}
 			input_field.off();
 			input_field.remove();
@@ -874,6 +922,7 @@ function enableGlobalVectorValueUpdate (global_var, index, parent_node) {
 	}).trigger('input');
 
 	input_field.focusout(function() {
+		let changed = false;
 		/// update array:
 		if (input_field.val().trim()) {
 			if (global_var.type == Types.REAL) {
@@ -891,6 +940,7 @@ function enableGlobalVectorValueUpdate (global_var, index, parent_node) {
 				parent_node.find('.span_value_variable').text(global_var.value[index]);
 
 			}
+			changed = true;
 		} else {
 			if (global_var.type == Types.REAL) {
 				parent_node.find('.span_value_variable').text(global_var.value[index].toFixed(1));
@@ -900,7 +950,11 @@ function enableGlobalVectorValueUpdate (global_var, index, parent_node) {
 		}
 		if (global_var.type == Types.TEXT) {
 			global_var.value[index] = input_field.val();
+			changed = true;
 			parent_node.find('.span_value_variable').text(global_var.value[index]);
+		}
+		if (changed) {
+			registerUserEvent(global_var.name, ActionTypes.CHANGE_GLOBAL_VALUE, global_var.value);
 		}
 		input_field.off();
 		input_field.remove();
@@ -911,7 +965,8 @@ function enableGlobalVectorValueUpdate (global_var, index, parent_node) {
 	});
 
 	input_field.on('keydown', function(e) {
-		var code = e.keyCode || e.which;
+		const code = e.keyCode || e.which;
+		let changed = false;
 		if(code == 13) {
 			if (input_field.val().trim()) {
 				if (global_var.type == Types.REAL) {
@@ -929,6 +984,7 @@ function enableGlobalVectorValueUpdate (global_var, index, parent_node) {
 					parent_node.find('.span_value_variable').text(global_var.value[index]);
 
 				}
+				changed = true;
 			} else {
 				if (global_var.type == Types.REAL) {
 					parent_node.find('.span_value_variable').text(global_var.value[index].toFixed(1));
@@ -938,7 +994,11 @@ function enableGlobalVectorValueUpdate (global_var, index, parent_node) {
 			}
 			if (global_var.type == Types.TEXT) {
 				global_var.value[index] = input_field.val();
+				changed = true;
 				parent_node.find('.span_value_variable').text(global_var.value[index]);
+			}
+			if (changed) {
+				registerUserEvent(global_var.name, ActionTypes.CHANGE_GLOBAL_VALUE, global_var.value);
 			}
 			input_field.off();
 			input_field.remove();

@@ -13,6 +13,7 @@ import { SemanticAnalyser } from '../processor/semantic/semanticAnalyser';
 import { IVProgAssessment } from '../assessment/ivprogAssessment';
 import * as AlgorithmManagement from './algorithm';
 import * as Utils from './utils';
+import { registerUserEvent, ActionTypes } from "./../services/userLog";
 import VersionInfo from './../../.ima_version.json';
 
 var counter_new_functions = 0;
@@ -128,36 +129,38 @@ WatchJS.watch(window.program_obj.functions, function(){
 
 function addFunctionHandler () {
 
-	var new_function = new Models.Function(LocalizedStrings.getUI("new_function") + "_" + counter_new_functions, Types.VOID, 0, [], false, false, [], new Models.Comment(LocalizedStrings.getUI('text_comment_start')));
+	const new_function = new Models.Function(LocalizedStrings.getUI("new_function") + "_" + counter_new_functions, Types.VOID, 0, [], false, false, [], new Models.Comment(LocalizedStrings.getUI('text_comment_start')));
 	program.addFunction(new_function);
 
 	counter_new_functions ++;
 
   window.insertContext = true;
+  registerUserEvent(new_function.name, ActionTypes.INSERT_FUNCTION);
 
-  var newe = renderFunction(new_function);
-
+  // var newe = renderFunction(new_function);
+  renderFunction(new_function);
   /*newe.css('display', 'none');
   newe.fadeIn();*/
 }
 
-function addParameter (function_obj, function_container, is_from_click = false) {
+function addParameter (function_obj, function_container/*, is_from_click = false*/) {
   if (function_obj.parameters_list == null) {
     function_obj.parameters_list = [];
   }
-  var new_parameter = new Models.Variable(Types.INTEGER, LocalizedStrings.getUI("new_parameter") + "_" + counter_new_parameters);
+  const new_parameter = new Models.Variable(Types.INTEGER, LocalizedStrings.getUI("new_parameter") + "_" + counter_new_parameters);
   function_obj.parameters_list.push(new_parameter);
   counter_new_parameters ++;
-
-  var newe = renderParameter(function_obj, new_parameter, function_container);
-
-  if (is_from_click) {
-    /*newe.css('display', 'none');
-    newe.fadeIn();*/
-  }
+  registerUserEvent(function_obj.name, ActionTypes.INSERT_FUNCTION_PARAM, new_parameter.name, Types.INTEGER, 0);
+  //var newe = renderParameter(function_obj, new_parameter, function_container);
+  renderParameter(function_obj, new_parameter, function_container);
+  // if (is_from_click) {
+  //   newe.css('display', 'none');
+  //   newe.fadeIn();
+  // }
 }
 
 function updateReturnType (function_obj, new_type, new_dimensions = 0) {
+  registerUserEvent(function_obj.name, ActionTypes.CHANGE_FUNCTION_RETURN, new_type, new_dimensions);
   function_obj.return_type = new_type;
   function_obj.return_dimensions = new_dimensions;
 }
@@ -165,6 +168,7 @@ function updateReturnType (function_obj, new_type, new_dimensions = 0) {
 function removeFunction (function_obj) {
   var index = program.functions.indexOf(function_obj);
   if (index > -1) {
+    registerUserEvent(function_obj.name, ActionTypes.REMOVE_FUNCTION);
     program.functions.splice(index, 1);
   }
 }
@@ -206,6 +210,7 @@ function addHandlers (function_obj, function_container) {
       function_obj.commands.push(new_cmd);
 
       CommandsManagement.renderCommand(new_cmd, function_container.find('.commands_list_div'), 3, function_obj);
+      registerUserEvent(function_obj.name, ActionTypes.INSERT_COMMAND, $(this).data('command'), '/', 0);
     } else {
       CommandsManagement.createFloatingCommand(function_obj, function_container, $(this).data('command'), evt);
     }
@@ -452,22 +457,23 @@ function isVisible (element, container) {
 window.evento_drag;
 
 function updateProgramObjDrag () {
-  var nodes = Array.prototype.slice.call( $('.all_functions').children() );
-  var function_index;
-  var start_index;
-  var function_obj;
+  const nodes = Array.prototype.slice.call( $('.all_functions').children() );
+  let function_index;
+  // var start_index;
+  let function_obj;
   $(evento_drag.item).parentsUntil(".all_functions").each(function (index) {
-    if ($(this).hasClass('function_div')) {
+    const ref = $(this);
+    if (ref.hasClass('function_div')) {
       function_index = nodes.indexOf(this);
       start_index = index;
-      function_obj = $(this);
+      function_obj = ref;
     }
   });
 
   console.log(function_index);
 
-  var path_target = [];
-  $(evento_drag.item).parentsUntil(".all_functions").each(function (index) {
+  const path_target = [];
+  $(evento_drag.item).parentsUntil(".all_functions").each(function () {
     if ($(this).hasClass('command_container')) {
       path_target.push(this);
     }
@@ -510,16 +516,16 @@ function updateProgramObjDrag () {
       }
     }
   }
-  var index_in_block = -1;
-  var is_in_else = $(evento_drag.item).parent().hasClass('commands_else');
+  // var index_in_block = -1;
+  const is_in_else = $(evento_drag.item).parent().hasClass('commands_else');
 
-  index_in_block = $(evento_drag.item).parent().find('.command_container').index(evento_drag.item);
+  // index_in_block = $(evento_drag.item).parent().find('.command_container').index(evento_drag.item);
 
-  var is_in_case_switch = $(evento_drag.item).parent().hasClass('case_commands_block');
-  var index_case_of_switch = -1;
-  if (is_in_case_switch) {
-    index_case_of_switch = $(evento_drag.item).parent().parent().parent().find('.case_div').index($(evento_drag.item).parent().parent());
-  }
+  const is_in_case_switch = $(evento_drag.item).parent().hasClass('case_commands_block');
+  // var index_case_of_switch = -1;
+  // if (is_in_case_switch) {
+  //   index_case_of_switch = $(evento_drag.item).parent().parent().parent().find('.case_div').index($(evento_drag.item).parent().parent());
+  // }
 
   /*console.log('path_relative:');
   console.log(path_relative);
@@ -933,17 +939,17 @@ function toggleConsole (is_running) {
   }
 }
 
-function waitToCloseConsole () {
-  domConsole.info("Aperte qualquer tecla para fechar...");
-  const p = new Promise((resolve, _) => {
-    domConsole.requestInput(resolve, true);
-  });
-  p.then( _ => {
-    domConsole.dispose();
-    domConsole = null;
-    $("#ivprog-term").hide();
-  })
-}
+// function waitToCloseConsole () {
+//   domConsole.info("Aperte qualquer tecla para fechar...");
+//   const p = new Promise((resolve, _) => {
+//     domConsole.requestInput(resolve, true);
+//   });
+//   p.then( _ => {
+//     domConsole.dispose();
+//     domConsole = null;
+//     $("#ivprog-term").hide();
+//   })
+// }
 
 function toggleTextualCoding () {
   var code = CodeManagement.generate();
@@ -971,6 +977,7 @@ function toggleVisualCoding () {
 }
 
 function removeParameter (function_obj, parameter_obj, parameter_container) {
+  registerUserEvent(parameter_obj.name, ActionTypes.REMOVE_FUNCTION_PARAM, function_obj.name);
   var index = function_obj.parameters_list.indexOf(parameter_obj);
   if (index > -1) {
     window.insertContext = true;
@@ -979,7 +986,8 @@ function removeParameter (function_obj, parameter_obj, parameter_container) {
   $(parameter_container).fadeOut();
 }
 
-function updateParameterType (parameter_obj, new_type, new_dimensions = 0) {
+function updateParameterType (parameter_obj, new_type, function_name, new_dimensions = 0) {
+  registerUserEvent(parameter_obj.name, ActionTypes.CHANGE_PARAM_TYPE, function_name, new_type, new_dimensions);
   parameter_obj.type = new_type;
   parameter_obj.dimensions = new_dimensions;
 
@@ -991,7 +999,7 @@ function updateParameterType (parameter_obj, new_type, new_dimensions = 0) {
 }
 
 function renderParameter (function_obj, parameter_obj, function_container) {
-  var ret = "";
+  let ret = "";
 
   ret += '<div class="ui label function_name_parameter pink"><i class="ui icon ellipsis vertical inverted"></i>';
 
@@ -1012,14 +1020,14 @@ function renderParameter (function_obj, parameter_obj, function_container) {
   ret += '<div class="menu">';
 
   
-  for (var tm in Types) {
+  for (const tm in Types) {
       if (tm == Types.VOID.toUpperCase()) {
         continue;
       }
       ret += '<div class="item ' + (parameter_obj.type == tm.toLowerCase() ? ' selected ' : '') + '" data-type="'+tm+'" >'+LocalizedStrings.getUI(tm.toLowerCase())+'</div>';
   }
 
-  for (var tm in Types) {
+  for (const tm in Types) {
     if (tm == Types.VOID.toUpperCase()) {
       continue;
     }
@@ -1048,17 +1056,18 @@ function renderParameter (function_obj, parameter_obj, function_container) {
   });
   
   ret.find('.ui.dropdown.parameter_type').dropdown({
-    onChange: function(value, text, $selectedItem) {
+    onChange: function(_, __, $selectedItem) {
       if ($selectedItem.data('dimensions')) {
-        updateParameterType(parameter_obj, Types[$selectedItem.data('type')], $selectedItem.data('dimensions'));
+        updateParameterType(parameter_obj, Types[$selectedItem.data('type')], function_obj.name, $selectedItem.data('dimensions'));
       } else {
-        updateParameterType(parameter_obj, Types[$selectedItem.data('type')]);
+        updateParameterType(parameter_obj, Types[$selectedItem.data('type')], function_obj.name);
       }
     },
     selectOnKeydown: false
   });
 
   ret.find('.label_enable_name_parameter').on('click', function(e){
+    registerUserEvent(function_obj.name, ActionTypes.ENTER_CHANGE_PARAM_NAME, parameter_obj.name);
     enableNameParameterUpdate(parameter_obj, ret, function_obj);
   });
 
@@ -1075,6 +1084,7 @@ function updateParameterName (parameter_var, new_name, parameter_obj_dom, functi
     if (variableNameAlreadyExists(new_name, function_obj)) {
       Utils.renderErrorMessage(parameter_obj_dom.find('.parameter_div_edit'), LocalizedStrings.getUI('inform_valid_variable_duplicated'));
     } else {
+      registerUserEvent(parameter_var.name, ActionTypes.RENAME_FUNCTION_PARAM, function_obj.name, new_name);
       parameter_var.name = new_name;
     }
   } else {
@@ -1113,6 +1123,7 @@ function updateFunctionName (function_var, new_name, function_obj_dom) {
     if (functionNameAlreadyExists(new_name)) {
       Utils.renderErrorMessage(function_obj_dom.find('.function_name_div'), LocalizedStrings.getUI('inform_valid_name_duplicated'));
     } else {
+      registerUserEvent(function_var.name, ActionTypes.RENAME_FUNCTION, new_name);
       function_var.name = new_name;
     }
   } else {

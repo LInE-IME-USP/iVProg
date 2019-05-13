@@ -2,6 +2,7 @@ import { Types } from './types';
 import * as Models from './ivprog_elements';
 import { LocalizedStrings } from './../services/localizedStringsService';
 import * as Utils from './utils';
+import { registerUserEvent, registerSystemEvent, ActionTypes } from "./../services/userLog";
 
 var counter_new_variables = 0;
 
@@ -14,6 +15,7 @@ export function addVariable (function_obj, function_container, is_in_click = fal
 
 	counter_new_variables ++;
 
+	registerUserEvent(function_obj.name, ActionTypes.INSERT_FUNCTION_VAR, new_var.name, Types.INTEGER, 0);
 	var newe = renderVariable(function_container, new_var, function_obj);
 
 	if (is_in_click) {
@@ -32,6 +34,7 @@ function updateName (variable_obj, new_name, variable_obj_dom, function_obj) {
 		if (variableNameAlreadyExists(new_name, function_obj)) {
 			Utils.renderErrorMessage(variable_obj_dom.find('.editing_name_var'), LocalizedStrings.getUI('inform_valid_variable_duplicated'));
 		} else {
+			registerUserEvent(function_obj.name, ActionTypes.REMOVE_FUNCTION_VAR, variable_obj.name, new_name);
 			variable_obj.name = new_name;
 		}
 	} else {
@@ -64,8 +67,9 @@ function isValidIdentifier (identifier_str) {
 	return /^[a-zA-Z_][a-zA-Z0-9_]*$/.test(identifier_str);
 }
 
-function removeVariable (variable_obj, variable_container) {
+function removeVariable (variable_obj, variable_container, function_name) {
 	var function_associated = variable_container.data('associatedFunction');
+	registerUserEvent(function_name, ActionTypes.REMOVE_FUNCTION_VAR, variable_obj.name);
 
 	var index = function_associated.variables_list.indexOf(variable_obj);
 	if (index > -1) {
@@ -78,42 +82,45 @@ function removeVariable (variable_obj, variable_container) {
 	variable_container.fadeOut();
 }
 
-function updateType (variable_obj, new_type, new_dimensions = 0) {
-	variable_obj.type = new_type;
+function updateType (variable_obj, new_type, function_name, new_dimensions = 0) {
+	variable_obj.type = new_type;		
 	variable_obj.dimensions = new_dimensions;
 
 	if (new_dimensions > 0) {
 		variable_obj.rows = new_dimensions;
 		variable_obj.columns = 2;
 	}
+	registerUserEvent(function_name, ActionTypes.CHANGE_VAR_TYPE, variable_obj.name,
+		new_type, new_dimensions, variable_obj.rows, variable_obj.columns);
 
-	updateInitialValues(variable_obj);
+	updateInitialValues(variable_obj, function_name);
 }
 
 function addHandlers (variable_obj, variable_container, function_obj) {
 
 	// Manage variable name: 
 	variable_container.find( ".enable_edit_name_variable" ).on('click', function(e){
+		registerUserEvent(function_obj.name, ActionTypes.ENTER_CHANGE_VAR_NAME, variable_obj.name);
 		enableNameUpdate(variable_obj, variable_container, function_obj);
 	});
 
 	// Menu to change type:
 	variable_container.find('.ui.dropdown.variable_type').dropdown({
-	    onChange: function(value, text, $selectedItem) {
+	    onChange: function(_, __, $selectedItem) {
 	    	if ($selectedItem.data('dimensions')) {
-	    		updateType(variable_obj, Types[$selectedItem.data('type')], $selectedItem.data('dimensions'));
+	    		updateType(variable_obj, Types[$selectedItem.data('type')], function_obj.name, $selectedItem.data('dimensions'));
 	    	} else {
-	    		updateType(variable_obj, Types[$selectedItem.data('type')]);
+	    		updateType(variable_obj, Types[$selectedItem.data('type')], function_obj.name);
 	    	}
 
-	    	renderValues(variable_obj, variable_container);
+	    	renderValues(variable_obj, variable_container, function_obj.name);
 	    },
 	    selectOnKeydown: false
 	});
 
 	// Remove variable: 
 	variable_container.find( ".remove_variable" ).on('click', function(e){
-		removeVariable(variable_obj, variable_container);
+		removeVariable(variable_obj, variable_container, function_obj.name);
 	});
 
 }
@@ -173,7 +180,7 @@ export function renderVariable (function_container, new_var, function_obj) {
 
 	addHandlers(new_var, element, function_obj);
 
-	renderValues(new_var, element);
+	renderValues(new_var, element, function_obj.name);
 
 	return element;
 }
@@ -192,11 +199,11 @@ function updateColumnsAndRowsText (variable_container, variable_var) {
 	}
 }
 
-function renderValues (new_var, variable_container) {
+function renderValues (new_var, variable_container, function_name) {
 
 	var ret = "";
 	var j = 0;
-
+		
 	if (new_var.dimensions == 0) {
 		if (new_var.type == Types.REAL) {
 			ret += '<div class="created_div_valor_var"><span class="span_value_variable simple_var">'+new_var.value.toFixed(1)+'</span> </div> ';
@@ -272,56 +279,87 @@ function renderValues (new_var, variable_container) {
 
 	ret = $(ret);
 
-	$(ret).find('.span_value_variable').data('associatedOject', new_var);
+	$(ret).find('.span_value_variable').		data('associatedOject', new_var);
 
 	$( ret ).find( ".boolean_simple_type" ).on('click', function(e){
+		registerUserEvent(function_name, ActionTypes.CHANGE_VAR_VALUE, new_var.name, new_var.value);
 		alternateBooleanValue(new_var, this.parentNode);
 	});
 	$( ret ).find( ".simple_var" ).on('click', function(e){
-		enableValueUpdate(new_var, this.parentNode);
+		registerUserEvent(function_name, ActionTypes.ENTER_CHANGE_VAR_VALUE, new_var.name);
+		enableValueUpdate(new_var, this.parentNode, function_name);
 	});
 
 	$( ret ).find( ".boolean_vector_var" ).on('click', function(e){
 		alternateBooleanVectorValue(new_var, $(this).data('index'), this.parentNode);
+		registerUserEvent(function_name, ActionTypes.CHANGE_VAR_VALUE, new_var.name,
+			new_var.value);
 	});
 	$( ret ).find( ".vector_var" ).on('click', function(e){
-		enableVectorValueUpdate(new_var, $(this).data('index'), this.parentNode);
+		enableVectorValueUpdate(new_var, $(this).data('index'), this.parentNode, function_name);
 	});
 	$( ret ).find( ".remove_global_vector_column" ).on('click', function(e){
 		removeColumnVector(new_var);
+		registerUserEvent(function_name, ActionTypes.CHANGE_VAR_TYPE, new_var.name,
+			new_var.type, new_var.dimensions, new_var.rows, new_var.columns);
+		registerSystemEvent(function_name, ActionTypes.CHANGE_VAR_VALUE, new_var.name,
+			new_var.value);
 		$( variable_container ).find( ".div_valor_var" ).html('');
-		renderValues(new_var, variable_container);
+		renderValues(new_var, variable_container, function_name);
 	});
 	$( ret ).find( ".add_global_vector_column" ).on('click', function(e){
 		addColumnVector(new_var);
+		registerUserEvent(function_name, ActionTypes.CHANGE_VAR_TYPE, new_var.name,
+			new_var.type, new_var.dimensions, new_var.rows, new_var.columns);
+		registerSystemEvent(function_name, ActionTypes.CHANGE_VAR_VALUE, new_var.name,
+			new_var.value);
 		$( variable_container ).find( ".div_valor_var" ).html('');
-		renderValues(new_var, variable_container);
+		renderValues(new_var, variable_container, function_name);
 	});
 	$( ret ).find( ".remove_global_matrix_column" ).on('click', function(e){
 		removeColumnMatrix(new_var);
+		registerUserEvent(function_name, ActionTypes.CHANGE_VAR_TYPE, new_var.name,
+			new_var.type, new_var.dimensions, new_var.rows, new_var.columns);
+		registerSystemEvent(function_name, ActionTypes.CHANGE_VAR_VALUE, new_var.name,
+			new_var.value);
 		$( variable_container ).find( ".div_valor_var" ).html('');
-		renderValues(new_var, variable_container);
+		renderValues(new_var, variable_container, function_name);
 	});
 	$( ret ).find( ".add_global_matrix_column" ).on('click', function(e){
 		addColumnMatrix(new_var);
+		registerUserEvent(function_name, ActionTypes.CHANGE_VAR_TYPE, new_var.name,
+			new_var.type, new_var.dimensions, new_var.rows, new_var.columns);
+		registerSystemEvent(function_name, ActionTypes.CHANGE_VAR_VALUE, new_var.name,
+			new_var.value);
 		$( variable_container ).find( ".div_valor_var" ).html('');
-		renderValues(new_var, variable_container);
+		renderValues(new_var, variable_container, function_name);
 	});
 	$( ret ).find( ".remove_global_matrix_line" ).on('click', function(e){
 		removeLineMatrix(new_var);
+		registerUserEvent(function_name, ActionTypes.CHANGE_VAR_TYPE, new_var.name,
+			new_var.type, new_var.dimensions, new_var.rows, new_var.columns);
+		registerSystemEvent(function_name, ActionTypes.CHANGE_VAR_VALUE, new_var.name,
+			new_var.value);
 		$( variable_container ).find( ".div_valor_var" ).html('');
-		renderValues(new_var, variable_container);
+		renderValues(new_var, variable_container, function_name);
 	});
 	$( ret ).find( ".add_global_matrix_line" ).on('click', function(e){
 		addLineMatrix(new_var);
+		registerUserEvent(function_name, ActionTypes.CHANGE_VAR_TYPE, new_var.name,
+			new_var.type, new_var.dimensions, new_var.rows, new_var.columns);
+		registerSystemEvent(function_name, ActionTypes.CHANGE_VAR_VALUE, new_var.name,
+			new_var.value);
 		$( variable_container ).find( ".div_valor_var" ).html('');
-		renderValues(new_var, variable_container);
+		renderValues(new_var, variable_container, function_name);
 	});
 	$( ret ).find( ".boolean_matrix_var" ).on('click', function(e){
 		alternateBooleanMatrixValue(new_var, $(this).data('row'), $(this).data('index'), this.parentNode);
+		registerUserEvent(function_name, ActionTypes.CHANGE_VAR_VALUE, new_var.name,
+			new_var.value);
 	});
 	$( ret ).find( ".matrix_var" ).on('click', function(e){
-		enableMatrixValueUpdate(new_var, $(this).data('row'), $(this).data('index'), this.parentNode);
+		registerUserEvent(function_name, ActionTypes.ENTER_CHANGE_VAR_VALUE, new_var.name);
+		enableMatrixValueUpdate(new_var, $(this).data('row'), $(this).data('index'), this.parentNode, function_name);
 	});
 	$( variable_container ).find( ".div_valor_var" ).append(ret);
 
@@ -451,7 +489,7 @@ function alternateBooleanVectorValue (var_obj, index, value_container) {
 	$(value_container).find('.span_value_variable').text(LocalizedStrings.getUI(var_obj.value[index]));
 }
 
-function updateInitialValues (variable_obj) {
+function updateInitialValues (variable_obj, function_name) {
 	if (variable_obj.type == Types.INTEGER) {
 		if (variable_obj.dimensions == 0) {
 			variable_obj.value = 1;
@@ -500,11 +538,12 @@ function updateInitialValues (variable_obj) {
 			variable_obj.value = [[true, true], [true, true]];
 		}
 	}
+	registerSystemEvent(function_name, ActionTypes.CHANGE_VAR_VALUE, variable_obj.name, variable_obj.value);
 }
 
 var opened_name_value_vector_global_ = false;
 var opened_input_value_vector_global_ = null;
-function enableVectorValueUpdate (var_obj, index, parent_node) {
+function enableVectorValueUpdate (var_obj, index, parent_node, function_name) {
 	if (opened_name_value_vector_global_) {
 		opened_input_value_vector_global_.focus();
 		return;
@@ -541,6 +580,7 @@ function enableVectorValueUpdate (var_obj, index, parent_node) {
 	}).trigger('input');
 
 	input_field.focusout(function() {
+		let changed = false;
 		/// update array:
 		if (input_field.val().trim()) {
 			if (var_obj.type == Types.REAL) {
@@ -558,6 +598,7 @@ function enableVectorValueUpdate (var_obj, index, parent_node) {
 				parent_node.find('.span_value_variable').text(var_obj.value[index]);
 
 			}
+			changed = true;
 		} else {
 			if (var_obj.type == Types.REAL) {
 				parent_node.find('.span_value_variable').text(var_obj.value[index].toFixed(1));
@@ -567,7 +608,12 @@ function enableVectorValueUpdate (var_obj, index, parent_node) {
 		}
 		if (var_obj.type == Types.TEXT) {
 			var_obj.value[index] = input_field.val();
+			changed = true;
 			parent_node.find('.span_value_variable').text(var_obj.value[index]);
+		}
+		if (changed) {
+			registerUserEvent(function_name, ActionTypes.CHANGE_VAR_VALUE, var_obj.name,
+				var_obj.value);
 		}
 		input_field.off();
 		input_field.remove();
@@ -578,7 +624,8 @@ function enableVectorValueUpdate (var_obj, index, parent_node) {
 	});
 
 	input_field.on('keydown', function(e) {
-		var code = e.keyCode || e.which;
+		const code = e.keyCode || e.which;
+		let changed = false;
 		if(code == 13) {
 			if (input_field.val().trim()) {
 				if (var_obj.type == Types.REAL) {
@@ -596,6 +643,7 @@ function enableVectorValueUpdate (var_obj, index, parent_node) {
 					parent_node.find('.span_value_variable').text(var_obj.value[index]);
 
 				}
+				changed = true;
 			} else {
 				if (var_obj.type == Types.REAL) {
 					parent_node.find('.span_value_variable').text(var_obj.value[index].toFixed(1));
@@ -605,7 +653,12 @@ function enableVectorValueUpdate (var_obj, index, parent_node) {
 			}
 			if (var_obj.type == Types.TEXT) {
 				var_obj.value[index] = input_field.val();
+				changed = true;
 				parent_node.find('.span_value_variable').text(var_obj.value[index]);
+			}
+			if (changed) {
+				registerUserEvent(function_name, ActionTypes.CHANGE_VAR_VALUE, var_obj.name,
+					var_obj.value);
 			}
 			input_field.off();
 			input_field.remove();
@@ -634,7 +687,7 @@ function enableVectorValueUpdate (var_obj, index, parent_node) {
 
 var opened_name_value_global_var = false;
 var opened_input_value_global_ar = null;
-function enableValueUpdate (var_obj, parent_node) {
+function enableValueUpdate (var_obj, parent_node, function_name) {
 	if (opened_name_value_global_var) {
 		opened_input_value_global_ar.focus();
 		return;
@@ -671,6 +724,7 @@ function enableValueUpdate (var_obj, parent_node) {
 
 	input_field.focusout(function() {
 		/// update array:
+		let changed = false;
 		if (input_field.val().trim()) {
 			if (var_obj.type == Types.REAL) {
 				var_obj.value = parseFloat(input_field.val().trim());
@@ -684,6 +738,7 @@ function enableValueUpdate (var_obj, parent_node) {
 				parent_node.find('.span_value_variable').text(var_obj.value);
 				
 			}
+			changed = true;
 		} else {
 			if (var_obj.type == Types.REAL) {
 				parent_node.find('.span_value_variable').text(var_obj.value.toFixed(1));
@@ -693,7 +748,12 @@ function enableValueUpdate (var_obj, parent_node) {
 		}
 		if (var_obj.type == Types.TEXT) {
 			var_obj.value = input_field.val();
+			changed = true;
 			parent_node.find('.span_value_variable').text(var_obj.value);
+		}
+		if (changed) {
+			registerUserEvent(function_name, ActionTypes.CHANGE_VAR_VALUE, var_obj.name,
+				var_obj.value);
 		}
 		input_field.off();
 		input_field.remove();
@@ -705,7 +765,8 @@ function enableValueUpdate (var_obj, parent_node) {
 	});
 
 	input_field.on('keydown', function(e) {
-		var code = e.keyCode || e.which;
+		const code = e.keyCode || e.which;
+		let changed = false;
 		if(code == 13) {
 			if (input_field.val().trim()) {
 				if (var_obj.type == Types.REAL) {
@@ -719,6 +780,7 @@ function enableValueUpdate (var_obj, parent_node) {
 					}
 					parent_node.find('.span_value_variable').text(var_obj.value);
 				}
+				changed = true;
 			} else {
 				if (var_obj.type == Types.REAL) {
 					parent_node.find('.span_value_variable').text(var_obj.value.toFixed(1));
@@ -728,7 +790,12 @@ function enableValueUpdate (var_obj, parent_node) {
 			}
 			if (var_obj.type == Types.TEXT) {
 				var_obj.value = input_field.val();
+				changed = true;
 				parent_node.find('.span_value_variable').text(var_obj.value);
+			}
+			if (changed) {
+				registerUserEvent(function_name, ActionTypes.CHANGE_VAR_VALUE, var_obj.name,
+					var_obj.value);
 			}
 			input_field.off();
 			input_field.remove();
@@ -776,7 +843,7 @@ function enableNameUpdate (variable_obj, variable_container, function_obj) {
 	input_name.on('input', function() {
 	    var inputWidth = input_name.textWidth()+10;
 	    opened_input_global = input_name;
-	    input_name.focus();
+	    input_name.focus();					
 
 	    var tmpStr = input_name.val();
 		input_name.val('');
@@ -838,7 +905,7 @@ function enableNameUpdate (variable_obj, variable_container, function_obj) {
 
 var opened_name_value_matrix_global_v = false;
 var opened_input_value_matrix_global_v = null;
-function enableMatrixValueUpdate (var_obj, row, index, parent_node) {
+function enableMatrixValueUpdate (var_obj, row, index, parent_node, function_name) {
 	if (opened_name_value_matrix_global_v) {
 		opened_input_value_matrix_global_v.focus();
 		return;
@@ -875,13 +942,14 @@ function enableMatrixValueUpdate (var_obj, row, index, parent_node) {
 	}).trigger('input');
 
 	input_field.focusout(function() {
+		let changed = false;
 		/// update array:
 		if (input_field.val().trim()) {
 			if (var_obj.type == Types.REAL) {
 				var_obj.value[row][index] = parseFloat(input_field.val().trim());
 
 				parent_node.find('.span_value_variable').text(var_obj.value[row][index].toFixed(1));
-			} else {
+			} else {					
 				if (var_obj.type == Types.INTEGER) {
 					var_obj.value[row][index] = parseInt(input_field.val().trim());
 				} else {
@@ -889,6 +957,7 @@ function enableMatrixValueUpdate (var_obj, row, index, parent_node) {
 				}
 				parent_node.find('.span_value_variable').text(var_obj.value[row][index]);
 			}
+			changed = true;
 		} else {
 			if (var_obj.type == Types.REAL) {
 				parent_node.find('.span_value_variable').text(var_obj.value[row][index].toFixed(1));
@@ -898,7 +967,12 @@ function enableMatrixValueUpdate (var_obj, row, index, parent_node) {
 		}
 		if (var_obj.type == Types.TEXT) {
 			var_obj.value[row][index] = input_field.val();
+			changed = true;
 			parent_node.find('.span_value_variable').text(var_obj.value[row][index]);
+		}
+		if (changed) {
+			registerUserEvent(function_name, ActionTypes.CHANGE_VAR_VALUE, var_obj.name,
+				var_obj.value);
 		}
 		input_field.off();
 		input_field.remove();
@@ -909,7 +983,8 @@ function enableMatrixValueUpdate (var_obj, row, index, parent_node) {
 	});
 
 	input_field.on('keydown', function(e) {
-		var code = e.keyCode || e.which;
+		const code = e.keyCode || e.which;
+		let changed = false;
 		if(code == 13) {
 			if (input_field.val().trim()) {
 				if (var_obj.type == Types.REAL) {
@@ -924,6 +999,7 @@ function enableMatrixValueUpdate (var_obj, row, index, parent_node) {
 					}
 					parent_node.find('.span_value_variable').text(var_obj.value[row][index]);
 				}
+				changed = true;
 			} else {
 				if (var_obj.type == Types.REAL) {
 					parent_node.find('.span_value_variable').text(var_obj.value[row][index].toFixed(1));
@@ -933,7 +1009,12 @@ function enableMatrixValueUpdate (var_obj, row, index, parent_node) {
 			}
 			if (var_obj.type == Types.TEXT) {
 				var_obj.value[row][index] = input_field.val();
+				changed = true;
 				parent_node.find('.span_value_variable').text(var_obj.value[row][index]);
+			}
+			if (changed) {
+				registerUserEvent(function_name, ActionTypes.CHANGE_VAR_VALUE, var_obj.name,
+					var_obj.value);
 			}
 			input_field.off();
 			input_field.remove();
