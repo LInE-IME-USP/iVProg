@@ -19,6 +19,9 @@ import { registerUserEvent, ActionTypes } from "./../services/userLog";
 // let which_element_is_draged = null;
 
 export function removeCommand (command, function_obj, dom_obj) {
+
+	registerUserEvent(function_obj.name, ActionTypes.REMOVE_COMMAND, command.type, '/', 0);
+
 	if (function_obj.commands.indexOf(command) > -1) {
 		function_obj.commands.splice(function_obj.commands.indexOf(command), 1);
 		return true;
