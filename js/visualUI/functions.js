@@ -630,6 +630,18 @@ function addSortableHandler (element, id_function) {
     animation: 300,
     group: {name: n_group},
     onEnd: function (evt) {
+
+      var nodes = Array.prototype.slice.call( $('.all_functions').children() );
+      var function_index;
+      var function_obj;
+      $(evt.item).parentsUntil(".all_functions").each(function (index) {
+        if ($(this).hasClass('function_div')) {
+          function_index = nodes.indexOf(this);
+          function_obj = window.program_obj.functions[function_index];
+        }
+      });
+
+       registerUserEvent(function_obj.name, ActionTypes.MOVE_COMMAND, $(evt.item).data('command').type, '/', 'from: ' + evt.oldIndex + ' to: ' + evt.newIndex);
        //updateSequenceLocals(evt.oldIndex, evt.newIndex, function_obj);
        var itemEl = evt.item;  // dragged HTMLElement
        evt.to;    // target list
