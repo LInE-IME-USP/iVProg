@@ -13,11 +13,15 @@ import * as FunctioncallsManagement from './commands/functioncall';
 import * as VariableValueMenuManagement from './commands/variable_value_menu';
 import * as BreaksManagement from './commands/break';
 import * as ReturnsManagement from './commands/return';
+import { registerUserEvent, ActionTypes } from "./../services/userLog";
 
 // let has_element_created_draged = false;
 // let which_element_is_draged = null;
 
 export function removeCommand (command, function_obj, dom_obj) {
+
+	registerUserEvent(function_obj.name, ActionTypes.REMOVE_COMMAND, command.type, '/', 0);
+
 	if (function_obj.commands.indexOf(command) > -1) {
 		function_obj.commands.splice(function_obj.commands.indexOf(command), 1);
 		return true;
@@ -319,11 +323,7 @@ function addGhostToFunctionArea (undermouse, evt) {
 
 function addGhostDiv (evt) {
 
-	console.log('a');
-
 	var undermouse = $(evt.target);
-
-	console.log('undermouse', undermouse);
 
 	if (undermouse.hasClass('ghost_div')) {
 		return;
@@ -524,6 +524,64 @@ function dragTrash (event) {
     });
 }
 
+function findSingleElement (searching, query) {
+
+	if (!searching || !query) {
+		return '';
+	}
+
+	if (searching.type == Models.COMMAND_TYPES.repeatNtimes || 
+		searching.type == Models.COMMAND_TYPES.whiletrue ||
+		searching.type == Models.COMMAND_TYPES.dowhiletrue) {
+
+		if (searching.commands_block) {
+			return '' + searching.commands_block.indexOf(query);
+		} else {
+			return '0';
+		}
+
+	} else if (searching.type == Models.COMMAND_TYPES.iftrue) {
+
+		if (searching.commands_block == null) {
+			searching.commands_block = [];
+		}
+		if (searching.commands_else == null) {
+			searching.commands_else = [];
+		}
+
+		console.log('\n\nveja onde: ', searching.commands_block, ' \n\nquery: ', query);
+
+		if (searching.commands_block.indexOf(query) >= 0) {
+			return 'if[' + searching.commands_block.indexOf(query) + ']';
+		} else {
+			return 'else[' + searching.commands_else.indexOf(query) + ']';
+		}
+
+	} else if (searching.type == Models.COMMAND_TYPES.switch) {
+
+		for (var i = 0; i < searching.cases.length; i++) {
+			if (searching.cases[i].commands_block.indexOf(query) >= 0) {
+				return 'case[' + searching.cases[i].commands_block.indexOf(query) + ']';
+			}
+		}
+
+	}
+
+}
+
+function findPathRecursive (starter_index, hierarquia_bottom_up, function_obj, index_command = -1, actual = null) {
+	var full_path = '';
+	
+	for (var i = 0; i <= hierarquia_bottom_up.length; i ++) {
+
+		console.log('\n\n:: ', i, ':\n', hierarquia_bottom_up[i]);
+
+		full_path += findSingleElement(hierarquia_bottom_up[i], hierarquia_bottom_up[i + 1]) + '-';
+	}
+
+	return full_path;
+}
+
 function manageCommand (function_obj, function_container, event, command_type) {
 
 	$( ".created_element" ).each(function( index ) { 
@@ -582,9 +640,9 @@ function manageCommand (function_obj, function_container, event, command_type) {
 			return;
 		}
 	}
-
+	var hierarquia_bottom_up = null;
 	// Agora é descobrir qual o escopo para adicionar o comando:
-
+	console.log('ev0');
 	// Se o elemento clicado possuir o atributo "fun", então, é direto na div dos comandos:
 	if (typeof el.data('fun') !== 'undefined') {
 
@@ -595,6 +653,7 @@ function manageCommand (function_obj, function_container, event, command_type) {
 				el.data('fun').commands = [];
 
 				var new_cmd = genericCreateCommand(command_type);
+				registerUserEvent(function_obj.name, ActionTypes.INSERT_COMMAND, command_type, '/', 0);
 
 				el.data('fun').commands.push(new_cmd);
 
@@ -609,7 +668,7 @@ function manageCommand (function_obj, function_container, event, command_type) {
 		console.log("soltou em um comando");
 		// descobrir em qual comando ele soltou: 
 		var hier_find = el.parentsUntil(".commands_list_div");
-		var hierarquia_bottom_up = [];
+		hierarquia_bottom_up = [];
 		if (typeof el.data('command') !== 'undefined') {
 			hierarquia_bottom_up.push(el.data('command'));
 		}
@@ -688,6 +747,16 @@ function manageCommand (function_obj, function_container, event, command_type) {
 	// has_element_created_draged = false;
 	// which_element_is_draged = null;
 
+	if (hierarquia_bottom_up) {
+		console.log('\n\n:::índices::\n\n');
+		var i = hierarquia_bottom_up.length - 1;
+		var starter_index = window.program_obj.functions[window.program_obj.functions.indexOf(function_obj)].commands.indexOf(hierarquia_bottom_up[i]);
+		var all_str_path = starter_index + '-' + findPathRecursive(starter_index, hierarquia_bottom_up, function_obj);
+		registerUserEvent(function_obj.name, ActionTypes.INSERT_COMMAND, command_type, '/' , all_str_path);
+		console.log('\n\nfull path: \n\n', all_str_path);
+		console.log('fim dos índices');
+	}
+
 	renderAlgorithm();
 }
 
@@ -714,6 +783,7 @@ function insertCommandInBlockHierar (el, event, function_obj, command_type, hier
 
 				var recentComand = genericCreateCommand(command_type);
 				command_parent.commands_block.push(recentComand);
+				registerUserEvent(function_obj.name, ActionTypes.INSERT_COMMAND, command_type, '/' + el_jq.data('command').type, 0);
 
 				renderCommand(recentComand, el_jq.find('.block_commands'), 3, function_obj);
 			} else { // Se já tem algum comando no bloco:
@@ -733,6 +803,8 @@ function insertCommandInBlockHierar (el, event, function_obj, command_type, hier
 }
 
 function findNearbyCommandToAddInBlockScope (el, event, node_list_commands, function_obj, command_type, command_parent) {
+
+	console.log("\n\n\n::COMANDOS:\n\n", el, event, node_list_commands, function_obj, command_type, command_parent);
 
 	var all_sub = $(node_list_commands).find('div.command_container');
 
@@ -1268,6 +1340,7 @@ function findBeforeOrAfterCommandToAdd (el, event, function_obj, command_type) {
 		}
 
 		renderCommand(recentComand, el, 1, function_obj);
+		registerUserEvent(function_obj.name, ActionTypes.INSERT_COMMAND, command_type, '/', index);
 
 	} else {
 		var recentComand = genericCreateCommand(command_type);
@@ -1279,6 +1352,7 @@ function findBeforeOrAfterCommandToAdd (el, event, function_obj, command_type) {
 		}
 
 		renderCommand(recentComand, el, 2, function_obj);
+		registerUserEvent(function_obj.name, ActionTypes.INSERT_COMMAND, command_type, '/', index);
 	}
 }
 
@@ -1314,6 +1388,7 @@ function findNearbyCommandToAddInFunctionScope (el, event, node_list_commands, f
 		function_obj.commands.push(recentComand);
 		//
 		renderCommand(recentComand, node_list_commands, 3, function_obj);
+		registerUserEvent(function_obj.name, ActionTypes.INSERT_COMMAND, command_type, '/', function_obj.commands.length - 1);
 
 	} else {
 
@@ -1326,5 +1401,6 @@ function findNearbyCommandToAddInFunctionScope (el, event, node_list_commands, f
 		}
 
 		renderCommand(recentComand, elemento_menor_distancia, 1, function_obj);
+		registerUserEvent(function_obj.name, ActionTypes.INSERT_COMMAND, command_type, '/', index);
 	}
 }

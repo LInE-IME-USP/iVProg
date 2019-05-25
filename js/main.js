@@ -4,6 +4,7 @@ import { initVisualUI, addFunctionChangeListener,
   removeGlobalListener, getTestCases } from './visualUI/functions';
 import * as LocalizedStringsService from './services/localizedStringsService';
 import { i18nHelper } from "./services/i18nHelper";
+import { ActionTypes, getLogs, getLogsAsString, registerClick, registerUserEvent, parseLogs } from "./services/userLog";
 import { prepareActivityToStudentHelper, autoEval } from "./util/iassignHelpers";
 
 const i18n = i18nHelper.i18n
@@ -20,5 +21,11 @@ export {
   autoEval,
   prepareActivityToStudentHelper,
   LocalizedStrings,
-  i18n
+  i18n,
+  getLogs,
+  getLogsAsString,
+  registerClick,
+  registerUserEvent,
+  parseLogs,
+  ActionTypes
 }
