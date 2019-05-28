@@ -22,27 +22,27 @@ export class IVProgAssessment {
   }
 
   runTest () {
-    console.log(this);
+    const outerRef = this
     try {
       const validTree = SemanticAnalyser.analyseFromSource(this.textCode);
       // loop test cases and show messages through domconsole
       const partialTests = this.testCases.map( (t, name) => {
-        return this.partialEvaluateTestCase(new IVProgProcessor(validTree), t.input, t.output, name);
+        return outerRef.partialEvaluateTestCase(new IVProgProcessor(validTree), t.input, t.output, name);
       });
       const testResult = partialTests.reduce((acc, curr) => acc.then(curr), Promise.resolve(0));
       return testResult.then(function (total) {
-        const grade = total / this.testCases.length;
+        const grade = total / outerRef.testCases.length;
         const channel = grade == 1 ? DOMConsole.INFO : DOMConsole.ERR;
-        this.writeToConsole(channel, StringTypes.MESSAGE, "test_suite_grade", grade * 100);
+        outerRef.writeToConsole(channel, StringTypes.MESSAGE, "test_suite_grade", grade * 100);
         return Promise.resolve(grade)
       }).catch(err => {
-          this.domConsole.err("Erro inesperado durante o cálculo da nota.");// try and show error messages through domconsole
-          this.domConsole.err(err.message);
-          return Promise.resolve(0);
+        outerRef.domConsole.err("Erro inesperado durante o cálculo da nota.");// try and show error messages through domconsole
+        outerRef.domConsole.err(err.message);
+        return Promise.resolve(0);
       });
     } catch (error) {
-      this.domConsole.err("Erro inesperado durante a execução do programa");// try and show error messages through domconsole
-      this.domConsole.err(error.message);
+      outerRef.domConsole.err("Erro inesperado durante a execução do programa");// try and show error messages through domconsole
+      outerRef.domConsole.err(error.message);
       return Promise.resolve(0);
     }
   }
