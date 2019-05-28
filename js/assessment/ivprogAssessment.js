@@ -29,7 +29,7 @@ export class IVProgAssessment {
         return this.partialEvaluateTestCase(new IVProgProcessor(validTree), t.input, t.output, name);
       });
       const testResult = partialTests.reduce((acc, curr) => acc.then(curr), Promise.resolve(0));
-      return testResult.then(total => {
+      return testResult.then(function (){
         const grade = total / this.testCases.length;
         const channel = grade == 1 ? DOMConsole.INFO : DOMConsole.ERR;
         this.writeToConsole(channel, StringTypes.MESSAGE, "test_suite_grade", grade * 100);
