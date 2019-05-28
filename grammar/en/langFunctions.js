@@ -29,6 +29,7 @@ export default {
   $negate: "negate",
   $invert: "invert",
   $max: "maximum",
-  $min: "minimum"
+  $min: "minimum",
+  $rand: "random"
 
 }

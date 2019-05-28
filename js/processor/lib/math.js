@@ -253,3 +253,15 @@ export function createMinFun () {
    block);
  return func;
 }
+
+export function createRandFun () {
+  const randFun = (sto, _) => {
+    const val = Math.random();
+    const result = new StoreObject(Types.REAL, new Decimal(val));
+    sto.mode = Modes.RETURN;
+    return Promise.resolve(sto.updateStore("$", result));
+  };
+  const block = new Commands.CommandBlock([],  [new Commands.SysCall(randFun)]);
+  const func = new Commands.Function('$rand', Types.REAL, [], block);
+  return func;
+}

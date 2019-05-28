@@ -52,6 +52,8 @@ window.system_functions.push(new Models.SystemFunction('$max', Types.REAL, 0, [n
   null, Models.SYSTEM_FUNCTIONS_CATEGORIES.math));
 window.system_functions.push(new Models.SystemFunction('$min', Types.REAL, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],
   null, Models.SYSTEM_FUNCTIONS_CATEGORIES.math));
+window.system_functions.push(new Models.SystemFunction('$rand', Types.REAL, 0, [],
+  null, Models.SYSTEM_FUNCTIONS_CATEGORIES.math));
 // Adding text functions:
 window.system_functions.push(new Models.SystemFunction('$substring', Types.TEXT, 0, [new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true),
   new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true),new Models.VariableValueMenu(VariableValueMenu.VAR_OR_VALUE_TYPES.all, null, null, null, true)],

@@ -122,6 +122,7 @@
   "$invert": "inverter_valor",
   "$max": "maximo",
   "$min": "minimo",
+  "$rand": "numero_aleatorio",
   "$substring": "subcadeia",
   "$length": "comprimento",
   "$uppercase": "caixa_alta",
