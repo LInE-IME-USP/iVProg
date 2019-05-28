@@ -2,12 +2,16 @@ import { setTestCases, getTestCases } from "../visualUI/functions";
 import { generate } from "../visualUI/code_generator";
 import { IVProgAssessment } from "../assessment/ivprogAssessment";
 import { TestConsole } from "./testConsole";
+import { parseLogs } from "./../services/userLog";
 
 function parseActivityData (data) {
   let algorithm_in_ilm = null;
   if (data.split('\n::algorithm::')[1]) {
     algorithm_in_ilm = data.split('\n::algorithm::')[1].split('\n::logs::')[0];
-    // TODO: restore logs
+    const logs = data.split('\n::algorithm::')[1].split('\n::logs::')[1];
+    if (logs != null) {
+      parseLogs(logs);
+    }
   }
   let content = JSON.parse(data.split('\n::algorithm::')[0]);
   content['algorithm_in_ilm'] = algorithm_in_ilm;
