@@ -2,11 +2,46 @@ import { Types } from '../types';
 import * as Models from '../ivprog_elements';
 import { LocalizedStrings } from '../../services/localizedStringsService';
 import * as VariableValueMenuManagement from './variable_value_menu';
+import { registerUserEvent, ActionTypes } from "../../services/userLog";
 import WatchJS from 'melanke-watchjs';
+
+window.timer = false;
 
 export function renderExpression (command, function_obj, div_to_render, expression_array) {
 
 	div_to_render.empty();
+
+	WatchJS.unwatch(command, "expression");
+	WatchJS.watch(command, "expression", function(){
+		if (window.timer)
+			return;
+		var m = div_to_render.find('.single_element_expression').not('.mouse_distance').not('.add_parentheses');
+		var s = "";
+		m.each(function(e){
+		   if ($(this).hasClass('parentheses_in_expression')) {
+		   		s += ($(this).text()) + " ";
+		   } else {
+		        s += ($(this).find('.text').text());
+		        
+		        s += ($(this).find('.var_name').text());
+
+		        s += ($(this).find('.parameters_function_called').text());
+
+		        s += ($(this).find('.value_rendered').text());
+
+		        s += " ";
+		   }
+		});
+		if (s) {
+			window.timer = true;
+		} else {
+			return;
+		}
+		registerUserEvent(function_obj.name, ActionTypes.CHANGE_COMMAND_EXP, command.type, '/', s);
+		setTimeout(function() {
+			window.timer = false;
+		}, 200);
+	}, 20, true);
 
 	if (command.type === Models.COMMAND_TYPES.attribution) {
 
