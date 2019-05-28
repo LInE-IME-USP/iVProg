@@ -22,6 +22,7 @@ export class IVProgAssessment {
   }
 
   runTest () {
+    console.log(this);
     try {
       const validTree = SemanticAnalyser.analyseFromSource(this.textCode);
       // loop test cases and show messages through domconsole
@@ -29,7 +30,7 @@ export class IVProgAssessment {
         return this.partialEvaluateTestCase(new IVProgProcessor(validTree), t.input, t.output, name);
       });
       const testResult = partialTests.reduce((acc, curr) => acc.then(curr), Promise.resolve(0));
-      return testResult.then(function (){
+      return testResult.then(function (total) {
         const grade = total / this.testCases.length;
         const channel = grade == 1 ? DOMConsole.INFO : DOMConsole.ERR;
         this.writeToConsole(channel, StringTypes.MESSAGE, "test_suite_grade", grade * 100);
