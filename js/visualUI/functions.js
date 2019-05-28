@@ -626,6 +626,9 @@ function prepareDragHandler (evt) {
 var command_in_drag;
 
 function addSortableHandler (element, id_function) {
+  if(true) { // DISABLE COMMAND DRAG
+    return;
+  }
   var n_group = 'commands_drag_' + id_function;
   Sortable.create(element, {
     handle: '.command_drag',

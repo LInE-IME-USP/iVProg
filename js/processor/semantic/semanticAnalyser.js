@@ -150,12 +150,28 @@ export class SemanticAnalyser {
     if(expression instanceof UnaryApp) {
       const op = expression.op;
       const resultType = this.evaluateExpressionType(expression.left);
-      return resultTypeAfterUnaryOp(op, resultType);
+      const finalResult = resultTypeAfterUnaryOp(op, resultType);
+      if (Types.UNDEFINED.isCompatible(finalResult)) {
+        const stringInfo = resultType.stringInfo();
+        const info = stringInfo[0];
+        const expString = expression.toString();
+        throw ProcessorErrorFactory.invalid_unary_op_full(expString, op, info.type, info.dim, expression.sourceInfo);
+      }
+      return finalResult;
     } else if (expression instanceof InfixApp) {
       const op = expression.op;
       const resultTypeLeft = this.evaluateExpressionType(expression.left);
       const resultTypeRight = this.evaluateExpressionType(expression.right);
-      return resultTypeAfterInfixOp(op, resultTypeLeft, resultTypeRight);
+      const finalResult = resultTypeAfterInfixOp(op, resultTypeLeft, resultTypeRight);
+      if (Types.UNDEFINED.isCompatible(finalResult)) {
+        const stringInfoLeft = resultTypeLeft.stringInfo();
+        const infoLeft = stringInfoLeft[0];
+        const stringInfoRight = resultTypeRight.stringInfo();
+        const infoRight = stringInfoRight[0];
+        const expString = expression.toString();
+        throw ProcessorErrorFactory.invalid_infix_op_full(expString,op, infoLeft.type, infoLeft.dim, infoRight.type, infoRight.dim, expression.sourceInfo);
+      }
+      return finalResult;
     } else if (expression instanceof Literal) {
       return this.evaluateLiteralType(expression);
     } else if (expression instanceof FunctionCall) {
@@ -498,7 +514,7 @@ export class SemanticAnalyser {
     if (fun.formalParameters.length !== actualParametersList.length) {
       throw ProcessorErrorFactory.invalid_parameters_size_full(fun.name, actualParametersList.length, fun.formalParameters.length, null);
     }
-    for (let i = 0; i < actualParametersList.length; i++) {
+    for (let i = 0; i < actualParametersList.length; ++i) {
       const param = actualParametersList[i];
       const formalParam = fun.formalParameters[i];
       const id = formalParam.id;
@@ -510,7 +526,7 @@ export class SemanticAnalyser {
       const resultType = this.evaluateExpressionType(param);
       if(resultType instanceof MultiType && formalParam.type instanceof MultiType) {
         let shared = 0
-        for (let j = 0; j < resultType.types.length; j++) {
+        for (let j = 0; j < resultType.types.length; ++j) {
           const element = resultType.types[j];
           if(formalParam.type.types.indexOf(element) !== -1) {
             shared++;

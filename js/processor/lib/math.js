@@ -150,7 +150,7 @@ export function createLogFun () {
   const logFun = (sto, _) => {
     const x = sto.applyStore('x');
     if (x.value.isNegative()) {
-      return Promise.reject("the value passed to log function cannot be negative");
+      return Promise.reject(new Error("the value passed to log function cannot be negative"));
     }
     let result = Decimal.log10(x.value);
     if(result.dp() > Config.decimalPlaces) {

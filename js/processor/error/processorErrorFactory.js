@@ -340,28 +340,28 @@ export const ProcessorErrorFactory  = Object.freeze({
     const context = [expected, actual];
     return new RuntimeError(LocalizedStrings.getError("invalid_array_literal_column", context));
   },
-  invalid_unary_op_full: (opName, type, dim, sourceInfo) => {
+  invalid_unary_op_full: (expString, opName, type, dim, sourceInfo) => {
     if(sourceInfo) {
-      const context = [sourceInfo.line, LocalizedStrings.translateOp(opName), LocalizedStrings.translateType(type, dim)];
+      const context = [sourceInfo.line, expString, LocalizedStrings.translateOp(opName), LocalizedStrings.translateType(type, dim)];
       return new RuntimeError(LocalizedStrings.getError("invalid_unary_op_full", context));
     } else {
       return ProcessorErrorFactory.invalid_unary_op(opName, type, dim);
     }
   },
-  invalid_unary_op: (opName, type, dim) => {
-    const context = [LocalizedStrings.translateOp(opName), LocalizedStrings.translateType(type, dim)];
+  invalid_unary_op: (expString, opName, type, dim) => {
+    const context = [expString, LocalizedStrings.translateOp(opName), LocalizedStrings.translateType(type, dim)];
     return new RuntimeError(LocalizedStrings.getError("invalid_unary_op", context));
   },
-  invalid_infix_op_full: (opName, typeLeft, dimLeft, typeRight, dimRight,  sourceInfo) => {
+  invalid_infix_op_full: (expString, opName, typeLeft, dimLeft, typeRight, dimRight,  sourceInfo) => {
     if(sourceInfo) {
-      const context = [sourceInfo.line, LocalizedStrings.translateOp(opName), LocalizedStrings.translateType(typeLeft, dimLeft), LocalizedStrings.translateType(typeRight, dimRight)];
+      const context = [sourceInfo.line, expString, LocalizedStrings.translateOp(opName), LocalizedStrings.translateType(typeLeft, dimLeft), LocalizedStrings.translateType(typeRight, dimRight)];
       return new RuntimeError(LocalizedStrings.getError("invalid_infix_op_full", context));
     } else {
       return ProcessorErrorFactory.invalid_infix_op(opName, typeLeft, dimLeft, typeRight, dimRight);
     }
   },
-  invalid_infix_op: (opName, typeLeft, dimLeft, typeRight, dimRight) => {
-    const context = [LocalizedStrings.translateOp(opName), LocalizedStrings.translateType(typeLeft, dimLeft), LocalizedStrings.translateType(typeRight, dimRight)];
+  invalid_infix_op: (expString, opName, typeLeft, dimLeft, typeRight, dimRight) => {
+    const context = [expString, LocalizedStrings.translateOp(opName), LocalizedStrings.translateType(typeLeft, dimLeft), LocalizedStrings.translateType(typeRight, dimRight)];
     return new RuntimeError(LocalizedStrings.getError("invalid_infix_op", context));
   },
   array_dimension_not_positive_full: (sourceInfo) => {
