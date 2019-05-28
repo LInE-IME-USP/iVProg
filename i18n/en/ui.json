@@ -116,6 +116,7 @@
   "$invert": "invert",
   "$max": "maximum",
   "$min": "minimum",
+  "$rand":"random",
   "$substring": "substring",
   "$length": "length",
   "$uppercase": "uppercase",

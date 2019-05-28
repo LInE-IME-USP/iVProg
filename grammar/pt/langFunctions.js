@@ -29,5 +29,6 @@ export default {
   $negate: "trocar_sinal",
   $invert: "inverter_valor",
   $max: "maximo",
-  $min: "minimo"
+  $min: "minimo",
+  $rand: "numero_aleatorio"
 }

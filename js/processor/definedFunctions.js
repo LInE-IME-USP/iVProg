@@ -14,7 +14,7 @@ import {createAbsFun, createCosFun,
   createMaxFun, createMinFun,
   createNegateFun, createPowFun,
   createSinFun, createSqrtFun,
-  createTanFun} from './lib/math';
+  createTanFun, createRandFun} from './lib/math';
 
 function valueToKey (value, object) {
   for (const key in object) {
@@ -52,7 +52,8 @@ const libsObject = {
     $negate: createNegateFun(),
     $invert: createInvertFun(),
     $max: createMaxFun(),
-    $min: createMinFun()
+    $min: createMinFun(),
+    $rand: createRandFun()
   },
   $ioLib: {
     $read: createInputFun(),
