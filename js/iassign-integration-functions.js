@@ -241,7 +241,6 @@ function prepareEnvironment () {
 
   $('.div_to_body').click(function(e) {
     // trackingMatrix.push(adCoords(e, 1));
-    console.log("Log click");
     ivprogCore.registerClick(e.pageX, e.pageY, e.target.classList['value']);
   });
 
