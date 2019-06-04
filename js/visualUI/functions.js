@@ -461,7 +461,7 @@ window.evento_drag;
 function updateProgramObjDrag () {
   const nodes = Array.prototype.slice.call( $('.all_functions').children() );
   let function_index;
-  // var start_index;
+  var start_index;
   let function_obj;
   $(evento_drag.item).parentsUntil(".all_functions").each(function (index) {
     const ref = $(this);
@@ -628,9 +628,7 @@ function prepareDragHandler (evt) {
 var command_in_drag;
 
 function addSortableHandler (element, id_function) {
-  if(true) { // DISABLE COMMAND DRAG
-    return;
-  }
+  
   var n_group = 'commands_drag_' + id_function;
   Sortable.create(element, {
     handle: '.command_drag',
@@ -664,6 +662,7 @@ function addSortableHandler (element, id_function) {
        try {
         updateProgramObjDrag();
        } catch (e) {
+        console.error(e);
         window.draging = false;
        }
     },
