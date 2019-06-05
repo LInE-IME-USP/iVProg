@@ -543,6 +543,7 @@ function updateProgramObjDrag () {
   console.log(index_case_of_switch);*/
 
   // encontrar o elemento na árvore:
+
   var command_start_point = window.program_obj.functions[function_index].commands[indice_na_raiz];
   var block_to_insert = command_start_point;
   for (var i = 0; i < index_each.length; i++) {
@@ -562,7 +563,7 @@ function updateProgramObjDrag () {
   // (1) se está em um else ou (2) se está em switch ou (3) será um caso padrão ou (4) se será na raiz.
   
   if (path_target.length == 0) { // soltou na raiz:
-    window.program_obj.functions[function_index].commands.splice(evento_drag.newIndex, 0, command_in_drag);
+    window.program_obj.functions[function_index].commands.splice(evento_drag.newIndex - 1, 0, command_in_drag);
   } else if (is_in_else)  {
     if (block_to_insert.commands_else) {
       block_to_insert.commands_else.splice(evento_drag.newIndex, 0, command_in_drag);
@@ -575,6 +576,7 @@ function updateProgramObjDrag () {
   } else {
     // verificar se tem alguma coisa no bloco:
     if (block_to_insert.commands_block) {
+      console.log("existe alguma coisa dentro do bloco, index: ", evento_drag.newIndex);
       block_to_insert.commands_block.splice(evento_drag.newIndex, 0, command_in_drag);
     } else {
       block_to_insert.commands_block = [];
