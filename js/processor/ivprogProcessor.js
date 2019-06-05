@@ -298,7 +298,13 @@ export class IVProgProcessor {
         }
       });
     }, Promise.resolve([false, store]));
-    return caseSequence.then(tuple => tuple[1]);
+    return caseSequence.then(tuple => {
+      const newStore = tuple[1];
+      if (newStore.mode === Modes.BREAK) {
+        newStore.mode = Modes.RUN;
+      }
+      return newStore;
+    });
   }
 
   executeFor (store, cmd) {
