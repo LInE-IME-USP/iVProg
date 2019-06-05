@@ -86,5 +86,7 @@
   "test_case_few_reads": "Caso de teste $0 falhou: ainda restam entradas!",
   "test_case_failed": "Caso de teste $0 falhou: <ul> <li>entrada(s): $1</li> <li>saída(s) esperada(s): $2</li> <li>saída(s): $3</li></ul>",
   "test_case_failed_exception": "Caso de teste $0 falhou: $1",
-  "invalid_type_conversion": "O valor $0 não pode ser convertido para o tipo $1"
+  "invalid_type_conversion": "O valor $0 não pode ser convertido para o tipo $1",
+  "invalid_read_type":"A entrada \"$0\" não é do tipo $1, que é o tipo da variável <span class='ivprog-error-varname'>$2</span>.",
+  "invalid_read_type_array":"A entrada \"$0\" não é do tipo $1, que é o tipo aceito pela variável <span class='ivprog-error-varname'>$2</span> que é um $3."
 }
