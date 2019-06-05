@@ -24,6 +24,7 @@ const globalChangeListeners = [];
 const functionsChangeListeners = [];
 let domConsole = null;
 let _testCases = [];
+let isRunning = false;
 window.studentGrade = null;
 window.LocalizedStrings = LocalizedStrings;
 const program = new Models.Program();
@@ -875,6 +876,9 @@ function updateSequenceFunction (oldIndex, newIndex) {
 }
 
 function runCodeAssessment () {
+  if (isRunning) {
+    return;
+  }
   
   window.studentGrade = null;
   const strCode = CodeManagement.generate();
@@ -888,19 +892,25 @@ function runCodeAssessment () {
     domConsole = new DOMConsole("#ivprog-term");
   $("#ivprog-term").slideDown(500);
   const runner = new IVProgAssessment(strCode, _testCases, domConsole);
-
+  isRunning = true;
   runner.runTest().then(grade => {
     if (!is_iassign) {
       parent.getEvaluationCallback(grade);
     } else {
       is_iassign = false;
     }
-  }).catch( err => console.log(err));
+    isRunning = false;
+  }).catch( err => {
+    console.log(err);
+    isRunning = false;
+  });
   
 }
 
 function runCode () {
-  
+  if (isRunning) {
+    return;
+  }
   const strCode = CodeManagement.generate();
   if (strCode == null) {
     return;
@@ -917,15 +927,18 @@ function runCode () {
     proc.registerInput(domConsole);
     proc.registerOutput(domConsole);
     $("#ivprog-term").addClass('ivprog-term-active');
-
+    isRunning = true;
     proc.interpretAST().then( _ => {
       domConsole.info("Programa executado com sucesso!");
       $("#ivprog-term").removeClass('ivprog-term-active');
+      isRunning = false;
     }).catch(err => {
       domConsole.err(err.message);
       $("#ivprog-term").removeClass('ivprog-term-active');
+      isRunning = false;
     }) 
   } catch (error) {
+    isRunning = false;
     domConsole.err(error.message);
     console.log(error);
   }
