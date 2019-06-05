@@ -378,5 +378,13 @@ export const ProcessorErrorFactory  = Object.freeze({
   invalid_type_conversion: (value, type, dim) => {
     const context = [value, LocalizedStrings.translateType(type, dim)];
     return new RuntimeError(LocalizedStrings.getError("invalid_type_conversion", context));
+  },
+  invalid_read_type: (exp, type, dim, name) => {
+    const context = [exp, LocalizedStrings.translateType(type, dim), name];
+    return new RuntimeError(LocalizedStrings.getError("invalid_read_type", context))
+  },
+  invalid_read_type_array: (exp, typePos, dimPos, name, typeArray, dimArray) => {
+    const context = [exp, LocalizedStrings.translateType(typePos, dimPos), name,LocalizedStrings.translateType(typeArray, dimArray)];
+    return new RuntimeError(LocalizedStrings.getError("invalid_read_type_array", context))
   }
 });

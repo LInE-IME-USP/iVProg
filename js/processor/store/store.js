@@ -94,4 +94,18 @@ export class Store {
     this.store[id] = Object.freeze(stoObj);
     return this;
   }
+  /**
+   * Helper function similar to applyStore. But it returns the actual object in the store be it ref or not
+   * applyStore will return the refferenced object if the object in the store is a ref
+   */
+  getStoreObject (id) {
+    if(!this.store[id]) {
+      if (this.nextStore !== null) {
+        return this.nextStore.getStoreObject(id);
+      } else {
+        throw new Error(`Variable ${id} not found.`);
+      }
+    }
+    return this.store[id];
+  }
 }

@@ -993,3 +993,9 @@ div.ui.checkbox.transition.visible {
 .parentheses_in_expression {
 	cursor: pointer;
 }
+
+.ivprog-error-varname {
+	font-style: italic;
+	margin-left: 1px;
+	margin-right: 1px;
+}
