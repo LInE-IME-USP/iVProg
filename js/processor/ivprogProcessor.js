@@ -299,6 +299,7 @@ export class IVProgProcessor {
       });
     }, Promise.resolve([false, store]));
     return caseSequence.then(tuple => {
+      outerRef.context.pop();
       const newStore = tuple[1];
       if (newStore.mode === Modes.BREAK) {
         newStore.mode = Modes.RUN;
