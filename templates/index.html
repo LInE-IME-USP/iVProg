@@ -93,9 +93,17 @@
         <div class="ui one column container segment ivprog_textual_panel loading" style="display: none;">
           <textarea class="ivprog_textual_code" readonly></textarea>
         </div>
-
-        <div id='ivprog-term' class="six column wide">
-          <div class="div_toggle_console"><i class="inverted terminal icon green button_toggle_console"></i></div>
+        <div id='ivprog-term-div' class="six column wide">
+          <div class="bash">
+            <div class="bash-title">
+              <i id="ivprog-console-clearbtn" class="icon eraser" style="float:left;padding-left: 5px"></i>
+              <span>Terminal</span>
+              <i id="ivprog-console-showbtn" class="icon window maximize outline" style="float:right"></i>
+              <i id="ivprog-console-hidebtn" class="icon window minimize outline" style="float:right"></i>
+            </div>
+            <div id='ivprog-term' class="bash-body">
+            </div>
+          </div>
         </div>
       </div>
 

@@ -712,6 +712,8 @@ export function initVisualUI () {
   // const mainDiv = $('#visual-main-div');
   // fill mainDiv with functions and globals...
   // renderAlgorithm()...
+  domConsole = new DOMConsole("#ivprog-term");
+  domConsole.hide();
   $('.add_function_button').on('click', () => {
     addFunctionHandler();
   });
@@ -747,6 +749,26 @@ export function initVisualUI () {
     window.open('https://www.usp.br/line/ivprog/', '_blank');
   });
   $('.main_title h2').prop('title', LocalizedStrings.getUI('text_ivprog_description'));
+  $('#ivprog-console-clearbtn').on('click', () => {
+    if (domConsole != null) {
+      domConsole.clear();
+    }
+  });
+  $('#ivprog-console-clearbtn').popup({content:LocalizedStrings.getUI("terminal_clear")});
+
+  $('#ivprog-console-showbtn').on('click', () => {
+    if (domConsole != null) {
+      domConsole.focus();
+    }
+  });
+  $('#ivprog-console-showbtn').popup({content:LocalizedStrings.getUI("terminal_show")});
+
+  $('#ivprog-console-hidebtn').on('click', () => {
+    if (domConsole != null) {
+      domConsole.hide();
+    }
+  });
+  $('#ivprog-console-hidebtn').popup({content:LocalizedStrings.getUI("terminal_hide")});
 
   var time_show = 750;
   $('.visual_coding_button').popup({
@@ -847,6 +869,7 @@ export function initVisualUI () {
        updateSequenceGlobals(evt.oldIndex, evt.newIndex);
     }
   });
+  
 }
 
 export function setTestCases (testCases) {
@@ -890,9 +913,9 @@ function runCodeAssessment () {
 
   toggleConsole(true);
 
-  if(domConsole == null)
-    domConsole = new DOMConsole("#ivprog-term");
-  $("#ivprog-term").slideDown(500);
+  // if(domConsole == null)
+  //   domConsole = new DOMConsole("#ivprog-term");
+  // $("#ivprog-term").slideDown(500);
   const runner = new IVProgAssessment(strCode, _testCases, domConsole);
   isRunning = true;
   runner.runTest().then(grade => {
@@ -920,9 +943,9 @@ function runCode () {
   
   toggleConsole(true);
 
-  if(domConsole == null)
-    domConsole = new DOMConsole("#ivprog-term");
-  $("#ivprog-term").slideDown(500);
+  // if(domConsole == null)
+  //   domConsole = new DOMConsole("#ivprog-term");
+  //$("#ivprog-term").slideDown(500);
   try {
     const data = SemanticAnalyser.analyseFromSource(strCode);
     const proc = new IVProgProcessor(data);
@@ -952,7 +975,12 @@ function toggleConsole (is_running) {
   if (is_running) {
     $('.ivprog-term-div').css('display', 'block');
     $('#ivprog-term').css('min-height', '160px');
-    $('#ivprog-term').css('margin-top', '-170px');
+    if(domConsole != null)
+      domConsole.focus();
+    //$('#ivprog-term').css('margin-top', '-170px');
+    return;
+  } else {
+    domConsole.hide();
     return;
   }
 
@@ -960,13 +988,13 @@ function toggleConsole (is_running) {
     // esconder
     $('.ivprog-term-div').css('display', 'none');
     $('#ivprog-term').css('min-height', '0');
-    $('#ivprog-term').css('margin-top', '-30px');
-    $('#ivprog-term').css('padding', '5px');
+    //$('#ivprog-term').css('margin-top', '-30px');
+    //$('#ivprog-term').css('padding', '5px');
   } else {
     // mostrar
     $('.ivprog-term-div').css('display', 'block');
     $('#ivprog-term').css('min-height', '160px');
-    $('#ivprog-term').css('margin-top', '-170px');
+    //$('#ivprog-term').css('margin-top', '-170px');
   }
 }
 
