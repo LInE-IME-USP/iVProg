@@ -269,7 +269,7 @@ export class DOMConsole {
   }
 
   sendOutput (text) {
-    const output = ""+tthis.inputCMD.click();ext;
+    const output = ""+text;
     output.split("\n").forEach(t => {
       t = t.replace(/\t/g,'&#9;');
       this.write(t)
