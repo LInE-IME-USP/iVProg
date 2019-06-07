@@ -1,4 +1,5 @@
 import { LocalizedStrings } from "./../services/localizedStringsService";
+import { Config } from "./../util/config";
 
 export class DOMConsole {
 
@@ -21,6 +22,7 @@ export class DOMConsole {
   constructor (elementID) {
     this.input = null;
     this.cursorInterval = null;
+    this.idleInterval = null;
     this.inputDiv = null;
     this.inputCMD = null;
     this.inputSpan = null;
@@ -59,6 +61,10 @@ export class DOMConsole {
     }
     const keyCode = event.which;
     if (keyCode === 13 || this.anyKey) {
+      if(this.idleInterval != null) {
+        clearInterval(this.idleInterval);
+        this.idleInterval = null;
+      }
       let text = this.input.value;
       text = text.replace('[\n\r]+', '');
       this.notifyListeners(text);
@@ -134,6 +140,9 @@ export class DOMConsole {
 
   updateSpanText () {
     this.inputSpan.innerHTML = this.input.value;
+    if(this.idleInterval != null)
+      window.clearInterval(this.idleInterval);
+    this.scheduleNotify()
   }
 
   stopBlinkCaret () {
@@ -232,6 +241,9 @@ export class DOMConsole {
     if(this.cursorInterval != null) {
       clearInterval(this.cursorInterval);
     }
+    if(this.idleInterval != null) {
+      clearInterval(this.idleInterval);
+    }
   }
 
   showInput () {
@@ -251,11 +263,13 @@ export class DOMConsole {
   requestInput (callback, anyKey = false) {
     this.inputListeners.push(callback);
     this.anyKey = anyKey;
+    if(this.idleInterval == null)
+      this.scheduleNotify();
     this.showInput();
   }
 
   sendOutput (text) {
-    const output = ""+text;
+    const output = ""+tthis.inputCMD.click();ext;
     output.split("\n").forEach(t => {
       t = t.replace(/\t/g,'&#9;');
       this.write(t)
@@ -280,5 +294,14 @@ export class DOMConsole {
 
   hideBtnClick () {
     this.hide();
+  }
+
+  notifyIdle () {
+    this.info(LocalizedStrings.getMessage('awaiting_input_message'));
+    this.inputCMD.click();
+  }
+  
+  scheduleNotify () {
+    this.idleInterval = window.setInterval(this.notifyIdle.bind(this), Config.idle_input_interval);
   }
 }
