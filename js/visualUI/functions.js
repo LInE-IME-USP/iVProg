@@ -712,7 +712,7 @@ export function initVisualUI () {
   // const mainDiv = $('#visual-main-div');
   // fill mainDiv with functions and globals...
   // renderAlgorithm()...
-  domConsole = new DOMConsole("#ivprog-term");
+  domConsole = new DOMConsole("ivprog-term-div");
   domConsole.hide();
   $('.add_function_button').on('click', () => {
     addFunctionHandler();
@@ -749,26 +749,6 @@ export function initVisualUI () {
     window.open('https://www.usp.br/line/ivprog/', '_blank');
   });
   $('.main_title h2').prop('title', LocalizedStrings.getUI('text_ivprog_description'));
-  $('#ivprog-console-clearbtn').on('click', () => {
-    if (domConsole != null) {
-      domConsole.clear();
-    }
-  });
-  $('#ivprog-console-clearbtn').popup({content:LocalizedStrings.getUI("terminal_clear")});
-
-  $('#ivprog-console-showbtn').on('click', () => {
-    if (domConsole != null) {
-      domConsole.focus();
-    }
-  });
-  $('#ivprog-console-showbtn').popup({content:LocalizedStrings.getUI("terminal_show")});
-
-  $('#ivprog-console-hidebtn').on('click', () => {
-    if (domConsole != null) {
-      domConsole.hide();
-    }
-  });
-  $('#ivprog-console-hidebtn').popup({content:LocalizedStrings.getUI("terminal_hide")});
 
   var time_show = 750;
   $('.visual_coding_button').popup({
