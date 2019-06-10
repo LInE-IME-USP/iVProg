@@ -206,7 +206,7 @@ export class DOMConsole {
 
   scrollTerm () {
     //scrollIt(this.inputDiv.previousSibling,200);
-    this.inputDiv.previousSibling.scrollIntoView();
+    this.termDiv.scrollTop = this.termDiv.scrollHeight;
   }
 
   focus () {
@@ -216,9 +216,8 @@ export class DOMConsole {
     if(this.parent.style.top.length == 0) {
       this.parent.style.marginTop = "-160px";
     }
-    const prev = this.inputDiv.closest('div');
-    if(prev != null)
-      prev.scrollIntoView();
+    this.termDiv.scrollIntoView();
+    this.scrollTerm();
   }
 
   hide () {
