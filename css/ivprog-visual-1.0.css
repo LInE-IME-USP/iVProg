@@ -654,7 +654,6 @@ div.function_name_div_updated:active,
 .global_var .circle.add_global_button,
 .ui.add_var_context .icon.plus.circle,
 .ui.rail .icon.plus.circle {
-	z-index: 10;
 	color: #bf80d4!important;
 	cursor: pointer;
 	font-style: 120%;
@@ -662,7 +661,6 @@ div.function_name_div_updated:active,
 .global_var i.back,
 .ui.add_var_context .icon.circle.back,
 .ui.rail .icon.circle.back {
-	z-index: 9;
 	color: white !important;
 }
 .ui.add_var_context{
