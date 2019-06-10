@@ -206,7 +206,7 @@ export class DOMConsole {
 
   scrollTerm () {
     //scrollIt(this.inputDiv.previousSibling,200);
-    this.inputDiv.previousSibling.scrollIntoView();
+    this.inputDiv.previousSibling.scrollIntoView(false);
   }
 
   focus () {
@@ -218,7 +218,7 @@ export class DOMConsole {
     }
     const prev = this.inputDiv.closest('div');
     if(prev != null)
-      prev.scrollIntoView();
+      prev.scrollIntoView(false);
   }
 
   hide () {
