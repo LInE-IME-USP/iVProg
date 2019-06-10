@@ -67,10 +67,16 @@
         <div class="ui one column container segment ivprog_visual_panel loading">
 
           <div class="global_var">
-            <i class="icon plus circle purple add_global_button"></i>
-            <i class="icon circle white back"></i>
 
-            <div class="ui icon button add-globalVar-button add_global_button purple"><i class="icon superscript"></i></div>
+
+            <div class="ui icon button add-globalVar-button add_global_button purple">
+
+              <i class="icons">
+                <i class="icon superscript" style="margin-top: -2px;margin-bottom: 2px;margin-left: 1px;margin-right: 1px; font-size: 18px;"></i>
+                <i class="corner add icon inverted" style="font-size: 10px;padding-top: 5px;padding-left: 7px;"></i>
+              </i>
+              
+            </div>
 
             <div class="list_globals" id="listGlobalsHandle"></div>
 
@@ -93,9 +99,8 @@
         <div class="ui one column container segment ivprog_textual_panel loading" style="display: none;">
           <textarea class="ivprog_textual_code" readonly></textarea>
         </div>
-
-        <div id='ivprog-term' class="six column wide">
-          <div class="div_toggle_console"><i class="inverted terminal icon green button_toggle_console"></i></div>
+        <div id='ivprog-term-div' class="six column wide">
+          
         </div>
       </div>
 

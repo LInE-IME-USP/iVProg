@@ -4,21 +4,27 @@ export class DOMInput extends Input{
 
   constructor (element) {
     super();
-    this.el = $(element);
+    let id = element
+    if(element[0] == '#') {
+      id = element.substring(1);
+    }
+    this.el = document.getElementById(id);
     this.listeners = [];
     this.setupEvents();
   }
 
   setupEvents () {
-    this.el.on('keydown', (e) => {
-      const code = e.keyCode || e.which;
-      if (code === 13) {
-        let text = this.el.val();
-        text = text.replace('[\n\r]+', '');
-        this.notifyInput(text);
-        this.el.val('');
-      }
-    });
+    this.el.addEventListener('keydown', this.captureInput.bind(this));
+  }
+
+  captureInput (event) {
+    const code = event.keyCode || event.which;
+    if (code === 13) {
+      let text = this.el.value;
+      text = text.replace('[\n\r]+', '');
+      this.notifyInput(text);
+      this.el.value = "";
+    }
   }
 
   requestInput (callback) {

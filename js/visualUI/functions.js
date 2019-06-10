@@ -321,17 +321,21 @@ export function renderFunction (function_obj) {
   appender += '</div> <span class="parethesis_function"> ) </span> </div>'
     + (function_obj.is_hidden ? ' <div class="function_area" style="display: none;"> ' : ' <div class="function_area"> ');
 
-  appender += '<div class="ui add_var_context add_var_button_function" style="float: left;"><i class="icon plus circle purple"></i><i class="icon circle white back"></i><div class="ui icon button purple"><i class="icon superscript"></i></div></div>';
+  appender += '<div class="ui add_var_context add_var_button_function" style="float: left;">             <div class="ui icon button purple"> ';
+
+  appender += '<i class="icons"><i class="icon superscript" style="margin-top: -2px;margin-bottom: 2px;margin-left: 1px;margin-right: 1px;"></i><i class="corner add icon inverted" style="font-size: 9px;padding-top: 6px;padding-left: 9px;"></i></i>';
+
+  appender += '</div></div>';
 
   appender += '<div class="ui top attached segment variables_list_div"></div>';
-
-  
 
   appender += '<div class="ui bottom attached segment commands_list_div commands_cont_'+cont+'">'
         + '<div class="ui rail" style="width: 35px; margin-left: -36px;"><div class="ui sticky sticky_cont_'+cont+'" style="top: 50px !important;">';
 
 
-  appender += '<i class="icon plus circle purple"></i><i class="icon circle white back"></i><div class="ui icon button dropdown menu_commands orange" ><i class="icon code"></i> <div class="menu"> ';
+  appender += '<div class="ui icon button dropdown menu_commands orange" > '
+            + '<i class="icons"><i class="icon code" style="margin-top: -1px;margin-bottom: 1px;margin-right: 0px;"></i><i class="corner add icon inverted" style="font-size: 9px;padding-top: 6px;padding-left: 9px;"></i></i>'
+            + '<div class="menu"> ';
   appender += '<a class="item" data-command="'+Models.COMMAND_TYPES.reader+'"><i class="download icon"></i> ' +LocalizedStrings.getUI('text_read_var')+ '</a>'
         + '<a class="item" data-command="'+Models.COMMAND_TYPES.writer+'"><i class="upload icon"></i> '+LocalizedStrings.getUI('text_write_var')+'</a>'
         + '<a class="item" data-command="'+Models.COMMAND_TYPES.comment+'"><i class="quote left icon"></i> '+LocalizedStrings.getUI('text_comment')+'</a>'
@@ -712,6 +716,9 @@ export function initVisualUI () {
   // const mainDiv = $('#visual-main-div');
   // fill mainDiv with functions and globals...
   // renderAlgorithm()...
+  domConsole = new DOMConsole("ivprog-term-div");
+  domConsole.hide();
+  $(document.getElementById("ivprog-term-div")).draggable()
   $('.add_function_button').on('click', () => {
     addFunctionHandler();
   });
@@ -847,6 +854,7 @@ export function initVisualUI () {
        updateSequenceGlobals(evt.oldIndex, evt.newIndex);
     }
   });
+  
 }
 
 export function setTestCases (testCases) {
@@ -890,9 +898,9 @@ function runCodeAssessment () {
 
   toggleConsole(true);
 
-  if(domConsole == null)
-    domConsole = new DOMConsole("#ivprog-term");
-  $("#ivprog-term").slideDown(500);
+  // if(domConsole == null)
+  //   domConsole = new DOMConsole("#ivprog-term");
+  // $("#ivprog-term").slideDown(500);
   const runner = new IVProgAssessment(strCode, _testCases, domConsole);
   isRunning = true;
   runner.runTest().then(grade => {
@@ -920,9 +928,9 @@ function runCode () {
   
   toggleConsole(true);
 
-  if(domConsole == null)
-    domConsole = new DOMConsole("#ivprog-term");
-  $("#ivprog-term").slideDown(500);
+  // if(domConsole == null)
+  //   domConsole = new DOMConsole("#ivprog-term");
+  //$("#ivprog-term").slideDown(500);
   try {
     const data = SemanticAnalyser.analyseFromSource(strCode);
     const proc = new IVProgProcessor(data);
@@ -952,7 +960,12 @@ function toggleConsole (is_running) {
   if (is_running) {
     $('.ivprog-term-div').css('display', 'block');
     $('#ivprog-term').css('min-height', '160px');
-    $('#ivprog-term').css('margin-top', '-170px');
+    if(domConsole != null)
+      domConsole.focus();
+    //$('#ivprog-term').css('margin-top', '-170px');
+    return;
+  } else {
+    domConsole.hide();
     return;
   }
 
@@ -960,13 +973,13 @@ function toggleConsole (is_running) {
     // esconder
     $('.ivprog-term-div').css('display', 'none');
     $('#ivprog-term').css('min-height', '0');
-    $('#ivprog-term').css('margin-top', '-30px');
-    $('#ivprog-term').css('padding', '5px');
+    //$('#ivprog-term').css('margin-top', '-30px');
+    //$('#ivprog-term').css('padding', '5px');
   } else {
     // mostrar
     $('.ivprog-term-div').css('display', 'block');
     $('#ivprog-term').css('min-height', '160px');
-    $('#ivprog-term').css('margin-top', '-170px');
+    //$('#ivprog-term').css('margin-top', '-170px');
   }
 }
 
