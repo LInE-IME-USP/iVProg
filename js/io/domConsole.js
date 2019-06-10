@@ -1,4 +1,5 @@
 import { LocalizedStrings } from "./../services/localizedStringsService";
+import { isElementInViewport } from "./../util/utils";
 import { Config } from "./../util/config";
 
 export class DOMConsole {
@@ -206,7 +207,7 @@ export class DOMConsole {
 
   scrollTerm () {
     //scrollIt(this.inputDiv.previousSibling,200);
-    this.inputDiv.previousSibling.scrollIntoView();
+    this.termDiv.scrollTop = this.termDiv.scrollHeight;
   }
 
   focus () {
@@ -216,9 +217,9 @@ export class DOMConsole {
     if(this.parent.style.top.length == 0) {
       this.parent.style.marginTop = "-160px";
     }
-    const prev = this.inputDiv.closest('div');
-    if(prev != null)
-      prev.scrollIntoView();
+    if(!isElementInViewport(this.termDiv))
+      this.termDiv.scrollIntoView(false);
+    this.scrollTerm();
   }
 
   hide () {
@@ -274,7 +275,8 @@ export class DOMConsole {
     this.needInput = true;
     this.inputDiv.style.display = 'block';
     this.inputCMD.click();
-    this.inputCMD.scrollIntoView();
+    //this.inputCMD.scrollIntoView();
+    this.scrollTerm();
   }
 
   hideInput () {

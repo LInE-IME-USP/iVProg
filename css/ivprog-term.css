@@ -129,13 +129,13 @@
   text-decoration: underline;
 }
 
-.bash-body li:before {
+/* .bash-body li:before {
   content: '$';
   color: #F8F8FF;
   position: absolute;
   left: 0;
   top: 0;
-}
+} */
 
 .bash-body i {
   cursor: text;
