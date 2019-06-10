@@ -3,6 +3,25 @@ import { Config } from "./../util/config";
 
 export class DOMConsole {
 
+  static get BASH_TEMPLATE () {
+    return `
+    <div class="bash-title">
+      <i id="ivprog-console-clearbtn" class="icon eraser" style="float:left;padding-left: 5px"></i>
+      <span>Terminal</span>
+      <i id="ivprog-console-showbtn" class="icon window maximize outline" style="float:right"></i>
+      <i id="ivprog-console-hidebtn" class="icon window minimize outline" style="float:right"></i>
+    </div>
+    <div id='ivprog-term' class="bash-body"></div>`;
+  }
+
+  static get INPUT_CARET_TEMPLATE () {
+    return `
+    <div id="cmd">
+      <span></span>
+      <div id="cursor"></div>
+    </div>`;
+  }
+
   static get USER () {
     return 0;
   }
@@ -77,23 +96,12 @@ export class DOMConsole {
   _setupDom () {
     const bashNode = document.createElement('div');
     bashNode.classList.add('bash');
-    bashNode.innerHTML = `
-    <div class="bash-title">
-      <i id="ivprog-console-clearbtn" class="icon eraser" style="float:left;padding-left: 5px"></i>
-      <span>Terminal</span>
-      <i id="ivprog-console-showbtn" class="icon window maximize outline" style="float:right"></i>
-      <i id="ivprog-console-hidebtn" class="icon window minimize outline" style="float:right"></i>
-    </div>
-    <div id='ivprog-term' class="bash-body"></div>`;
+    bashNode.innerHTML = DOMConsole.BASH_TEMPLATE;
     this.termDiv = bashNode.querySelector("#ivprog-term");
     this.termDiv.classList.add("ivprog-term-div");
     this.inputDiv = document.createElement("div");
     this.inputDiv.id = "ivprog-terminal-inputdiv";
-    this.inputDiv.innerHTML = `
-      <div id="cmd">
-        <span></span>
-        <div id="cursor"></div>
-      </div>`;
+    this.inputDiv.innerHTML = DOMConsole.INPUT_CARET_TEMPLATE;
     this.input = document.createElement("input");
     this.input.setAttribute("name", "command");
     this.input.setAttribute("value", "");
@@ -174,7 +182,7 @@ export class DOMConsole {
     const divClass = this.getClassForType(type);
     const textDiv = document.createElement('div');
     textDiv.classList.add(divClass);
-    textDiv.innerHTML = `<span>${text}</span>`;
+    textDiv.innerHTML = this.getOutputText(text);
     this.termDiv.insertBefore(textDiv, this.inputDiv);
     this.scrollTerm();
   }
@@ -182,12 +190,18 @@ export class DOMConsole {
   _appendUserInput (text) {
     const divClass = this.getClassForType(DOMConsole.INPUT);
     const textDiv = document.createElement('div');
-    textDiv.innerHTML = `
-      <i class="icon keyboard outline" style="float:left"></i>
-      <span>${text}</span>`;
+    textDiv.innerHTML = this.getUserInputText(text);
     textDiv.classList.add(divClass);
     this.termDiv.insertBefore(textDiv, this.inputDiv);
     this.scrollTerm();
+  }
+
+  getOutputText (text) {
+    return `<span>${text}</span>`;
+  }
+
+  getUserInputText (text) {
+    return `<i class="icon keyboard outline" style="float:left"></i><span>${text}</span>`;
   }
 
   scrollTerm () {
