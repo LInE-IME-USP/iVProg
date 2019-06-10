@@ -197,13 +197,23 @@ export class DOMConsole {
 
   focus () {
     this.termDiv.style.display = 'block';
+    // Is in draggable mode?
+    console.log(this.parent.style.top.length);
+    if(this.parent.style.top.length == 0) {
+      this.parent.style.marginTop = "-160px";
+    }
     const prev = this.inputDiv.closest('div');
     if(prev != null)
       prev.scrollIntoView();
   }
 
   hide () {
+    // Is in draggable mode?
+    if(this.parent.style.top.length == 0) {
+      this.parent.style.marginTop = "0";
+    }
     this.termDiv.style.display = 'none';
+    
   }
 
   getClassForType (type) {
