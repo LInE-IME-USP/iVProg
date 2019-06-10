@@ -2,5 +2,5 @@
   "test_case_success": "Caso de teste $0: OK",
   "test_case_duration": "Levou $0ms",
   "test_suite_grade": "A sua solução alcançou $0% da nota.",
-  "awaiting_input_message": "O seu programa está em execução e aguardando uma entrada! Digite alguma coisa..."
+  "awaiting_input_message": "O seu programa está em execução e aguardando uma entrada! Digite algo e pressione ENTER..."
 }

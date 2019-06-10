@@ -1,4 +1,5 @@
 import { LocalizedStrings } from "./../services/localizedStringsService";
+import { isElementInViewport } from "./../util/utils";
 import { Config } from "./../util/config";
 
 export class DOMConsole {
@@ -216,7 +217,8 @@ export class DOMConsole {
     if(this.parent.style.top.length == 0) {
       this.parent.style.marginTop = "-160px";
     }
-    this.termDiv.scrollIntoView();
+    if(!isElementInViewport(this.termDiv))
+      this.termDiv.scrollIntoView(false);
     this.scrollTerm();
   }
 
@@ -273,7 +275,8 @@ export class DOMConsole {
     this.needInput = true;
     this.inputDiv.style.display = 'block';
     this.inputCMD.click();
-    this.inputCMD.scrollIntoView();
+    //this.inputCMD.scrollIntoView();
+    this.scrollTerm();
   }
 
   hideInput () {
