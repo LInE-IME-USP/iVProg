@@ -41,7 +41,10 @@ export function autoEval (originalData, callback) {
       return callback(-2);
     }
     const autoAssessment = new IVProgAssessment(code, getTestCases(), new TestConsole([]));
-    autoAssessment.runTest().then( grade => callback(grade)).catch(err => console.log(err))
+    autoAssessment.runTest().then( grade => callback(grade)).catch(err => {
+      console.log(err);
+      callback(0);
+    });
   }
 }
 
