@@ -38,7 +38,7 @@
   "text_return":"retorne",
   "text_btn_return":"Retorno",
   "text_comment": "Comentário",
-  "join_or": "ou",
+  "string_join_or": "ou",
   "matrix_string": "matriz de $0",
   "vector_string": "vetor de $0",
   "text_attribution": "Atribuição",
