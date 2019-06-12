@@ -15,6 +15,7 @@ import * as AlgorithmManagement from './algorithm';
 import * as Utils from './utils';
 import { registerUserEvent, ActionTypes } from "./../services/userLog";
 import VersionInfo from './../../.ima_version.json';
+import { isValidIdentifier } from "./../util/utils";
 
 var counter_new_functions = 0;
 var counter_new_parameters = 0;
@@ -1182,10 +1183,6 @@ function functionNameAlreadyExists (function_name) {
     }
   }
   return false;
-}
-
-function isValidIdentifier (identifier_str) {
-  return /^[a-zA-Z_][a-zA-Z0-9_]*$/.test(identifier_str);
 }
 
 var opened_name_parameter = false;

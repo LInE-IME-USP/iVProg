@@ -3,6 +3,7 @@ import * as Models from './ivprog_elements';
 import { LocalizedStrings } from './../services/localizedStringsService';
 import * as Utils from './utils';
 import { registerUserEvent, registerSystemEvent, ActionTypes } from "./../services/userLog";
+import { isValidIdentifier } from "./../util/utils";
 
 var counter_new_globals = 0;
 
@@ -53,10 +54,6 @@ function globalNameAlreadyExists (global_name) {
     }
   }
   return false;
-}
-
-function isValidIdentifier (identifier_str) {
-	return /^[a-zA-Z_][a-zA-Z0-9_]*$/.test(identifier_str);
 }
 
 function updateType (global_var, new_type, new_dimensions = 0) {

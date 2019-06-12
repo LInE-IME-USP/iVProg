@@ -3,6 +3,7 @@ import * as Models from './ivprog_elements';
 import { LocalizedStrings } from './../services/localizedStringsService';
 import * as Utils from './utils';
 import { registerUserEvent, registerSystemEvent, ActionTypes } from "./../services/userLog";
+import { isValidIdentifier } from "./../util/utils";
 
 var counter_new_variables = 0;
 
@@ -34,7 +35,7 @@ function updateName (variable_obj, new_name, variable_obj_dom, function_obj) {
 		if (variableNameAlreadyExists(new_name, function_obj)) {
 			Utils.renderErrorMessage(variable_obj_dom.find('.editing_name_var'), LocalizedStrings.getUI('inform_valid_variable_duplicated'));
 		} else {
-			registerUserEvent(function_obj.name, ActionTypes.REMOVE_FUNCTION_VAR, variable_obj.name, new_name);
+			registerUserEvent(function_obj.name, ActionTypes.RENAME_FUNCTION_VAR, variable_obj.name, new_name);
 			variable_obj.name = new_name;
 		}
 	} else {
@@ -61,10 +62,6 @@ function variableNameAlreadyExists (name_var, function_obj) {
 	}
 
 	return false;
-}
-
-function isValidIdentifier (identifier_str) {
-	return /^[a-zA-Z_][a-zA-Z0-9_]*$/.test(identifier_str);
 }
 
 function removeVariable (variable_obj, variable_container, function_name) {

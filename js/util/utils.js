@@ -1,3 +1,6 @@
+import { LanguageService } from "./../services/languageService";
+import { LocalizedStrings } from "./../services/localizedStringsService";
+import { Operators } from "./../ast/operators";
 
 /** 
  * source: https://pawelgrzybek.com/page-scroll-in-vanilla-javascript/ 
@@ -93,4 +96,56 @@ export function isElementInViewport (el) {
     rect.right > 0 &&
     rect.left < (window.innerWidth || document.documentElement.clientWidth) &&
     rect.top < (window.innerHeight || document.documentElement.clientHeight);
+}
+let cacheMainList = null;
+let cacheOp = null;
+export function isKeyword (text) {
+  fillCache();
+  for (let key = 0; key < cacheMainList.length; ++key) {
+    const keyword = cacheMainList[key];
+    if(keyword == text) {
+      return true;
+    }
+  }
+  // not in main list, check op
+  for (let op = 0; op < cacheOp.length; op++) {
+    const lOp = cacheOp[op];
+    if(lOp == text) {
+      return true;
+    }
+  }
+  return false;
+}
+
+export function isValidIdentifier (identifier_str) {
+  const validRegex = /^[a-zA-Z_][a-zA-Z0-9_]*$/.test(identifier_str);
+  if(!validRegex) {
+    return false;
+  }
+	return !isKeyword(identifier_str);
+}
+
+function fillCache () {
+  if(cacheMainList == null) {
+    cacheMainList = [];
+    const mainList = ["RK_PROGRAM","RK_REAL","RK_VOID","RK_BOOLEAN","RK_STRING",
+      "RK_INTEGER","RK_CHARACTER","RK_SWITCH","RK_CASE","RK_DEFAULT","RK_CONST",
+      "RK_FUNCTION","RK_RETURN","RK_FOR","RK_BREAK","RK_DO","RK_WHILE","RK_IF",
+      "RK_ELSE","RK_FALSE","RK_TRUE"];
+    const lexerClass = LanguageService.getCurrentLexer();
+    const nullLexer = new lexerClass();
+    for (let key = 0; key < mainList.length; ++key) {
+      const word = mainList[key];
+      const keyword = nullLexer.literalNames[lexerClass[word]];
+      cacheMainList.push(keyword.substring(1, keyword.length-1));
+    }
+  }
+  if(cacheOp == null) {
+    cacheOp = []
+    const logicOpList = [Operators.AND.value, Operators.OR.value, Operators.NOT.value];
+    for (let op = 0; op < logicOpList.length; ++op) {
+      const lOp = `logic_operator_${logicOpList[op]}`;
+      cacheOp.push(LocalizedStrings.getUI(lOp))
+    }
+  }
 }
