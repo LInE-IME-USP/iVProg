@@ -100,7 +100,7 @@
   "var_menu_select_all": "Selecione",
   "var_menu_select_function": "Selecione uma função",
   "expression_menu_select": "Construir uma expressão lógica",
-  "inform_valid_name": "Informe um nome válido!",
+  "inform_valid_name": "Informe um nome válido! O nome não pode ser uma palavra reservadoa e deve começar com letras e conter apenas letras, números e _",
   "inform_valid_content": "Informe o conteúdo!",
   "inform_valid_expression": "Construa uma expressão lógica!",
   "inform_valid_name_duplicated": "Este nome já está em uso por outra função!",

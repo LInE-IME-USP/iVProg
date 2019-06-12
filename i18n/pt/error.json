@@ -88,5 +88,10 @@
   "test_case_failed_exception": "Caso de teste $0 falhou: $1",
   "invalid_type_conversion": "O valor $0 não pode ser convertido para o tipo $1",
   "invalid_read_type":"A entrada \"$0\" não é do tipo $1, que é o tipo da variável <span class='ivprog-error-varname'>$2</span>.",
-  "invalid_read_type_array":"A entrada \"$0\" não é do tipo $1, que é o tipo aceito pela variável <span class='ivprog-error-varname'>$2</span> que é um $3."
+  "invalid_read_type_array":"A entrada \"$0\" não é do tipo $1, que é o tipo aceito pela variável <span class='ivprog-error-varname'>$2</span> que é um $3.",
+  "inform_valid_identifier": "Informe um nome válido! O nome não pode ser uma palavra reservadoa e deve começar com letras e conter apenas letras, números e _",
+  "inform_valid_global_duplicated": "Já existe uma variável global com o nome <span class='ivprog-error-varname'>$0</span>, você precisa de nomes distintos.",
+  "inform_valid_variable_duplicated" : "Já existe uma variável com o nome <span class='ivprog-error-varname'>$0</span> na função <span class='ivprog-error-varname'>$1</span>, você precisa de nomes distintos.",
+  "inform_valid_function_duplicated" : "Já existe uma função com o nome <span class='ivprog-error-varname'>$0</span>, você precisa de nomes distintos.",
+  "inform_valid_param_duplicated" : "Já existe um parâmetro com o nome <span class='ivprog-error-varname'>$0</span> na função <span class='ivprog-error-varname'>$1</span>, você precisa de nomes distintos."
 }

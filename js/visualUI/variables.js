@@ -33,13 +33,13 @@ function updateName (variable_obj, new_name, variable_obj_dom, function_obj) {
 
 	if (isValidIdentifier(new_name)) {
 		if (variableNameAlreadyExists(new_name, function_obj)) {
-			Utils.renderErrorMessage(variable_obj_dom.find('.editing_name_var'), LocalizedStrings.getUI('inform_valid_variable_duplicated'));
+			Utils.renderErrorMessage(variable_obj_dom.find('.editing_name_var'), LocalizedStrings.getError('inform_valid_variable_duplicated', [new_name, function_obj.name]));
 		} else {
 			registerUserEvent(function_obj.name, ActionTypes.RENAME_FUNCTION_VAR, variable_obj.name, new_name);
 			variable_obj.name = new_name;
 		}
 	} else {
-		Utils.renderErrorMessage(variable_obj_dom.find('.editing_name_var'), LocalizedStrings.getUI('inform_valid_name'));
+		Utils.renderErrorMessage(variable_obj_dom.find('.editing_name_var'), LocalizedStrings.getError('inform_valid_identifier'));
 	}
 }
 

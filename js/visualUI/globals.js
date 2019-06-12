@@ -37,13 +37,13 @@ function updateName (global_var, new_name, global_obj_dom) {
 
 	if (isValidIdentifier(new_name)) {
 		if (globalNameAlreadyExists(new_name)) {
-			Utils.renderErrorMessage(global_obj_dom.find('.editing_name_var'), LocalizedStrings.getUI('inform_valid_global_duplicated'));
+			Utils.renderErrorMessage(global_obj_dom.find('.editing_name_var'), LocalizedStrings.getError('inform_valid_global_duplicated', [new_name]));
 		} else {
 			registerUserEvent(global_var.name, ActionTypes.RENAME_GLOBAL_VAR, new_name);
 			global_var.name = new_name;
 		}
 	} else {
-		Utils.renderErrorMessage(global_obj_dom.find('.editing_name_var'), LocalizedStrings.getUI('inform_valid_name'));
+		Utils.renderErrorMessage(global_obj_dom.find('.editing_name_var'), LocalizedStrings.getError('inform_valid_identifier'));
 	}
 }
 

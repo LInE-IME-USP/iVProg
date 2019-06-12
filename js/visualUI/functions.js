@@ -1127,13 +1127,13 @@ function updateParameterName (parameter_var, new_name, parameter_obj_dom, functi
 
   if (isValidIdentifier(new_name)) {
     if (variableNameAlreadyExists(new_name, function_obj)) {
-      Utils.renderErrorMessage(parameter_obj_dom.find('.parameter_div_edit'), LocalizedStrings.getUI('inform_valid_variable_duplicated'));
+      Utils.renderErrorMessage(parameter_obj_dom.find('.parameter_div_edit'), LocalizedStrings.getError('inform_valid_param_duplicated', [new_name, function_obj.name]));
     } else {
-      registerUserEvent(parameter_var.name, ActionTypes.RENAME_FUNCTION_PARAM, function_obj.name, new_name);
+      registerUserEvent(function_obj.name, ActionTypes.RENAME_FUNCTION_PARAM, parameter_var.name, new_name);
       parameter_var.name = new_name;
     }
   } else {
-    Utils.renderErrorMessage(parameter_obj_dom.find('.parameter_div_edit'), LocalizedStrings.getUI('inform_valid_name'));
+    Utils.renderErrorMessage(parameter_obj_dom.find('.parameter_div_edit'), LocalizedStrings.getError('inform_valid_identifier'));
   }
 }
 
@@ -1166,13 +1166,13 @@ function updateFunctionName (function_var, new_name, function_obj_dom) {
   
   if (isValidIdentifier(new_name)) {
     if (functionNameAlreadyExists(new_name)) {
-      Utils.renderErrorMessage(function_obj_dom.find('.function_name_div'), LocalizedStrings.getUI('inform_valid_name_duplicated'));
+      Utils.renderErrorMessage(function_obj_dom.find('.function_name_div'), LocalizedStrings.getError('inform_valid_function_duplicated', [new_name]));
     } else {
       registerUserEvent(function_var.name, ActionTypes.RENAME_FUNCTION, new_name);
       function_var.name = new_name;
     }
   } else {
-    Utils.renderErrorMessage(function_obj_dom.find('.function_name_div'), LocalizedStrings.getUI('inform_valid_name'));
+    Utils.renderErrorMessage(function_obj_dom.find('.function_name_div'), LocalizedStrings.getError('inform_valid_identifier'));
   }
 }
 
