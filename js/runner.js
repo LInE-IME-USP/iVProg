@@ -20,7 +20,8 @@ const ivprogLexer = LanguageService.getCurrentLexer();
 // }
 // const anaSin = new IVProgParser(input, ivprogLexer);
 const editor = new JsonEditor('#json-renderer', {});
-const domConsole = new DOMConsole("#console");
+const domConsole = new DOMConsole("#console", true);
+domConsole.hide();
 // proc.interpretAST().then( sto => {
 //   console.log(sto.applyStore('a'));
 // }).catch(e => console.log(e));

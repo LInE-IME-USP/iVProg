@@ -39,7 +39,8 @@ export class DOMConsole {
     return 3;
   }
 
-  constructor (elementID) {
+  constructor (elementID, disableMarginTop = false) {
+    this.disableMarginTop = disableMarginTop;
     this.input = null;
     this.cursorInterval = null;
     this.idleInterval = null;
@@ -198,10 +199,16 @@ export class DOMConsole {
   }
 
   getOutputText (text) {
+    if(text.trim().length == 0) {
+      text = "&nbsp;";
+    }
     return `<span>${text}</span>`;
   }
 
   getUserInputText (text) {
+    if(text.trim().length == 0) {
+      text = "&nbsp;";
+    }
     return `<i class="icon keyboard outline" style="float:left"></i><span>${text}</span>`;
   }
 
@@ -213,8 +220,7 @@ export class DOMConsole {
   focus () {
     this.termDiv.style.display = 'block';
     // Is in draggable mode?
-    console.log(this.parent.style.top.length);
-    if(this.parent.style.top.length == 0) {
+    if(!this.disableMarginTop && this.parent.style.top.length == 0) {
       this.parent.style.marginTop = "-160px";
     }
     if(!isElementInViewport(this.termDiv))
@@ -224,7 +230,7 @@ export class DOMConsole {
 
   hide () {
     // Is in draggable mode?
-    if(this.parent.style.top.length == 0) {
+    if(!this.disableMarginTop && this.parent.style.top.length == 0) {
       this.parent.style.marginTop = "0";
     }
     this.termDiv.style.display = 'none';
@@ -297,7 +303,8 @@ export class DOMConsole {
   sendOutput (text) {
     const output = ""+text;
     output.split("\n").forEach(t => {
-      t = t.replace(/\t/g,'&#9;');
+      t = t.replace(/\t/g,'&nbsp;&nbsp;');
+      t = t.replace(/\s/g,"&nbsp;");
       this.write(t)
     });
   }
