@@ -277,7 +277,7 @@ function variableValueMenuCode (command, variable_obj, dom_object, function_obj,
 			if (variable_obj.function_called.name) {
 				parameters_menu = '<div class="parameters_function_called"> '+variable_obj.function_called.name+' <span> ( </span>';
 			} else {
-				parameters_menu = '<div class="parameters_function_called"> <i>'+LocalizedStrings.getUI(variable_obj.function_called.category)+'.'+LocalizedStrings.getUI(variable_obj.function_called.identifier)+'</i> <span> ( </span>';
+				parameters_menu = '<div class="parameters_function_called"> <i>'+ LocalizedStrings.translateInternalFunction(variable_obj.function_called.identifier, variable_obj.function_called.category)+'</i> <span> ( </span>';
 			}
 
 			parameters_menu += '<span> ) </span></div>';
@@ -336,7 +336,7 @@ function variableValueMenuCode (command, variable_obj, dom_object, function_obj,
 			if (variable_obj.function_called.name) {
 				parameters_menu = '<div class="parameters_function_called"> '+variable_obj.function_called.name+' <span> ( </span>';
 			} else {
-				parameters_menu = '<div class="parameters_function_called"> <i>'+LocalizedStrings.getUI(variable_obj.function_called.category)+'.'+LocalizedStrings.getUI(variable_obj.function_called.identifier)+'</i> <span> ( </span>';
+				parameters_menu = '<div class="parameters_function_called"> <i>'+LocalizedStrings.translateInternalFunction(variable_obj.function_called.identifier, variable_obj.function_called.category)+'</i> <span> ( </span>';
 			}
 
 			for (var j = 0; j < variable_obj.function_called.parameters_list.length; j++) {
@@ -659,7 +659,7 @@ function addIVProgFunctionsToMenu (function_obj, menu_var_or_value, ref_object, 
 	sub_menu.append('<div class="divider"></div><div class="header">'+LocalizedStrings.getUI('text_header_ivprog_functions')+'</div>');
 	sub_menu.append('<div class="item"><i class="dropdown icon"></i>'+LocalizedStrings.getUI('text_menu_functions_math')+'<div class="menu menu_math_functions"></div></div>');
 	sub_menu.append('<div class="item"><i class="dropdown icon"></i>'+LocalizedStrings.getUI('text_menu_functions_text')+'<div class="menu menu_text_functions"></div></div>');
-	sub_menu.append('<div class="item"><i class="dropdown icon"></i>'+LocalizedStrings.getUI('text_menu_functions_arrangement')+'<div class="menu menu_arrangement_functions"></div></div>');
+	sub_menu.append('<div class="item"><i class="dropdown icon"></i>'+LocalizedStrings.getUI('text_menu_functions_array')+'<div class="menu menu_arrangement_functions"></div></div>');
 	sub_menu.append('<div class="item"><i class="dropdown icon"></i>'+LocalizedStrings.getUI('text_menu_functions_conversion')+'<div class="menu menu_conversion_functions"></div></div>');
 
 	// Insert Math functions:
@@ -667,7 +667,7 @@ function addIVProgFunctionsToMenu (function_obj, menu_var_or_value, ref_object, 
 		var t = $('<div class="item"></div>');
 		t.data('function_reference', window.system_functions[i]);
 		t.data('option', VAR_OR_VALUE_TYPES.only_function);
-		t.text(LocalizedStrings.getUI(window.system_functions[i].identifier));
+		t.text(LocalizedStrings.translateInternalFunction(window.system_functions[i].identifier));
 		
 		switch(window.system_functions[i].category) {
 			case Models.SYSTEM_FUNCTIONS_CATEGORIES.math:
@@ -742,8 +742,8 @@ function addVariablesToMenu (function_obj, menu_var_or_value, ref_object, expres
 		}
 	}
 	if (!is_there) {
-		sub_menu.append($('<div class="header">'+LocalizedStrings.getUI('text_none_variable')+'</div>'));
-		sub_menu.append($('<div class="item disabled">'+LocalizedStrings.getUI('text_none_variable_instruction')+'</div>'));
+		sub_menu.append($('<div class="header">'+LocalizedStrings.getUI('text_no_variable')+'</div>'));
+		sub_menu.append($('<div class="item disabled">'+LocalizedStrings.getUI('text_no_variable_instruction')+'</div>'));
 	}
 
 }
@@ -824,7 +824,7 @@ function openInputToFunction (command, ref_object, dom_object, menu_var_or_value
 		if (function_selected.name) {
 			parameters_menu = '<div class="parameters_function_called"> '+function_selected.name+' <span> ( </span>';
 		} else {
-			parameters_menu = '<div class="parameters_function_called"> <i>'+LocalizedStrings.getUI(function_selected.category)+'.'+LocalizedStrings.getUI(function_selected.identifier)+'</i> <span> ( </span>';
+			parameters_menu = '<div class="parameters_function_called"> <i>'+LocalizedStrings.translateInternalFunction(function_selected.identifier, function_selected.category)+'</i> <span> ( </span>';
 		}
 		for (var j = 0; j < function_selected.parameters_list.length; j++) {
 			parameters_menu += '<div class="render_style_param parameter_'+j+'"></div>';
@@ -900,7 +900,7 @@ function openInputToFunction (command, ref_object, dom_object, menu_var_or_value
 		if (function_selected.name) {
 			parameters_menu = '<div class="parameters_function_called"> '+function_selected.name+' <span> ( </span>';
 		} else {
-			parameters_menu = '<div class="parameters_function_called"> <i>'+LocalizedStrings.getUI(function_selected.category)+'.'+LocalizedStrings.getUI(function_selected.identifier)+'</i> <span> ( </span>';
+			parameters_menu = '<div class="parameters_function_called"> <i>'+LocalizedStrings.translateInternalFunction(function_selected.identifier, function_selected.category)+'</i> <span> ( </span>';
 		}
 		
 		parameters_menu += '<span> ) </span></div>';

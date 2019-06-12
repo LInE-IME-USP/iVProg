@@ -48,7 +48,7 @@
   "dependencies": {
     "antlr4": "^4.7.2",
     "decimal.js": "^10.1.1",
-    "line-i18n": "git+https://git.lcalion.com/LInE/line-i18n.git",
+    "line-i18n": "git+http://200.144.254.107/git/LInE/line-i18n.git",
     "melanke-watchjs": "^1.5.0",
     "server": "^1.0.18"
   }

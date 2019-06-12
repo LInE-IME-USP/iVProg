@@ -830,9 +830,9 @@ function getLogicOperators () {
 	var logic_operators;
 	logic_operators = '<div class="item" data-type="'+Models.EXPRESSION_TYPES.exp_logic+'" data-value="'+Models.LOGIC_COMPARISON.equals_to+'">==</div>';
 	logic_operators += '<div class="item" data-type="'+Models.EXPRESSION_TYPES.exp_logic+'" data-value="'+Models.LOGIC_COMPARISON.not_equals_to+'">!=</div>';
-	logic_operators += '<div class="item" data-type="'+Models.EXPRESSION_TYPES.exp_logic+'" data-value="'+Models.LOGIC_COMPARISON.and+'">'+LocalizedStrings.getUI('and')+'</div>';
-	logic_operators += '<div class="item" data-type="'+Models.EXPRESSION_TYPES.exp_logic+'" data-value="'+Models.LOGIC_COMPARISON.or+'">'+LocalizedStrings.getUI('or')+'</div>';
-	logic_operators += '<div class="item" data-type="'+Models.EXPRESSION_TYPES.exp_logic+'" data-value="'+Models.LOGIC_COMPARISON.not+'">'+LocalizedStrings.getUI('not')+'</div>';
+	logic_operators += '<div class="item" data-type="'+Models.EXPRESSION_TYPES.exp_logic+'" data-value="'+Models.LOGIC_COMPARISON.and+'">'+LocalizedStrings.getUI('logic_operator_and')+'</div>';
+	logic_operators += '<div class="item" data-type="'+Models.EXPRESSION_TYPES.exp_logic+'" data-value="'+Models.LOGIC_COMPARISON.or+'">'+LocalizedStrings.getUI('logic_operator_or')+'</div>';
+	logic_operators += '<div class="item" data-type="'+Models.EXPRESSION_TYPES.exp_logic+'" data-value="'+Models.LOGIC_COMPARISON.not+'">'+LocalizedStrings.getUI('logic_operator_not')+'</div>';
 	return logic_operators;
 }
 

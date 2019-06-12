@@ -133,13 +133,13 @@ export function renderVariable (function_container, new_var, function_obj) {
 	element += '<div class="ui dropdown variable_type">';
 
   	if (new_var.dimensions > 0) {
-  		element += '<div class="text">'+ LocalizedStrings.getUI('vector') + ':' + LocalizedStrings.getUI(new_var.type.toLowerCase());
+  		element += '<div class="text">'+ LocalizedStrings.getUI('vector') + ':' + LocalizedStrings.getUI(`type_${new_var.type.toLowerCase()}`);
   		for (var i = 0; i < new_var.dimensions; i ++) {
   			element += ' [ ] ';
   		}
   		element += '</div>';
   	} else {
-  		element += '<div class="text">' + LocalizedStrings.getUI(new_var.type.toLowerCase()) + '</div>';
+  		element += '<div class="text">' + LocalizedStrings.getUI(`type_${new_var.type.toLowerCase()}`) + '</div>';
   	}
 	element += '<div class="menu">';
 
@@ -147,7 +147,7 @@ export function renderVariable (function_container, new_var, function_obj) {
   		if (tm == Types.VOID.toUpperCase()) {
   			continue;
   		}
-  		element += '<div class="item ' + (new_var.type == tm.toLowerCase() ? ' selected ' : '') + '" data-type="'+tm+'" >'+LocalizedStrings.getUI(tm.toLowerCase())+'</div>';
+  		element += '<div class="item ' + (new_var.type == tm.toLowerCase() ? ' selected ' : '') + '" data-type="'+tm+'" >'+LocalizedStrings.getUI(`type_${tm.toLowerCase()}`)+'</div>';
 	}
 
   	for (var tm in Types) {
@@ -156,10 +156,10 @@ export function renderVariable (function_container, new_var, function_obj) {
   		}
   		element += '<div class="item">'
   			+ '<i class="dropdown icon"></i>'
-	    	+  LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI(tm.toLowerCase())
+	    	+  LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI(`type_${tm.toLowerCase()}`)
 	      	+  '<div class="menu">'
-		        + '<div class="item" data-text="'+ LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI(tm.toLowerCase())+' [ ] " data-type="'+tm+'" data-dimensions="1">[ ]</div>'
-		        + '<div class="item" data-text="'+ LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI(tm.toLowerCase())+' [ ] [ ] " data-type="'+tm+'" data-dimensions="2">[ ] [ ] </div>'
+		        + '<div class="item" data-text="'+ LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI(`type_${tm.toLowerCase()}`)+' [ ] " data-type="'+tm+'" data-dimensions="1">[ ]</div>'
+		        + '<div class="item" data-text="'+ LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI(`type_${tm.toLowerCase()}`)+' [ ] [ ] " data-type="'+tm+'" data-dimensions="2">[ ] [ ] </div>'
 	      	+  '</div>'
 	    	+ '</div>';	
   	}
@@ -209,7 +209,7 @@ function renderValues (new_var, variable_container, function_name) {
 			ret += '<div class="created_div_valor_var"><span class="span_value_variable simple_var">'+new_var.value.toFixed(1)+'</span> </div> ';
 		} else {
 			if (new_var.type == Types.BOOLEAN) {
-				ret += '<div class="created_div_valor_var"><span class="span_value_variable boolean_simple_type">'+LocalizedStrings.getUI(new_var.value)+'</span> </div> ';
+				ret += '<div class="created_div_valor_var"><span class="span_value_variable boolean_simple_type">'+LocalizedStrings.getUI(`logic_value_${new_var.value}`)+'</span> </div> ';
 			} else {
 				ret += '<div class="created_div_valor_var"><span class="span_value_variable simple_var">'+new_var.value+'</span> </div> ';
 			}
@@ -226,7 +226,7 @@ function renderValues (new_var, variable_container, function_name) {
 			} else {
 				for (var k = 0; k < new_var.columns; k++) {
 					if (new_var.type == Types.BOOLEAN) {
-						ret += '<td><span class="span_value_variable boolean_vector_var" data-index="'+k+'">'+LocalizedStrings.getUI(new_var.value[k])+'</span></td>';
+						ret += '<td><span class="span_value_variable boolean_vector_var" data-index="'+k+'">'+LocalizedStrings.getUI(`logic_value_${new_var.value[k]}`)+'</span></td>';
 					} else {
 						ret += '<td><span class="span_value_variable vector_var" data-index="'+k+'">'+new_var.value[k]+'</span>'+'</td>';
 					}
@@ -254,7 +254,7 @@ function renderValues (new_var, variable_container, function_name) {
     				ret += '<tr>';
     				for (var k = 0; k < new_var.columns; k++) {
     					if (new_var.type == Types.BOOLEAN) { 
-    						ret += '<td><span class="span_value_variable boolean_matrix_var" data-index="'+k+'" data-row="'+l+'">'+LocalizedStrings.getUI(new_var.value[l][k])+'</span></td>';
+    						ret += '<td><span class="span_value_variable boolean_matrix_var" data-index="'+k+'" data-row="'+l+'">'+LocalizedStrings.getUI(`logic_value_${new_var.value[l][k]}`)+'</span></td>';
     					} else {
     						ret += '<td><span class="span_value_variable matrix_var" data-index="'+k+'" data-row="'+l+'">'+new_var.value[l][k]+'</span></td>';
     					}
@@ -369,7 +369,7 @@ function renderValues (new_var, variable_container, function_name) {
 
 function alternateBooleanMatrixValue (var_obj, row, index, value_container) {
 	var_obj.value[row][index] = !var_obj.value[row][index];
-	$(value_container).find('.span_value_variable').text(LocalizedStrings.getUI(var_obj.value[row][index]));
+	$(value_container).find('.span_value_variable').text(LocalizedStrings.getUI(`logic_value_${var_obj.value[row][index]}`));
 }
 
 function addLineMatrix (var_obj) {
@@ -393,7 +393,7 @@ function addLineMatrix (var_obj) {
 	if (var_obj.type == Types.TEXT) {
 		var n_l = [];
 		for (i = 0; i < var_obj.columns; i++) {
-			n_l.push(LocalizedStrings.getUI('text_start'));
+			n_l.push(LocalizedStrings.getUI('textvar_default_value'));
 		}
 		var_obj.value.push(n_l);
 	}
@@ -431,7 +431,7 @@ function addColumnMatrix (var_obj) {
 	}
 	if (var_obj.type == Types.TEXT) {
 		for (var i = 0; i < var_obj.rows; i++) {
-			var_obj.value[i].push(LocalizedStrings.getUI('text_start'));
+			var_obj.value[i].push(LocalizedStrings.getUI('textvar_default_value'));
 		}
 	}
 	if (var_obj.type == Types.BOOLEAN) {
@@ -463,7 +463,7 @@ function addColumnVector (var_obj) {
 		var_obj.value.push(1.0);
 	}
 	if (var_obj.type == Types.TEXT) {
-		var_obj.value.push(LocalizedStrings.getUI('text_start'));
+		var_obj.value.push(LocalizedStrings.getUI('textvar_default_value'));
 	}
 	if (var_obj.type == Types.BOOLEAN) {
 		var_obj.value.push(true);
@@ -481,12 +481,12 @@ function removeColumnVector (var_obj) {
 
 function alternateBooleanValue (var_obj, value_container) {
 	var_obj.value = !var_obj.value;
-	$(value_container).find('.span_value_variable').text(LocalizedStrings.getUI(var_obj.value));
+	$(value_container).find('.span_value_variable').text(LocalizedStrings.getUI(`logic_value_${var_obj.value}`));
 }
 
 function alternateBooleanVectorValue (var_obj, index, value_container) {
 	var_obj.value[index] = !var_obj.value[index];
-	$(value_container).find('.span_value_variable').text(LocalizedStrings.getUI(var_obj.value[index]));
+	$(value_container).find('.span_value_variable').text(LocalizedStrings.getUI(`logic_value_${var_obj.value[index]}`));
 }
 
 function updateInitialValues (variable_obj, function_name) {
@@ -516,14 +516,14 @@ function updateInitialValues (variable_obj, function_name) {
 
 	if (variable_obj.type == Types.TEXT) {
 		if (variable_obj.dimensions == 0) {
-			variable_obj.value = LocalizedStrings.getUI('text_start');
+			variable_obj.value = LocalizedStrings.getUI('textvar_default_value');
 		}
 		if (variable_obj.dimensions == 1) {
-			variable_obj.value = [LocalizedStrings.getUI('text_start'), LocalizedStrings.getUI('text_start')];
+			variable_obj.value = [LocalizedStrings.getUI('textvar_default_value'), LocalizedStrings.getUI('textvar_default_value')];
 		}
 		if (variable_obj.dimensions == 2) {
-			variable_obj.value = [[LocalizedStrings.getUI('text_start'), LocalizedStrings.getUI('text_start')], 
-									[LocalizedStrings.getUI('text_start'), LocalizedStrings.getUI('text_start')]];
+			variable_obj.value = [[LocalizedStrings.getUI('textvar_default_value'), LocalizedStrings.getUI('textvar_default_value')], 
+									[LocalizedStrings.getUI('textvar_default_value'), LocalizedStrings.getUI('textvar_default_value')]];
 		}
 	}
 

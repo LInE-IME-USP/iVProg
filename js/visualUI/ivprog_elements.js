@@ -1,4 +1,3 @@
-import * as VariableValueMenuManagement from './commands/variable_value_menu';
 import { Types } from './types';
 import WatchJS from 'melanke-watchjs';
 import * as AlgorithmManagement from './algorithm';
@@ -17,7 +16,7 @@ export const ARITHMETIC_COMPARISON = Object.freeze({greater_than:"greater_than",
 
 export const LOGIC_COMPARISON = Object.freeze({equals_to:"equals_to", not_equals_to:"not_equals_to", and:"and", or:"or", not:"not"});
 
-export const SYSTEM_FUNCTIONS_CATEGORIES = Object.freeze({math:"math", text:"text_t", arrangement:"arrangement", conversion:"conversion"});
+export const SYSTEM_FUNCTIONS_CATEGORIES = Object.freeze({math:'$mathLib', text:'$strLib', arrangement:'$arrayLib', conversion:'$langLib'});
 
 export class Variable {
 

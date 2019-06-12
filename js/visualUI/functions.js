@@ -252,7 +252,7 @@ function renderFunctionReturn (function_obj, function_element) {
   var ret = '<div class="ui dropdown function_return">';
     
     if (function_obj.return_dimensions > 0) {
-      ret += '<div class="text">'+ LocalizedStrings.getUI("vector") +':'+ LocalizedStrings.getUI(function_obj.return_type);
+      ret += '<div class="text">'+ LocalizedStrings.getUI("vector") +':'+ LocalizedStrings.getUI(`type_${function_obj.return_type}`);
       if (function_obj.return_dimensions == 1) {
         ret += ' [ ] ';
       } else {
@@ -260,14 +260,14 @@ function renderFunctionReturn (function_obj, function_element) {
       }
       ret += '</div>';
     } else {
-      ret += '<div class="text">'+LocalizedStrings.getUI(function_obj.return_type)+'</div>';
+      ret += '<div class="text">'+LocalizedStrings.getUI(`type_${function_obj.return_type}`)+'</div>';
     }
 
     ret += '<div class="menu">';
 
 
     for (var tm in Types) {
-      ret += '<div class="item ' + (function_obj.return_type == tm.toLowerCase()  && function_obj.return_dimensions < 1 ? ' selected ' : '') + '" data-type="'+tm+'" >'+LocalizedStrings.getUI(tm.toLowerCase())+'</div>';
+      ret += '<div class="item ' + (function_obj.return_type == tm.toLowerCase()  && function_obj.return_dimensions < 1 ? ' selected ' : '') + '" data-type="'+tm+'" >'+LocalizedStrings.getUI(`type_${tm.toLowerCase()}`)+'</div>';
     }
 
     for (var tm in Types) {
@@ -276,10 +276,10 @@ function renderFunctionReturn (function_obj, function_element) {
       }
       ret += '<div class="item">'
         + '<i class="dropdown icon"></i>'
-        +  LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI(tm.toLowerCase())
+        +  LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI(`type_${tm.toLowerCase()}`)
           +  '<div class="menu">'
-            + '<div class="item '+(function_obj.return_type == tm.toLowerCase()  && function_obj.return_dimensions > 0 ? ' selected ' : '')+'" data-text="'+ LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI(tm.toLowerCase())+' [ ] " data-type="'+tm+'" data-dimensions="1">[ ]</div>'
-            + '<div class="item '+(function_obj.return_type == tm.toLowerCase()  && function_obj.return_dimensions > 0 ? ' selected ' : '')+'" data-text="'+ LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI(tm.toLowerCase())+' [ ] [ ] " data-type="'+tm+'" data-dimensions="2">[ ] [ ] </div>'
+            + '<div class="item '+(function_obj.return_type == tm.toLowerCase()  && function_obj.return_dimensions > 0 ? ' selected ' : '')+'" data-text="'+ LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI(`type_${tm.toLowerCase()}`)+' [ ] " data-type="'+tm+'" data-dimensions="1">[ ]</div>'
+            + '<div class="item '+(function_obj.return_type == tm.toLowerCase()  && function_obj.return_dimensions > 0 ? ' selected ' : '')+'" data-text="'+ LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI(`type_${tm.toLowerCase()}`)+' [ ] [ ] " data-type="'+tm+'" data-dimensions="2">[ ] [ ] </div>'
           +  '</div>'
         + '</div>'; 
     }
@@ -309,7 +309,7 @@ export function renderFunction (function_obj) {
   appender += '<div class="function_signature_div">'+LocalizedStrings.getUI("function")+' ';
 
   if (function_obj.is_main) {
-      appender += '<div class="function_name_div">  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ' + LocalizedStrings.getUI('void') + ' &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="span_name_function" >'+function_obj.name+'</span> </div> '
+      appender += '<div class="function_name_div">  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ' + LocalizedStrings.getUI('type_void') + ' &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="span_name_function" >'+function_obj.name+'</span> </div> '
         + ' <span class="parethesis_function">( </span> <div class="ui large labels parameters_list">';
   } else {
       appender += '<div class="ui function_return"></div>';
@@ -380,7 +380,7 @@ export function renderFunction (function_obj) {
     CommandsManagement.renderCommand(function_obj.commands[j], $(appender.find('.commands_list_div')[0]), 3, function_obj);
   }
   $('.minimize_function_button').popup({
-    content : LocalizedStrings.getUI("tooltip_minimize"),
+    content : LocalizedStrings.getUI("tooltip_hide_function"),
     delay: {
       show: 750,
       hide: 0
@@ -1050,7 +1050,7 @@ function renderParameter (function_obj, parameter_obj, function_container) {
   ret += '<div class="ui dropdown parameter_type">';
 
   if (parameter_obj.dimensions > 0) {
-    ret += '<div class="text">'+ LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI(parameter_obj.type);
+    ret += '<div class="text">'+ LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI(`type_${parameter_obj.type}`);
     if (parameter_obj.dimensions == 1) {
       ret += ' [ ] ';
     } else {
@@ -1058,7 +1058,7 @@ function renderParameter (function_obj, parameter_obj, function_container) {
     }
     ret += '</div>';
   } else {
-    ret += '<div class="text">'+LocalizedStrings.getUI(parameter_obj.type)+'</div>';
+    ret += '<div class="text">'+LocalizedStrings.getUI(`type_${parameter_obj.type}`)+'</div>';
   }
 
   ret += '<div class="menu">';
@@ -1068,7 +1068,7 @@ function renderParameter (function_obj, parameter_obj, function_container) {
       if (tm == Types.VOID.toUpperCase()) {
         continue;
       }
-      ret += '<div class="item ' + (parameter_obj.type == tm.toLowerCase() ? ' selected ' : '') + '" data-type="'+tm+'" >'+LocalizedStrings.getUI(tm.toLowerCase())+'</div>';
+      ret += '<div class="item ' + (parameter_obj.type == tm.toLowerCase() ? ' selected ' : '') + '" data-type="'+tm+'" >'+LocalizedStrings.getUI(`type_${tm.toLowerCase()}`)+'</div>';
   }
 
   for (const tm in Types) {
@@ -1077,10 +1077,10 @@ function renderParameter (function_obj, parameter_obj, function_container) {
     }
     ret += '<div class="item">'
       + '<i class="dropdown icon"></i>'
-      +  LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI(tm.toLowerCase())
+      +  LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI(`type_${tm.toLowerCase()}`)
         +  '<div class="menu">'
-          + '<div class="item" data-text="'+ LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI(tm.toLowerCase())+' [ ] " data-type="'+tm+'" data-dimensions="1">[ ]</div>'
-          + '<div class="item" data-text="'+ LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI(tm.toLowerCase())+' [ ] [ ] " data-type="'+tm+'" data-dimensions="2">[ ] [ ] </div>'
+          + '<div class="item" data-text="'+ LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI(`type_${tm.toLowerCase()}`)+' [ ] " data-type="'+tm+'" data-dimensions="1">[ ]</div>'
+          + '<div class="item" data-text="'+ LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI(`type_${tm.toLowerCase()}`)+' [ ] [ ] " data-type="'+tm+'" data-dimensions="2">[ ] [ ] </div>'
         +  '</div>'
       + '</div>'; 
   }

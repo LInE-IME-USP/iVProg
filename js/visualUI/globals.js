@@ -111,14 +111,14 @@ function updateInitialValues (global_var) {
 
 	if (global_var.type == Types.TEXT) {
 		if (global_var.dimensions == 0) {
-			global_var.value = LocalizedStrings.getUI('text_start');
+			global_var.value = LocalizedStrings.getUI('textvar_default_value');
 		}
 		if (global_var.dimensions == 1) {
-			global_var.value = [LocalizedStrings.getUI('text_start'), LocalizedStrings.getUI('text_start')];
+			global_var.value = [LocalizedStrings.getUI('textvar_default_value'), LocalizedStrings.getUI('textvar_default_value')];
 		}
 		if (global_var.dimensions == 2) {
-			global_var.value = [[LocalizedStrings.getUI('text_start'), LocalizedStrings.getUI('text_start')], 
-									[LocalizedStrings.getUI('text_start'), LocalizedStrings.getUI('text_start')]];
+			global_var.value = [[LocalizedStrings.getUI('textvar_default_value'), LocalizedStrings.getUI('textvar_default_value')], 
+									[LocalizedStrings.getUI('textvar_default_value'), LocalizedStrings.getUI('textvar_default_value')]];
 		}
 	}
 
@@ -139,12 +139,12 @@ function updateInitialValues (global_var) {
 
 function alternateBooleanGlobalValue (global_var, value_container) {
 	global_var.value = !global_var.value;
-	$(value_container).find('.span_value_variable').text(LocalizedStrings.getUI(global_var.value));
+	$(value_container).find('.span_value_variable').text(LocalizedStrings.getUI(`logic_value_${global_var.value}`));
 }
 
 function alternateBooleanGlobalVectorValue (global_var, index, value_container) {
 	global_var.value[index] = !global_var.value[index];
-	$(value_container).find('.span_value_variable').text(LocalizedStrings.getUI(global_var.value[index]));
+	$(value_container).find('.span_value_variable').text(LocalizedStrings.getUI(`logic_value_${global_var.value[index]}`));
 }
 
 function removeGlobalColumnVector (global_var) {
@@ -166,7 +166,7 @@ function addGlobalColumnVector (global_var) {
 		global_var.value.push(1.0);
 	}
 	if (global_var.type == Types.TEXT) {
-		global_var.value.push(LocalizedStrings.getUI('text_start'));
+		global_var.value.push(LocalizedStrings.getUI('textvar_default_value'));
 	}
 	if (global_var.type == Types.BOOLEAN) {
 		global_var.value.push(true);
@@ -200,7 +200,7 @@ function addColumnGlobalMatrix (global_var) {
 	}
 	if (global_var.type == Types.TEXT) {
 		for (var i = 0; i < global_var.rows; i++) {
-			global_var.value[i].push(LocalizedStrings.getUI('text_start'));
+			global_var.value[i].push(LocalizedStrings.getUI('textvar_default_value'));
 		}
 	}
 	if (global_var.type == Types.BOOLEAN) {
@@ -240,7 +240,7 @@ function addLineGlobalMatrix (global_var) {
 	if (global_var.type == Types.TEXT) {
 		var n_l = [];
 		for (i = 0; i < global_var.columns; i++) {
-			n_l.push(LocalizedStrings.getUI('text_start'));
+			n_l.push(LocalizedStrings.getUI('textvar_default_value'));
 		}
 		global_var.value.push(n_l);
 	}
@@ -256,7 +256,7 @@ function addLineGlobalMatrix (global_var) {
 
 function alternateBooleanGlobalMatrixValue (global_var, row, index, value_container) {
 	global_var.value[row][index] = !global_var.value[row][index];
-	$(value_container).find('.span_value_variable').text(LocalizedStrings.getUI(global_var.value[row][index]));
+	$(value_container).find('.span_value_variable').text(LocalizedStrings.getUI(`logic_value_${global_var.value[row][index]}`));
 }
 
 function renderValues (global_var, global_container) {
@@ -269,7 +269,7 @@ function renderValues (global_var, global_container) {
 			ret += '<div class="created_div_valor_var"><span class="span_value_variable simple_var">'+global_var.value.toFixed(1)+'</span>  </div> ';
 		} else {
 			if (global_var.type == Types.BOOLEAN) {
-				ret += '<div class="created_div_valor_var"><span class="span_value_variable boolean_simple_type">'+LocalizedStrings.getUI(global_var.value)+'</span>  </div> ';
+				ret += '<div class="created_div_valor_var"><span class="span_value_variable boolean_simple_type">'+LocalizedStrings.getUI(`logic_value_${global_var.value}`)+'</span>  </div> ';
 			} else {
 				ret += '<div class="created_div_valor_var"><span class="span_value_variable simple_var">'+global_var.value+'</span>  </div> ';
 			}
@@ -286,7 +286,7 @@ function renderValues (global_var, global_container) {
 			} else {
 				for (var k = 0; k < global_var.columns; k++) {
 					if (global_var.type == Types.BOOLEAN) {
-						ret += '<td><span class="span_value_variable boolean_vector_var" data-index="'+k+'">'+LocalizedStrings.getUI(global_var.value[k])+'</span></td>';
+						ret += '<td><span class="span_value_variable boolean_vector_var" data-index="'+k+'">'+LocalizedStrings.getUI(`logic_value_${global_var.value[k]}`)+'</span></td>';
 					} else {
 						ret += '<td><span class="span_value_variable vector_var" data-index="'+k+'">'+global_var.value[k]+'</span>'+'</td>';
 					}
@@ -314,7 +314,7 @@ function renderValues (global_var, global_container) {
     				ret += '<tr>';
     				for (var k = 0; k < global_var.columns; k++) {
     					if (global_var.type == Types.BOOLEAN) { 
-    						ret += '<td><span class="span_value_variable boolean_matrix_var" data-index="'+k+'" data-row="'+l+'">'+LocalizedStrings.getUI(global_var.value[l][k])+'</span></td>';
+    						ret += '<td><span class="span_value_variable boolean_matrix_var" data-index="'+k+'" data-row="'+l+'">'+LocalizedStrings.getUI(`logic_value_${global_var.value[l][k]}`)+'</span></td>';
     					} else {
     						ret += '<td><span class="span_value_variable matrix_var" data-index="'+k+'" data-row="'+l+'">'+global_var.value[l][k]+'</span></td>';
     					}
@@ -486,13 +486,13 @@ export function renderGlobal (global_var) {
  	element += '<div class="ui dropdown global_type">';
 
   	if (global_var.dimensions > 0) {
-  		element += '<div class="text">'+ LocalizedStrings.getUI('vector')+ ':' + LocalizedStrings.getUI(global_var.type);
+  		element += '<div class="text">'+ LocalizedStrings.getUI('vector')+ ':' + LocalizedStrings.getUI(`type_${global_var.type}`);
   		for (var i = 0; i < global_var.dimensions; i ++) {
   			element += ' [ <span class="dimensions_'+i+'"></span> ] ';
   		}
   		element += '</div>';
   	} else {
-  		element += '<div class="text">' + LocalizedStrings.getUI(global_var.type.toLowerCase()) + '</div>';
+  		element += '<div class="text">' + LocalizedStrings.getUI(`type_${global_var.type.toLowerCase()}`) + '</div>';
   	}
 	element += '<div class="menu">';
 
@@ -500,7 +500,7 @@ export function renderGlobal (global_var) {
   		if (tm == Types.VOID.toUpperCase()) {
   			continue;
   		}
-  		element += '<div class="item ' + (global_var.type == tm.toLowerCase() ? ' selected ' : '') + '" data-type="'+tm+'" >'+LocalizedStrings.getUI(tm.toLowerCase())+'</div>';
+  		element += '<div class="item ' + (global_var.type == tm.toLowerCase() ? ' selected ' : '') + '" data-type="'+tm+'" >'+LocalizedStrings.getUI(`type_${tm.toLowerCase()}`)+'</div>';
 	}
 
   	for (var tm in Types) {
@@ -509,10 +509,10 @@ export function renderGlobal (global_var) {
   		}
   		element += '<div class="item">'
 	    	+ '<i class="dropdown icon"></i>'
-	    	+  LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI(tm.toLowerCase())
+	    	+  LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI(`type_${tm.toLowerCase()}`)
 	      	+  '<div class="menu">'
-		        + '<div class="item" data-text="'+ LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI(tm.toLowerCase())+' [ ] " data-type="'+tm+'" data-dimensions="1">[ ]</div>'
-		        + '<div class="item" data-text="'+ LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI(tm.toLowerCase())+' [ ] [ ] " data-type="'+tm+'" data-dimensions="2">[ ] [ ] </div>'
+		        + '<div class="item" data-text="'+ LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI(`type_${tm.toLowerCase()}`)+' [ ] " data-type="'+tm+'" data-dimensions="1">[ ]</div>'
+		        + '<div class="item" data-text="'+ LocalizedStrings.getUI('vector')+':'+LocalizedStrings.getUI(`type_${tm.toLowerCase()}`)+' [ ] [ ] " data-type="'+tm+'" data-dimensions="2">[ ] [ ] </div>'
 	      	+  '</div>'
 	    	+ '</div>';	
   	}

@@ -119,9 +119,9 @@ export class DOMConsole {
     this.showBtn = bashNode.querySelector('#ivprog-console-showbtn');
     this._setupCursor();
     //Jquery tooltips....
-    $(this.clearBtn).popup({content:LocalizedStrings.getUI("terminal_clear")});
-    $(this.showBtn).popup({content:LocalizedStrings.getUI("terminal_show")});
-    $(this.hideBtn).popup({content:LocalizedStrings.getUI("terminal_hide")});
+    $(this.clearBtn).popup({content:LocalizedStrings.getUI("tooltip_terminal_clear")});
+    $(this.showBtn).popup({content:LocalizedStrings.getUI("tooltip_terminal_show")});
+    $(this.hideBtn).popup({content:LocalizedStrings.getUI("tooltip_terminal_hide")});
   }
 
   _setupCursor () {

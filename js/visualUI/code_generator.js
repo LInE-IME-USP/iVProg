@@ -41,19 +41,19 @@ function functionsCode (function_obj) {
 
 	switch (function_obj.return_type) {
 		case Types.INTEGER:
-			ret += LocalizedStrings.getUI('integer');
+			ret += LocalizedStrings.getUI('type_integer');
 			break;
 		case Types.REAL:
-			ret += LocalizedStrings.getUI('real');
+			ret += LocalizedStrings.getUI('type_real');
 			break;
 		case Types.TEXT:
-			ret += LocalizedStrings.getUI('text');
+			ret += LocalizedStrings.getUI('type_text');
 			break;
 		case Types.BOOLEAN:
-			ret += LocalizedStrings.getUI('boolean');
+			ret += LocalizedStrings.getUI('type_boolean');
 			break;
 		case Types.VOID:
-			ret += LocalizedStrings.getUI('void');
+			ret += LocalizedStrings.getUI('type_void');
 			break;
 	}
 	ret += ' ';
@@ -597,15 +597,15 @@ function elementExpressionCode (expression_obj) {
 					break;
 
 				case Models.LOGIC_COMPARISON.and:
-					ret += ' ' + LocalizedStrings.getUI('and') + ' ';
+					ret += ' ' + LocalizedStrings.getUI('logic_operator_and') + ' ';
 					break;
 
 				case Models.LOGIC_COMPARISON.or:
-					ret += ' ' + LocalizedStrings.getUI('or') + ' ';
+					ret += ' ' + LocalizedStrings.getUI('logic_operator_or') + ' ';
 					break;
 
 				case Models.LOGIC_COMPARISON.not:
-					ret += ' ' + LocalizedStrings.getUI('not') + ' ';
+					ret += ' ' + LocalizedStrings.getUI('logic_operator_not') + ' ';
 					break;
 
 				case Models.ARITHMETIC_COMPARISON.greater_than:
@@ -673,7 +673,7 @@ function variableValueMenuCode (variable_obj, is_return = false) {
 			if (variable_obj.function_called.name) {
 				ret += variable_obj.function_called.name + ' ( ';
 			} else {
-				ret += LocalizedStrings.getUI(variable_obj.function_called.category)+'.'+LocalizedStrings.getUI(variable_obj.function_called.identifier) + ' ( ';
+				ret += LocalizedStrings.translateInternalFunction(variable_obj.function_called.identifier,variable_obj.function_called.category) + ' ( ';
 			}
 
 			if (variable_obj.parameters_list) {
@@ -759,16 +759,16 @@ function parametersCode (parameter_obj) {
 	var ret = '';
 	switch (parameter_obj.type) {
 		case Types.INTEGER:
-			ret += ' '+LocalizedStrings.getUI('integer')+' ';
+			ret += ' '+LocalizedStrings.getUI('type_integer')+' ';
 			break;
 		case Types.REAL:
-			ret += ' '+LocalizedStrings.getUI('real')+' ';
+			ret += ' '+LocalizedStrings.getUI('type_real')+' ';
 			break;
 		case Types.TEXT:
-			ret += ' '+LocalizedStrings.getUI('text')+' ';
+			ret += ' '+LocalizedStrings.getUI('type_text')+' ';
 			break;
 		case Types.BOOLEAN:
-			ret += ' '+LocalizedStrings.getUI('boolean')+' ';
+			ret += ' '+LocalizedStrings.getUI('type_boolean')+' ';
 			break;
 	}
 	ret += parameter_obj.name + '';
@@ -793,16 +793,16 @@ function variablesCode (variable_obj) {
 	}
 	switch (temp.type) {
 		case Types.INTEGER:
-			ret += LocalizedStrings.getUI('integer')+' ';
+			ret += LocalizedStrings.getUI('type_integer')+' ';
 			break;
 		case Types.REAL:
-			ret += LocalizedStrings.getUI('real')+' ';
+			ret += LocalizedStrings.getUI('type_real')+' ';
 			break;
 		case Types.TEXT:
-			ret += LocalizedStrings.getUI('text')+' ';
+			ret += LocalizedStrings.getUI('type_text')+' ';
 			break;
 		case Types.BOOLEAN:
-			ret += LocalizedStrings.getUI('boolean')+' ';
+			ret += LocalizedStrings.getUI('type_boolean')+' ';
 			break;
 	}
 	ret += temp.name + ' ';
@@ -831,9 +831,9 @@ function variablesCode (variable_obj) {
 				ret += '= {';
 				for (var j = 0; j < temp.value.length; j++) {
 					if (temp.value[j]) {
-						ret += LocalizedStrings.getUI("true");
+						ret += LocalizedStrings.getUI('logic_value_true');
 					} else {
-						ret += LocalizedStrings.getUI("false");
+						ret += LocalizedStrings.getUI('logic_value_false');
 					}
 					if ((j + 1) < temp.value.length) {
 						ret += ',';
@@ -902,9 +902,9 @@ function variablesCode (variable_obj) {
 					for (var k = 0; k < temp.columns; k++) {
 						
 						if (temp.value[j][k]) {
-							ret += LocalizedStrings.getUI("true");
+							ret += LocalizedStrings.getUI('logic_value_true');
 						} else {
-							ret += LocalizedStrings.getUI("false");
+							ret += LocalizedStrings.getUI('logic_value_false');
 						}
 
 						if ((k + 1) < temp.columns) {
@@ -935,9 +935,9 @@ function variablesCode (variable_obj) {
 			case Types.BOOLEAN:
 				ret += '= ';
 				if (temp.value) {
-					ret += LocalizedStrings.getUI("true");
+					ret += LocalizedStrings.getUI('logic_value_true');
 				} else {
-					ret += LocalizedStrings.getUI("false");
+					ret += LocalizedStrings.getUI('logic_value_false');
 				}
 				break;
 		}
@@ -962,16 +962,16 @@ function globalsCode () {
 			}
 			switch (temp.type) {
 				case Types.INTEGER:
-					ret += LocalizedStrings.getUI('integer');
+					ret += LocalizedStrings.getUI('type_integer');
 					break;
 				case Types.REAL:
-					ret += LocalizedStrings.getUI('real');
+					ret += LocalizedStrings.getUI('type_real');
 					break;
 				case Types.TEXT:
-					ret += LocalizedStrings.getUI('text');
+					ret += LocalizedStrings.getUI('type_text');
 					break;
 				case Types.BOOLEAN:
-					ret += LocalizedStrings.getUI('boolean');
+					ret += LocalizedStrings.getUI('type_boolean');
 					break;
 			}
 			ret += ' ' + temp.name + ' ';
@@ -1007,9 +1007,9 @@ function globalsCode () {
 						ret += '= {';
 						for (var j = 0; j < temp.value.length; j++) {
 							if (temp.value[j]) {
-								ret += LocalizedStrings.getUI("true");
+								ret += LocalizedStrings.getUI('logic_value_true');
 							} else {
-								ret += LocalizedStrings.getUI("false");
+								ret += LocalizedStrings.getUI('logic_value_false');
 							}
 							if ((j + 1) < temp.value.length) {
 								ret += ',';
@@ -1087,9 +1087,9 @@ function globalsCode () {
 							for (var k = 0; k < temp.columns; k++) {
 								
 								if (temp.value[j][k]) {
-									ret += LocalizedStrings.getUI("true");
+									ret += LocalizedStrings.getUI('logic_value_true');
 								} else {
-									ret += LocalizedStrings.getUI("false");
+									ret += LocalizedStrings.getUI('logic_value_false');
 								}
 
 								if ((k + 1) < temp.columns) {
@@ -1120,9 +1120,9 @@ function globalsCode () {
 					case Types.BOOLEAN:
 						ret += '= ';
 						if (temp.value) {
-							ret += LocalizedStrings.getUI("true");;
+							ret += LocalizedStrings.getUI('logic_value_true');;
 						} else {
-							ret += LocalizedStrings.getUI("false");;
+							ret += LocalizedStrings.getUI('logic_value_false');;
 						}
 						break;
 				}
